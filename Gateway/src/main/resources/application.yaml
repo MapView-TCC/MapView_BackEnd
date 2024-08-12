@@ -1,0 +1,51 @@
+server:
+  port: 8000
+spring:
+  application:
+    name: Gateway
+
+  security:
+    oauth2:
+      client:
+        registration:
+          azure:
+            client-id: a02aa40a-f271-4ad7-8439-18b3cba4af94
+            client-secret: CnS8Q~2WbfXrqPcWMJNwfZZaNcjRieYvkZY44bqm
+            scope: openid,profile,email
+
+            redirect-uri: http://localhost:5173/callback
+            provider: azure
+
+
+        provider:
+          azure:
+            issuer-uri: https://login.microsoftonline.com/0ae51e19-07c8-4e4b-bb6d-648ee58410f4/v2.0
+            authorization-uri: https://login.microsoftonline.com/0ae51e19-07c8-4e4b-bb6d-648ee58410f4/oauth2/v2.0/authorize
+            token-uri: https://login.microsoftonline.com/0ae51e19-07c8-4e4b-bb6d-648ee58410f4/oauth2/v2.0/token
+            jwk-set-uri: https://login.microsoftonline.com/0ae51e19-07c8-4e4b-bb6d-648ee58410f4/discovery/v2.0/keys
+  cloud:
+    gateway:
+
+      routes:
+        - id: resource
+          uri: http://localhost:9000
+          predicates:
+            - Path=/resource
+          filters:
+            - name: TokenRelay
+
+            - AddResponseHeader=Access-Control-Allow-Origin, http://localhost:5173
+            - AddResponseHeader=Access-Control-Allow-Methods, GET, POST, PUT, DELETE, OPTIONS
+            - AddResponseHeader=Access-Control-Allow-Headers, Authorization, Content-Type
+
+logging:
+  level:
+    org.springframework.security: DEBUG
+    org.springframework.cloud.gateway.filter.factory.TokenRelayGatewayFilterFactory: DEBUG
+    org.springframework.cloud.gateway: DEBUG
+    org.springframework.security.oauth2: DEBUG
+
+
+
+
+
