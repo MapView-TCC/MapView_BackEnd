@@ -15,13 +15,13 @@ CREATE TABLE IF NOT EXISTS access_history (
 );
 
 -- Creating the Classes table
-CREATE TABLE IF NOT EXISTS class (
-    id_class INT AUTO_INCREMENT PRIMARY KEY,
-    course_name ENUM('ADMINISTRACAO', 'DIGITAL SOLUTIONS', 'MANUFATURA DIGITAL', 'MECATRONICA') NOT NULL,
-    class VARCHAR(255) NOT NULL,
+CREATE TABLE IF NOT EXISTS classes (
+    id_classes INT AUTO_INCREMENT PRIMARY KEY,
+    course_name ENUM('ADMINISTRACAO', 'DIGITAL_SOLUTIONS', 'MANUFATURA_DIGITAL', 'MECATRONICA') NOT NULL,
+    classes VARCHAR(255) NOT NULL,
     id_user INT NOT NULL,
     creation_date DATE NOT NULL,
-    active TINYINT NOT NULL,
+    operative TINYINT NOT NULL,
     FOREIGN KEY(id_user) REFERENCES user(id_user)
 );
 
@@ -123,10 +123,10 @@ CREATE TABLE IF NOT EXISTS responsible (
     id_responsible INT AUTO_INCREMENT PRIMARY KEY,
     responsible_name VARCHAR(255) NOT NULL,
     edv VARCHAR(255) UNIQUE NOT NULL,
-    id_class INT,
+    id_classes INT,
     id_user INT NOT NULL,
     operative TINYINT NOT NULL,
-    FOREIGN KEY(id_class) REFERENCES class(id_class),
+    FOREIGN KEY(id_classes) REFERENCES classes(id_classes),
     FOREIGN KEY(id_user) REFERENCES user(id_user)
 );
 
@@ -154,3 +154,5 @@ CREATE TABLE IF NOT EXISTS user_log (
     action ENUM('CREATE', 'UPDATE', 'READ', 'DELETE'),
     FOREIGN KEY(id_user) REFERENCES user(id_user)
 );
+
+
