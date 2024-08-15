@@ -4,7 +4,7 @@ import com.MapView.BackEnd.Service.LocationService;
 import com.MapView.BackEnd.entities.Enviroment;
 import com.MapView.BackEnd.entities.Post;
 
-public class LocationImp implements LocationService {
+public class LocationServiceImp implements LocationService {
     @Override
     public void getLocation(Long id_location) {
 

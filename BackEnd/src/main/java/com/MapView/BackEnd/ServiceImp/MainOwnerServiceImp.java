@@ -3,7 +3,7 @@ package com.MapView.BackEnd.ServiceImp;
 import com.MapView.BackEnd.Service.MainOwnerService;
 import com.MapView.BackEnd.entities.CostCenter;
 
-public class MainOwnerImp implements MainOwnerService {
+public class MainOwnerServiceImp implements MainOwnerService {
     @Override
     public void getMainOwner(Long id_owner) {
 

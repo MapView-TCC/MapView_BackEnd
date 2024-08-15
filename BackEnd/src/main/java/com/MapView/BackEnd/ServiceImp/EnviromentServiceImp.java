@@ -3,7 +3,7 @@ package com.MapView.BackEnd.ServiceImp;
 import com.MapView.BackEnd.Service.EnviromentService;
 import com.MapView.BackEnd.entities.Raspberry;
 
-public class EnviromentImp implements EnviromentService {
+public class EnviromentServiceImp implements EnviromentService {
     @Override
     public void getEnvioment(Long id_environment) {
 

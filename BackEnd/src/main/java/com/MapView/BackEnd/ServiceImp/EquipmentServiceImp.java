@@ -6,7 +6,7 @@ import com.MapView.BackEnd.entities.MainOwner;
 
 import java.time.LocalDate;
 
-public class EquipmentImp implements EquipmentService {
+public class EquipmentServiceImp implements EquipmentService {
     @Override
     public void getEquipment(Long id_equipment) {
 
