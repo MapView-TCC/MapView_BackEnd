@@ -1,7 +1,17 @@
 package com.MapView.BackEnd.Repository;
 
-import com.MapView.BackEnd.entities.User;
+import com.MapView.BackEnd.Dtos.User.UserCreateDTO;
+import com.MapView.BackEnd.entities.Users;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-public interface UserRepository extends JpaRepository<User,Long> {
+import java.util.List;
+
+@Repository
+public interface UserRepository extends JpaRepository<Users,Long> {
+    List<Users>findByOperativeTrue();
+    void save(UserCreateDTO data);
+
+
 }
+
