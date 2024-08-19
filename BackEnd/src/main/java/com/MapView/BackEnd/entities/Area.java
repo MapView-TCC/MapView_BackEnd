@@ -16,5 +16,6 @@ public class Area {
     private Long id_area;
     private String area_code;
     private String area_name;
+
     private boolean operative;
 }

@@ -2,7 +2,9 @@ package com.MapView.BackEnd.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 
 @Table(name = "access_history")
@@ -18,7 +20,11 @@ public class AccessHistory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id_history;
-    private User id_user;
-    private LocalDateTime login_datetime;
+    //cascade = CascadeType.ALL
+    @OneToOne()
+    @JoinColumn(name = "id_user")
+    private Users id_user;
+    @CreationTimestamp
+    private Instant login_datetime;
     private LocalDateTime logout_datetime;
 }

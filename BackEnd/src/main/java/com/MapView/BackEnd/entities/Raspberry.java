@@ -15,7 +15,11 @@ public class Raspberry {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id_raspberry;
     private String raspberry_name;
+    @OneToOne
+    @JoinColumn(name = "id_building")
     private Building id_building;
+    @OneToOne
+    @JoinColumn(name = "id_area")
     private Area id_area;
     private boolean operative;
 }
