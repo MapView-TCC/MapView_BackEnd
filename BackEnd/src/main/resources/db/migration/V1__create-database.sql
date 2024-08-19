@@ -1,7 +1,8 @@
 -- Creating the User table
-CREATE TABLE IF NOT EXISTS user (
+CREATE TABLE IF NOT EXISTS Users (
     id_user INT AUTO_INCREMENT PRIMARY KEY,
-    role ENUM('ADMIN', 'SUPPORT', 'USER') NOT NULL,
+    email VARCHAR(255) NOT NULL,
+    role ENUM('ADMIN', 'SUPPORT', 'USER'),
     operative TINYINT NOT NULL
 );
 
@@ -9,9 +10,9 @@ CREATE TABLE IF NOT EXISTS user (
 CREATE TABLE IF NOT EXISTS access_history (
     id_history INT PRIMARY KEY AUTO_INCREMENT,
     id_user INT NOT NULL,
-    login_datetime DATETIME,
+    login_datetime TIMESTAMP,
     logout_datetime DATETIME,
-    FOREIGN KEY(id_user) REFERENCES user(id_user)
+    FOREIGN KEY(id_user) REFERENCES Users(id_user)
 );
 
 -- Creating the Classes table
@@ -22,7 +23,7 @@ CREATE TABLE IF NOT EXISTS classes (
     id_user INT NOT NULL,
     creation_date DATE NOT NULL,
     operative TINYINT NOT NULL,
-    FOREIGN KEY(id_user) REFERENCES user(id_user)
+    FOREIGN KEY(id_user) REFERENCES Users(id_user)
 );
 
 -- Creating the Building table (é a tabela Predio)
@@ -113,7 +114,8 @@ CREATE TABLE IF NOT EXISTS tracking_history (
     id_tracking INT AUTO_INCREMENT PRIMARY KEY,
     id_equipment VARCHAR(255) NOT NULL,
     id_environment INT NOT NULL,
-    operative TINYINT NOT NULL,
+    action ENUM ('ENTER','OUT'),
+    dateTime TIMESTAMP,
     FOREIGN KEY(id_equipment) REFERENCES equipment(id_equipment),
     FOREIGN KEY(id_environment) REFERENCES environment(id_environment)
 );
@@ -127,7 +129,7 @@ CREATE TABLE IF NOT EXISTS responsible (
     id_user INT NOT NULL,
     operative TINYINT NOT NULL,
     FOREIGN KEY(id_classes) REFERENCES classes(id_classes),
-    FOREIGN KEY(id_user) REFERENCES user(id_user)
+    FOREIGN KEY(id_user) REFERENCES Users(id_user)
 );
 
 -- Creating the auxiliary Equipment_Responsible table
@@ -152,7 +154,7 @@ CREATE TABLE IF NOT EXISTS user_log (
     description VARCHAR(255),
     datetime TIMESTAMP,
     action ENUM('CREATE', 'UPDATE', 'READ', 'DELETE'),
-    FOREIGN KEY(id_user) REFERENCES user(id_user)
+    FOREIGN KEY(id_user) REFERENCES Users(id_user)
 );
 
 

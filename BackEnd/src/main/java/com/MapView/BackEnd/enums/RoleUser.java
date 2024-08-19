@@ -1,7 +1,7 @@
 package com.MapView.BackEnd.enums;
 
 public enum RoleUser {
-    USER,
+    ADMIN,
     SUPPORT,
-    ADMIN
+    USER
 }
