@@ -2,6 +2,9 @@ package com.MapView.BackEnd.ServiceImp;
 
 import com.MapView.BackEnd.Service.EnviromentService;
 import com.MapView.BackEnd.entities.Raspberry;
+import org.springframework.stereotype.Service;
+
+@Service
 
 public class EnviromentServiceImp implements EnviromentService {
     @Override

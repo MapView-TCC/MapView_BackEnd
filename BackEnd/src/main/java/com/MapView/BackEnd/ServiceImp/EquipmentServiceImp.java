@@ -3,9 +3,10 @@ package com.MapView.BackEnd.ServiceImp;
 import com.MapView.BackEnd.Service.EquipmentService;
 import com.MapView.BackEnd.entities.Location;
 import com.MapView.BackEnd.entities.MainOwner;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-
+@Service
 public class EquipmentServiceImp implements EquipmentService {
     @Override
     public void getEquipment(Long id_equipment) {

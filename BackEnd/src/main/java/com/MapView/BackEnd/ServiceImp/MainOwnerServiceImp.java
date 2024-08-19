@@ -2,7 +2,9 @@ package com.MapView.BackEnd.ServiceImp;
 
 import com.MapView.BackEnd.Service.MainOwnerService;
 import com.MapView.BackEnd.entities.CostCenter;
+import org.springframework.stereotype.Service;
 
+@Service
 public class MainOwnerServiceImp implements MainOwnerService {
     @Override
     public void getMainOwner(Long id_owner) {

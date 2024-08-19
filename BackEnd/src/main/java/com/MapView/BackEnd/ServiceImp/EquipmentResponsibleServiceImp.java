@@ -3,9 +3,10 @@ package com.MapView.BackEnd.ServiceImp;
 import com.MapView.BackEnd.Service.EquipmentResponsibleService;
 import com.MapView.BackEnd.entities.Equipment;
 import com.MapView.BackEnd.entities.Responsible;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-
+@Service
 public class EquipmentResponsibleServiceImp implements EquipmentResponsibleService {
 
     @Override
