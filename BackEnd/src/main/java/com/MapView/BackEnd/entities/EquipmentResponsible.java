@@ -18,7 +18,11 @@ public class EquipmentResponsible {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id_equip_resp;
+    @OneToOne
+    @JoinColumn(name = "id_equipment")
     private Equipment id_equipment;
+    @OneToOne
+    @JoinColumn(name = "id_responsible")
     private Responsible id_responsible;
     private LocalDate start_usage;
     private LocalDate end_usage;

@@ -19,7 +19,11 @@ public class Responsible {
 
     private String responsible_name;
     private String edv;
+    @OneToOne
+    @JoinColumn(name = "id_classes")
     private Classes id_classes;
-    private User id_user;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "id_user")
+    private Users id_user;
     private boolean operative;
 }

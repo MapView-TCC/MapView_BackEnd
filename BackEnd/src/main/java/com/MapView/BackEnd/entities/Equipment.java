@@ -1,8 +1,6 @@
 package com.MapView.BackEnd.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
 
 @Table(name = "equipment")
@@ -22,7 +20,11 @@ public class Equipment {
     private String validity; // sera?
     private String admin_rights;
     private String observation;
+    @OneToOne
+    @JoinColumn(name = "id_location")
     private Location id_location;
+    @OneToOne
+    @JoinColumn(name = "id_owner")
     private MainOwner id_owner;
     private boolean operative;
 }

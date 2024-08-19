@@ -15,6 +15,8 @@ public class MainOwner {
     @Id
     private String id_owner;
     private String owner_name;
+    @OneToOne
+    @JoinColumn(name = "id_cost_center")
     private CostCenter id_cost_center;
     private boolean operative;
 

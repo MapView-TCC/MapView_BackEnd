@@ -3,6 +3,7 @@ package com.MapView.BackEnd.entities;
 import com.MapView.BackEnd.enums.EnumClasses;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.engine.internal.Cascade;
 
 import java.time.LocalDateTime;
 
@@ -19,9 +20,12 @@ public class Classes {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id_classes;
+    @Enumerated
     private EnumClasses enumClasses;
     private String classes;
-    private User id_user;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "id_user")
+    private Users id_user;
     private LocalDateTime creation_date;
     private boolean operative;
 

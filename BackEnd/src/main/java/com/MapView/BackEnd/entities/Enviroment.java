@@ -16,6 +16,8 @@ public class Enviroment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id_environment;
     private String environment_name;
+    @OneToOne
+    @JoinColumn(name = "id_raspberry")
     private Raspberry id_raspberry;
     private boolean operative;
 }
