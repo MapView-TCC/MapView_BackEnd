@@ -1,6 +1,4 @@
-package com.MapView.BackEnd.Dtos.User;
-
-import com.MapView.BackEnd.enums.RoleUser;
+package com.MapView.BackEnd.dtos.User;
 
 public record UserCreateDTO(String email) {
 

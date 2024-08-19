@@ -1,10 +1,10 @@
-package com.MapView.BackEnd.Dtos.User;
+package com.MapView.BackEnd.dtos.User;
 
 import com.MapView.BackEnd.entities.Users;
 import com.MapView.BackEnd.enums.RoleUser;
 
-public record UserDetailsDto(String email, RoleUser roleUser) {
-    public UserDetailsDto(Users user){
-        this(user.getEmail(),user.getRole());
+public record UserDetailsDTO(Long id,String email, RoleUser roleUser) {
+    public UserDetailsDTO(Users user){
+        this(user.getId_user(),user.getEmail(),user.getRole());
     }
 }
