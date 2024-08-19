@@ -33,6 +33,13 @@ export default defineConfig({
         rewrite: (path) => path.replace(/^\/gateway/, ''),
       },
 
+      '/user': {
+        target: 'http://localhost:8000',
+        changeOrigin: true,
+        secure: false,
+        rewrite: (path) => path.replace(/^\/gateway/, ''),
+      },
+
       // Proxy para a rota de callback
 
       '/callback': {

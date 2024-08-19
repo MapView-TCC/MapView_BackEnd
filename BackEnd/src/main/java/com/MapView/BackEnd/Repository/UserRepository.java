@@ -1,6 +1,6 @@
 package com.MapView.BackEnd.Repository;
 
-import com.MapView.BackEnd.Dtos.User.UserCreateDTO;
+import com.MapView.BackEnd.dtos.User.UserCreateDTO;
 import com.MapView.BackEnd.entities.Users;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
