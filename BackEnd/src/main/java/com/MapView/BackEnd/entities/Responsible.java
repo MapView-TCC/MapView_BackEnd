@@ -2,6 +2,7 @@ package com.MapView.BackEnd.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.apache.catalina.User;
 
 @Table(name = "responsible")
 @Entity(name = "responsible")
@@ -26,4 +27,22 @@ public class Responsible {
     @JoinColumn(name = "id_user")
     private Users id_user;
     private boolean operative;
+
+
+
+    public  Responsible(String responsible_name, String edv,Classes classes,Users users){
+        this.responsible_name = responsible_name;
+        this.edv = edv;
+        this.id_classes = classes;
+        this.id_user = users;
+        this.operative = true;
+
+    }
+
+    public void activeResposible(){
+        this.setOperative(true);
+    }
+    public void inactivateEnviroment(){
+        this.setOperative(false);
+    }
 }

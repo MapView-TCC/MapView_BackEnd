@@ -18,7 +18,7 @@ public class Location {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id_location;
-    private Post id_post;
-    private Enviroment id_enviroment;
+    private Long id_post;
+    private Long id_enviroment;
 
 }
