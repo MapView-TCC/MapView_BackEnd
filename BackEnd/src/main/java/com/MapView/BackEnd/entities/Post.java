@@ -1,7 +1,10 @@
 package com.MapView.BackEnd.entities;
 
+import com.MapView.BackEnd.dtos.Post.PostCreateDTO;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.security.PublicKey;
 
 @Table(name = "post")
 @Entity(name = "post")
@@ -17,4 +20,19 @@ public class Post {
     private Long id_post;
     private String post;
     private boolean operative;
+
+
+
+    public Post(PostCreateDTO data){
+        this.post = data.post();
+        this.operative = true;
+
+    }
+
+
+
+    public boolean post_status_check(){
+        return this.operative;
+    }
+
 }
