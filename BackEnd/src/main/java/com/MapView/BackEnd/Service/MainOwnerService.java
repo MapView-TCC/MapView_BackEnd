@@ -1,9 +1,7 @@
 package com.MapView.BackEnd.Service;
 
-import com.MapView.BackEnd.Dtos.MainOwner.MainOwnerDTO;
+import com.MapView.BackEnd.dtos.MainOwner.MainOwnerDTO;
 import com.MapView.BackEnd.entities.CostCenter;
-import com.MapView.BackEnd.entities.Enviroment;
-import com.MapView.BackEnd.entities.Post;
 
 public interface MainOwnerService {
     void getMainOwner(Long id_owner);

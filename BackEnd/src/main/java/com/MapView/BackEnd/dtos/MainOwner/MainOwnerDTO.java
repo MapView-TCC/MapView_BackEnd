@@ -1,4 +1,4 @@
-package com.MapView.BackEnd.Dtos.MainOwner;
+package com.MapView.BackEnd.dtos.MainOwner;
 
 public record MainOwnerDTO(
         String id_owner,

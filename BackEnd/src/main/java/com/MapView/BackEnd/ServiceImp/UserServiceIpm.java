@@ -33,7 +33,7 @@ public class UserServiceIpm implements UserService {
     }
 
     @Override
-    public List<UserDetailsDTO> getAllUser(String UserService) {
+    public List<UserDetailsDTO> getAllUser() {
         return this.userRepository.findByOperativeTrue().stream().map(UserDetailsDTO::new).toList();
     }
 
@@ -45,9 +45,15 @@ public class UserServiceIpm implements UserService {
         return new UserDetailsDTO(user);
     }
 
+
+
     @Override
-    public void setPrivilege(Users users, RoleUser roleUser) {
-        users.setRole(roleUser);
+    public void setPrivilege(Long user_id, RoleUser roleUser) {
+        var user = userRepository.findById(user_id).orElseThrow(()-> new NotFoundException("User Id Not Found"));
+        if(user.status_check()){
+            user.setRole(roleUser);
+            userRepository.save(user);
+        }
     }
 
 

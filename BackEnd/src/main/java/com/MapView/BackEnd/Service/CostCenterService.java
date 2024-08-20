@@ -1,7 +1,7 @@
 package com.MapView.BackEnd.Service;
 
 
-import com.MapView.BackEnd.Dtos.CostCenter.CostCenterDTO;
+import com.MapView.BackEnd.dtos.CostCenter.CostCenterDTO;
 
 public interface CostCenterService {
 

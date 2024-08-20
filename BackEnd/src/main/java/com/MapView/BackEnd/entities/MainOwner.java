@@ -1,6 +1,6 @@
 package com.MapView.BackEnd.entities;
 
-import com.MapView.BackEnd.Dtos.MainOwner.MainOwnerDTO;
+import com.MapView.BackEnd.dtos.MainOwner.MainOwnerDTO;
 import jakarta.persistence.*;
 import lombok.*;
 

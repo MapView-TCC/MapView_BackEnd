@@ -1,6 +1,6 @@
 package com.MapView.BackEnd.entities;
 
-import com.MapView.BackEnd.Dtos.CostCenter.CostCenterDTO;
+import com.MapView.BackEnd.dtos.CostCenter.CostCenterDTO;
 import jakarta.persistence.*;
 import lombok.*;
 

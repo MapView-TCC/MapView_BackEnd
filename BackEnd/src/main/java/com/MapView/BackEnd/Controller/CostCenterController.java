@@ -1,6 +1,6 @@
 package com.MapView.BackEnd.Controller;
 
-import com.MapView.BackEnd.Dtos.CostCenter.CostCenterDTO;
+import com.MapView.BackEnd.dtos.CostCenter.CostCenterDTO;
 import com.MapView.BackEnd.ServiceImp.CostCenterServiceImp;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;

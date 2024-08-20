@@ -1,10 +1,9 @@
 package com.MapView.BackEnd.Controller;
 
-import com.MapView.BackEnd.Dtos.MainOwner.MainOwnerDTO;
+import com.MapView.BackEnd.dtos.MainOwner.MainOwnerDTO;
 import com.MapView.BackEnd.ServiceImp.MainOwnerServiceImp;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
-import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

@@ -1,7 +1,6 @@
 package com.MapView.BackEnd.ServiceImp;
 
-import com.MapView.BackEnd.Dtos.CostCenter.CostCenterDTO;
-import com.MapView.BackEnd.Dtos.MainOwner.MainOwnerDTO;
+import com.MapView.BackEnd.dtos.MainOwner.MainOwnerDTO;
 import com.MapView.BackEnd.Repository.CostCenterRepository;
 import com.MapView.BackEnd.Repository.MainOwnerRepository;
 import com.MapView.BackEnd.Service.MainOwnerService;
