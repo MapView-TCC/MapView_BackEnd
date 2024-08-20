@@ -5,7 +5,9 @@ import com.MapView.BackEnd.Repository.CostCenterRepository;
 import com.MapView.BackEnd.Service.CostCenterService;
 import com.MapView.BackEnd.entities.CostCenter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+@Service
 public class CostCenterServiceImp implements CostCenterService {
 
     @Autowired
