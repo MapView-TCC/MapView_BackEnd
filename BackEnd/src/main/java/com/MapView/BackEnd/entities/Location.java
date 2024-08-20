@@ -18,12 +18,7 @@ public class Location {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id_location;
-    @OneToMany
-    @JoinColumn(name = "id_post")
-    private List<Post> id_post;
-
-    @OneToMany
-    @JoinColumn(name = "id_enviroment")
-    private List<Enviroment> id_enviroment;
+    private Post id_post;
+    private Enviroment id_enviroment;
 
 }
