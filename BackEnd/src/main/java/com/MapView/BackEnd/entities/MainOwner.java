@@ -1,5 +1,6 @@
 package com.MapView.BackEnd.entities;
 
+import com.MapView.BackEnd.Dtos.MainOwner.MainOwnerDTO;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -21,4 +22,9 @@ public class MainOwner {
     private boolean operative;
 
 
+    public MainOwner(MainOwnerDTO data, CostCenter id_cost_center) {
+        this.id_owner = data.id_owner();
+        this.owner_name = data.owner_name();
+        this.id_cost_center = id_cost_center;
+    }
 }

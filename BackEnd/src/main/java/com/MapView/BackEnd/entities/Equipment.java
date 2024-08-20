@@ -1,5 +1,6 @@
 package com.MapView.BackEnd.entities;
 
+import com.MapView.BackEnd.Dtos.Equipment.CadastroDTO;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -17,7 +18,7 @@ public class Equipment {
     private String rfid;
     private String type;
     private String model;
-    private String validity; // sera?
+    private String validity;
     private String admin_rights;
     private String observation;
     @OneToOne
@@ -27,4 +28,16 @@ public class Equipment {
     @JoinColumn(name = "id_owner")
     private MainOwner id_owner;
     private boolean operative;
+
+    public Equipment(CadastroDTO data,Location location,MainOwner id_owner) {
+        this.id_equipment = data.id_equipment();
+        this.rfid = data.rfid();
+        this.type = data.type();
+        this.model = data.model();
+        this.admin_rights = data.admin_rights();
+        this.observation = data.observation();
+        this.id_location = location;
+        this.id_owner = id_owner;
+    }
+
 }

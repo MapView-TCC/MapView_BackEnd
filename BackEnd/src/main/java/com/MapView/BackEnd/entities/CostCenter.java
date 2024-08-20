@@ -1,5 +1,6 @@
 package com.MapView.BackEnd.entities;
 
+import com.MapView.BackEnd.Dtos.CostCenter.CostCenterDTO;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -20,5 +21,12 @@ public class CostCenter {
     private String cost_center_name;
     private boolean operative;
 
+    public CostCenter(String cost_center_name, Long id_cost_center) {
+        this.cost_center_name = cost_center_name;
+        this.id_cost_center = id_cost_center;
+    }
+
+    public CostCenter(CostCenterDTO dados) {
+    }
 }
 
