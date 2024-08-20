@@ -1,10 +1,10 @@
 package com.MapView.BackEnd.ServiceImp;
 
-import com.MapView.BackEnd.Dtos.Equipment.CadastroDTO;
 import com.MapView.BackEnd.Repository.EquipmentRepository;
 import com.MapView.BackEnd.Repository.LocationRepository;
 import com.MapView.BackEnd.Repository.MainOwnerRepository;
 import com.MapView.BackEnd.Service.EquipmentService;
+import com.MapView.BackEnd.dtos.Equipment.EquipmentCreateDTO;
 import com.MapView.BackEnd.entities.Equipment;
 import com.MapView.BackEnd.entities.Location;
 import com.MapView.BackEnd.entities.MainOwner;
@@ -36,7 +36,7 @@ public class EquipmentServiceImp implements EquipmentService {
     }
 
     @Override
-    public void createEquipment(CadastroDTO dados) {
+    public void createEquipment(EquipmentCreateDTO dados) {
         Location location = locationRepository.findById(dados.id_location())
                 .orElseThrow(() -> new RuntimeException("Não encontrado!"));
 

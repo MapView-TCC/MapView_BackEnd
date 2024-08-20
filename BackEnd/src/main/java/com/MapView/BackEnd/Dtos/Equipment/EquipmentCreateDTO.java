@@ -1,9 +1,6 @@
-package com.MapView.BackEnd.Dtos.Equipment;
+package com.MapView.BackEnd.dtos.Equipment;
 
-import com.MapView.BackEnd.entities.Location;
-import com.MapView.BackEnd.entities.MainOwner;
-
-public record CadastroDTO(
+public record EquipmentCreateDTO(
         String id_equipment,
         String rfid,
         String type,

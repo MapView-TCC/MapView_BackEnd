@@ -1,6 +1,6 @@
 package com.MapView.BackEnd.entities;
 
-import com.MapView.BackEnd.Dtos.Equipment.CadastroDTO;
+import com.MapView.BackEnd.dtos.Equipment.EquipmentCreateDTO;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -29,7 +29,7 @@ public class Equipment {
     private MainOwner id_owner;
     private boolean operative;
 
-    public Equipment(CadastroDTO data,Location location,MainOwner id_owner) {
+    public Equipment(EquipmentCreateDTO data, Location location, MainOwner id_owner) {
         this.id_equipment = data.id_equipment();
         this.rfid = data.rfid();
         this.type = data.type();
