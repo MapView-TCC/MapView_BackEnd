@@ -5,6 +5,7 @@ import com.MapView.BackEnd.dtos.MainOwner.MainOwnerDetailsDTO;
 import com.MapView.BackEnd.Repository.CostCenterRepository;
 import com.MapView.BackEnd.Repository.MainOwnerRepository;
 import com.MapView.BackEnd.Service.MainOwnerService;
+import com.MapView.BackEnd.dtos.MainOwner.MainOwnerUpdateDTO;
 import com.MapView.BackEnd.entities.CostCenter;
 import com.MapView.BackEnd.entities.MainOwner;
 import com.MapView.BackEnd.infra.NotFoundException;
@@ -55,8 +56,20 @@ public class MainOwnerServiceImp implements MainOwnerService {
     }
 
     @Override
-    public void updateMainOwner(String owner_name, CostCenter id_cost_center) {
+    public MainOwnerDetailsDTO updateMainOwner(String id_owner, MainOwnerUpdateDTO dados) {
+        var mainowner = mainOwnerRepository.findById(id_owner).orElseThrow(() -> new NotFoundException("Main Owner id not found"));
 
+        if (dados.owner_name() != null){
+            mainowner.setOwner_name(dados.owner_name());
+        }
+
+        if (dados.id_cost_center() != null){
+            var costcenter = costCenterRepository.findById(dados.id_cost_center()).orElseThrow(() -> new NotFoundException("Cost Center id not found"));
+            mainowner.setId_cost_center(costcenter);
+        }
+
+        mainOwnerRepository.save(mainowner);
+        return new MainOwnerDetailsDTO(mainowner);
     }
 
     @Override

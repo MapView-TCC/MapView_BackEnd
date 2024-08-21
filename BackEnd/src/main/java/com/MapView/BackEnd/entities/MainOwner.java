@@ -11,7 +11,6 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @EqualsAndHashCode(of = "id_owner")
-
 public class MainOwner {
     @Id
     private String id_owner;

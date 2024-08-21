@@ -13,11 +13,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.List;
+
 @Service
 public class EquipmentServiceImp implements EquipmentService {
 
     @Autowired
-    private EquipmentRepository repository ;
+    private EquipmentRepository equipmentRepository ;
 
     @Autowired
     private LocationRepository locationRepository;
@@ -32,8 +34,8 @@ public class EquipmentServiceImp implements EquipmentService {
     }
 
     @Override
-    public void getAllEquipment() {
-
+    public List<EquipmentDetailsDTO> getAllEquipment() {
+        return equipmentRepository.findAllByOperativeTrue().stream().map(EquipmentDetailsDTO::new).toList();
     }
 
     @Override
@@ -49,7 +51,7 @@ public class EquipmentServiceImp implements EquipmentService {
 
         Equipment equipment = new Equipment(dados,location,mainOwner);
 
-        repository.save(equipment);
+        equipmentRepository.save(equipment);
 
         return new EquipmentDetailsDTO(equipment);
     }
@@ -61,7 +63,7 @@ public class EquipmentServiceImp implements EquipmentService {
 
     @Override
     public void activateEquipment(String id_equipment) {
-        var equipmentClass = repository.findById(id_equipment);
+        var equipmentClass = equipmentRepository.findById(id_equipment);
         if (equipmentClass.isPresent()){
             var equipment = equipmentClass.get();
             equipment.setOperative(true);
@@ -70,7 +72,7 @@ public class EquipmentServiceImp implements EquipmentService {
 
     @Override
     public void inactivateEquipment(String id_equipment) {
-        var equipmentClass = repository.findById(id_equipment);
+        var equipmentClass = equipmentRepository.findById(id_equipment);
         if (equipmentClass.isPresent()){
             var equipment = equipmentClass.get();
             equipment.setOperative(false);

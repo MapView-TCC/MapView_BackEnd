@@ -6,11 +6,12 @@ import com.MapView.BackEnd.entities.Location;
 import com.MapView.BackEnd.entities.MainOwner;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public interface EquipmentService {
 
     void getEquipment(Long id_equipment);
-    void getAllEquipment();
+    List<EquipmentDetailsDTO> getAllEquipment();
     EquipmentDetailsDTO createEquipment(EquipmentCreateDTO dados);
     void updateEquipment(String rfid, String type, String model, LocalDate validity, String admin_rights, String observation, Location id_location, MainOwner id_owner);
     void activateEquipment(String id_equipment); // put

@@ -4,10 +4,12 @@ import com.MapView.BackEnd.dtos.CostCenter.CostCenterDetailsDTO;
 import com.MapView.BackEnd.dtos.MainOwner.MainOwnerCreateDTO;
 import com.MapView.BackEnd.dtos.MainOwner.MainOwnerDetailsDTO;
 import com.MapView.BackEnd.ServiceImp.MainOwnerServiceImp;
+import com.MapView.BackEnd.dtos.MainOwner.MainOwnerUpdateDTO;
 import com.MapView.BackEnd.entities.MainOwner;
 import com.MapView.BackEnd.infra.NotFoundException;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
+import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -47,6 +49,12 @@ public class MainOwnerController {
         } catch (NotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
+    }
+
+    @PutMapping("{id}")
+    public ResponseEntity<MainOwnerDetailsDTO> updateMainOwner(@PathVariable String id, @RequestBody MainOwnerUpdateDTO dados){
+        MainOwnerDetailsDTO updateMainOwner = mainOwnerServiceImp.updateMainOwner(id, dados);
+        return ResponseEntity.ok(updateMainOwner);
     }
 
     @PutMapping("/inactivate/{id}")

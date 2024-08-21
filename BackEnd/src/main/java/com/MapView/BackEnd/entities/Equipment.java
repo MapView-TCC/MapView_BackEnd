@@ -42,4 +42,7 @@ public class Equipment {
         this.operative = true;
     }
 
+    public boolean status_check(){
+        return this.operative;
+    }
 }

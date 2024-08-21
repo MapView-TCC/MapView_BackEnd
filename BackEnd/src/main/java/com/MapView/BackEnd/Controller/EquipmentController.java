@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 import com.MapView.BackEnd.dtos.Equipment.EquipmentCreateDTO;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/v1/equipment")
 public class EquipmentController {
@@ -28,6 +30,12 @@ public class EquipmentController {
         return ResponseEntity.created(uri).body(new EquipmentDetailsDTO(equipment.id_equipment(), equipment.rfid(), equipment.type(),
                 equipment.model(), equipment.validity(), equipment.admin_rights(), equipment.observation(), equipment.id_location(),
                 equipment.id_owner(), equipment.operative()));
+    }
+
+    @GetMapping
+    public ResponseEntity<List<EquipmentDetailsDTO>> getAllEquipment(){
+        var list = equipmentServiceImp.getAllEquipment();
+        return ResponseEntity.ok(list);
     }
 
     @PutMapping("/inactivate/{id}")
