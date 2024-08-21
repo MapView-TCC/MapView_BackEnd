@@ -1,6 +1,6 @@
 package com.MapView.BackEnd.enums;
 
-public enum EnumClasses {
+public enum EnumCourse {
     ADMINISTRACAO,
     DIGITAL_SOLUTIONS,
     MANUFATURA_DIGITAL,
