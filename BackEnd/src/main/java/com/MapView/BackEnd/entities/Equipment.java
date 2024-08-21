@@ -18,8 +18,8 @@ public class Equipment {
     private String rfid;
     private String type;
     private String model;
-    private String validity;
-    private String admin_rights;
+    private String validity; // periodo de utilização, quando tem que ser devolvido
+    private String admin_rights; // codigo que eles tem para fazer as requisições
     private String observation;
     @OneToOne
     @JoinColumn(name = "id_location")
@@ -34,10 +34,12 @@ public class Equipment {
         this.rfid = data.rfid();
         this.type = data.type();
         this.model = data.model();
+        this.validity = data.validity();
         this.admin_rights = data.admin_rights();
         this.observation = data.observation();
         this.id_location = location;
         this.id_owner = id_owner;
+        this.operative = true;
     }
 
 }

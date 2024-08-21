@@ -26,5 +26,9 @@ public class CostCenter {
         this.cost_center_name = dados.cost_center_name();
         this.operative = true;
     }
+
+    public boolean status_check(){
+        return this.operative;
+    }
 }
 

@@ -7,10 +7,7 @@ import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 import com.MapView.BackEnd.dtos.Equipment.EquipmentCreateDTO;
 
@@ -23,11 +20,29 @@ public class EquipmentController {
 
     @PostMapping
     @Transactional
-    public ResponseEntity<EquipmentCreateDTO> cadastrar(@RequestBody @Valid EquipmentCreateDTO dados, UriComponentsBuilder uriBuilder){
-        equipmentServiceImp.createEquipment(dados);
+    public ResponseEntity<EquipmentDetailsDTO> cadastrar(@RequestBody @Valid EquipmentCreateDTO dados, UriComponentsBuilder uriBuilder){
+        var equipment = equipmentServiceImp.createEquipment(dados);
 
         // boa pratica, para retornar o caminho
-        var uri = uriBuilder.path("/api/v1/equipment/{id}").buildAndExpand(dados.id_equipment()).toUri();
-        return ResponseEntity.created(uri).body(new EquipmentCreateDTO(dados.id_equipment(), dados.rfid(), dados.type(), dados.model(), dados.admin_rights(), dados.observation(), dados.id_location(), dados.id_owner()));
+        var uri = uriBuilder.path("/api/v1/equipment/{id}").buildAndExpand(equipment.id_equipment()).toUri();
+        return ResponseEntity.created(uri).body(new EquipmentDetailsDTO(equipment.id_equipment(), equipment.rfid(), equipment.type(),
+                equipment.model(), equipment.validity(), equipment.admin_rights(), equipment.observation(), equipment.id_location(),
+                equipment.id_owner(), equipment.operative()));
     }
+
+    @PutMapping("/inactivate/{id}")
+    @Transactional
+    public ResponseEntity<Void> inactivate(@PathVariable String id){
+        equipmentServiceImp.inactivateEquipment(id);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/active/{id}")
+    @Transactional
+    public ResponseEntity<Void> active(@PathVariable String id){
+        equipmentServiceImp.activateEquipment(id);
+        return ResponseEntity.ok().build();
+    }
+
+
 }
