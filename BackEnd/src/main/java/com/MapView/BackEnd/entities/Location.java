@@ -21,4 +21,5 @@ public class Location {
     private Long id_post;
     private Long id_enviroment;
 
+
 }
