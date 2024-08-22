@@ -1,6 +1,7 @@
 package com.MapView.BackEnd.entities;
 
-import com.MapView.BackEnd.dtos.MainOwner.MainOwnerDTO;
+import com.MapView.BackEnd.dtos.MainOwner.MainOwnerCreateDTO;
+import com.MapView.BackEnd.dtos.MainOwner.MainOwnerDetailsDTO;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -8,10 +9,8 @@ import lombok.*;
 @Entity(name = "main_owner")
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(of = "id_owner")
-
 public class MainOwner {
     @Id
     private String id_owner;
@@ -22,9 +21,14 @@ public class MainOwner {
     private boolean operative;
 
 
-    public MainOwner(MainOwnerDTO data, CostCenter id_cost_center) {
-        this.id_owner = data.id_owner();
-        this.owner_name = data.owner_name();
-        this.id_cost_center = id_cost_center;
+    public MainOwner(MainOwnerCreateDTO dados, CostCenter costCenter) {
+        this.id_owner = dados.id_owner();
+        this.owner_name =  dados.owner_name();
+        this.id_cost_center = costCenter;
+        this.operative = true;
+    }
+
+    public boolean status_check(){
+        return this.operative;
     }
 }

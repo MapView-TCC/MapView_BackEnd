@@ -5,6 +5,7 @@ public record EquipmentCreateDTO(
         String rfid,
         String type,
         String model,
+        String validity,
         String admin_rights,
         String observation,
         Long id_location,

@@ -1,13 +1,17 @@
 package com.MapView.BackEnd.Service;
 
-import com.MapView.BackEnd.dtos.MainOwner.MainOwnerDTO;
+import com.MapView.BackEnd.dtos.MainOwner.MainOwnerCreateDTO;
+import com.MapView.BackEnd.dtos.MainOwner.MainOwnerDetailsDTO;
+import com.MapView.BackEnd.dtos.MainOwner.MainOwnerUpdateDTO;
 import com.MapView.BackEnd.entities.CostCenter;
 
+import java.util.List;
+
 public interface MainOwnerService {
-    void getMainOwner(Long id_owner);
-    void getAllMainOwner();
-    void createMainOwner(MainOwnerDTO mainOwnerDTO);
-    void updateMainOwner(String owner_name, CostCenter id_cost_center);
-    void activateMainOwner(Long id_owner); // put
-    void inactivateMainOwner(Long id_owner); // put
+    MainOwnerDetailsDTO getMainOwner(String id_owner);
+    List<MainOwnerDetailsDTO> getAllMainOwner();
+    MainOwnerDetailsDTO createMainOwner(MainOwnerCreateDTO mainOwnerCreateDTO);
+    MainOwnerDetailsDTO updateMainOwner(String owner_name, MainOwnerUpdateDTO id_cost_center);
+    void activateMainOwner(String id_owner); // put
+    void inactivateMainOwner(String id_owner); // put
 }

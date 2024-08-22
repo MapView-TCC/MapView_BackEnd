@@ -5,6 +5,7 @@ import com.MapView.BackEnd.Repository.LocationRepository;
 import com.MapView.BackEnd.Repository.MainOwnerRepository;
 import com.MapView.BackEnd.Service.EquipmentService;
 import com.MapView.BackEnd.dtos.Equipment.EquipmentCreateDTO;
+import com.MapView.BackEnd.dtos.Equipment.EquipmentDetailsDTO;
 import com.MapView.BackEnd.entities.Equipment;
 import com.MapView.BackEnd.entities.Location;
 import com.MapView.BackEnd.entities.MainOwner;
@@ -12,11 +13,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.List;
+
 @Service
 public class EquipmentServiceImp implements EquipmentService {
 
     @Autowired
-    private EquipmentRepository repository ;
+    private EquipmentRepository equipmentRepository ;
 
     @Autowired
     private LocationRepository locationRepository;
@@ -31,27 +34,26 @@ public class EquipmentServiceImp implements EquipmentService {
     }
 
     @Override
-    public void getAllEquipment() {
-
+    public List<EquipmentDetailsDTO> getAllEquipment() {
+        return equipmentRepository.findAllByOperativeTrue().stream().map(EquipmentDetailsDTO::new).toList();
     }
 
     @Override
-    public void createEquipment(EquipmentCreateDTO dados) {
+    public EquipmentDetailsDTO createEquipment(EquipmentCreateDTO dados) {
+        // location
         Location location = locationRepository.findById(dados.id_location())
                 .orElseThrow(() -> new RuntimeException("Não encontrado!"));
-
-        locationRepository.save(location);
 
         // main owner
         MainOwner mainOwner = mainOwnerRepository.findById(String.valueOf(dados.id_owner()))
                 .orElseThrow(() -> new RuntimeException("Não encontrado"));
 
 
-        mainOwnerRepository.save(mainOwner);
-
         Equipment equipment = new Equipment(dados,location,mainOwner);
 
-        repository.save(equipment);
+        equipmentRepository.save(equipment);
+
+        return new EquipmentDetailsDTO(equipment);
     }
 
     @Override
@@ -60,12 +62,20 @@ public class EquipmentServiceImp implements EquipmentService {
     }
 
     @Override
-    public void activateEquipment(Long id_equipment) {
-
+    public void activateEquipment(String id_equipment) {
+        var equipmentClass = equipmentRepository.findById(id_equipment);
+        if (equipmentClass.isPresent()){
+            var equipment = equipmentClass.get();
+            equipment.setOperative(true);
+        }
     }
 
     @Override
-    public void inactivateEquipment(Long id_equipment) {
-
+    public void inactivateEquipment(String id_equipment) {
+        var equipmentClass = equipmentRepository.findById(id_equipment);
+        if (equipmentClass.isPresent()){
+            var equipment = equipmentClass.get();
+            equipment.setOperative(false);
+        }
     }
 }
