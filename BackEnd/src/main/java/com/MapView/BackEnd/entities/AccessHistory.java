@@ -27,4 +27,5 @@ public class AccessHistory {
     @CreationTimestamp
     private Instant login_datetime;
     private LocalDateTime logout_datetime;
+
 }
