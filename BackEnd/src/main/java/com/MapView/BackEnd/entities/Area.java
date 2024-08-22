@@ -30,4 +30,3 @@ public class Area {
         return this.operative;
     }
 }
-gi
