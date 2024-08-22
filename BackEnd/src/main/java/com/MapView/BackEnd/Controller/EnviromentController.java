@@ -36,7 +36,7 @@ public class EnviromentController {
     @Transactional
     public ResponseEntity<EnviromentDetailsDTO> updateEnviroment(@PathVariable("enviroment_id") Long enviroment_id, EnviromentUpdateDTO data){
         var enviroment = enviromentServiceImp.updateEnviroment(enviroment_id,data);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(enviroment);
     }
 
     @GetMapping("/{enviroment_id}")
