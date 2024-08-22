@@ -1,5 +1,6 @@
 package com.MapView.BackEnd.entities;
 
+import com.MapView.BackEnd.dtos.Area.AreaCreateDTO;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -18,4 +19,14 @@ public class Area {
     private String area_name;
 
     private boolean operative;
+
+    public Area(AreaCreateDTO dados) {
+        this.area_code = dados.area_code();
+        this.area_name = dados.area_name();
+        this.operative = true;
+    }
+
+    public boolean check_status(){
+        return this.operative;
+    }
 }
