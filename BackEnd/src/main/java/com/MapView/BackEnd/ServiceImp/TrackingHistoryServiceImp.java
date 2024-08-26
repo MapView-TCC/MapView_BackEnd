@@ -10,7 +10,6 @@ import com.MapView.BackEnd.entities.Enviroment;
 import com.MapView.BackEnd.entities.Equipment;
 import com.MapView.BackEnd.entities.TrackingHistory;
 import com.MapView.BackEnd.infra.NotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,14 +17,20 @@ import java.util.List;
 @Service
 public class TrackingHistoryServiceImp implements TrackingHistoryService {
 
-    @Autowired
-    private TrackingHistoryRepository trackingHistoryRepository;
 
-    @Autowired
-    private EnviromentRepository enviromentRepository;
+    private final TrackingHistoryRepository trackingHistoryRepository;
 
-    @Autowired
-    private EquipmentRepository equipmentRepository;
+
+    private final EnviromentRepository enviromentRepository;
+
+
+    private final EquipmentRepository equipmentRepository;
+
+    public TrackingHistoryServiceImp(TrackingHistoryRepository trackingHistoryRepository, EnviromentRepository enviromentRepository, EquipmentRepository equipmentRepository) {
+        this.trackingHistoryRepository = trackingHistoryRepository;
+        this.enviromentRepository = enviromentRepository;
+        this.equipmentRepository = equipmentRepository;
+    }
 
     @Override
     public TrackingHistoryDetailsDTO getTrackingHistory(Long id_tracking) {

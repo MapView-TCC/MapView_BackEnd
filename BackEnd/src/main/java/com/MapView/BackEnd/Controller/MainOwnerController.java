@@ -1,16 +1,12 @@
 package com.MapView.BackEnd.Controller;
 
-import com.MapView.BackEnd.dtos.CostCenter.CostCenterDetailsDTO;
 import com.MapView.BackEnd.dtos.MainOwner.MainOwnerCreateDTO;
 import com.MapView.BackEnd.dtos.MainOwner.MainOwnerDetailsDTO;
 import com.MapView.BackEnd.ServiceImp.MainOwnerServiceImp;
 import com.MapView.BackEnd.dtos.MainOwner.MainOwnerUpdateDTO;
-import com.MapView.BackEnd.entities.MainOwner;
 import com.MapView.BackEnd.infra.NotFoundException;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
-import org.apache.coyote.Response;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,8 +18,12 @@ import java.util.List;
 @RequestMapping("/api/v1/mainowner")
 public class MainOwnerController {
 
-    @Autowired
-    private MainOwnerServiceImp mainOwnerServiceImp;
+
+    private final MainOwnerServiceImp mainOwnerServiceImp;
+
+    public MainOwnerController(MainOwnerServiceImp mainOwnerServiceImp) {
+        this.mainOwnerServiceImp = mainOwnerServiceImp;
+    }
 
     @PostMapping
     @Transactional

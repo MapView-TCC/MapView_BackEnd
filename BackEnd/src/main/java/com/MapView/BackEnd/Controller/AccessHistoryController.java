@@ -4,7 +4,6 @@ import com.MapView.BackEnd.ServiceImp.AccessHistoryServiceImp;
 import com.MapView.BackEnd.dtos.AccessHistory.AccessHistoryCreateDTO;
 import com.MapView.BackEnd.dtos.AccessHistory.AccessHistoryDetailsDTO;
 import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -15,8 +14,12 @@ import java.util.List;
 @RequestMapping("/api/v1/accessHistory")
 public class AccessHistoryController {
 
-    @Autowired
-    private AccessHistoryServiceImp accessHistoryServiceImp;
+
+    private final AccessHistoryServiceImp accessHistoryServiceImp;
+
+    public AccessHistoryController(AccessHistoryServiceImp accessHistoryServiceImp) {
+        this.accessHistoryServiceImp = accessHistoryServiceImp;
+    }
 
     @PostMapping
     @Transactional

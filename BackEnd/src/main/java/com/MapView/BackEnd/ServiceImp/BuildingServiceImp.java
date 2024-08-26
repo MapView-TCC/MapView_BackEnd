@@ -7,7 +7,6 @@ import com.MapView.BackEnd.dtos.Building.BuildingDetailsDTO;
 import com.MapView.BackEnd.dtos.Building.BuildingUpdateDTO;
 import com.MapView.BackEnd.entities.Building;
 import com.MapView.BackEnd.infra.NotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,8 +14,12 @@ import java.util.List;
 @Service
 public class BuildingServiceImp implements BuildingService {
 
-    @Autowired
-    private BuildingRepository buildingRepository;
+
+    private final BuildingRepository buildingRepository;
+
+    public BuildingServiceImp(BuildingRepository buildingRepository) {
+        this.buildingRepository = buildingRepository;
+    }
 
     @Override
     public BuildingDetailsDTO getBuilding(Long id_building) {

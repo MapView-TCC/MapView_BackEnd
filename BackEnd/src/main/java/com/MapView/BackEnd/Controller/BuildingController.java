@@ -4,11 +4,8 @@ import com.MapView.BackEnd.ServiceImp.BuildingServiceImp;
 import com.MapView.BackEnd.dtos.Building.BuildingCreateDTO;
 import com.MapView.BackEnd.dtos.Building.BuildingDetailsDTO;
 import com.MapView.BackEnd.dtos.Building.BuildingUpdateDTO;
-import com.MapView.BackEnd.dtos.CostCenter.CostCenterDetailsDTO;
-import com.MapView.BackEnd.dtos.CostCenter.CostCenterUpdateDTO;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -19,8 +16,12 @@ import java.util.List;
 @RequestMapping("/api/v1/bulding")
 public class BuildingController {
 
-    @Autowired
-    private BuildingServiceImp buildingServiceImp;
+
+    private final BuildingServiceImp buildingServiceImp;
+
+    public BuildingController(BuildingServiceImp buildingServiceImp) {
+        this.buildingServiceImp = buildingServiceImp;
+    }
 
     @PostMapping
     @Transactional

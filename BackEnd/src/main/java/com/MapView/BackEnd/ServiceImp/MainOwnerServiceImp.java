@@ -9,7 +9,6 @@ import com.MapView.BackEnd.dtos.MainOwner.MainOwnerUpdateDTO;
 import com.MapView.BackEnd.entities.CostCenter;
 import com.MapView.BackEnd.entities.MainOwner;
 import com.MapView.BackEnd.infra.NotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,11 +16,16 @@ import java.util.List;
 @Service
 public class MainOwnerServiceImp implements MainOwnerService {
 
-    @Autowired
-    private MainOwnerRepository mainOwnerRepository;
 
-    @Autowired
-    private CostCenterRepository costCenterRepository;
+    private final MainOwnerRepository mainOwnerRepository;
+
+
+    private final CostCenterRepository costCenterRepository;
+
+    public MainOwnerServiceImp(MainOwnerRepository mainOwnerRepository, CostCenterRepository costCenterRepository) {
+        this.mainOwnerRepository = mainOwnerRepository;
+        this.costCenterRepository = costCenterRepository;
+    }
 
     @Override
     public MainOwnerDetailsDTO getMainOwner(String id_owner) {

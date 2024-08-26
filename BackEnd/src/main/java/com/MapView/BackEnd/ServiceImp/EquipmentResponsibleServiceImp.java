@@ -11,7 +11,6 @@ import com.MapView.BackEnd.entities.Equipment;
 import com.MapView.BackEnd.entities.EquipmentResponsible;
 import com.MapView.BackEnd.entities.Responsible;
 import com.MapView.BackEnd.infra.NotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,14 +18,20 @@ import java.util.List;
 @Service
 public class EquipmentResponsibleServiceImp implements EquipmentResponsibleService {
 
-    @Autowired
-    EquipmentResponsibleRepository equipmentResponsibleRepository;
 
-    @Autowired
-    EquipmentRepository equipmentRepository;
+    private final EquipmentResponsibleRepository equipmentResponsibleRepository;
 
-    @Autowired
-    ResponsibleRepository responsibleRepository;
+
+    private final EquipmentRepository equipmentRepository;
+
+
+    private  final  ResponsibleRepository responsibleRepository;
+
+    public EquipmentResponsibleServiceImp(EquipmentResponsibleRepository equipmentResponsibleRepository, EquipmentRepository equipmentRepository, ResponsibleRepository responsibleRepository) {
+        this.equipmentResponsibleRepository = equipmentResponsibleRepository;
+        this.equipmentRepository = equipmentRepository;
+        this.responsibleRepository = responsibleRepository;
+    }
 
     @Override
     public EquipmentResponsibleDetailsDTO getEquipmentResponsible(Long id_equip_resp) {

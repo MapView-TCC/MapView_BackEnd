@@ -4,23 +4,24 @@ import com.MapView.BackEnd.dtos.CostCenter.CostCenterCreateDTO;
 import com.MapView.BackEnd.ServiceImp.CostCenterServiceImp;
 import com.MapView.BackEnd.dtos.CostCenter.CostCenterDetailsDTO;
 import com.MapView.BackEnd.dtos.CostCenter.CostCenterUpdateDTO;
-import com.MapView.BackEnd.entities.CostCenter;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/costcenter")
 public class CostCenterController {
 
-    @Autowired
-    private CostCenterServiceImp costCenterServiceImp;
+
+    private final CostCenterServiceImp costCenterServiceImp;
+
+    public CostCenterController(CostCenterServiceImp costCenterServiceImp) {
+        this.costCenterServiceImp = costCenterServiceImp;
+    }
 
     @PostMapping
     @Transactional

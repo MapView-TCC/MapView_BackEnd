@@ -7,7 +7,6 @@ import com.MapView.BackEnd.dtos.Area.AreaDetailsDTO;
 import com.MapView.BackEnd.dtos.Area.AreaUpdateDTO;
 import com.MapView.BackEnd.entities.Area;
 import com.MapView.BackEnd.infra.NotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,8 +14,12 @@ import java.util.List;
 @Service
 public class AreaServiceImp implements AreaService {
 
-    @Autowired
-    private AreaRepository areaRepository;
+
+    private final AreaRepository areaRepository;
+
+    public AreaServiceImp(AreaRepository areaRepository) {
+        this.areaRepository = areaRepository;
+    }
 
     @Override
     public AreaDetailsDTO getArea(Long id_area) {

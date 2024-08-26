@@ -1,13 +1,11 @@
 package com.MapView.BackEnd.Controller;
 
 import com.MapView.BackEnd.ServiceImp.RaspberryServiceImp;
-import com.MapView.BackEnd.dtos.MainOwner.MainOwnerDetailsDTO;
 import com.MapView.BackEnd.dtos.Raspberry.RaspberryCreateDTO;
 import com.MapView.BackEnd.dtos.Raspberry.RaspberryDetailsDTO;
 import com.MapView.BackEnd.dtos.Raspberry.RaspberryUpdateDTO;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -18,8 +16,12 @@ import java.util.List;
 @RequestMapping("/api/v1/raspberry")
 public class RaspberryController {
 
-    @Autowired
-    private RaspberryServiceImp raspberryServiceImp;
+
+    private final RaspberryServiceImp raspberryServiceImp;
+
+    public RaspberryController(RaspberryServiceImp raspberryServiceImp) {
+        this.raspberryServiceImp = raspberryServiceImp;
+    }
 
     @PostMapping
     @Transactional

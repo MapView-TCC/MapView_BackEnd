@@ -9,7 +9,6 @@ import com.MapView.BackEnd.dtos.Equipment.EquipmentDetailsDTO;
 import com.MapView.BackEnd.entities.Equipment;
 import com.MapView.BackEnd.entities.Location;
 import com.MapView.BackEnd.entities.MainOwner;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -18,14 +17,16 @@ import java.util.List;
 @Service
 public class EquipmentServiceImp implements EquipmentService {
 
-    @Autowired
-    private EquipmentRepository equipmentRepository ;
 
-    @Autowired
-    private LocationRepository locationRepository;
+    private final EquipmentRepository equipmentRepository ;
+    private final LocationRepository locationRepository;
+    private final MainOwnerRepository mainOwnerRepository;
 
-    @Autowired
-    private MainOwnerRepository mainOwnerRepository;
+    public EquipmentServiceImp(EquipmentRepository equipmentRepository, LocationRepository locationRepository, MainOwnerRepository mainOwnerRepository) {
+        this.equipmentRepository = equipmentRepository;
+        this.locationRepository = locationRepository;
+        this.mainOwnerRepository = mainOwnerRepository;
+    }
 
 
     @Override

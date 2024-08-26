@@ -8,7 +8,6 @@ import com.MapView.BackEnd.dtos.AccessHistory.AccessHistoryDetailsDTO;
 import com.MapView.BackEnd.entities.AccessHistory;
 import com.MapView.BackEnd.entities.Users;
 import com.MapView.BackEnd.infra.NotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -18,11 +17,14 @@ import java.util.List;
 public class AccessHistoryServiceImp implements AccessHistoryService {
 
 
-    @Autowired
-    private AccessHistoryRepository accessHistoryRepository;
 
-    @Autowired
-    private UserRepository userRepository;
+    private final AccessHistoryRepository accessHistoryRepository;
+    private final UserRepository userRepository;
+
+    public AccessHistoryServiceImp(AccessHistoryRepository accessHistoryRepository, UserRepository userRepository) {
+        this.accessHistoryRepository = accessHistoryRepository;
+        this.userRepository = userRepository;
+    }
 
     @Override
     public AccessHistoryDetailsDTO getAccessHistory(Long id_history) {

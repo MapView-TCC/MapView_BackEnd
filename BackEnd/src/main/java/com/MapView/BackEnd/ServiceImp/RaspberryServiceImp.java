@@ -11,7 +11,6 @@ import com.MapView.BackEnd.entities.Area;
 import com.MapView.BackEnd.entities.Building;
 import com.MapView.BackEnd.entities.Raspberry;
 import com.MapView.BackEnd.infra.NotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,14 +18,16 @@ import java.util.List;
 @Service
 public class RaspberryServiceImp implements RaspberryService {
 
-    @Autowired
-    private RaspberryRepository raspberryRepository;
 
-    @Autowired
-    private AreaRepository areaRepository;
+    private final RaspberryRepository raspberryRepository;
+    private final AreaRepository areaRepository;
+    private final BuildingRepository buildingRepository;
 
-    @Autowired
-    private BuildingRepository buildingRepository;
+    public RaspberryServiceImp(RaspberryRepository raspberryRepository, AreaRepository areaRepository, BuildingRepository buildingRepository) {
+        this.raspberryRepository = raspberryRepository;
+        this.areaRepository = areaRepository;
+        this.buildingRepository = buildingRepository;
+    }
 
 
     @Override

@@ -1,14 +1,11 @@
 package com.MapView.BackEnd.Controller;
 
-import com.MapView.BackEnd.Service.AreaService;
 import com.MapView.BackEnd.ServiceImp.AreaServiceImp;
 import com.MapView.BackEnd.dtos.Area.AreaCreateDTO;
 import com.MapView.BackEnd.dtos.Area.AreaDetailsDTO;
 import com.MapView.BackEnd.dtos.Area.AreaUpdateDTO;
-import com.MapView.BackEnd.dtos.CostCenter.CostCenterDetailsDTO;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -19,8 +16,12 @@ import java.util.List;
 @RequestMapping("/api/v1/area")
 public class AreaController {
 
-    @Autowired
-    private AreaServiceImp areaServiceImp;
+
+    private final AreaServiceImp areaServiceImp;
+
+    public AreaController(AreaServiceImp areaServiceImp) {
+        this.areaServiceImp = areaServiceImp;
+    }
 
     @PostMapping
     @Transactional

@@ -1,14 +1,11 @@
 package com.MapView.BackEnd.Controller;
 
-import com.MapView.BackEnd.Repository.EquipmentResponsibleRepository;
 import com.MapView.BackEnd.ServiceImp.EquipmentResponsibleServiceImp;
 import com.MapView.BackEnd.dtos.EquipmentResponsible.EquipmentResponsibleCreateDTO;
 import com.MapView.BackEnd.dtos.EquipmentResponsible.EquipmentResponsibleDetailsDTO;
 import com.MapView.BackEnd.dtos.EquipmentResponsible.EquipmentResponsibleUpdateDTO;
-import com.MapView.BackEnd.dtos.Raspberry.RaspberryDetailsDTO;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -19,8 +16,12 @@ import java.util.List;
 @RequestMapping("/api/v1/equipmentresponsible")
 public class EquipmentResponsibleController {
 
-    @Autowired
-    private EquipmentResponsibleServiceImp equipmentResponsibleServiceImp;
+
+    private final EquipmentResponsibleServiceImp equipmentResponsibleServiceImp;
+
+    public EquipmentResponsibleController(EquipmentResponsibleServiceImp equipmentResponsibleServiceImp) {
+        this.equipmentResponsibleServiceImp = equipmentResponsibleServiceImp;
+    }
 
     @GetMapping
     public ResponseEntity<List<EquipmentResponsibleDetailsDTO>> getAllEquipmentResponsible(){

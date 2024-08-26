@@ -5,7 +5,6 @@ import com.MapView.BackEnd.dtos.Equipment.*;
 import com.MapView.BackEnd.ServiceImp.EquipmentServiceImp;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -17,8 +16,12 @@ import java.util.List;
 @RequestMapping("/api/v1/equipment")
 public class EquipmentController {
 
-    @Autowired
-    private EquipmentServiceImp equipmentServiceImp;
+
+    private final EquipmentServiceImp equipmentServiceImp;
+
+    public EquipmentController(EquipmentServiceImp equipmentServiceImp) {
+        this.equipmentServiceImp = equipmentServiceImp;
+    }
 
     @PostMapping
     @Transactional

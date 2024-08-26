@@ -7,17 +7,19 @@ import com.MapView.BackEnd.dtos.CostCenter.CostCenterDetailsDTO;
 import com.MapView.BackEnd.dtos.CostCenter.CostCenterUpdateDTO;
 import com.MapView.BackEnd.entities.CostCenter;
 import com.MapView.BackEnd.infra.NotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class CostCenterServiceImp implements CostCenterService {
 
-    @Autowired
-    private CostCenterRepository costCenterRepository;
+
+    private final CostCenterRepository costCenterRepository;
+
+    public CostCenterServiceImp(CostCenterRepository costCenterRepository) {
+        this.costCenterRepository = costCenterRepository;
+    }
 
     @Override
     public CostCenterDetailsDTO getCostCenter(Long id_cost_center) {

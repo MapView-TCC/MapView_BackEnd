@@ -1,11 +1,9 @@
 package com.MapView.BackEnd.Controller;
 
 import com.MapView.BackEnd.ServiceImp.TrackingHistoryServiceImp;
-import com.MapView.BackEnd.dtos.AccessHistory.AccessHistoryDetailsDTO;
 import com.MapView.BackEnd.dtos.TrackingHistory.TrackingHistoryCreateDTO;
 import com.MapView.BackEnd.dtos.TrackingHistory.TrackingHistoryDetailsDTO;
 import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -16,8 +14,12 @@ import java.util.List;
 @RequestMapping("/api/v1/trackingHistory")
 public class TrackingHistoryController {
 
-    @Autowired
-    private TrackingHistoryServiceImp trackingHistoryServiceImp;
+
+    private final TrackingHistoryServiceImp trackingHistoryServiceImp;
+
+    public TrackingHistoryController(TrackingHistoryServiceImp trackingHistoryServiceImp) {
+        this.trackingHistoryServiceImp = trackingHistoryServiceImp;
+    }
 
     @PostMapping
     @Transactional
