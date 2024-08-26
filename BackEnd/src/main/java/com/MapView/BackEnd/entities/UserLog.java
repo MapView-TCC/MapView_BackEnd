@@ -3,6 +3,7 @@ package com.MapView.BackEnd.entities;
 import com.MapView.BackEnd.enums.EnumAction;
 import jakarta.persistence.*;
 import lombok.*;
+import org.apache.catalina.User;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.Instant;
@@ -22,7 +23,7 @@ public class UserLog {
     private Long id_log;
     @OneToOne
     @JoinColumn(name = "id_user")
-    private Users id_user;
+    private Users user;
     private String altered_table;
     private String id_altered;
     private String field;
@@ -31,4 +32,14 @@ public class UserLog {
     private Instant datetime;
     @Enumerated
     private EnumAction action;
+
+
+    public UserLog (Users user, String altered_table, String id_altered, String field, String description, Instant datetime, EnumAction action){
+        this.user = user;
+        this.altered_table = altered_table;
+        this.id_altered = id_altered;
+        this.field = field;
+        this.datetime = datetime;
+        this.action = action;
+    }
 }
