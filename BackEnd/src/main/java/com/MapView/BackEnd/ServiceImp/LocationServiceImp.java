@@ -56,7 +56,7 @@ public class LocationServiceImp implements LocationService {
         var location = locationRepository.findById(id_location).orElseThrow(() -> new NotFoundException("Location Id Not Found"));
 
         if(data.id_enviromnet() != null){
-            location.setEnviroment(enviroment);
+            location.setEnvironment(enviroment);
         }
         if(data.id_post() != null){
             location.setPost(post);

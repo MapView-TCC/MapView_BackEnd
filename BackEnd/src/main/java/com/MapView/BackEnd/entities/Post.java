@@ -1,6 +1,7 @@
 package com.MapView.BackEnd.entities;
 
 import com.MapView.BackEnd.dtos.Post.PostCreateDTO;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -21,8 +22,9 @@ public class Post {
     private Long id_post;
     private String post;
     private boolean operative;
-    @OneToMany(mappedBy = "post")
-    private Set<Location> location;
+    @ManyToMany(mappedBy = "environments")
+    @JsonBackReference
+    private Set<Enviroment> posts;
 
 
     public Post(PostCreateDTO data){
