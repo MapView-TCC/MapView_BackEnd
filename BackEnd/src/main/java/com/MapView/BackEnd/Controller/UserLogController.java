@@ -4,11 +4,9 @@ import com.MapView.BackEnd.Service.UserLogService;
 
 import com.MapView.BackEnd.dtos.User.UserDetailsDTO;
 import com.MapView.BackEnd.dtos.UserLog.UserLogDetailDTO;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -31,8 +29,8 @@ public class UserLogController {
     }
 
     @GetMapping
-    public ResponseEntity<List<UserLogDetailDTO>> getAllUser(){
-        var user = userLogService.getAllUserLog();
+    public ResponseEntity<List<UserLogDetailDTO>> getAllUser(@RequestParam int page,@RequestParam int itens){
+        var user = userLogService.getAllUserLog(page, itens);
         return ResponseEntity.ok(user);
     }
 }
