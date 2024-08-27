@@ -1,6 +1,6 @@
 package com.MapView.BackEnd.dtos.Equipment;
 
-public record EquipmentCreateDTO(
+public record EquipmentUpdateDTO(
         String id_equipment,
         String rfid,
         String type,
