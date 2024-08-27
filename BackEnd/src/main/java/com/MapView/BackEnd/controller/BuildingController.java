@@ -25,7 +25,7 @@ public class BuildingController {
 
     @PostMapping
     @Transactional
-    public ResponseEntity<BuildingDetailsDTO> create(@RequestBody @Valid BuildingCreateDTO dados, UriComponentsBuilder uriBuilder){
+    public ResponseEntity<BuildingDetailsDTO> createBuilding(@RequestBody @Valid BuildingCreateDTO dados, UriComponentsBuilder uriBuilder){
         var building = buildingServiceImp.createBuilding(dados);
 
         var uri = uriBuilder.path("/api/v1/bulding/{id}").buildAndExpand(building.id_building()).toUri();
@@ -33,20 +33,20 @@ public class BuildingController {
     }
 
     @GetMapping
-    public ResponseEntity<List<BuildingDetailsDTO>> listBuilding(){
+    public ResponseEntity<List<BuildingDetailsDTO>> getAllBuilding(){
         var list = buildingServiceImp.getAllBuilding();
         return ResponseEntity.ok(list);
     }
 
     @GetMapping("{id_building}")
-    public ResponseEntity<BuildingDetailsDTO> updateBuilding(@PathVariable Long id_building){
+    public ResponseEntity<BuildingDetailsDTO> getBuilding(@PathVariable Long id_building){
         var building = buildingServiceImp.getBuilding(id_building);
         return ResponseEntity.ok(building);
     }
 
     @PutMapping("{id_building}")
     @Transactional
-    public ResponseEntity<BuildingDetailsDTO> updateCostCenter(@PathVariable Long id_building,@RequestBody BuildingUpdateDTO dados){
+    public ResponseEntity<BuildingDetailsDTO> updateBuilding(@PathVariable Long id_building,@RequestBody BuildingUpdateDTO dados){
         BuildingDetailsDTO updateBuilding = buildingServiceImp.updateBuilding(id_building, dados);
         return ResponseEntity.ok(updateBuilding);
     }

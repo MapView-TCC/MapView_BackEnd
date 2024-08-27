@@ -25,7 +25,7 @@ public class EquipmentController {
 
     @PostMapping
     @Transactional
-    public ResponseEntity<EquipmentDetailsDTO> cadastrar(@RequestBody @Valid EquipmentCreateDTO dados, UriComponentsBuilder uriBuilder){
+    public ResponseEntity<EquipmentDetailsDTO> createEquipament(@RequestBody @Valid EquipmentCreateDTO dados, UriComponentsBuilder uriBuilder){
         var equipment = equipmentServiceImp.createEquipment(dados);
 
         // boa pratica, para retornar o caminho

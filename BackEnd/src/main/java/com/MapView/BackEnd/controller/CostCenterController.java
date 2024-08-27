@@ -34,7 +34,7 @@ public class CostCenterController {
     }
 
     @GetMapping
-    public ResponseEntity<List<CostCenterDetailsDTO>> listResponseEntity(){
+    public ResponseEntity<List<CostCenterDetailsDTO>> getAllCostCenter(){
         var list = costCenterServiceImp.getAllCostCenter();
         return ResponseEntity.ok(list);
     }

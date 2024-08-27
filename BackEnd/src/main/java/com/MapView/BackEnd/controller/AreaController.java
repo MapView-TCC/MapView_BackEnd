@@ -34,13 +34,13 @@ public class AreaController {
     }
 
     @GetMapping("/{id_area}")
-    public ResponseEntity<AreaDetailsDTO> getIdArea(@PathVariable Long id_area){
+    public ResponseEntity<AreaDetailsDTO> getArea(@PathVariable Long id_area){
         var area = areaServiceImp.getArea(id_area);
         return ResponseEntity.ok(area);
     }
 
     @GetMapping
-    public ResponseEntity<List<AreaDetailsDTO>> listArea(){
+    public ResponseEntity<List<AreaDetailsDTO>>  getAllArea(){
         var area = areaServiceImp.getAllArea();
         return ResponseEntity.ok(area);
     }

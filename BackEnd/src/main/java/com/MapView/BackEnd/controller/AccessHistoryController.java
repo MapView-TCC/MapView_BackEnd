@@ -23,7 +23,7 @@ public class AccessHistoryController {
 
     @PostMapping
     @Transactional
-    public AccessHistoryDetailsDTO create(@RequestBody AccessHistoryCreateDTO accessHistoryCreateDTO, UriComponentsBuilder uriBuilder){
+    public AccessHistoryDetailsDTO createAccessHistory(@RequestBody AccessHistoryCreateDTO accessHistoryCreateDTO, UriComponentsBuilder uriBuilder){
         var history = accessHistoryServiceImp.createAccessHistory(accessHistoryCreateDTO);
 
         // boa pratica, para retornar o caminho
@@ -33,19 +33,19 @@ public class AccessHistoryController {
 
     @PutMapping("/{id}")
     @Transactional
-    public ResponseEntity<AccessHistoryDetailsDTO> update(@PathVariable Long id){
+    public ResponseEntity<AccessHistoryDetailsDTO> updateAccessHistory(@PathVariable Long id){
         AccessHistoryDetailsDTO historyDetailsDTO = accessHistoryServiceImp.updateAccessHistory(id);
         return ResponseEntity.ok(historyDetailsDTO);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<AccessHistoryDetailsDTO> getId(@PathVariable Long id){
+    public ResponseEntity<AccessHistoryDetailsDTO> getAccessHistory(@PathVariable Long id){
         var accessHistory = accessHistoryServiceImp.getAccessHistory(id);
         return ResponseEntity.ok(accessHistory);
     }
 
     @GetMapping
-    public ResponseEntity<List<AccessHistoryDetailsDTO>> getAll(){
+    public ResponseEntity<List<AccessHistoryDetailsDTO>> getAllAccessHistory(){
         var list = accessHistoryServiceImp.getAllAccessHistory();
         return ResponseEntity.ok(list);
     }

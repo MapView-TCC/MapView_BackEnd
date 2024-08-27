@@ -1,6 +1,6 @@
-package com.MapView.BackEnd.Controller;
+package com.MapView.BackEnd.controller;
 
-import com.MapView.BackEnd.Service.UserLogService;
+import com.MapView.BackEnd.service.UserLogService;
 
 import com.MapView.BackEnd.dtos.User.UserDetailsDTO;
 import com.MapView.BackEnd.dtos.UserLog.UserLogDetailDTO;

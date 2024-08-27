@@ -60,7 +60,7 @@ public class UserController {
         return ResponseEntity.ok().build();
 
     }
-    @PutMapping("/deactive/{user_id}")
+    @PutMapping("/inactivate/{user_id}")
     @Transactional
     public ResponseEntity<Void> inactiveUser(@PathVariable("user_id") Long user_id){
         userServiceIpm.inactivateUser(user_id);

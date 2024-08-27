@@ -1,7 +1,7 @@
-package com.MapView.BackEnd.ServiceImp;
+package com.MapView.BackEnd.serviceImp;
 
-import com.MapView.BackEnd.Repository.UserLogRepository;
-import com.MapView.BackEnd.Service.UserLogService;
+import com.MapView.BackEnd.repository.UserLogRepository;
+import com.MapView.BackEnd.service.UserLogService;
 import com.MapView.BackEnd.dtos.User.UserDetailsDTO;
 import com.MapView.BackEnd.dtos.UserLog.UserLogDetailDTO;
 import com.MapView.BackEnd.entities.UserLog;
