@@ -39,8 +39,8 @@ public class ClassesController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ClassesDetaiLDTO>> getAllClasses() {
-        var classes = classesServiceImp.getAllClasses();
+    public ResponseEntity<List<ClassesDetaiLDTO>> getAllClasses(@RequestParam int page, @RequestParam int itens) {
+        var classes = classesServiceImp.getAllClasses(page, itens);
         return ResponseEntity.ok(classes);
     }
     @PostMapping("/{class_id}")

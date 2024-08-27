@@ -32,8 +32,8 @@ public class LocationController {
     }
 
     @GetMapping
-    public ResponseEntity<List<LocationDetalsDTO>> getAllLocations (){
-        var loc = locationServiceImp.getAllLocation();
+    public ResponseEntity<List<LocationDetalsDTO>> getAllLocations (@RequestParam int page, @RequestParam int itens){
+        var loc = locationServiceImp.getAllLocation(page, itens);
         return ResponseEntity.ok(loc);
     }
 

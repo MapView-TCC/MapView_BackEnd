@@ -9,7 +9,9 @@ import com.MapView.BackEnd.dtos.MainOwner.MainOwnerUpdateDTO;
 import com.MapView.BackEnd.entities.CostCenter;
 import com.MapView.BackEnd.entities.MainOwner;
 import com.MapView.BackEnd.infra.NotFoundException;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -40,8 +42,8 @@ public class MainOwnerServiceImp implements MainOwnerService {
     }
 
     @Override
-    public List<MainOwnerDetailsDTO> getAllMainOwner() {
-        return mainOwnerRepository.findAllByOperativeTrue().stream().map(MainOwnerDetailsDTO::new).toList();
+    public List<MainOwnerDetailsDTO> getAllMainOwner(int page, int itens) {
+        return mainOwnerRepository.findAllByOperativeTrue(PageRequest.of(page, itens)).stream().map(MainOwnerDetailsDTO::new).toList();
     }
 
     @Override

@@ -7,6 +7,7 @@ import com.MapView.BackEnd.dtos.CostCenter.CostCenterDetailsDTO;
 import com.MapView.BackEnd.dtos.CostCenter.CostCenterUpdateDTO;
 import com.MapView.BackEnd.entities.CostCenter;
 import com.MapView.BackEnd.infra.NotFoundException;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -32,8 +33,8 @@ public class CostCenterServiceImp implements CostCenterService {
     }
 
     @Override
-    public List<CostCenterDetailsDTO> getAllCostCenter() {
-        return costCenterRepository.findAllByOperativeTrue().stream().map(CostCenterDetailsDTO::new).toList();
+    public List<CostCenterDetailsDTO> getAllCostCenter(int page,int itens) {
+        return costCenterRepository.findAllByOperativeTrue(PageRequest.of(page, itens)).stream().map(CostCenterDetailsDTO::new).toList();
     }
 
     @Override

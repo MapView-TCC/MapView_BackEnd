@@ -11,7 +11,9 @@ import com.MapView.BackEnd.dtos.Equipment.EquipmentDetailsDTO;
 import com.MapView.BackEnd.entities.Equipment;
 import com.MapView.BackEnd.entities.Location;
 import com.MapView.BackEnd.entities.MainOwner;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -43,8 +45,8 @@ public class EquipmentServiceImp implements EquipmentService {
     }
 
     @Override
-    public List<EquipmentDetailsDTO> getAllEquipment() {
-        return equipmentRepository.findAllByOperativeTrue().stream().map(EquipmentDetailsDTO::new).toList();
+    public List<EquipmentDetailsDTO> getAllEquipment(int page, int itens) {
+        return equipmentRepository.findAllByOperativeTrue(PageRequest.of(page, itens)).stream().map(EquipmentDetailsDTO::new).toList();
     }
 
 

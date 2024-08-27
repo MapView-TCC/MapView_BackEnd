@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface AccessHistoryService {
     AccessHistoryDetailsDTO getAccessHistory(Long id_history);
-    List<AccessHistoryDetailsDTO> getAllAccessHistory();
+    List<AccessHistoryDetailsDTO> getAllAccessHistory(int page, int itens);
     AccessHistoryDetailsDTO createAccessHistory(AccessHistoryCreateDTO dados);
     AccessHistoryDetailsDTO updateAccessHistory(Long id_history);
 }

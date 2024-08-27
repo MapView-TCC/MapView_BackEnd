@@ -7,6 +7,8 @@ import com.MapView.BackEnd.dtos.Area.AreaDetailsDTO;
 import com.MapView.BackEnd.dtos.Area.AreaUpdateDTO;
 import com.MapView.BackEnd.entities.Area;
 import com.MapView.BackEnd.infra.NotFoundException;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -33,8 +35,8 @@ public class AreaServiceImp implements AreaService {
     }
 
     @Override
-    public List<AreaDetailsDTO> getAllArea() {
-        return areaRepository.findAllByOperativeTrue().stream().map(AreaDetailsDTO::new).toList();
+    public List<AreaDetailsDTO> getAllArea(int page, int itens) {
+        return areaRepository.findAllByOperativeTrue(PageRequest.of(page, itens)).stream().map(AreaDetailsDTO::new).toList();
     }
 
     @Override

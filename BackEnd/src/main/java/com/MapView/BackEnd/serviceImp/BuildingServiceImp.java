@@ -7,7 +7,9 @@ import com.MapView.BackEnd.dtos.Building.BuildingDetailsDTO;
 import com.MapView.BackEnd.dtos.Building.BuildingUpdateDTO;
 import com.MapView.BackEnd.entities.Building;
 import com.MapView.BackEnd.infra.NotFoundException;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -33,8 +35,8 @@ public class BuildingServiceImp implements BuildingService {
     }
 
     @Override
-    public List<BuildingDetailsDTO> getAllBuilding() {
-        return buildingRepository.findAllByOperativeTrue().stream().map(BuildingDetailsDTO::new).toList();
+    public List<BuildingDetailsDTO> getAllBuilding( int page,  int itens) {
+        return buildingRepository.findAllByOperativeTrue(PageRequest.of(page, itens)).stream().map(BuildingDetailsDTO::new).toList();
     }
 
     @Override

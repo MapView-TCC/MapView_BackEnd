@@ -8,6 +8,7 @@ import com.MapView.BackEnd.dtos.AccessHistory.AccessHistoryDetailsDTO;
 import com.MapView.BackEnd.entities.AccessHistory;
 import com.MapView.BackEnd.entities.Users;
 import com.MapView.BackEnd.infra.NotFoundException;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -35,8 +36,8 @@ public class AccessHistoryServiceImp implements AccessHistoryService {
     }
 
     @Override
-    public List<AccessHistoryDetailsDTO> getAllAccessHistory() {
-        return accessHistoryRepository.findAll().stream().map(AccessHistoryDetailsDTO::new).toList();
+    public List<AccessHistoryDetailsDTO> getAllAccessHistory(int page, int itens) {
+        return accessHistoryRepository.findAll(PageRequest.of(page, itens)).stream().map(AccessHistoryDetailsDTO::new).toList();
     }
 
     @Override

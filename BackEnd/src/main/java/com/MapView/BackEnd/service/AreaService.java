@@ -9,7 +9,7 @@ import java.util.List;
 public interface AreaService {
 
     AreaDetailsDTO getArea(Long id_area);
-    List<AreaDetailsDTO> getAllArea();
+    List<AreaDetailsDTO> getAllArea(int page,int itens);
     AreaDetailsDTO createArea(AreaCreateDTO dados);
     AreaDetailsDTO updateArea(Long id_area, AreaUpdateDTO dados);
     void activateArea(Long id_area); // put

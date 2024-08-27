@@ -9,7 +9,7 @@ import java.util.List;
 public interface EnviromentService {
 
     EnviromentDetailsDTO getEnvioment(Long enviroment_id);
-    List<EnviromentDetailsDTO> getAllEnvioment();
+    List<EnviromentDetailsDTO> getAllEnvioment(int page,int itens);
     EnviromentDetailsDTO createEnviroment(EnviromentCreateDTO data);
     EnviromentDetailsDTO updateEnviroment(Long enviroment_id,EnviromentUpdateDTO data);
     void activateEnviroment(Long id_environment);

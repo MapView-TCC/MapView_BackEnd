@@ -37,8 +37,8 @@ public class TrackingHistoryController {
     }
 
     @GetMapping
-    public ResponseEntity<List<TrackingHistoryDetailsDTO>> getAllTracking(){
-        var list = trackingHistoryServiceImp.getAllTrackingHistory();
+    public ResponseEntity<List<TrackingHistoryDetailsDTO>> getAllTracking(@RequestParam int page, @RequestParam int itens){
+        var list = trackingHistoryServiceImp.getAllTrackingHistory(page,itens);
         return ResponseEntity.ok(list);
     }
 }

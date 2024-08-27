@@ -33,8 +33,8 @@ public class BuildingController {
     }
 
     @GetMapping
-    public ResponseEntity<List<BuildingDetailsDTO>> getAllBuilding(){
-        var list = buildingServiceImp.getAllBuilding();
+    public ResponseEntity<List<BuildingDetailsDTO>> getAllBuilding(@RequestParam int page, @RequestParam int itens){
+        var list = buildingServiceImp.getAllBuilding(page, itens);
         return ResponseEntity.ok(list);
     }
 

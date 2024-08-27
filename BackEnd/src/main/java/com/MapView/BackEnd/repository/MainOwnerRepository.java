@@ -1,6 +1,7 @@
 package com.MapView.BackEnd.repository;
 
 import com.MapView.BackEnd.entities.MainOwner;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -8,5 +9,5 @@ import java.util.List;
 
 @Repository
 public interface MainOwnerRepository extends JpaRepository<MainOwner,String> {
-    List<MainOwner> findAllByOperativeTrue();
+    List<MainOwner> findAllByOperativeTrue(Pageable pageable);
 }

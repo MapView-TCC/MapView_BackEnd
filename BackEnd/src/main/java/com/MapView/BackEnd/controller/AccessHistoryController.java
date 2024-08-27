@@ -45,8 +45,8 @@ public class AccessHistoryController {
     }
 
     @GetMapping
-    public ResponseEntity<List<AccessHistoryDetailsDTO>> getAllAccessHistory(){
-        var list = accessHistoryServiceImp.getAllAccessHistory();
+    public ResponseEntity<List<AccessHistoryDetailsDTO>> getAllAccessHistory(@RequestParam int page, @RequestParam int itens){
+        var list = accessHistoryServiceImp.getAllAccessHistory(page,itens);
         return ResponseEntity.ok(list);
     }
 }

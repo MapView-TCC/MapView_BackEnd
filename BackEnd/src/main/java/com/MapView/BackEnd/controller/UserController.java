@@ -48,8 +48,8 @@ public class UserController {
     }
 
     @GetMapping
-    public ResponseEntity<List<UserDetailsDTO>> getAllUser(){
-        var user = userServiceIpm.getAllUser();
+    public ResponseEntity<List<UserDetailsDTO>> getAllUser(@RequestParam int page, @RequestParam int itens){
+        var user = userServiceIpm.getAllUser(page, itens);
         return ResponseEntity.ok(user);
 
     }
