@@ -46,8 +46,8 @@ public class EnviromentController {
     }
 
     @GetMapping
-    public ResponseEntity<List<EnviromentDetailsDTO>> getAllEnviroment(){
-        var enviroment = enviromentServiceImp.getAllEnvioment();
+    public ResponseEntity<List<EnviromentDetailsDTO>> getAllEnviroment(@RequestParam int page, @RequestParam int itens){
+        var enviroment = enviromentServiceImp.getAllEnvioment(page, itens);
         return ResponseEntity.ok(enviroment);
 
     }

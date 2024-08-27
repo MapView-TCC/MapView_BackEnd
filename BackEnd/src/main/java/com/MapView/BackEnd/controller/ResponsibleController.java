@@ -44,8 +44,8 @@ public class ResponsibleController {
 
     }
     @GetMapping()
-    public ResponseEntity<List<ResponsibleDetailsDTO>> getAllReponsible(@PathVariable("user_id") Long user_id){
-        var user = responsibleServiceImp.getAllResposible();
+    public ResponseEntity<List<ResponsibleDetailsDTO>> getAllReponsible(@RequestParam int page, @RequestParam int itens){
+        var user = responsibleServiceImp.getAllResposible(page, itens);
         return ResponseEntity.ok(user);
 
     }

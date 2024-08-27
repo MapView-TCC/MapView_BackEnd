@@ -36,8 +36,8 @@ public class MainOwnerController {
     }
 
     @GetMapping
-    public ResponseEntity<List<MainOwnerDetailsDTO>> getAllMainOwner(){
-        var list = mainOwnerServiceImp.getAllMainOwner();
+    public ResponseEntity<List<MainOwnerDetailsDTO>> getAllMainOwner(@RequestParam int page, @RequestParam int itens){
+        var list = mainOwnerServiceImp.getAllMainOwner(page, itens);
         return ResponseEntity.ok(list);
     }
 

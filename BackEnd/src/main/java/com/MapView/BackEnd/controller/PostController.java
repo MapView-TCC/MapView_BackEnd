@@ -42,8 +42,8 @@ public class PostController {
 
     }
     @GetMapping
-    public ResponseEntity<List<PostDetailDTO>> getAllPost(){
-        var post = postServiceImp.getAllPost();
+    public ResponseEntity<List<PostDetailDTO>> getAllPost(@RequestParam int page, @RequestParam int itens){
+        var post = postServiceImp.getAllPost(page, itens);
         return ResponseEntity.ok(post);
 
     }

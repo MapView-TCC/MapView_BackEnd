@@ -9,7 +9,9 @@ import com.MapView.BackEnd.dtos.Responsible.ResponsibleDetailsDTO;
 import com.MapView.BackEnd.dtos.Responsible.ResponsibleUpdateDTO;
 import com.MapView.BackEnd.entities.Responsible;
 import com.MapView.BackEnd.infra.NotFoundException;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -45,8 +47,8 @@ public class ResponsibleServiceImp implements ResponsibleService {
     }
 
     @Override
-    public List<ResponsibleDetailsDTO> getAllResposible() {
-        return responsibleRepository.findByOperativeTrue().stream().map(ResponsibleDetailsDTO::new).toList();
+    public List<ResponsibleDetailsDTO> getAllResposible(int page, int itens) {
+        return responsibleRepository.findByOperativeTrue(PageRequest.of(page, itens)).stream().map(ResponsibleDetailsDTO::new).toList();
     }
 
     @Override

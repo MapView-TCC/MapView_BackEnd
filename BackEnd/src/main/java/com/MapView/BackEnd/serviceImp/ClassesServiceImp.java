@@ -8,7 +8,9 @@ import com.MapView.BackEnd.dtos.Classes.ClassesDetaiLDTO;
 import com.MapView.BackEnd.dtos.Classes.ClassesUpdateDTO;
 import com.MapView.BackEnd.entities.Classes;
 import com.MapView.BackEnd.infra.NotFoundException;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 @Service
@@ -60,8 +62,8 @@ public class ClassesServiceImp implements ClassesService {
     }
 
     @Override
-    public List<ClassesDetaiLDTO> getAllClasses() {
-        return this.classesRepository.findClassesByOperativeTrue().stream().map(ClassesDetaiLDTO::new).toList();
+    public List<ClassesDetaiLDTO> getAllClasses(@RequestParam int page, @RequestParam int itens) {
+        return this.classesRepository.findClassesByOperativeTrue(PageRequest.of(page, itens)).stream().map(ClassesDetaiLDTO::new).toList();
     }
 
     @Override

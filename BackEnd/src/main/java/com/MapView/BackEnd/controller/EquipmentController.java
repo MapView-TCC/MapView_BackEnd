@@ -36,13 +36,13 @@ public class EquipmentController {
     }
 
     @GetMapping
-    public ResponseEntity<List<EquipmentDetailsDTO>> getAllEquipment(){
-        var list = equipmentServiceImp.getAllEquipment();
+    public ResponseEntity<List<EquipmentDetailsDTO>> getAllEquipment(@RequestParam int page, @RequestParam int itens){
+        var list = equipmentServiceImp.getAllEquipment(page,itens);
         return ResponseEntity.ok(list);
     }
 
-    @GetMapping
-    public ResponseEntity<EquipmentDetailsDTO> getById(String id){
+    @GetMapping("/{equipament_id}")
+    public ResponseEntity<EquipmentDetailsDTO> getById(@PathVariable("equipament_id") String id){
         var equipment = equipmentServiceImp.getEquipment(id);
         return ResponseEntity.ok(equipment);
     }

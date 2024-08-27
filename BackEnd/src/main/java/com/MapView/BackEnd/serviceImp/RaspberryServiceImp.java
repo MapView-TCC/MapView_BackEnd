@@ -11,6 +11,7 @@ import com.MapView.BackEnd.entities.Area;
 import com.MapView.BackEnd.entities.Building;
 import com.MapView.BackEnd.entities.Raspberry;
 import com.MapView.BackEnd.infra.NotFoundException;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -43,8 +44,8 @@ public class RaspberryServiceImp implements RaspberryService {
     }
 
     @Override
-    public List<RaspberryDetailsDTO> getAllRaspberry() {
-        return raspberryRepository.findAllByOperativeTrue().stream().map(RaspberryDetailsDTO::new).toList();
+    public List<RaspberryDetailsDTO> getAllRaspberry(int page, int itens) {
+        return raspberryRepository.findAllByOperativeTrue(PageRequest.of(page, itens)).stream().map(RaspberryDetailsDTO::new).toList();
     }
 
     @Override

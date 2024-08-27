@@ -9,7 +9,7 @@ import java.util.List;
 public interface BuildingService {
 
     BuildingDetailsDTO getBuilding(Long id_building);
-    List<BuildingDetailsDTO> getAllBuilding();
+    List<BuildingDetailsDTO> getAllBuilding(int page, int itens);
     BuildingDetailsDTO createBuilding(BuildingCreateDTO dados);
     BuildingDetailsDTO updateBuilding(Long id_building, BuildingUpdateDTO dados);
     void activateBuilding(Long id_building); // put

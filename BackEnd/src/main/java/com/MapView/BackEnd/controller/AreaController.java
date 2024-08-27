@@ -40,8 +40,8 @@ public class AreaController {
     }
 
     @GetMapping
-    public ResponseEntity<List<AreaDetailsDTO>>  getAllArea(){
-        var area = areaServiceImp.getAllArea();
+    public ResponseEntity<List<AreaDetailsDTO>>  getAllArea(@RequestParam int page, @RequestParam int itens){
+        var area = areaServiceImp.getAllArea(page, itens);
         return ResponseEntity.ok(area);
     }
 

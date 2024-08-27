@@ -7,6 +7,7 @@ import com.MapView.BackEnd.dtos.Post.PostDetailDTO;
 import com.MapView.BackEnd.dtos.Post.PostUpdateDTO;
 import com.MapView.BackEnd.entities.Post;
 import com.MapView.BackEnd.infra.NotFoundException;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -29,8 +30,8 @@ public class PostServiceImp implements PostService {
     }
 
     @Override
-    public List<PostDetailDTO> getAllPost() {
-        return this.postRepository.findByOperativeTrue().stream().map(PostDetailDTO::new).toList();
+    public List<PostDetailDTO> getAllPost(int page, int itens) {
+        return this.postRepository.findByOperativeTrue(PageRequest.of(page, itens)).stream().map(PostDetailDTO::new).toList();
 
 
     }

@@ -10,7 +10,9 @@ import com.MapView.BackEnd.entities.Enviroment;
 import com.MapView.BackEnd.entities.Equipment;
 import com.MapView.BackEnd.entities.TrackingHistory;
 import com.MapView.BackEnd.infra.NotFoundException;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -41,8 +43,8 @@ public class TrackingHistoryServiceImp implements TrackingHistoryService {
     }
 
     @Override
-    public List<TrackingHistoryDetailsDTO> getAllTrackingHistory() {
-        return trackingHistoryRepository.findAll().stream().map(TrackingHistoryDetailsDTO::new).toList();
+    public List<TrackingHistoryDetailsDTO> getAllTrackingHistory(int page, int itens) {
+        return trackingHistoryRepository.findAll(PageRequest.of(page, itens)).stream().map(TrackingHistoryDetailsDTO::new).toList();
     }
 
     @Override

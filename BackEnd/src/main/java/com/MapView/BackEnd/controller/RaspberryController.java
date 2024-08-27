@@ -34,8 +34,8 @@ public class RaspberryController {
     }
 
     @GetMapping
-    public ResponseEntity<List<RaspberryDetailsDTO>> getAllRaspberry(){
-        var list = raspberryServiceImp.getAllRaspberry();
+    public ResponseEntity<List<RaspberryDetailsDTO>> getAllRaspberry(@RequestParam int page, @RequestParam int itens){
+        var list = raspberryServiceImp.getAllRaspberry(page,itens);
         return ResponseEntity.ok(list);
     }
 

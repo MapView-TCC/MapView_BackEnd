@@ -34,8 +34,8 @@ public class CostCenterController {
     }
 
     @GetMapping
-    public ResponseEntity<List<CostCenterDetailsDTO>> getAllCostCenter(){
-        var list = costCenterServiceImp.getAllCostCenter();
+    public ResponseEntity<List<CostCenterDetailsDTO>> getAllCostCenter(@RequestParam int page, @RequestParam int itens){
+        var list = costCenterServiceImp.getAllCostCenter(page,itens);
         return ResponseEntity.ok(list);
     }
 
