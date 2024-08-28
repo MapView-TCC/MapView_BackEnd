@@ -5,6 +5,7 @@ import com.MapView.BackEnd.dtos.Equipment.*;
 import com.MapView.BackEnd.serviceImp.EquipmentServiceImp;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Null;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -38,6 +39,14 @@ public class EquipmentController {
     @GetMapping
     public ResponseEntity<List<EquipmentDetailsDTO>> getAllEquipment(@RequestParam int page, @RequestParam int itens){
         var list = equipmentServiceImp.getAllEquipment(page,itens);
+        return ResponseEntity.ok(list);
+    }
+
+    @GetMapping("/filter/validity")
+    public ResponseEntity<List<EquipmentDetailsDTO>> getAllEquipmentValidity(@RequestParam int page, @RequestParam int itens, @RequestParam(required = false)  String validity,
+                                                                             @RequestParam(required = false)  String enviroment, @RequestParam(required = false)  String mainowner){
+
+        var list = equipmentServiceImp.getEquipmentValidation(page,itens, validity,enviroment,mainowner);
         return ResponseEntity.ok(list);
     }
 
