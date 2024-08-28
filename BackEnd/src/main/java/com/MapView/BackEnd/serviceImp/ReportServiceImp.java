@@ -7,13 +7,8 @@ import com.MapView.BackEnd.service.ReportService;
 import jakarta.servlet.ServletOutputStream;
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.poi.hssf.usermodel.*;
-import org.apache.poi.ss.usermodel.FillPatternType;
-import org.apache.poi.ss.usermodel.HorizontalAlignment;
-import org.apache.poi.ss.usermodel.IndexedColors;
-import org.apache.poi.ss.usermodel.VerticalAlignment;
+import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
-import org.apache.poi.xssf.usermodel.XSSFFont;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -41,6 +36,10 @@ public class ReportServiceImp implements ReportService {
         headerStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND); // Define o padrão de preenchimento
         headerStyle.setAlignment(HorizontalAlignment.CENTER);
         headerStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+        headerStyle.setBorderBottom(BorderStyle.MEDIUM);
+        headerStyle.setBorderLeft(BorderStyle.MEDIUM);
+        headerStyle.setBorderRight(BorderStyle.MEDIUM);
+        headerStyle.setBorderTop(BorderStyle.MEDIUM);
 
         // Estilizando a fonte
         HSSFFont font = workbook.createFont();
@@ -51,7 +50,7 @@ public class ReportServiceImp implements ReportService {
 
         // Criar a linha do cabeçalho
         HSSFRow rowDate = sheet.createRow(0);
-        rowDate.createCell(0).setCellValue(String.format("Data da última utilização: %s", new java.util.Date().toString())); // data atual
+        rowDate.createCell(0).setCellValue(String.format("Data da última utilização: %s", new java.util.Date())); // data atual
 
         // Criar a linha do cabeçalho
         HSSFRow row = sheet.createRow(2);

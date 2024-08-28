@@ -50,6 +50,7 @@ public class AreaServiceImp implements AreaService {
     public AreaDetailsDTO updateArea(Long id_area, AreaUpdateDTO dados) {
         var area = areaRepository.findById(id_area).orElseThrow(() -> new NotFoundException("Id not found"));
 
+
         if (dados.area_name() != null){
             area.setArea_name(dados.area_name());
         }
