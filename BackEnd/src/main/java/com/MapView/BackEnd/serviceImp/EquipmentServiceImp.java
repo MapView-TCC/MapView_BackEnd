@@ -132,17 +132,19 @@ public class EquipmentServiceImp implements EquipmentService {
     }
 
     @Override
-    public List<EquipmentDetailsDTO> getEquipmentValidation(int page, int itens, String validity, String environment, String mainOwner) {
-        
+    public List<EquipmentDetailsDTO> getEquipmentValidation(int page, int itens, String validity, String environment, String mainOwner, String id_owner, String id_equipment) {
+
         List<Equipment> filteredEquipments = equipmentRepository.findAllByOperativeTrue(PageRequest.of(page, itens))
                 .stream()
                 .filter(e -> (validity == null || e.getValidity().equals(validity)) &&
                         (environment == null || e.getId_location().getEnvironment().getEnvironment_name().equals(environment)) &&
-                        (mainOwner == null || e.getId_owner().getOwner_name().equals(mainOwner)))
+                        (mainOwner == null || e.getId_owner().getOwner_name().equals(mainOwner)) &&
+                        (id_owner == null || e.getId_owner().getId_owner().equals(id_owner)) &&
+                        (id_equipment == null || e.getId_equipment().equals(id_equipment)))
                 .toList();
 
 
-        if (validity == null && environment == null && mainOwner == null) {
+        if (validity == null && environment == null && mainOwner == null && id_owner == null && id_equipment == null) {
             return equipmentRepository.findAllByOperativeTrue(PageRequest.of(page, itens))
                     .stream()
                     .map(EquipmentDetailsDTO::new)

@@ -42,11 +42,12 @@ public class EquipmentController {
         return ResponseEntity.ok(list);
     }
 
-    @GetMapping("/filter/validity")
-    public ResponseEntity<List<EquipmentDetailsDTO>> getAllEquipmentValidity(@RequestParam int page, @RequestParam int itens, @RequestParam(required = false)  String validity,
-                                                                             @RequestParam(required = false)  String enviroment, @RequestParam(required = false)  String mainowner){
+    @GetMapping("/filter")
+    public ResponseEntity<List<EquipmentDetailsDTO>> getAllEquipmentFilter(@RequestParam int page, @RequestParam int itens, @RequestParam(required = false)  String validity,
+                                                                             @RequestParam(required = false)  String enviroment, @RequestParam(required = false)  String mainowner,
+                                                                           @RequestParam(required = false) String id_owner, @RequestParam(required = false) String id_equipment){
 
-        var list = equipmentServiceImp.getEquipmentValidation(page,itens, validity,enviroment,mainowner);
+        var list = equipmentServiceImp.getEquipmentValidation(page,itens, validity,enviroment,mainowner, id_owner, id_equipment);
         return ResponseEntity.ok(list);
     }
 
