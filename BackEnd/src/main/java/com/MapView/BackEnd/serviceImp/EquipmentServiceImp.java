@@ -13,10 +13,9 @@ import com.MapView.BackEnd.entities.Location;
 import com.MapView.BackEnd.entities.MainOwner;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
 
-import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class EquipmentServiceImp implements EquipmentService {
@@ -131,4 +130,30 @@ public class EquipmentServiceImp implements EquipmentService {
             equipment.setOperative(false);
         }
     }
+
+    @Override
+    public List<EquipmentDetailsDTO> getEquipmentValidation(int page, int itens, String validity, String environment, String mainOwner) {
+        
+        List<Equipment> filteredEquipments = equipmentRepository.findAllByOperativeTrue(PageRequest.of(page, itens))
+                .stream()
+                .filter(e -> (validity == null || e.getValidity().equals(validity)) &&
+                        (environment == null || e.getId_location().getEnvironment().getEnvironment_name().equals(environment)) &&
+                        (mainOwner == null || e.getId_owner().getOwner_name().equals(mainOwner)))
+                .toList();
+
+
+        if (validity == null && environment == null && mainOwner == null) {
+            return equipmentRepository.findAllByOperativeTrue(PageRequest.of(page, itens))
+                    .stream()
+                    .map(EquipmentDetailsDTO::new)
+                    .collect(Collectors.toList());
+        }
+
+
+        return filteredEquipments.stream()
+                .map(EquipmentDetailsDTO::new)
+                .collect(Collectors.toList());
+    }
+
+
 }
