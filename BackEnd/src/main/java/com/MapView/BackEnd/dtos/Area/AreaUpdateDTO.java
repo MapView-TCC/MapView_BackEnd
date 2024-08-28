@@ -1,4 +1,4 @@
 package com.MapView.BackEnd.dtos.Area;
 
-public record AreaUpdateDTO(String area_code, String area_name) {
+public record AreaUpdateDTO(String area_code, String area_name,Long user_id) {
 }

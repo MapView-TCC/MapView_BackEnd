@@ -25,8 +25,8 @@ public class AreaController {
 
     @PostMapping
     @Transactional
-    public AreaDetailsDTO createArea(@RequestBody @Valid AreaCreateDTO dados, UriComponentsBuilder uriBuilder){
-        var area = areaServiceImp.createArea(dados);
+    public AreaDetailsDTO createArea(@RequestBody @Valid AreaCreateDTO dados,@RequestParam Long user_id, UriComponentsBuilder uriBuilder){
+        var area = areaServiceImp.createArea(dados,user_id);
 
         // boa pratica, para retornar o caminho
         var uri = uriBuilder.path("/api/v1/area/{id}").buildAndExpand(area.id_area()).toUri();

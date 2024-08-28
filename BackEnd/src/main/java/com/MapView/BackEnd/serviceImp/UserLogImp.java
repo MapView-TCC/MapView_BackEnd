@@ -1,15 +1,14 @@
 package com.MapView.BackEnd.serviceImp;
 
 import com.MapView.BackEnd.repository.UserLogRepository;
+import com.MapView.BackEnd.repository.UserRepository;
 import com.MapView.BackEnd.service.UserLogService;
-import com.MapView.BackEnd.dtos.User.UserDetailsDTO;
 import com.MapView.BackEnd.dtos.UserLog.UserLogDetailDTO;
 import com.MapView.BackEnd.entities.UserLog;
 import com.MapView.BackEnd.entities.Users;
 import com.MapView.BackEnd.enums.EnumAction;
 import com.MapView.BackEnd.infra.NotFoundException;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -20,14 +19,17 @@ public class UserLogImp implements UserLogService {
 
 
     private final UserLogRepository userLogRepository;
+    private final UserRepository userRepository;
 
-    public UserLogImp(UserLogRepository userLogRepository) {
+    public UserLogImp(UserLogRepository userLogRepository, UserRepository userRepository) {
         this.userLogRepository = userLogRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
     public UserLogDetailDTO getUserLog(Long id_user) {
         UserLog userLog = this.userLogRepository.findById(id_user).orElseThrow(() -> new NotFoundException("User Id not found"));
+
         return new UserLogDetailDTO(userLog);
     }
 
@@ -38,8 +40,9 @@ public class UserLogImp implements UserLogService {
 
 
     @Override
-    public UserDetailsDTO createUserLog(Users user, String altered_table, String id_altered, String field, String description, Instant datetime, EnumAction action) {
-        var userlog = new UserLog(user,altered_table,id_altered,field, description,datetime,action);
-        return new UserDetailsDTO(user);
+    public Void createUserLog(Long user_id, UserLog userLog) {
+        var user = userRepository.findById(user_id).orElseThrow(()-> new NotFoundException("User Id not Found"));
+        userLogRepository.save(userLog);
+        return null;
     }
 }
