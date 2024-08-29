@@ -31,7 +31,7 @@ public class EquipmentController {
 
         // boa pratica, para retornar o caminho
         var uri = uriBuilder.path("/api/v1/equipment/{id}").buildAndExpand(equipment.id_equipment()).toUri();
-        return ResponseEntity.created(uri).body(new EquipmentDetailsDTO(equipment.id_equipment(), equipment.rfid(), equipment.type(),
+        return ResponseEntity.created(uri).body(new EquipmentDetailsDTO(equipment.id_equipment(), equipment.name_equipment(), equipment.rfid(), equipment.type(),
                 equipment.model(), equipment.validity(), equipment.admin_rights(), equipment.observation(), equipment.id_location(),
                 equipment.id_owner(), equipment.operative()));
     }
@@ -45,9 +45,11 @@ public class EquipmentController {
     @GetMapping("/filter")
     public ResponseEntity<List<EquipmentDetailsDTO>> getAllEquipmentFilter(@RequestParam int page, @RequestParam int itens, @RequestParam(required = false)  String validity,
                                                                              @RequestParam(required = false)  String enviroment, @RequestParam(required = false)  String mainowner,
-                                                                           @RequestParam(required = false) String id_owner, @RequestParam(required = false) String id_equipment){
+                                                                           @RequestParam(required = false) String id_owner, @RequestParam(required = false) String id_equipment,
+                                                                           @RequestParam(required = false) String name_equipment, @RequestParam(required = false) String post){
 
-        var list = equipmentServiceImp.getEquipmentValidation(page,itens, validity,enviroment,mainowner, id_owner, id_equipment);
+        var list = equipmentServiceImp.getEquipmentValidation(page,itens, validity,enviroment,mainowner, id_owner, id_equipment,
+                                                             name_equipment, post);
         return ResponseEntity.ok(list);
     }
 

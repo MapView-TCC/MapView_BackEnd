@@ -6,6 +6,7 @@ import com.MapView.BackEnd.entities.MainOwner;
 
 public record EquipmentDetailsDTO(
         String id_equipment,
+        String name_equipment,
         String rfid,
         String type,
         String model,
@@ -17,7 +18,7 @@ public record EquipmentDetailsDTO(
         boolean operative) {
 
     public EquipmentDetailsDTO(Equipment equipment){
-        this(equipment.getId_equipment(), equipment.getRfid(), equipment.getType(), equipment.getModel(),
+        this(equipment.getId_equipment(), equipment.getName_equipment(), equipment.getRfid(), equipment.getType(), equipment.getModel(),
              equipment.getValidity(), equipment.getAdmin_rights(), equipment.getObservation(), equipment.getId_location(),
              equipment.getId_owner(), equipment.isOperative());
     }

@@ -72,6 +72,10 @@ public class EquipmentServiceImp implements EquipmentService {
         var equipment = equipmentRepository.findById(id_equipment)
                 .orElseThrow(() -> new NotFoundException("Id not found"));
 
+        if (dados.name_equipment() != null){
+            equipment.setName_equipment(dados.name_equipment());
+        }
+
         if (dados.rfid() != null) {
             equipment.setRfid(dados.rfid());
         }
@@ -132,7 +136,10 @@ public class EquipmentServiceImp implements EquipmentService {
     }
 
     @Override
-    public List<EquipmentDetailsDTO> getEquipmentValidation(int page, int itens, String validity, String environment, String mainOwner, String id_owner, String id_equipment) {
+    public List<EquipmentDetailsDTO> getEquipmentValidation(int page, int itens, String validity,
+                                                            String environment, String mainOwner,
+                                                            String id_owner, String id_equipment,
+                                                            String name_equipment, String post) {
 
         List<Equipment> filteredEquipments = equipmentRepository.findAllByOperativeTrue(PageRequest.of(page, itens))
                 .stream()
@@ -140,11 +147,14 @@ public class EquipmentServiceImp implements EquipmentService {
                         (environment == null || e.getId_location().getEnvironment().getEnvironment_name().equals(environment)) &&
                         (mainOwner == null || e.getId_owner().getOwner_name().equals(mainOwner)) &&
                         (id_owner == null || e.getId_owner().getId_owner().equals(id_owner)) &&
-                        (id_equipment == null || e.getId_equipment().equals(id_equipment)))
+                        (id_equipment == null || e.getId_equipment().equals(id_equipment)) &&
+                        (name_equipment == null || e.getName_equipment().equals(name_equipment)) &&
+                        (post == null || e.getId_location().getPost().getPost().equals(post)))
                 .toList();
 
 
-        if (validity == null && environment == null && mainOwner == null && id_owner == null && id_equipment == null) {
+        if (validity == null && environment == null && mainOwner == null && id_owner == null && id_equipment == null &&
+                name_equipment == null && post == null) {
             return equipmentRepository.findAllByOperativeTrue(PageRequest.of(page, itens))
                     .stream()
                     .map(EquipmentDetailsDTO::new)

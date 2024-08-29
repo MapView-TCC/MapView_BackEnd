@@ -17,6 +17,10 @@ public class Equipment {
 
     @Id
     private String id_equipment;
+
+    // novo campo
+    private String name_equipment;
+
     private String rfid;
     private String type;
     private String model;
