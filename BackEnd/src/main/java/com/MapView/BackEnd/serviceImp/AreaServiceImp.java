@@ -68,11 +68,11 @@ public class AreaServiceImp implements AreaService {
 
         if (dados.area_name() != null){
             area.setArea_name(dados.area_name());
-            userlog.setField("area_name");
+            userlog.setField("area_name to: "+ dados.area_name());
         }
         if (dados.area_code() != null){
             area.setArea_code(dados.area_code());
-            userlog.setField(userlog.getField()+","+"area_code");
+            userlog.setField(userlog.getField()+" ,"+"area_code to: "+dados.area_code());
         }
         areaRepository.save(area);
         userLogService.createUserLog(user_id,userlog);

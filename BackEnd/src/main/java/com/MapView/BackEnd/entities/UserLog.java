@@ -53,7 +53,6 @@ public class UserLog {
         this.action = action;
     }
 
-
     public UserLog(Users user, String altered_table, String description, EnumAction action) {
         this.user = user;
         this.altered_table=altered_table;
