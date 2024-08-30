@@ -41,17 +41,24 @@ public class UserLog {
         this.field = field;
         this.description = description;
         this.datetime = Instant.now();
-        this.action = EnumAction.UPDATE;
+        this.action = action;
     }
-    public UserLog (Users user, String altered_table, Long id_altered, String description, EnumAction action){
+    public UserLog (Users user, String altered_table, Long id_altered, String description,EnumAction action){
         this.user = user;
         this.altered_table = altered_table;
         this.id_altered = id_altered;
         this.field = null;
         this.description = description;
         this.datetime = Instant.now();
-        this.action = EnumAction.CREATE;
+        this.action = action;
     }
 
 
+    public UserLog(Users user, String altered_table, String description, EnumAction action) {
+        this.user = user;
+        this.altered_table=altered_table;
+        this.description = description;
+        this.datetime = Instant.now();
+        this.action = action;
+    }
 }
