@@ -32,21 +32,19 @@ public class AreaServiceImp implements AreaService {
     }
 
     @Override
-    public AreaDetailsDTO getArea(Long id_area) {
+    public AreaDetailsDTO getArea(Long user_id,Long id_area) {
         Area area = this.areaRepository.findById(id_area).orElseThrow(() -> new NotFoundException("Id not found"));
-
         if (!area.check_status()){
             return null;
         }
-
-
-
+        var userLog = new UserLog(null,"Area",id_area,"Read Area",EnumAction.READ);
+        userLogService.createUserLog(user_id,userLog);
         return new AreaDetailsDTO(area);
     }
 
     @Override
-    public List<AreaDetailsDTO> getAllArea(int page, int itens) {
-        var userLog = new UserLog(null,"Area",null,null,"Create new Area", EnumAction.READ);
+    public List<AreaDetailsDTO> getAllArea(int page, int itens,Long user_id) {
+        var userLog = new UserLog(null,"Area","Read All Area", EnumAction.READ);
         userLogService.createUserLog(user_id,userLog);
         return areaRepository.findAllByOperativeTrue(PageRequest.of(page, itens)).stream().map(AreaDetailsDTO::new).toList();
     }
@@ -56,7 +54,7 @@ public class AreaServiceImp implements AreaService {
         var area = new Area(dados);
         Long id_area = areaRepository.save(area).getId_area();
 
-        var userLog = new UserLog(null,"Area",id_area,null,"Create new Area", EnumAction.CREATE);
+        var userLog = new UserLog(null,"Area",id_area,"Create new Area", EnumAction.CREATE);
         userLogService.createUserLog(user_id,userLog);
 
         return new AreaDetailsDTO(area);
@@ -75,27 +73,32 @@ public class AreaServiceImp implements AreaService {
             area.setArea_code(dados.area_code());
             userlog.setField(userlog.getField()+","+"area_code");
         }
-        userLogService.createUserLog(user_id,userlog);
         areaRepository.save(area);
+        userLogService.createUserLog(user_id,userlog);
+
 
         return new AreaDetailsDTO(area);
     }
 
     @Override
-    public void activateArea(Long id_area) {
+    public void activateArea(Long id_area,Long user_id) {
         var areaClass = areaRepository.findById(id_area);
         if (areaClass.isPresent()){
             var area = areaClass.get();
             area.setOperative(true);
         }
+        var userLog = new UserLog(null,"Area",id_area,"Operative","Activated Area",EnumAction.UPDATE);
+        userLogService.createUserLog(user_id,userLog);
     }
 
     @Override
-    public void inactivateArea(Long id_area) {
+    public void inactivateArea(Long id_area,Long user_id) {
         var areaClass = areaRepository.findById(id_area);
         if (areaClass.isPresent()){
             var area = areaClass.get();
             area.setOperative(false);
         }
+        var userLog = new UserLog(null,"Area",id_area,"Operative","Inactivated Area",EnumAction.UPDATE);
+        userLogService.createUserLog(user_id,userLog);
     }
 }

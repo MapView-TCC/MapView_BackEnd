@@ -34,18 +34,18 @@ public class AreaController {
     }
 
     @GetMapping("/{id_area}")
-    public ResponseEntity<AreaDetailsDTO> getArea(@PathVariable Long id_area){
-        var area = areaServiceImp.getArea(id_area);
+    public ResponseEntity<AreaDetailsDTO> getArea(@RequestParam Long user_id, @PathVariable Long id_area){
+        var area = areaServiceImp.getArea(id_area,user_id);
         return ResponseEntity.ok(area);
     }
 
     @GetMapping
-    public ResponseEntity<List<AreaDetailsDTO>>  getAllArea(@RequestParam int page, @RequestParam int itens){
-        var area = areaServiceImp.getAllArea(page, itens);
+    public ResponseEntity<List<AreaDetailsDTO>>  getAllArea(@RequestParam int page, @RequestParam int itens,@RequestParam Long user_id){
+        var area = areaServiceImp.getAllArea(page, itens,user_id);
         return ResponseEntity.ok(area);
     }
 
-    @PutMapping("/{id_area}")
+    @PutMapping("/area/{id_area}")
     @Transactional
     public ResponseEntity<AreaDetailsDTO> updateArea(@PathVariable Long id_area, @RequestBody AreaUpdateDTO dados,@RequestParam Long user_id){
         AreaDetailsDTO areaDetailsDTO = areaServiceImp.updateArea(id_area, dados,user_id);
@@ -54,15 +54,15 @@ public class AreaController {
 
     @PutMapping("/inactivate/{id_area}")
     @Transactional
-    public ResponseEntity<AreaDetailsDTO> inactivate(@PathVariable Long id_area){
-        areaServiceImp.inactivateArea(id_area);
+    public ResponseEntity<AreaDetailsDTO> inactivate(@PathVariable Long id_area,@RequestParam Long user_id){
+        areaServiceImp.inactivateArea(id_area,user_id);
         return ResponseEntity.ok().build();
     }
 
     @PutMapping("/active/{id_area}")
     @Transactional
-    public ResponseEntity<AreaDetailsDTO> active(@PathVariable Long id_area){
-        areaServiceImp.activateArea(id_area);
+    public ResponseEntity<AreaDetailsDTO> active( @PathVariable Long id_area,@RequestParam Long user_id){
+        areaServiceImp.activateArea(id_area,user_id);
         return ResponseEntity.ok().build();
     }
 
