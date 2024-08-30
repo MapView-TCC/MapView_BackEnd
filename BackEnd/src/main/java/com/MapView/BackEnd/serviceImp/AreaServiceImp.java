@@ -46,6 +46,8 @@ public class AreaServiceImp implements AreaService {
 
     @Override
     public List<AreaDetailsDTO> getAllArea(int page, int itens) {
+        var userLog = new UserLog(null,"Area",null,null,"Create new Area", EnumAction.READ);
+        userLogService.createUserLog(user_id,userLog);
         return areaRepository.findAllByOperativeTrue(PageRequest.of(page, itens)).stream().map(AreaDetailsDTO::new).toList();
     }
 
@@ -53,9 +55,10 @@ public class AreaServiceImp implements AreaService {
     public AreaDetailsDTO createArea(AreaCreateDTO dados, Long user_id) {
         var area = new Area(dados);
         Long id_area = areaRepository.save(area).getId_area();
+
         var userLog = new UserLog(null,"Area",id_area,null,"Create new Area", EnumAction.CREATE);
         userLogService.createUserLog(user_id,userLog);
-                ;
+
         return new AreaDetailsDTO(area);
     }
 
@@ -69,7 +72,6 @@ public class AreaServiceImp implements AreaService {
             area.setArea_name(dados.area_name());
             userlog.setField("area_name");
         }
-
         if (dados.area_code() != null){
             area.setArea_code(dados.area_code());
             userlog.setField(userlog.getField()+","+"area_code");
