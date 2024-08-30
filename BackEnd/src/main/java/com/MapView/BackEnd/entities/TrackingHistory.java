@@ -1,6 +1,7 @@
 package com.MapView.BackEnd.entities;
 
 import com.MapView.BackEnd.enums.EnumAction;
+import com.MapView.BackEnd.enums.EnumTrackingAction;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -19,16 +20,27 @@ public class TrackingHistory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id_tracking;
+
     @CreationTimestamp
-    private Instant dateTime;
+    // Use aspas invertidas para forçar o nome exato
+    //@Column(updatable = false) // Se você não quiser que a data de criação seja atualizada
+    private Instant datetime;
+
     @OneToOne
     @JoinColumn(name ="id_equipment")
     private Equipment id_equipment;
     @OneToOne
-    @JoinColumn(name ="id_enviroment")
+    @JoinColumn(name ="id_environment")
     private Enviroment id_enviroment;
 
-    @Enumerated
-    private EnumAction action;
+    @Enumerated(value = EnumType.STRING)
+    private EnumTrackingAction action;
 
+//    public TrackingHistory(Long id_tracking, Instant dateTime, Equipment id_equipment, Enviroment id_enviroment, EnumTrackingAction action) {
+//        this.id_tracking = id_tracking;
+//        this.dateTime = dateTime;
+//        this.id_equipment = id_equipment;
+//        this.id_enviroment = id_enviroment;
+//        this.action = action;
+//    }
 }
