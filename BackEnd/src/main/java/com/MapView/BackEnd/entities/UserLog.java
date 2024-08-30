@@ -30,7 +30,7 @@ public class UserLog {
     private String description;
     @CreationTimestamp
     private Instant datetime;
-    @Enumerated
+    @Enumerated(EnumType.STRING)
     private EnumAction action;
 
 
@@ -39,16 +39,18 @@ public class UserLog {
         this.altered_table = altered_table;
         this.id_altered = id_altered;
         this.field = field;
+        this.description = description;
         this.datetime = Instant.now();
-        this.action = action;
+        this.action = EnumAction.UPDATE;
     }
     public UserLog (Users user, String altered_table, Long id_altered, String description, EnumAction action){
         this.user = user;
         this.altered_table = altered_table;
         this.id_altered = id_altered;
         this.field = null;
+        this.description = description;
         this.datetime = Instant.now();
-        this.action = action;
+        this.action = EnumAction.CREATE;
     }
 
 
