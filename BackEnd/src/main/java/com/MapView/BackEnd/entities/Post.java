@@ -26,14 +26,9 @@ public class Post {
     @JsonBackReference
     private Set<Enviroment> posts;
 
-
     public Post(PostCreateDTO data){
         this.post = data.post();
         this.operative = true;
 
     }
-    public boolean post_status_check(){
-        return this.operative;
-    }
-
 }
