@@ -40,6 +40,7 @@ public class ResponsibleServiceImp implements ResponsibleService {
 
         // salvar na entidade
         var user = userRepository.findById(data.id_user()).orElseThrow(() -> new NotFoundException("User Id Not Found"));
+
         var classe = classesRepository.findById(data.id_classes()).orElseThrow(() -> new NotFoundException("Class Id Not Found"));
 
         var responsible = new Responsible(data.responsible_name(), data.edv(), classe,user);
@@ -90,19 +91,19 @@ public class ResponsibleServiceImp implements ResponsibleService {
 
         if(data.responsible_name() != null){
             responsible.setResponsible_name(data.responsible_name());
-            userlog.setField("Responsible to: " + data.responsible_name());
+            userlog.setField("Responsible name to: " + data.responsible_name());
         }
         if(data.edv() != null){
             responsible.setEdv(data.edv());
-        }
-        if(data.edv() != null){
-            responsible.setEdv(data.edv());
+            userlog.setField(userlog.getField() + " ," + "Responsible edv to: " + data.edv());
         }
         if(data.id_classes() != null){
             responsible.setId_classes(classeEntity);
+            userlog.setField(userlog.getField() + " ," + "Responsible id classes to: " + data.id_classes());
         }
         if(data.id_user() != null){
             responsible.setId_user(userEntity);
+            userlog.setField(userlog.getField() + " ," + "Responsible id user to: " + data.id_user());
         }
 
         userLogRepository.save(userlog);
@@ -113,17 +114,29 @@ public class ResponsibleServiceImp implements ResponsibleService {
 
     @Override
     public void activeResposible(Long id_resposible, Long user_id) {
-        var responsible = responsibleRepository.findById(id_resposible).orElseThrow(() -> new NotFoundException("Responsible Id Not Found"));
-        responsible.activeResposible();
-        responsibleRepository.save(responsible);
+        Users user = this.userRepository.findById(user_id).orElseThrow(() -> new NotFoundException("Id not found"));
 
+        var responsibleClass = responsibleRepository.findById(id_resposible);
+        if (responsibleClass.isPresent()){
+            var responsible = responsibleClass.get();
+            responsible.setOperative(true);
+        }
+
+        var userLog = new UserLog(user, "Resposible", id_resposible.toString(), "Operative", "Activated Resposible", EnumAction.UPDATE);
+        userLogRepository.save(userLog);
     }
 
     @Override
     public void inactivateResposible(Long id_resposible, Long user_id) {
-        var responsible = responsibleRepository.findById(id_resposible).orElseThrow(() -> new NotFoundException("Responsible Id Not Found"));
-        responsible.inactivateEnviroment();
-        responsibleRepository.save(responsible);
+        Users user = this.userRepository.findById(user_id).orElseThrow(() -> new NotFoundException("Id not found"));
 
+        var responsibleClass = responsibleRepository.findById(id_resposible);
+        if (responsibleClass.isPresent()){
+            var responsible = responsibleClass.get();
+            responsible.setOperative(false);
+        }
+
+        var userLog = new UserLog(user, "Resposible", id_resposible.toString(), "Operative", "Inactivated Resposible", EnumAction.UPDATE);
+        userLogRepository.save(userLog);
     }
 }

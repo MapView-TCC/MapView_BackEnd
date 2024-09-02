@@ -89,53 +89,58 @@ public class EquipmentServiceImp implements EquipmentService {
         Users user = this.userRepository.findById(user_id).orElseThrow(() -> new NotFoundException("Id not found"));
         var userlog = new UserLog(user,"Equipment",dados.id_equipment(),null,"Infos update",EnumAction.UPDATE);
 
+        if (dados.id_equipment() != null){
+            equipment.setId_equipment(dados.id_equipment());
+            userlog.setField("equipment id to: " + dados.id_equipment());
+        }
+
         if (dados.name_equipment() != null){
             equipment.setName_equipment(dados.name_equipment());
-            userlog.setField("equipment to: " + dados.name_equipment());
+            userlog.setField(userlog.getField()+" ,"+"equipment name to: " + dados.name_equipment());
         }
 
         if (dados.rfid() != null) {
             equipment.setRfid(dados.rfid());
-            userlog.setField(userlog.getField() + "equipment to: " + dados.rfid());
+            userlog.setField(userlog.getField()+" ,"+"equipment rfid to: " + dados.rfid());
         }
 
         if (dados.type() != null) {
             equipment.setType(dados.type());
-            userlog.setField(userlog.getField() + "equipment to: " + dados.type());
+            userlog.setField(userlog.getField()+" ,"+"equipment type to: " + dados.type());
         }
 
         if (dados.model() != null) {
             equipment.setModel(dados.model());
-            userlog.setField(userlog.getField() + "equipment to: " + dados.model());
+            userlog.setField(userlog.getField()+" ,"+"equipment model to: " + dados.model());
         }
 
         if (dados.validity() != null) {
             equipment.setValidity(dados.validity());
-            userlog.setField(userlog.getField() + "equipment to: " + dados.validity());
+            userlog.setField(userlog.getField()+" ,"+"equipment validity to: " + dados.validity());
         }
 
         if (dados.admin_rights() != null) {
             equipment.setAdmin_rights(dados.admin_rights());
-            userlog.setField(userlog.getField() + "equipment to: " + dados.admin_rights());
+            userlog.setField(userlog.getField()+" ,"+"equipment admin rights to: " + dados.admin_rights());
         }
 
         if (dados.observation() != null) {
             equipment.setObservation(dados.observation());
-            userlog.setField(userlog.getField() + "equipment to: " + dados.observation());
+            userlog.setField(userlog.getField()+" ,"+"equipment observation to: " + dados.observation());
         }
 
         if (dados.id_location() != null) {
             var location = locationRepository.findById(dados.id_location())
                     .orElseThrow(() -> new NotFoundException("Location id not found"));
             equipment.setId_location(location);
-            userlog.setField(userlog.getField() + "equipment to: " + dados.id_location());
+            userlog.setField(userlog.getField()+" ,"+"equipment location to: " + dados.id_location());
         }
 
         if (dados.id_owner() != null) {
             var owner = mainOwnerRepository.findById(dados.id_owner())
                     .orElseThrow(() -> new NotFoundException("Owner id not found"));
             equipment.setId_owner(owner);
-            userlog.setField(userlog.getField() + "equipment to: " + dados.id_owner());
+            userlog.setField(userlog.getField()+" ,"+"equipment main owner to: " + dados.id_owner());
         }
 
         userLogRepository.save(userlog);
