@@ -32,7 +32,7 @@ public class ReportServiceImp implements ReportService {
 
         // Estilo do cabeçalho
         HSSFCellStyle headerStyle = workbook.createCellStyle();
-        headerStyle.setFillForegroundColor(IndexedColors.LIGHT_BLUE.getIndex()); // Cor de fundo (cinza claro)
+        headerStyle.setFillForegroundColor(IndexedColors.AUTOMATIC.getIndex()); // Cor de fundo (cinza claro)
         headerStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND); // Define o padrão de preenchimento
         headerStyle.setAlignment(HorizontalAlignment.CENTER);
         headerStyle.setVerticalAlignment(VerticalAlignment.CENTER);
@@ -50,7 +50,7 @@ public class ReportServiceImp implements ReportService {
 
         // Criar a linha do cabeçalho
         HSSFRow rowDate = sheet.createRow(0);
-        rowDate.createCell(0).setCellValue(String.format("Data da última utilização: %s", new java.util.Date())); // data atual
+        rowDate.createCell(0).setCellValue(String.format("Data do último download: %s", new java.util.Date())); // data atual
 
         // Criar a linha do cabeçalho
         HSSFRow row = sheet.createRow(2);
@@ -67,12 +67,20 @@ public class ReportServiceImp implements ReportService {
 
         int dataRowIndex = 3;
 
+        // Estilo das células de dados
+        HSSFCellStyle dataStyle = workbook.createCellStyle();
+        dataStyle.setBorderBottom(BorderStyle.THIN);
+        dataStyle.setBorderLeft(BorderStyle.THIN);
+        dataStyle.setBorderRight(BorderStyle.THIN);
+        dataStyle.setBorderTop(BorderStyle.THIN);
+
         for (Equipment equipment : equipments) {
             HSSFRow dataRow = sheet.createRow(dataRowIndex);
-            dataRow.createCell(0).setCellValue(equipment.getId_equipment());
-            dataRow.createCell(1).setCellValue(equipment.getType());
-            dataRow.createCell(2).setCellValue(equipment.getModel());
-            dataRow.createCell(3).setCellValue(equipment.getValidity());
+
+            createDataCell(dataRow, 0, equipment.getId_equipment(), dataStyle);
+            createDataCell(dataRow, 1, equipment.getType(), dataStyle);
+            createDataCell(dataRow, 2, equipment.getModel(), dataStyle);
+            createDataCell(dataRow, 3, equipment.getValidity(), dataStyle);
 
             // Extrair informações textuais das entidades Location e MainOwner
             String IdownerName = equipment.getId_owner() != null ? equipment.getId_owner().getId_owner() : "N/A";
@@ -80,23 +88,26 @@ public class ReportServiceImp implements ReportService {
             String environment = (location != null && location.getEnvironment() != null) ? location.getEnvironment().getEnvironment_name() : "N/A";
             String postName = (location != null && location.getPost() != null) ? location.getPost().getPost() : "N/A";
 
-            dataRow.createCell(4).setCellValue(IdownerName);
-            dataRow.createCell(5).setCellValue(environment);
-            dataRow.createCell(6).setCellValue(postName);
-            dataRow.createCell(7).setCellValue(equipment.getObservation());
+            createDataCell(dataRow, 4, IdownerName, dataStyle);
+            createDataCell(dataRow, 5, environment, dataStyle);
+            createDataCell(dataRow, 6, postName, dataStyle);
+            createDataCell(dataRow, 7, equipment.getObservation(), dataStyle);
 
             dataRowIndex++;
         }
 
         // Definir largura fixa para cada coluna
         sheet.setColumnWidth(0, 6000);
-        sheet.setColumnWidth(1, 3000);
+        sheet.setColumnWidth(1, 4000);
         sheet.setColumnWidth(2, 4000);
         sheet.setColumnWidth(3, 4000);
-        sheet.setColumnWidth(4, 5000);
+        sheet.setColumnWidth(4, 6000);
         sheet.setColumnWidth(5, 5000);
         sheet.setColumnWidth(6, 5000);
-        sheet.setColumnWidth(7, 5000);
+        sheet.setColumnWidth(7, 9000);
+
+        // definir altura da coluna
+        row.setHeight((short) (18 * 20));
 
         // adiciona o filtro
         sheet.setAutoFilter(new CellRangeAddress(2,2,0,7));
@@ -109,6 +120,12 @@ public class ReportServiceImp implements ReportService {
     }
 
     private void createHeaderCell(HSSFRow row, int columnIndex, String value, HSSFCellStyle style) {
+        HSSFCell cell = row.createCell(columnIndex);
+        cell.setCellValue(value);
+        cell.setCellStyle(style);
+    }
+
+    private void createDataCell(HSSFRow row, int columnIndex, String value, HSSFCellStyle style) {
         HSSFCell cell = row.createCell(columnIndex);
         cell.setCellValue(value);
         cell.setCellStyle(style);
