@@ -34,14 +34,14 @@ public class CostCenterController {
     }
 
     @GetMapping
-    public ResponseEntity<List<CostCenterDetailsDTO>> getAllCostCenter(@RequestParam int page, @RequestParam int itens){
+    public ResponseEntity<List<CostCenterDetailsDTO>> getAllCostCenter(@RequestParam int page, @RequestParam int itens,@RequestParam Long user_id){
         var list = costCenterServiceImp.getAllCostCenter(page,itens);
         return ResponseEntity.ok(list);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CostCenterDetailsDTO> getIdCostCenter(@PathVariable Long id){
-        var costCenter = costCenterServiceImp.getCostCenter(id);
+    public ResponseEntity<CostCenterDetailsDTO> getIdCostCenter(@PathVariable Long id,@RequestParam Long user_id){
+        var costCenter = costCenterServiceImp.getCostCenter(id,user_id);
         return ResponseEntity.ok(costCenter);
     }
 

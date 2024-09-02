@@ -41,8 +41,6 @@ public class UserLogImp implements UserLogService {
 
     @Override
     public Void createUserLog(Long user_id, UserLog userLog) {
-        var user = userRepository.findById(user_id).orElseThrow(()-> new NotFoundException("User Id not Found"));
-        userLog.setUser(user);
         userLogRepository.save(userLog);
         return null;
     }

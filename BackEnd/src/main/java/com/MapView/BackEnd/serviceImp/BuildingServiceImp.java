@@ -1,8 +1,11 @@
 package com.MapView.BackEnd.serviceImp;
 
 import com.MapView.BackEnd.entities.UserLog;
+import com.MapView.BackEnd.entities.Users;
 import com.MapView.BackEnd.enums.EnumAction;
 import com.MapView.BackEnd.repository.BuildingRepository;
+import com.MapView.BackEnd.repository.UserLogRepository;
+import com.MapView.BackEnd.repository.UserRepository;
 import com.MapView.BackEnd.service.BuildingService;
 import com.MapView.BackEnd.dtos.Building.BuildingCreateDTO;
 import com.MapView.BackEnd.dtos.Building.BuildingDetailsDTO;
@@ -11,6 +14,7 @@ import com.MapView.BackEnd.entities.Building;
 import com.MapView.BackEnd.infra.NotFoundException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -19,27 +23,32 @@ public class BuildingServiceImp implements BuildingService {
 
 
     private final BuildingRepository buildingRepository;
-    private final UserLogImp userLogImp;
+    private final UserRepository userRepository;
+    private  final UserLogRepository userLogRepository;
 
-    public BuildingServiceImp(BuildingRepository buildingRepository, UserLogImp userLogImp) {
+    public BuildingServiceImp(BuildingRepository buildingRepository, UserRepository userRepository, UserLogRepository userLogRepository) {
         this.buildingRepository = buildingRepository;
-        this.userLogImp = userLogImp;
+        this.userRepository = userRepository;
+        this.userLogRepository = userLogRepository;
     }
 
     @Override
     public BuildingDetailsDTO getBuilding(Long id_building,Long user_id) {
         Building building = this.buildingRepository.findById(id_building).orElseThrow(() -> new NotFoundException("Id not found"));
+        Users user = this.userRepository.findById(user_id).orElseThrow(() -> new NotFoundException("Id not found"));
         if (!building.status_check()){
             return null;
         }
-        var userLog = new UserLog(null,"Building",id_building,"Read building",EnumAction.READ);
-        userLogImp.createUserLog(user_id,userLog);
+        var userLog = new UserLog(user,"Building",id_building,"Read building",EnumAction.READ);
+        userLogRepository.save(userLog);
 
         return new BuildingDetailsDTO(building);
     }
 
     @Override
-    public List<BuildingDetailsDTO> getAllBuilding( int page,  int itens) {
+    public List<BuildingDetailsDTO> getAllBuilding(int page, int itens, @RequestParam Long user_id) {
+        Users user = this.userRepository.findById(user_id).orElseThrow(() -> new NotFoundException("Id not found"));
+
         return buildingRepository.findAllByOperativeTrue(PageRequest.of(page, itens)).stream().map(BuildingDetailsDTO::new).toList();
     }
 
@@ -47,16 +56,20 @@ public class BuildingServiceImp implements BuildingService {
     public BuildingDetailsDTO createBuilding(BuildingCreateDTO dados,Long user_id) {
         var building = new Building(dados);
         Long id_build = buildingRepository.save(building).getId_building();
+        Users user = this.userRepository.findById(user_id).orElseThrow(() -> new NotFoundException("Id not found"));
 
-        var userLog = new UserLog(null,"Building",id_build,"Create new Building", EnumAction.CREATE);
-        userLogImp.createUserLog(user_id,userLog);
+        var userLog = new UserLog(user,"Building",id_build,"Create new Building", EnumAction.CREATE);
+        userLogRepository.save(userLog);
+
         return new BuildingDetailsDTO(building);
     }
 
     @Override
     public BuildingDetailsDTO updateBuilding(Long id_building, BuildingUpdateDTO dados,Long user_id) {
         var building = buildingRepository.findById(id_building). orElseThrow(() -> new RuntimeException("Building Id not found"));
-        var userlog = new UserLog(null,"Building",id_building,null,"Update building: ",EnumAction.UPDATE);
+        Users user = this.userRepository.findById(user_id).orElseThrow(() -> new NotFoundException("Id not found"));
+
+        var userlog = new UserLog(user,"Building",id_building,null,"Update building: ",EnumAction.UPDATE);
 
         if (dados.building_code() != null){
             building.setBuilding_code(dados.building_code());
@@ -66,19 +79,21 @@ public class BuildingServiceImp implements BuildingService {
         }
 
         buildingRepository.save(building);
-        userLogImp.createUserLog(user_id,userlog);
+        userLogRepository.save(userlog);
         return new BuildingDetailsDTO(building);
     }
 
     @Override
     public void activateBuilding(Long id_building, Long user_id) {
         var buildingClass = buildingRepository.findById(id_building);
+        Users user = this.userRepository.findById(user_id).orElseThrow(() -> new NotFoundException("Id not found"));
+
         if (buildingClass.isPresent()){
             var building = buildingClass.get();
             building.setOperative(true);
         }
         var userLog = new UserLog(null,"Building",id_building,"Operative","Activated Area", EnumAction.UPDATE);
-        userLogImp.createUserLog(user_id,userLog);
+        userLogRepository.save(userLog);
     }
 
     @Override
@@ -89,6 +104,6 @@ public class BuildingServiceImp implements BuildingService {
             building.setOperative(false);
         }
         var userLog = new UserLog(null,"Building",id_building,"Operative","Inactivated Area", EnumAction.UPDATE);
-         userLogImp.createUserLog(user_id,userLog);
+         userLogRepository.save(userLog);
     }
 }
