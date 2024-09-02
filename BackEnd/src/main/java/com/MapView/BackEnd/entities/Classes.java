@@ -39,4 +39,7 @@ public class Classes {
         this.operative = true;
     }
 
+    public boolean check_status(){
+        return this.operative;
+    }
 }

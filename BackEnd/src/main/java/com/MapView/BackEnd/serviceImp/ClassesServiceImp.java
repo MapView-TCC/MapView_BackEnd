@@ -1,5 +1,7 @@
 package com.MapView.BackEnd.serviceImp;
 
+import com.MapView.BackEnd.entities.UserLog;
+import com.MapView.BackEnd.enums.EnumAction;
 import com.MapView.BackEnd.repository.ClassesRepository;
 import com.MapView.BackEnd.repository.UserRepository;
 import com.MapView.BackEnd.service.ClassesService;
@@ -8,6 +10,7 @@ import com.MapView.BackEnd.dtos.Classes.ClassesDetaiLDTO;
 import com.MapView.BackEnd.dtos.Classes.ClassesUpdateDTO;
 import com.MapView.BackEnd.entities.Classes;
 import com.MapView.BackEnd.infra.NotFoundException;
+import com.MapView.BackEnd.service.UserLogService;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -19,65 +22,90 @@ public class ClassesServiceImp implements ClassesService {
 
     private final ClassesRepository classesRepository;
     private final UserRepository userRepository;
+    private final UserLogService userLogService;
 
-    public ClassesServiceImp(ClassesRepository classesRepository, UserRepository userRepository) {
+    public ClassesServiceImp(ClassesRepository classesRepository, UserRepository userRepository, UserLogService userLogService) {
         this.classesRepository = classesRepository;
         this.userRepository = userRepository;
-
+        this.userLogService = userLogService;
     }
     @Override
-    public ClassesDetaiLDTO createClasses(ClassesCreateDTO data) {
+    public ClassesDetaiLDTO createClasses(ClassesCreateDTO data, Long id_user) {
         var user = userRepository.findById(data.user_id()).orElseThrow(() -> new NotFoundException("User Id Not Found"));
         var classe = new Classes(data,user);
-        classesRepository.save(classe);
+        Long id_classes = classesRepository.save(classe).getId_classes();
+
+        var userLog = new UserLog(null,"Classes", id_classes,"Create new classes", EnumAction.CREATE);
+        userLogService.createUserLog(id_user,userLog);
 
         return new ClassesDetaiLDTO(classe);
     }
 
     @Override
-    public ClassesDetaiLDTO getClasse(Long id) {
-        var classe = classesRepository.findById(id).orElseThrow(() -> new NotFoundException("User Id Not Found"));
+    public ClassesDetaiLDTO getClasse(Long id, Long user_id) {
+        var classe = classesRepository.findById(id).orElseThrow(() -> new NotFoundException("Classe id Not Found"));
+        if (!classe.check_status()){
+            return null;
+        }
+
+        var userLog = new UserLog(null,"Classe",id,"Read Area",EnumAction.READ);
+        userLogService.createUserLog(user_id,userLog);
+
         return new ClassesDetaiLDTO(classe);
     }
 
     @Override
-    public ClassesDetaiLDTO updateClasses(Long classes_id ,ClassesUpdateDTO data) {
+    public ClassesDetaiLDTO updateClasses(Long classes_id ,ClassesUpdateDTO data, Long user_id) {
         var classes = classesRepository.findById(data.user_id()).orElseThrow(() -> new NotFoundException("Class Id Not Found"));
+        var userlog = new UserLog(null,"Classes",classes_id,null,"Update Classes: ",EnumAction.UPDATE);
+
         if(data.user_id() != null){
             var user = userRepository.findById(data.user_id()).orElseThrow(() -> new NotFoundException("User Id Not Found"));
             classes.setId_user(user);
+            userlog.setField("user_id");
+            userlog.setDescription("user_id to: " + data.user_id());
         }
-        if(data.enumCourse() != null){
-            classes.setEnumCourse(data.enumCourse());
-        }
-        if(data.criation_date() != null){
-            classes.setCreation_date(data.criation_date());
-        }
+
         if(data.classes() != null){
             classes.setClasses(data.classes());
+            userlog.setField("classes");
+            userlog.setDescription("classes to: " + data.classes());
         }
         classesRepository.save(classes);
+        userLogService.createUserLog(user_id,userlog);
 
         return new ClassesDetaiLDTO(classes);
     }
 
     @Override
-    public List<ClassesDetaiLDTO> getAllClasses(@RequestParam int page, @RequestParam int itens) {
+    public List<ClassesDetaiLDTO> getAllClasses(int page, int itens, Long user_id) {
+        var userLog = new UserLog(null,"Classes","Read All Classes", EnumAction.READ);
+        userLogService.createUserLog(user_id,userLog);
         return this.classesRepository.findClassesByOperativeTrue(PageRequest.of(page, itens)).stream().map(ClassesDetaiLDTO::new).toList();
     }
 
     @Override
-    public void activeClass(Long class_id) {
-        var classe = classesRepository.findById(class_id).orElseThrow(()-> new NotFoundException("Class Id Not Found"));
-        classe.setOperative(true);
-        classesRepository.save(classe);
+    public void activeClass(Long class_id, Long user_id) {
+        var classesClass = classesRepository.findById(class_id);
+        if (classesClass.isPresent()){
+            var classes = classesClass.get();
+            classes.setOperative(true);
+        }
+
+        var userLog = new UserLog(null,"Classes",class_id,"Operative","Activated Area",EnumAction.UPDATE);
+        userLogService.createUserLog(user_id,userLog);
     }
 
     @Override
-    public void inactiveClass(Long class_id) {
-        var classe = classesRepository.findById(class_id).orElseThrow(()-> new NotFoundException("Class Id Not Found"));
-        classe.setOperative(false);
-        classesRepository.save(classe);
+    public void inactiveClass(Long class_id, Long user_id) {
+        var classesClass = classesRepository.findById(class_id);
+        if (classesClass.isPresent()){
+            var classes = classesClass.get();
+            classes.setOperative(false);
+        }
+
+        var userLog = new UserLog(null,"Classes",class_id,"Operative","Activated Area",EnumAction.UPDATE);
+        userLogService.createUserLog(user_id,userLog);
 
     }
 
