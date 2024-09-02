@@ -26,8 +26,8 @@ public class EquipmentController {
 
     @PostMapping
     @Transactional
-    public ResponseEntity<EquipmentDetailsDTO> createEquipament(@RequestBody @Valid EquipmentCreateDTO dados, UriComponentsBuilder uriBuilder){
-        var equipment = equipmentServiceImp.createEquipment(dados);
+    public ResponseEntity<EquipmentDetailsDTO> createEquipament(@RequestBody @Valid EquipmentCreateDTO dados, UriComponentsBuilder uriBuilder, @RequestParam Long user_id){
+        var equipment = equipmentServiceImp.createEquipment(dados, user_id);
 
         // boa pratica, para retornar o caminho
         var uri = uriBuilder.path("/api/v1/equipment/{id}").buildAndExpand(equipment.id_equipment()).toUri();
@@ -37,8 +37,8 @@ public class EquipmentController {
     }
 
     @GetMapping
-    public ResponseEntity<List<EquipmentDetailsDTO>> getAllEquipment(@RequestParam int page, @RequestParam int itens){
-        var list = equipmentServiceImp.getAllEquipment(page,itens);
+    public ResponseEntity<List<EquipmentDetailsDTO>> getAllEquipment(@RequestParam int page, @RequestParam int itens, @RequestParam Long user_id){
+        var list = equipmentServiceImp.getAllEquipment(page,itens, user_id);
         return ResponseEntity.ok(list);
     }
 
@@ -54,29 +54,29 @@ public class EquipmentController {
     }
 
     @GetMapping("/{equipament_id}")
-    public ResponseEntity<EquipmentDetailsDTO> getById(@PathVariable("equipament_id") String id){
-        var equipment = equipmentServiceImp.getEquipment(id);
+    public ResponseEntity<EquipmentDetailsDTO> getById(@PathVariable("equipament_id") String id, @RequestParam Long user_id){
+        var equipment = equipmentServiceImp.getEquipment(id, user_id);
         return ResponseEntity.ok(equipment);
     }
 
     @PutMapping("/inactivate/{id}")
     @Transactional
-    public ResponseEntity<Void> inactivate(@PathVariable String id){
-        equipmentServiceImp.inactivateEquipment(id);
+    public ResponseEntity<Void> inactivate(@PathVariable String id, @RequestParam Long user_id){
+        equipmentServiceImp.inactivateEquipment(id, user_id);
         return ResponseEntity.ok().build();
     }
 
     @PutMapping("/active/{id}")
     @Transactional
-    public ResponseEntity<Void> active(@PathVariable String id){
-        equipmentServiceImp.activateEquipment(id);
+    public ResponseEntity<Void> active(@PathVariable String id, @RequestParam Long user_id){
+        equipmentServiceImp.activateEquipment(id, user_id);
         return ResponseEntity.ok().build();
     }
 
     @PutMapping("/{id}")
     @Transactional
-    public ResponseEntity<EquipmentDetailsDTO> updateEquipment(@PathVariable String id, @RequestBody EquipmentUpdateDTO dados){
-        EquipmentDetailsDTO equipmentDetailsDTO = equipmentServiceImp.updateEquipment(id, dados);
+    public ResponseEntity<EquipmentDetailsDTO> updateEquipment(@PathVariable String id, @RequestBody EquipmentUpdateDTO dados, @RequestParam Long user_id){
+        EquipmentDetailsDTO equipmentDetailsDTO = equipmentServiceImp.updateEquipment(id, dados, user_id);
         return ResponseEntity.ok(equipmentDetailsDTO);
     }
 

@@ -8,11 +8,11 @@ import java.util.List;
 
 public interface EnviromentService {
 
-    EnviromentDetailsDTO getEnvioment(Long enviroment_id);
-    List<EnviromentDetailsDTO> getAllEnvioment(int page,int itens);
-    EnviromentDetailsDTO createEnviroment(EnviromentCreateDTO data);
-    EnviromentDetailsDTO updateEnviroment(Long enviroment_id,EnviromentUpdateDTO data);
-    void activateEnviroment(Long id_environment);
-    void inactivateEnviroment(Long id_environment);
+    EnviromentDetailsDTO getEnviroment(Long enviroment_id, Long user_id);
+    List<EnviromentDetailsDTO> getAllEnviroment(int page,int itens, Long user_id);
+    EnviromentDetailsDTO createEnviroment(EnviromentCreateDTO data, Long user_id);
+    EnviromentDetailsDTO updateEnviroment(Long enviroment_id,EnviromentUpdateDTO data, Long user_id);
+    void activateEnviroment(Long id_environment, Long user_id);
+    void inactivateEnviroment(Long id_environment, Long user_id);
 }
  

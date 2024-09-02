@@ -30,13 +30,16 @@ public class EquipmentResponsible {
 
     private LocalDate start_usage;
     private LocalDate end_usage;
+
     private boolean operative;
 
 
     public EquipmentResponsible(EquipmentResponsibleCreateDTO equipmentResponsibleCreateDTO, Equipment equipment,
                                 Responsible responsible) {
         this.id_equipment = equipment;
+        this.id_responsible = responsible;
         this.start_usage = equipmentResponsibleCreateDTO.start_usage();
         this.end_usage = equipmentResponsibleCreateDTO.end_usage();
+        this.operative = true;
     }
 }

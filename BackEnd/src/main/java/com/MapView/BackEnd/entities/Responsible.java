@@ -44,10 +44,8 @@ public class Responsible {
 
     }
 
-    public void activeResposible(){
-        this.setOperative(true);
+    public boolean status_check(){
+        return this.operative;
     }
-    public void inactivateEnviroment(){
-        this.setOperative(false);
-    }
+
 }
