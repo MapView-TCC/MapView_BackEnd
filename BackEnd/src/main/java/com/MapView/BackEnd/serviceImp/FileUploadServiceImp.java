@@ -57,14 +57,14 @@ public class FileUploadServiceImp {
     }
 
     public void equipament_image(Path targetLocation){
+        String targetLocatioString = targetLocation.toString();
 
         List<Equipment> allEquipments   =  equipmentRepository.findAll();
 
         for (Equipment equipment : allEquipments) {
-            equipment.setTargetLocation(targetLocation);
+            equipment.setImage(targetLocatioString);
         }
 
-        // Salvando todos os equipamentos atualizados
         equipmentRepository.saveAll(allEquipments);
     }
 
