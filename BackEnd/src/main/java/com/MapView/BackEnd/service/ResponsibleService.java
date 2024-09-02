@@ -8,11 +8,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.util.List;
 
 public interface ResponsibleService {
-    ResponsibleDetailsDTO getResposible(Long id_Resposible);
-    List<ResponsibleDetailsDTO> getAllResposible(int page, int itens);
-    ResponsibleDetailsDTO createResposible(ResponsibleCrateDTO data);
-    ResponsibleDetailsDTO updateResposible(Long id_responsible, ResponsibleUpdateDTO data);
+    ResponsibleDetailsDTO getResposible(Long id_Resposible, Long user_id);
+    List<ResponsibleDetailsDTO> getAllResposible(int page, int itens, Long user_id);
+    ResponsibleDetailsDTO createResposible(ResponsibleCrateDTO data, Long user_id);
+    ResponsibleDetailsDTO updateResposible(Long id_responsible, ResponsibleUpdateDTO data, Long user_id);
 
-    void activeResposible(Long id_Resposible);
-    void inactivateEnviroment(Long id_Resposible);
+    void activeResposible(Long id_Resposible, Long user_id);
+    void inactivateResposible(Long id_Resposible, Long user_id);
 }

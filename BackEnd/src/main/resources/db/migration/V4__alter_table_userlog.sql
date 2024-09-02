@@ -1,2 +1,2 @@
 ALTER TABLE user_log
-MODIFY id_altered VARCHAR;
+MODIFY COLUMN id_altered VARCHAR(255);
