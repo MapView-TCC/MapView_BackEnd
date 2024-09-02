@@ -34,12 +34,14 @@ public class AreaServiceImp implements AreaService {
 
     @Override
     public AreaDetailsDTO getArea(Long user_id,Long id_area) {
-        Area area = this.areaRepository.findById(id_area).orElseThrow(() -> new NotFoundException("Id not found"));
         Users user = this.userRepository.findById(user_id).orElseThrow(() -> new NotFoundException("Id not found"));
-        if (!area.check_status()){
+
+        Area area = this.areaRepository.findById(id_area).orElseThrow(() -> new NotFoundException("Id not found"));
+        if (!area.isOperative()){
             return null;
         }
-        var userLog = new UserLog(user,"Area",id_area,"Read Area",EnumAction.READ);
+
+        var userLog = new UserLog(user,"Area",id_area.toString(),"Read Area",EnumAction.READ);
         userLogRepository.save(userLog);
         return new AreaDetailsDTO(area);
     }
@@ -59,7 +61,7 @@ public class AreaServiceImp implements AreaService {
         var area = new Area(dados);
         Long id_area = areaRepository.save(area).getId_area();
 
-        var userLog = new UserLog(user,"Area",id_area,"Create new Area", EnumAction.CREATE);
+        var userLog = new UserLog(user,"Area",id_area.toString(),"Create new Area", EnumAction.CREATE);
         userLogRepository.save(userLog);
 
         return new AreaDetailsDTO(area);
@@ -69,7 +71,8 @@ public class AreaServiceImp implements AreaService {
     public AreaDetailsDTO updateArea(Long id_area, AreaUpdateDTO dados,Long user_id) {
         var area = areaRepository.findById(id_area).orElseThrow(() -> new NotFoundException("Id not found"));
         Users user = this.userRepository.findById(user_id).orElseThrow(() -> new NotFoundException("Id not found"));
-        var userlog = new UserLog(user,"Area",id_area,null,"Infos update",EnumAction.UPDATE);
+
+        var userlog = new UserLog(user,"Area", id_area.toString(),null,"Infos update",EnumAction.UPDATE);
 
 
         if (dados.area_name() != null){
@@ -89,24 +92,24 @@ public class AreaServiceImp implements AreaService {
     @Override
     public void activateArea(Long id_area,Long user_id) {
         Users user = this.userRepository.findById(user_id).orElseThrow(() -> new NotFoundException("Id not found"));
-        var areaClass = areaRepository.findById(id_area);
-        if (areaClass.isPresent()){
-            var area = areaClass.get();
-            area.setOperative(true);
-        }
-        var userLog = new UserLog(user,"Area",id_area,"Operative","Activated Area",EnumAction.UPDATE);
+
+        var area = areaRepository.findById(id_area).orElseThrow(() -> new NotFoundException("Id not found"));
+        area.setOperative(true);
+        areaRepository.save(area);
+
+        var userLog = new UserLog(user,"Area",id_area.toString(),"Operative","Activated Area",EnumAction.UPDATE);
         userLogRepository.save(userLog);
     }
 
     @Override
     public void inactivateArea(Long id_area,Long user_id) {
         Users user = this.userRepository.findById(user_id).orElseThrow(() -> new NotFoundException("Id not found"));
-        var areaClass = areaRepository.findById(id_area);
-        if (areaClass.isPresent()){
-            var area = areaClass.get();
-            area.setOperative(false);
-        }
-        var userLog = new UserLog(user,"Area",id_area,"Operative","Inactivated Area",EnumAction.UPDATE);
+
+        var area = areaRepository.findById(id_area).orElseThrow(() -> new NotFoundException("Id not found"));
+        area.setOperative(false);
+        areaRepository.save(area);
+
+        var userLog = new UserLog(user,"Area",id_area.toString(),"Operative","Inactivated Area",EnumAction.UPDATE);
         userLogRepository.save(userLog);
     }
 }

@@ -25,8 +25,4 @@ public class Area {
         this.area_name = dados.area_name();
         this.operative = true;
     }
-
-    public boolean check_status(){
-        return this.operative;
-    }
 }

@@ -25,7 +25,7 @@ public class UserLog {
     @JoinColumn(name = "id_user")
     private Users user;
     private String altered_table;
-    private Long id_altered;
+    private String id_altered;
     private String field;
     private String description;
     @CreationTimestamp
@@ -34,7 +34,7 @@ public class UserLog {
     private EnumAction action;
 
 
-    public UserLog (Users user, String altered_table, Long id_altered, String field, String description, EnumAction action){
+    public UserLog (Users user, String altered_table, String id_altered, String field, String description, EnumAction action){
         this.user = user;
         this.altered_table = altered_table;
         this.id_altered = id_altered;
@@ -43,7 +43,7 @@ public class UserLog {
         this.datetime = Instant.now();
         this.action = action;
     }
-    public UserLog (Users user, String altered_table, Long id_altered, String description,EnumAction action){
+    public UserLog (Users user, String altered_table, String id_altered, String description,EnumAction action){
         this.user = user;
         this.altered_table = altered_table;
         this.id_altered = id_altered;

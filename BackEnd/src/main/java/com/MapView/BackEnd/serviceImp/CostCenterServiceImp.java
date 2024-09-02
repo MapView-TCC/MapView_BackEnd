@@ -39,52 +39,75 @@ public class CostCenterServiceImp implements CostCenterService {
         if (!costCenter.status_check()){
             return null;
         }
-        var userLog = new UserLog(user,"CostCenter",id_cost_center,"Read CostCenter", EnumAction.READ);
+        var userLog = new UserLog(user,"CostCenter",id_cost_center.toString(),"Read CostCenter", EnumAction.READ);
         userLogRepository.save(userLog);
         return new CostCenterDetailsDTO(costCenter);
     }
 
     @Override
-    public List<CostCenterDetailsDTO> getAllCostCenter(int page,int itens) {
+    public List<CostCenterDetailsDTO> getAllCostCenter(int page,int itens,Long user_id) {
         Users user = this.userRepository.findById(user_id).orElseThrow(() -> new NotFoundException("Id not found"));
+        var userLog = new UserLog(user,"CostCenter","Read All CostCenter", EnumAction.READ);
+        userLogRepository.save(userLog);
+
         return costCenterRepository.findAllByOperativeTrue(PageRequest.of(page, itens)).stream().map(CostCenterDetailsDTO::new).toList();
     }
 
     @Override
-    public CostCenterDetailsDTO createCostCenter(CostCenterCreateDTO dados) {
+    public CostCenterDetailsDTO createCostCenter(CostCenterCreateDTO dados,Long user_id) {
+        Users user = this.userRepository.findById(user_id).orElseThrow(() -> new NotFoundException("Id not found"));
+
         var costcenter = new CostCenter(dados);
-        costCenterRepository.save(costcenter);
+        Long cost_id = costCenterRepository.save(costcenter).getId_cost_center();
+
+        var userLog = new UserLog(user,"CostCenter",cost_id.toString(),"Create new CostCenter", EnumAction.CREATE);
+        userLogRepository.save(userLog);
+
         return new CostCenterDetailsDTO(costcenter);
     }
 
     @Override
-    public CostCenterDetailsDTO updateCostCenter(Long id, CostCenterUpdateDTO dados) {
+    public CostCenterDetailsDTO updateCostCenter(Long id, CostCenterUpdateDTO dados,Long user_id) {
         var costCenter =  costCenterRepository.findById(id).orElseThrow(() -> new NotFoundException("Cost Center Id Not Found"));
+
+        Users user = this.userRepository.findById(user_id).orElseThrow(() -> new NotFoundException("Id not found"));
+
+        var userlog = new UserLog(user,"Area", id.toString(),null,"Infos update",EnumAction.UPDATE);
 
         if (dados.cost_center_name() != null){
             costCenter.setCost_center_name(dados.cost_center_name());
+            userlog.setField("const_center_name to: "+ dados.cost_center_name());
         }
 
         costCenterRepository.save(costCenter);
+        userLogRepository.save(userlog);
         return new CostCenterDetailsDTO(costCenter);
     }
 
     // funções para ativer e inativar
     @Override
-    public void activateCostCenter(Long id_cost_center) {
-        var costCenterClass = costCenterRepository.findById(id_cost_center);
-        if (costCenterClass.isPresent()){
-            var costcenter = costCenterClass.get();
-            costcenter.setOperative(true);
-        }
+    public void activateCostCenter(Long id_cost_center,Long user_id) {
+        Users user = this.userRepository.findById(user_id).orElseThrow(() -> new NotFoundException("Id not found"));
+
+        var costCenter = costCenterRepository.findById(id_cost_center).orElseThrow(() -> new NotFoundException("Id not found"));
+        costCenter.setOperative(true);
+        costCenterRepository.save(costCenter);
+
+        var userLog = new UserLog(user,"CostCenter",id_cost_center.toString(),"Operative","Inactivated Cost Center",EnumAction.UPDATE);
+        userLogRepository.save(userLog);
+
+
+
     }
 
     @Override
-    public void inactivateCostCenter(Long id_cost_center) {
-        var costCenterClass = costCenterRepository.findById(id_cost_center);
-        if (costCenterClass.isPresent()){
-            var costcenter = costCenterClass.get();
-            costcenter.setOperative(false);
-        }
+    public void inactivateCostCenter(Long id_cost_center,Long user_id) {
+        Users user = this.userRepository.findById(user_id).orElseThrow(() -> new NotFoundException("Id not found"));
+        var costCenter = costCenterRepository.findById(id_cost_center).orElseThrow(() -> new NotFoundException("Const Center Not Found"));
+        costCenter.setOperative(false);
+        costCenterRepository.save(costCenter);
+
+        var userLog = new UserLog(user,"Cost Center",id_cost_center.toString(),"Operative","Inactivated Area",EnumAction.UPDATE);
+        userLogRepository.save(userLog);
     }
 }

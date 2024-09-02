@@ -8,10 +8,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.util.List;
 
 public interface MainOwnerService {
-    MainOwnerDetailsDTO getMainOwner(String id_owner);
-    List<MainOwnerDetailsDTO> getAllMainOwner(int page, int itens);
-    MainOwnerDetailsDTO createMainOwner(MainOwnerCreateDTO mainOwnerCreateDTO);
-    MainOwnerDetailsDTO updateMainOwner(String owner_name, MainOwnerUpdateDTO id_cost_center);
-    void activateMainOwner(String id_owner); // put
-    void inactivateMainOwner(String id_owner); // put
+    MainOwnerDetailsDTO getMainOwner(String id_owner,Long user_id);
+    List<MainOwnerDetailsDTO> getAllMainOwner(int page, int itens,Long user_id);
+    MainOwnerDetailsDTO createMainOwner(MainOwnerCreateDTO mainOwnerCreateDTO,Long user_id);
+    MainOwnerDetailsDTO updateMainOwner(String owner_name, MainOwnerUpdateDTO id_cost_center,Long user_id);
+    void activateMainOwner(String id_owner,Long user_id); // put
+    void inactivateMainOwner(String id_owner,Long user_id); // put
 }

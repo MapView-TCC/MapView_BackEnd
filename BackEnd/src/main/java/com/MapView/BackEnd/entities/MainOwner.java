@@ -28,7 +28,4 @@ public class MainOwner {
         this.operative = true;
     }
 
-    public boolean status_check(){
-        return this.operative;
-    }
 }
