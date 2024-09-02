@@ -31,8 +31,6 @@ public class Raspberry {
         this.id_area = id_area;
         this.operative = true;
     }
-    public boolean status_check(){
-        return this.operative;
-    }
+
 }
 
