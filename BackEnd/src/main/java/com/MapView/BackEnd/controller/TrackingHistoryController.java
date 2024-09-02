@@ -1,5 +1,6 @@
 package com.MapView.BackEnd.controller;
 
+import com.MapView.BackEnd.enums.EnumTrackingAction;
 import com.MapView.BackEnd.serviceImp.TrackingHistoryServiceImp;
 import com.MapView.BackEnd.dtos.TrackingHistory.TrackingHistoryCreateDTO;
 import com.MapView.BackEnd.dtos.TrackingHistory.TrackingHistoryDetailsDTO;
@@ -27,7 +28,7 @@ public class TrackingHistoryController {
         var tracking = trackingHistoryServiceImp.createTrackingHistory(dados);
 
         var uri = uriBuilder.path("/api/v1/accessHistory/{id}").buildAndExpand(tracking.id_tracking()).toUri();
-        return ResponseEntity.created(uri).body(new TrackingHistoryDetailsDTO(tracking.id_tracking(), tracking.dateTime(), tracking.id_equipment(), tracking.id_enviroment(), tracking.action())).getBody();
+        return ResponseEntity.created(uri).body(new TrackingHistoryDetailsDTO(tracking.id_tracking(), tracking.datetime(), tracking.id_equipment(), tracking.id_enviroment(), tracking.action())).getBody();
     }
 
     @GetMapping("/{id}")
@@ -39,6 +40,13 @@ public class TrackingHistoryController {
     @GetMapping
     public ResponseEntity<List<TrackingHistoryDetailsDTO>> getAllTracking(@RequestParam int page, @RequestParam int itens){
         var list = trackingHistoryServiceImp.getAllTrackingHistory(page,itens);
+        return ResponseEntity.ok(list);
+    }
+
+    @GetMapping("/filter")
+    public ResponseEntity<List<TrackingHistoryDetailsDTO>> getAllTrackingFilter(@RequestParam int page, @RequestParam int itens, @RequestParam(required = false)EnumTrackingAction action,
+                                                                                @RequestParam(required = false)Integer day, @RequestParam(required = false)Integer month, @RequestParam(required = false)Integer year){
+        var list = trackingHistoryServiceImp.FilterTracking(page, itens, action, day, month, year);
         return ResponseEntity.ok(list);
     }
 }
