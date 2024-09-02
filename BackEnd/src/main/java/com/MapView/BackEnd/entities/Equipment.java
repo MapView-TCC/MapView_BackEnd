@@ -33,6 +33,8 @@ public class Equipment {
     @OneToOne
     @JoinColumn(name = "id_owner")
     private MainOwner id_owner;
+
+    private String image;
     private boolean operative;
 
     @OneToMany(mappedBy = "id_equipment")
