@@ -5,6 +5,7 @@ import com.MapView.BackEnd.enums.EnumCourse;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Table(name = "classes")
@@ -27,7 +28,7 @@ public class Classes {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_user")
     private Users id_user;
-    private LocalDateTime creation_date;
+    private LocalDate creation_date;
     private boolean operative;
 
 
