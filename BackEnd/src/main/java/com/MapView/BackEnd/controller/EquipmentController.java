@@ -38,9 +38,9 @@ public class EquipmentController {
                 equipment.id_owner(), equipment.operative()));
     }
 
-    @PostMapping
+    @PostMapping("/image")
     @Transactional
-    public ResponseEntity<String> uploadImage(UploadCreateDTO data){
+    public ResponseEntity<String> uploadImage(@RequestBody UploadCreateDTO data){
         return equipmentServiceImp.uploadImageEquipament(data.file(),data.equipment());
     }
 

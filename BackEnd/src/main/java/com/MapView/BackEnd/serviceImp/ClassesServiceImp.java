@@ -2,6 +2,7 @@ package com.MapView.BackEnd.serviceImp;
 
 import com.MapView.BackEnd.entities.UserLog;
 import com.MapView.BackEnd.enums.EnumAction;
+import com.MapView.BackEnd.infra.OperativeFalseException;
 import com.MapView.BackEnd.repository.ClassesRepository;
 import com.MapView.BackEnd.repository.UserLogRepository;
 import com.MapView.BackEnd.repository.UserRepository;
@@ -63,6 +64,10 @@ public class ClassesServiceImp implements ClassesService {
     public ClassesDetaiLDTO updateClasses(Long classes_id ,ClassesUpdateDTO data, Long user_id) {
         var usuario_log = userRepository.findById(user_id).orElseThrow(() -> new NotFoundException("User Id Not Found"));
         var classes = classesRepository.findById(data.user_id()).orElseThrow(() -> new NotFoundException("Class Id Not Found"));
+
+        if(!classes.isOperative()){
+            throw new OperativeFalseException("The inactive equipment cannot be updated.");
+        }
 
         var userlog = new UserLog(usuario_log,"Classes",classes_id.toString(),null,"Update Classes: ",EnumAction.UPDATE);
 

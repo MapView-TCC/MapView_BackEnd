@@ -3,6 +3,7 @@ package com.MapView.BackEnd.serviceImp;
 import com.MapView.BackEnd.entities.UserLog;
 import com.MapView.BackEnd.entities.Users;
 import com.MapView.BackEnd.enums.EnumAction;
+import com.MapView.BackEnd.infra.OperativeFalseException;
 import com.MapView.BackEnd.repository.EnviromentRepository;
 import com.MapView.BackEnd.repository.RaspberryRepository;
 import com.MapView.BackEnd.repository.UserLogRepository;
@@ -72,6 +73,11 @@ public class EnviromentServiceImp implements EnviromentService {
     public EnviromentDetailsDTO updateEnviroment(Long enviroment_id,EnviromentUpdateDTO data, Long user_id) {
         var user = userRepository.findById(user_id).orElseThrow(()->new NotFoundException("Id Enviroment Not Found"));
         var enviroment = enviromentRepository.findById(enviroment_id).orElseThrow(()->new NotFoundException("Id Enviroment Not Found"));
+
+        if(!enviroment.isOperative()){
+            throw new OperativeFalseException("The inactive equipment cannot be updated.");
+        }
+
         var rasp = raspberryRepository.findById(data.id_raspberry()).orElseThrow(()->new NotFoundException("Id Raspberry Not Found"));
         var userlog = new UserLog(user,"Enviroment",enviroment_id.toString(),null,"Update Enviroment: ",EnumAction.UPDATE);
 
@@ -80,7 +86,6 @@ public class EnviromentServiceImp implements EnviromentService {
             userlog.setField("enviroment_name");
             userlog.setDescription("enviroment_name to: " + data.environment_name());
         }
-
         if (data.id_raspberry() != null){
             enviroment.setId_raspberry(rasp);
             userlog.setField("id_raspberry");
