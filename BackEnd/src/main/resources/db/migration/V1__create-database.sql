@@ -1,6 +1,6 @@
 -- Creating the User table
 CREATE TABLE IF NOT EXISTS Users (
-    id_user INT AUTO_INCREMENT PRIMARY KEY,
+    id_user INT AUTO_INCREMENT  PRIMARY KEY,
     email VARCHAR(255) NOT NULL,
     role ENUM('ADMIN', 'SUPPORT', 'USER'),
     operative TINYINT NOT NULL
@@ -96,6 +96,7 @@ CREATE TABLE IF NOT EXISTS main_owner (
 -- Creating the Equipment table
 CREATE TABLE IF NOT EXISTS equipment (
     id_equipment VARCHAR(255) PRIMARY KEY,
+    name_equipment VARCHAR(255),
     rfid VARCHAR(255) UNIQUE,
     type VARCHAR(255) NOT NULL,
     model VARCHAR(255) NOT NULL,
@@ -104,6 +105,7 @@ CREATE TABLE IF NOT EXISTS equipment (
     observation TEXT,
     id_location INT NOT NULL,
     id_owner VARCHAR(255) NOT NULL,
+    image VARCHAR(255),
     operative TINYINT NOT NULL,
     FOREIGN KEY(id_location) REFERENCES location(id_location),
     FOREIGN KEY(id_owner) REFERENCES main_owner(id_owner)

@@ -1,14 +1,14 @@
 package com.MapView.BackEnd.controller;
 
+import com.MapView.BackEnd.entities.Equipment;
 import com.MapView.BackEnd.entities.FileStorageProperties;
+import com.MapView.BackEnd.repository.EquipmentRepository;
 import jakarta.servlet.http.HttpServletRequest;
-import org.apache.tomcat.util.file.ConfigurationSource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -31,10 +31,13 @@ public class FileUploadController {
 
     private final Path fileStorageLocation;
 
+    private final EquipmentRepository equipmentRepository;
 
-    public FileUploadController(FileStorageProperties fileStorageProperties) {
+
+    public FileUploadController(FileStorageProperties fileStorageProperties, EquipmentRepository equipmentRepository) {
         this.fileStorageLocation = Paths.get(fileStorageProperties.getUploadDir())
                 .toAbsolutePath().normalize();
+        this.equipmentRepository = equipmentRepository;
     }
 
 
@@ -45,6 +48,8 @@ public class FileUploadController {
         try {
             Path targetLocation = fileStorageLocation.resolve(fileName);
             file.transferTo(targetLocation);
+
+            equipament_image(targetLocation);
 
             String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
                     .path("/api/files/download/")
@@ -89,6 +94,18 @@ public class FileUploadController {
                 .collect(Collectors.toList());
 
         return ResponseEntity.ok(fileNames);
+    }
+
+    public void equipament_image(Path targetLocation){
+        String targetLocatioString = targetLocation.toString();
+
+        List<Equipment> allEquipments   =  equipmentRepository.findAll();
+
+        for (Equipment equipment : allEquipments) {
+            equipment.setImage(targetLocatioString);
+        }
+
+        equipmentRepository.saveAll(allEquipments);
     }
  }
 

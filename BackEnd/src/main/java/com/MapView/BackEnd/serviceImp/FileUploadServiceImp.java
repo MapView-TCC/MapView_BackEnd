@@ -1,6 +1,8 @@
 package com.MapView.BackEnd.serviceImp;
 
+import com.MapView.BackEnd.entities.Equipment;
 import com.MapView.BackEnd.entities.FileStorageProperties;
+import com.MapView.BackEnd.repository.EquipmentRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -9,7 +11,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -25,11 +26,13 @@ public class FileUploadServiceImp {
 
 
     private final Path fileStorageLocation;
+    private final EquipmentRepository equipmentRepository;
 
 
-    public FileUploadServiceImp(FileStorageProperties fileStorageProperties) {
+    public FileUploadServiceImp(FileStorageProperties fileStorageProperties, EquipmentRepository equipmentRepository) {
         this.fileStorageLocation = Paths.get(fileStorageProperties.getUploadDir())
                 .toAbsolutePath().normalize();
+        this.equipmentRepository = equipmentRepository;
     }
 
     public ResponseEntity<String> uploadFile(MultipartFile file) {
@@ -37,8 +40,10 @@ public class FileUploadServiceImp {
 
         try {
             Path targetLocation = fileStorageLocation.resolve(fileName);
+
             file.transferTo(targetLocation);
 
+            equipament_image(targetLocation);
             String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
                     .path("/api/files/download/")
                     .path(fileName)
@@ -49,6 +54,18 @@ public class FileUploadServiceImp {
             ex.printStackTrace();
             return ResponseEntity.badRequest().body("File upload failed.");
         }
+    }
+
+    public void equipament_image(Path targetLocation){
+        String targetLocatioString = targetLocation.toString();
+
+        List<Equipment> allEquipments   =  equipmentRepository.findAll();
+
+        for (Equipment equipment : allEquipments) {
+            equipment.setImage(targetLocatioString);
+        }
+
+        equipmentRepository.saveAll(allEquipments);
     }
 
     public ResponseEntity<Resource> downloadFile(@PathVariable String filename,
