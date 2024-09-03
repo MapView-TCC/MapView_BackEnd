@@ -1,2 +1,0 @@
-ALTER TABLE equipment
-MODIFY model ENUM('T16', 'T14', 'ZBOOK') NOT NULL;
