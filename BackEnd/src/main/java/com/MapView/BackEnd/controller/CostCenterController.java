@@ -45,7 +45,7 @@ public class CostCenterController {
         return ResponseEntity.ok(costCenter);
     }
 
-    @PutMapping("{id}")
+    @PostMapping("{id}")
     @Transactional
     public ResponseEntity<CostCenterDetailsDTO> updateCostCenter(@PathVariable Long id,@RequestBody CostCenterUpdateDTO dados,@RequestParam Long user_id){
         CostCenterDetailsDTO updateCost = costCenterServiceImp.updateCostCenter(id, dados,user_id);

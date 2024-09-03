@@ -1,6 +1,7 @@
 package com.MapView.BackEnd.serviceImp;
 
 import com.MapView.BackEnd.dtos.Equipment.EquipmentDetailsDTO;
+import com.MapView.BackEnd.enums.EnumColors;
 import com.MapView.BackEnd.enums.EnumTrackingAction;
 import com.MapView.BackEnd.repository.EnviromentRepository;
 import com.MapView.BackEnd.repository.EquipmentRepository;
@@ -65,6 +66,7 @@ public class TrackingHistoryServiceImp implements TrackingHistoryService {
         trackingHistory.setId_enviroment(enviroment);
         trackingHistory.setId_equipment(equipment);
         trackingHistory.setAction(dados.action());
+        trackingHistory.setColors(dados.colors());
 
         trackingHistoryRepository.save(trackingHistory);
 
@@ -72,13 +74,14 @@ public class TrackingHistoryServiceImp implements TrackingHistoryService {
     }
 
     @Override
-    public List<TrackingHistoryDetailsDTO> FilterTracking(int page, int itens, EnumTrackingAction action,  Integer day, Integer month, Integer year) {
+    public List<TrackingHistoryDetailsDTO> FilterTracking(int page, int itens, EnumTrackingAction action, Integer day, Integer month, Integer year, EnumColors colors) {
 
         List<TrackingHistory> filterTracking;
 
         // Se a ação não for nula, filtra pelo valor da ação
         filterTracking = trackingHistoryRepository.findAll(PageRequest.of(page, itens)).stream()
                 .filter(t -> (action == null || t.getAction() == action))
+                .filter(t -> (colors == null || t.getColors() == colors))
                 .filter(t -> {
                     // Converte o Instant para LocalDateTime no fuso horário local
                     LocalDateTime dateTime = t.getDatetime().atZone(ZoneId.systemDefault()).toLocalDateTime();

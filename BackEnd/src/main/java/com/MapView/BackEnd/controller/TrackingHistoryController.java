@@ -1,5 +1,6 @@
 package com.MapView.BackEnd.controller;
 
+import com.MapView.BackEnd.enums.EnumColors;
 import com.MapView.BackEnd.enums.EnumTrackingAction;
 import com.MapView.BackEnd.serviceImp.TrackingHistoryServiceImp;
 import com.MapView.BackEnd.dtos.TrackingHistory.TrackingHistoryCreateDTO;
@@ -28,7 +29,7 @@ public class TrackingHistoryController {
         var tracking = trackingHistoryServiceImp.createTrackingHistory(dados);
 
         var uri = uriBuilder.path("/api/v1/accessHistory/{id}").buildAndExpand(tracking.id_tracking()).toUri();
-        return ResponseEntity.created(uri).body(new TrackingHistoryDetailsDTO(tracking.id_tracking(), tracking.datetime(), tracking.id_equipment(), tracking.id_enviroment(), tracking.action())).getBody();
+        return ResponseEntity.created(uri).body(new TrackingHistoryDetailsDTO(tracking.id_tracking(), tracking.datetime(), tracking.id_equipment(), tracking.id_enviroment(), tracking.action(), tracking.colors())).getBody();
     }
 
     @GetMapping("/{id}")
@@ -45,8 +46,9 @@ public class TrackingHistoryController {
 
     @GetMapping("/filter")
     public ResponseEntity<List<TrackingHistoryDetailsDTO>> getAllTrackingFilter(@RequestParam int page, @RequestParam int itens, @RequestParam(required = false)EnumTrackingAction action,
-                                                                                @RequestParam(required = false)Integer day, @RequestParam(required = false)Integer month, @RequestParam(required = false)Integer year){
-        var list = trackingHistoryServiceImp.FilterTracking(page, itens, action, day, month, year);
+                                                                                @RequestParam(required = false)Integer day, @RequestParam(required = false)Integer month, @RequestParam(required = false)Integer year,
+                                                                                @RequestParam(required = false)EnumColors colors){
+        var list = trackingHistoryServiceImp.FilterTracking(page, itens, action, day, month, year, colors);
         return ResponseEntity.ok(list);
     }
 }

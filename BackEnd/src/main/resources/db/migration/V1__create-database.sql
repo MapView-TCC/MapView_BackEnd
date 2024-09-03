@@ -117,6 +117,7 @@ CREATE TABLE IF NOT EXISTS tracking_history (
     id_equipment VARCHAR(255) NOT NULL,
     id_environment INT NOT NULL,
     action ENUM ('ENTER','OUT'),
+    colors ENUM ('RED', 'YELLOW', 'GREEN'),
     dateTime TIMESTAMP,
     FOREIGN KEY(id_equipment) REFERENCES equipment(id_equipment),
     FOREIGN KEY(id_environment) REFERENCES environment(id_environment)

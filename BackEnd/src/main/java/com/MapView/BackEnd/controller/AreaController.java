@@ -45,7 +45,7 @@ public class AreaController {
         return ResponseEntity.ok(area);
     }
 
-    @PutMapping("/area/{id_area}")
+    @PostMapping("/area/{id_area}")
     @Transactional
     public ResponseEntity<AreaDetailsDTO> updateArea(@PathVariable Long id_area, @RequestBody AreaUpdateDTO dados,@RequestParam Long user_id){
         AreaDetailsDTO areaDetailsDTO = areaServiceImp.updateArea(id_area, dados,user_id);

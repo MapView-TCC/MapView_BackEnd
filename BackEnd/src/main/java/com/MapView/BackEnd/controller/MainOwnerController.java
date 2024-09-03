@@ -51,7 +51,7 @@ public class MainOwnerController {
         }
     }
 
-    @PutMapping("{id}")
+    @PostMapping("{id}")
     @Transactional
     public ResponseEntity<MainOwnerDetailsDTO> updateMainOwner(@RequestParam Long user_id,@PathVariable String mainowner_id, @RequestBody MainOwnerUpdateDTO dados){
         MainOwnerDetailsDTO updateMainOwner = mainOwnerServiceImp.updateMainOwner(mainowner_id, dados,user_id);

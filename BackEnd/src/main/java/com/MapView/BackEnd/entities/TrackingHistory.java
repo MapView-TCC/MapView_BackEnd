@@ -1,6 +1,7 @@
 package com.MapView.BackEnd.entities;
 
 import com.MapView.BackEnd.enums.EnumAction;
+import com.MapView.BackEnd.enums.EnumColors;
 import com.MapView.BackEnd.enums.EnumTrackingAction;
 import jakarta.persistence.*;
 import lombok.*;
@@ -13,7 +14,6 @@ import java.time.LocalDateTime;
 @Entity(name = "tracking_history")
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(of = "id_tracking")
 public class TrackingHistory {
@@ -36,11 +36,17 @@ public class TrackingHistory {
     @Enumerated(value = EnumType.STRING)
     private EnumTrackingAction action;
 
-//    public TrackingHistory(Long id_tracking, Instant dateTime, Equipment id_equipment, Enviroment id_enviroment, EnumTrackingAction action) {
-//        this.id_tracking = id_tracking;
-//        this.dateTime = dateTime;
-//        this.id_equipment = id_equipment;
-//        this.id_enviroment = id_enviroment;
-//        this.action = action;
-//    }
+    @Enumerated(value = EnumType.STRING)
+    private EnumColors colors;
+
+    public TrackingHistory(Long id_tracking, Instant dateTime, Equipment id_equipment,
+                           Enviroment id_enviroment,
+                           EnumTrackingAction action, EnumColors colors) {
+        this.id_tracking = id_tracking;
+        this.datetime = dateTime;
+        this.id_equipment = id_equipment;
+        this.id_enviroment = id_enviroment;
+        this.action = action;
+        this.colors = colors;
+    }
 }

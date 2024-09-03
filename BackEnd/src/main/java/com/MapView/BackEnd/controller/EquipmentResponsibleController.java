@@ -45,7 +45,7 @@ public class EquipmentResponsibleController {
         return ResponseEntity.created(uri).body(new EquipmentResponsibleDetailsDTO(equipmentResponsible.id_equip_resp(), equipmentResponsible.id_equipment(), equipmentResponsible.id_responsible(), equipmentResponsible.start_usage(), equipmentResponsible.end_usage(), equipmentResponsible.operative()));
     }
 
-    @PutMapping("/{id_equip_resp}")
+    @PostMapping("/{id_equip_resp}")
     @Transactional
     public ResponseEntity<EquipmentResponsibleDetailsDTO> updateEquipmentResponsible(@PathVariable Long id_equip_resp, @RequestBody EquipmentResponsibleUpdateDTO dados){
         EquipmentResponsibleDetailsDTO updateEquipmentResponsible = equipmentResponsibleServiceImp.updateEquipmentResponsible(id_equip_resp, dados);

@@ -31,7 +31,7 @@ public class AccessHistoryController {
         return ResponseEntity.created(uri).body(new AccessHistoryDetailsDTO(history.id_history(), history.id_users(), history.login_dateTime(), history.logout_dateTime())).getBody();
     }
 
-    @PutMapping("/{id}")
+    @PostMapping("/{id}")
     @Transactional
     public ResponseEntity<AccessHistoryDetailsDTO> updateAccessHistory(@PathVariable Long id){
         AccessHistoryDetailsDTO historyDetailsDTO = accessHistoryServiceImp.updateAccessHistory(id);

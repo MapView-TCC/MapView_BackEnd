@@ -45,7 +45,7 @@ public class RaspberryController {
         return ResponseEntity.ok(raspberry);
     }
 
-    @PutMapping("/{id_raspberry}")
+    @PostMapping("/{id_raspberry}")
     @Transactional
     public ResponseEntity<RaspberryDetailsDTO> updateRaspberry(@PathVariable Long id_raspberry, @RequestBody RaspberryUpdateDTO dados, @RequestParam Long user_id){
         RaspberryDetailsDTO updateRaspberry = raspberryServiceImp.updateRaspberry(id_raspberry, dados, user_id);

@@ -44,7 +44,7 @@ public class PostController {
 
     }
 
-    @PutMapping("/{id_post}")
+    @PostMapping("/{id_post}")
     @Transactional
     public ResponseEntity<PostDetailDTO> updatePost (@PathVariable("id_post") Long id_post, @RequestBody PostUpdateDTO data,@RequestParam Long user_id){
          var post =  postServiceImp.updatePost(id_post,data,user_id);
