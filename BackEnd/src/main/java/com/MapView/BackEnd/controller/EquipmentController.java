@@ -2,12 +2,14 @@ package com.MapView.BackEnd.controller;
 
 import com.MapView.BackEnd.dtos.Equipment.*;
 
+import com.MapView.BackEnd.dtos.ImageUpload.UploadCreateDTO;
 import com.MapView.BackEnd.serviceImp.EquipmentServiceImp;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Null;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponentsBuilder;
 import com.MapView.BackEnd.dtos.Equipment.EquipmentCreateDTO;
 
@@ -34,6 +36,12 @@ public class EquipmentController {
         return ResponseEntity.created(uri).body(new EquipmentDetailsDTO(equipment.id_equipment(), equipment.name_equipment(), equipment.rfid(), equipment.type(),
                 equipment.model(), equipment.validity(), equipment.admin_rights(), equipment.observation(), equipment.id_location(),
                 equipment.id_owner(), equipment.operative()));
+    }
+
+    @PostMapping
+    @Transactional
+    public ResponseEntity<String> uploadImage(UploadCreateDTO data){
+        return equipmentServiceImp.uploadImageEquipament(data.file(),data.equipment());
     }
 
     @GetMapping
@@ -73,7 +81,7 @@ public class EquipmentController {
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping("/{id}")
+    @PostMapping("/{id}")
     @Transactional
     public ResponseEntity<EquipmentDetailsDTO> updateEquipment(@PathVariable String id, @RequestBody EquipmentUpdateDTO dados, @RequestParam Long user_id){
         EquipmentDetailsDTO equipmentDetailsDTO = equipmentServiceImp.updateEquipment(id, dados, user_id);

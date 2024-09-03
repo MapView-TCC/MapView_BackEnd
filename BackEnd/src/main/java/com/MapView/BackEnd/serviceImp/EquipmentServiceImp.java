@@ -3,14 +3,22 @@ package com.MapView.BackEnd.serviceImp;
 import com.MapView.BackEnd.dtos.Equipment.EquipmentUpdateDTO;
 import com.MapView.BackEnd.entities.*;
 import com.MapView.BackEnd.enums.EnumAction;
+import com.MapView.BackEnd.enums.EnumModelEquipment;
 import com.MapView.BackEnd.infra.NotFoundException;
 import com.MapView.BackEnd.repository.*;
 import com.MapView.BackEnd.service.EquipmentService;
 import com.MapView.BackEnd.dtos.Equipment.EquipmentCreateDTO;
 import com.MapView.BackEnd.dtos.Equipment.EquipmentDetailsDTO;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,14 +31,16 @@ public class EquipmentServiceImp implements EquipmentService {
     private final MainOwnerRepository mainOwnerRepository;
     private final UserLogRepository userLogRepository;
     private final UserRepository userRepository;
+    private final Path fileStorageLocation;
 
     public EquipmentServiceImp(EquipmentRepository equipmentRepository, LocationRepository locationRepository, MainOwnerRepository mainOwnerRepository,
-                               UserLogRepository userLogRepository, UserRepository userRepository) {
+                               UserLogRepository userLogRepository, UserRepository userRepository, FileStorageProperties fileStorageProperties) {
         this.equipmentRepository = equipmentRepository;
         this.locationRepository = locationRepository;
         this.mainOwnerRepository = mainOwnerRepository;
         this.userLogRepository = userLogRepository;
         this.userRepository = userRepository;
+        this.fileStorageLocation = Paths.get(fileStorageProperties.getUploadDir()).toAbsolutePath().normalize();
     }
 
 
@@ -85,6 +95,8 @@ public class EquipmentServiceImp implements EquipmentService {
     public EquipmentDetailsDTO updateEquipment(String id_equipment, EquipmentUpdateDTO dados, Long user_id) {
         var equipment = equipmentRepository.findById(id_equipment)
                 .orElseThrow(() -> new NotFoundException("Id not found"));
+
+        
 
         Users user = this.userRepository.findById(user_id).orElseThrow(() -> new NotFoundException("Id not found"));
         var userlog = new UserLog(user,"Equipment",dados.id_equipment(),null,"Infos update",EnumAction.UPDATE);
@@ -203,11 +215,43 @@ public class EquipmentServiceImp implements EquipmentService {
                     .map(EquipmentDetailsDTO::new)
                     .collect(Collectors.toList());
         }
-
-
         return filteredEquipments.stream()
                 .map(EquipmentDetailsDTO::new)
                 .collect(Collectors.toList());
+    }
+
+    public ResponseEntity<String> uploadImageEquipament (MultipartFile file,EnumModelEquipment equipment){
+        String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+
+        try {
+            Path targetLocation = fileStorageLocation.resolve(fileName);
+            file.transferTo(targetLocation);
+
+            equipament_image(targetLocation,equipment);
+
+            String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
+                    .path("/api/files/download/")
+                    .path(fileName)
+                    .toUriString();
+
+            return ResponseEntity.ok("File uploaded successfully. Download link: " + fileDownloadUri);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            return ResponseEntity.badRequest().body("File upload failed.");
+        }
+
+    }
+
+    public void equipament_image(Path targetLocation, EnumModelEquipment equipmentModel){
+        String targetLocatioString = targetLocation.toString();
+
+        List<Equipment> allEquipments = equipmentRepository.findByModel(equipmentModel);
+
+        for (Equipment equipment : allEquipments) {
+            equipment.setImage(targetLocatioString);
+        }
+
+        equipmentRepository.saveAll(allEquipments);
     }
 
 
