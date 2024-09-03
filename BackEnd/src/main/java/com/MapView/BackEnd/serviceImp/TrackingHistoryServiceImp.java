@@ -58,12 +58,12 @@ public class TrackingHistoryServiceImp implements TrackingHistoryService {
         Equipment equipment = equipmentRepository.findById(dados.id_equipment())
                 .orElseThrow(() -> new RuntimeException("Id not found"));
 
-        Enviroment enviroment = enviromentRepository.findById(dados.id_enviroment())
+        Enviroment environment = enviromentRepository.findById(dados.id_environment())
                 .orElseThrow(() -> new RuntimeException("Id not found"));
 
 
         TrackingHistory trackingHistory = new TrackingHistory();
-        trackingHistory.setId_enviroment(enviroment);
+        trackingHistory.setId_environment(environment);
         trackingHistory.setId_equipment(equipment);
         trackingHistory.setAction(dados.action());
         trackingHistory.setColors(dados.colors());

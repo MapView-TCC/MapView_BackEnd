@@ -7,7 +7,7 @@ import com.MapView.BackEnd.enums.EnumTrackingAction;
 import java.time.Instant;
 
 public record TrackingHistoryCreateDTO(String id_equipment,
-                                       Long id_enviroment,
+                                       Long id_environment,
                                        EnumTrackingAction action,
                                        EnumColors colors) {
 }

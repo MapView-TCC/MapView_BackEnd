@@ -3,6 +3,7 @@ package com.MapView.BackEnd.entities;
 import com.MapView.BackEnd.enums.EnumAction;
 import com.MapView.BackEnd.enums.EnumColors;
 import com.MapView.BackEnd.enums.EnumTrackingAction;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -26,12 +27,13 @@ public class TrackingHistory {
     //@Column(updatable = false) // Se você não quiser que a data de criação seja atualizada
     private Instant datetime;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name ="id_equipment")
     private Equipment id_equipment;
-    @OneToOne
+
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name ="id_environment")
-    private Enviroment id_enviroment;
+    private Enviroment id_environment;
 
     @Enumerated(value = EnumType.STRING)
     private EnumTrackingAction action;
@@ -40,12 +42,12 @@ public class TrackingHistory {
     private EnumColors colors;
 
     public TrackingHistory(Long id_tracking, Instant dateTime, Equipment id_equipment,
-                           Enviroment id_enviroment,
+                           Enviroment id_environment,
                            EnumTrackingAction action, EnumColors colors) {
         this.id_tracking = id_tracking;
         this.datetime = dateTime;
         this.id_equipment = id_equipment;
-        this.id_enviroment = id_enviroment;
+        this.id_environment = id_environment;
         this.action = action;
         this.colors = colors;
     }

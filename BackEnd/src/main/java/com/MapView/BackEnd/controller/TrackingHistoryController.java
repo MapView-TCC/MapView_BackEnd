@@ -28,8 +28,8 @@ public class TrackingHistoryController {
     public TrackingHistoryDetailsDTO createTracking(@RequestBody TrackingHistoryCreateDTO dados, UriComponentsBuilder uriBuilder){
         var tracking = trackingHistoryServiceImp.createTrackingHistory(dados);
 
-        var uri = uriBuilder.path("/api/v1/accessHistory/{id}").buildAndExpand(tracking.id_tracking()).toUri();
-        return ResponseEntity.created(uri).body(new TrackingHistoryDetailsDTO(tracking.id_tracking(), tracking.datetime(), tracking.id_equipment(), tracking.id_enviroment(), tracking.action(), tracking.colors())).getBody();
+        var uri = uriBuilder.path("/api/v1/trackingHistory/{id}").buildAndExpand(tracking.id_tracking()).toUri();
+        return ResponseEntity.created(uri).body(new TrackingHistoryDetailsDTO(tracking.id_tracking(), tracking.datetime(), tracking.id_equipment(), tracking.id_environment(), tracking.action(), tracking.colors())).getBody();
     }
 
     @GetMapping("/{id}")
