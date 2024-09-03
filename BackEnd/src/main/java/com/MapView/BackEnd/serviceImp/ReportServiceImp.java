@@ -79,7 +79,7 @@ public class ReportServiceImp implements ReportService {
 
             createDataCell(dataRow, 0, equipment.getId_equipment(), dataStyle);
             createDataCell(dataRow, 1, equipment.getType(), dataStyle);
-            createDataCell(dataRow, 2, equipment.getModel(), dataStyle);
+            createDataCell(dataRow, 2, equipment.getModel().toString(), dataStyle);
             createDataCell(dataRow, 3, equipment.getValidity(), dataStyle);
 
             // Extrair informações textuais das entidades Location e MainOwner

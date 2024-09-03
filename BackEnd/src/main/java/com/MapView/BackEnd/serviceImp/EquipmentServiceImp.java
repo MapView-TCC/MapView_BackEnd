@@ -5,6 +5,7 @@ import com.MapView.BackEnd.entities.*;
 import com.MapView.BackEnd.enums.EnumAction;
 import com.MapView.BackEnd.enums.EnumModelEquipment;
 import com.MapView.BackEnd.infra.NotFoundException;
+import com.MapView.BackEnd.infra.OperativeFalseException;
 import com.MapView.BackEnd.repository.*;
 import com.MapView.BackEnd.service.EquipmentService;
 import com.MapView.BackEnd.dtos.Equipment.EquipmentCreateDTO;
@@ -96,7 +97,9 @@ public class EquipmentServiceImp implements EquipmentService {
         var equipment = equipmentRepository.findById(id_equipment)
                 .orElseThrow(() -> new NotFoundException("Id not found"));
 
-        
+        if(!equipment.isOperative()){
+            throw new OperativeFalseException("The inactive equipment cannot be updated.");
+        }
 
         Users user = this.userRepository.findById(user_id).orElseThrow(() -> new NotFoundException("Id not found"));
         var userlog = new UserLog(user,"Equipment",dados.id_equipment(),null,"Infos update",EnumAction.UPDATE);

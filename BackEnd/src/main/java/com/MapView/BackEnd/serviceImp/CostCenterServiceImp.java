@@ -4,6 +4,7 @@ import com.MapView.BackEnd.dtos.CostCenter.CostCenterCreateDTO;
 import com.MapView.BackEnd.entities.UserLog;
 import com.MapView.BackEnd.entities.Users;
 import com.MapView.BackEnd.enums.EnumAction;
+import com.MapView.BackEnd.infra.OperativeFalseException;
 import com.MapView.BackEnd.repository.CostCenterRepository;
 import com.MapView.BackEnd.repository.UserLogRepository;
 import com.MapView.BackEnd.repository.UserRepository;
@@ -70,8 +71,11 @@ public class CostCenterServiceImp implements CostCenterService {
     public CostCenterDetailsDTO updateCostCenter(Long id, CostCenterUpdateDTO dados,Long user_id) {
         var costCenter =  costCenterRepository.findById(id).orElseThrow(() -> new NotFoundException("Cost Center Id Not Found"));
 
-        Users user = this.userRepository.findById(user_id).orElseThrow(() -> new NotFoundException("Id not found"));
+        if(!costCenter.isOperative()){
+            throw new OperativeFalseException("The inactive equipment cannot be updated.");
+        }
 
+        Users user = this.userRepository.findById(user_id).orElseThrow(() -> new NotFoundException("Id not found"));
         var userlog = new UserLog(user,"Area", id.toString(),null,"Infos update",EnumAction.UPDATE);
 
         if (dados.cost_center_name() != null){

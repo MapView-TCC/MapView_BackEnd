@@ -99,7 +99,7 @@ CREATE TABLE IF NOT EXISTS equipment (
     name_equipment VARCHAR(255),
     rfid VARCHAR(255) UNIQUE,
     type VARCHAR(255) NOT NULL,
-    model VARCHAR(255) NOT NULL,
+    model ENUM('T16','T14','ZBOOK') NOT NULL,
     validity VARCHAR(255) NOT NULL,
     admin_rights VARCHAR(255) NOT NULL,
     observation TEXT,

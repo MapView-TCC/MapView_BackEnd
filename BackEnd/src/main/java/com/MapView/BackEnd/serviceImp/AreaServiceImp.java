@@ -3,6 +3,7 @@ package com.MapView.BackEnd.serviceImp;
 import com.MapView.BackEnd.entities.UserLog;
 import com.MapView.BackEnd.entities.Users;
 import com.MapView.BackEnd.enums.EnumAction;
+import com.MapView.BackEnd.infra.OperativeFalseException;
 import com.MapView.BackEnd.repository.AreaRepository;
 import com.MapView.BackEnd.repository.UserLogRepository;
 import com.MapView.BackEnd.repository.UserRepository;
@@ -70,8 +71,12 @@ public class AreaServiceImp implements AreaService {
     @Override
     public AreaDetailsDTO updateArea(Long id_area, AreaUpdateDTO dados,Long user_id) {
         var area = areaRepository.findById(id_area).orElseThrow(() -> new NotFoundException("Id not found"));
-        Users user = this.userRepository.findById(user_id).orElseThrow(() -> new NotFoundException("Id not found"));
 
+        if(!area.isOperative()){
+            throw new OperativeFalseException("The inactive area cannot be updated.");
+        }
+
+        Users user = this.userRepository.findById(user_id).orElseThrow(() -> new NotFoundException("Id not found"));
         var userlog = new UserLog(user,"Area", id_area.toString(),null,"Infos update",EnumAction.UPDATE);
 
 

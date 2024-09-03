@@ -3,6 +3,7 @@ package com.MapView.BackEnd.serviceImp;
 import com.MapView.BackEnd.entities.UserLog;
 import com.MapView.BackEnd.entities.Users;
 import com.MapView.BackEnd.enums.EnumAction;
+import com.MapView.BackEnd.infra.OperativeFalseException;
 import com.MapView.BackEnd.repository.BuildingRepository;
 import com.MapView.BackEnd.repository.UserLogRepository;
 import com.MapView.BackEnd.repository.UserRepository;
@@ -36,7 +37,7 @@ public class BuildingServiceImp implements BuildingService {
     public BuildingDetailsDTO getBuilding(Long building_id,Long user_id) {
         Building building = this.buildingRepository.findById(building_id).orElseThrow(() -> new NotFoundException("Id not found"));
         Users user = this.userRepository.findById(user_id).orElseThrow(() -> new NotFoundException("Id not found"));
-        if (!building.status_check()){
+        if (!building.isOperative()){
             return null;
         }
         var userLog = new UserLog(user,"Building",building_id.toString(),"Read building",EnumAction.READ);
@@ -67,8 +68,12 @@ public class BuildingServiceImp implements BuildingService {
     @Override
     public BuildingDetailsDTO updateBuilding(Long building_id, BuildingUpdateDTO dados,Long user_id) {
         var building = buildingRepository.findById(building_id). orElseThrow(() -> new RuntimeException("Building Id not found"));
-        Users user = this.userRepository.findById(user_id).orElseThrow(() -> new NotFoundException("Id not found"));
 
+        if(!building.isOperative()){
+            throw new OperativeFalseException("The inactive equipment cannot be updated.");
+        }
+
+        Users user = this.userRepository.findById(user_id).orElseThrow(() -> new NotFoundException("Id not found"));
         var userlog = new UserLog(user,"Building",building_id.toString(),null,"Update building: ",EnumAction.UPDATE);
 
         if (dados.building_code() != null){

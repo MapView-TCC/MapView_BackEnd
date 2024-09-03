@@ -1,5 +1,6 @@
 package com.MapView.BackEnd.serviceImp;
 
+import com.MapView.BackEnd.infra.OperativeFalseException;
 import com.MapView.BackEnd.repository.EnviromentRepository;
 import com.MapView.BackEnd.repository.LocationRepository;
 import com.MapView.BackEnd.repository.PostRepository;
@@ -51,9 +52,11 @@ public class LocationServiceImp implements LocationService {
 
     @Override
     public LocationDetalsDTO updateLocation(Long id_location, LocationUpdateDTO data) {
+        var location = locationRepository.findById(id_location).orElseThrow(() -> new NotFoundException("Location Id Not Found"));
         var post = postRepository.findById(data.id_post()).orElseThrow(() -> new NotFoundException("Post Id not Found"));
         var enviroment = enviromentRepository.findById(data.id_enviromnet()).orElseThrow(() -> new NotFoundException("Enviroment Id Not Found"));
-        var location = locationRepository.findById(id_location).orElseThrow(() -> new NotFoundException("Location Id Not Found"));
+
+
 
         if(data.id_enviromnet() != null){
             location.setEnvironment(enviroment);

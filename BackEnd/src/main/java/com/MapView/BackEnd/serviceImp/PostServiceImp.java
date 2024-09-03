@@ -3,6 +3,7 @@ package com.MapView.BackEnd.serviceImp;
 import com.MapView.BackEnd.entities.UserLog;
 import com.MapView.BackEnd.entities.Users;
 import com.MapView.BackEnd.enums.EnumAction;
+import com.MapView.BackEnd.infra.OperativeFalseException;
 import com.MapView.BackEnd.repository.PostRepository;
 import com.MapView.BackEnd.repository.UserLogRepository;
 import com.MapView.BackEnd.repository.UserRepository;
@@ -70,6 +71,10 @@ public class PostServiceImp implements PostService {
     @Override
     public PostDetailDTO updatePost(Long id_post, PostUpdateDTO data,Long user_id) {
         var post = this.postRepository.findById(id_post).orElseThrow(() ->new NotFoundException("Post Id Not Found"));
+
+        if(!post.isOperative()){
+            throw new OperativeFalseException("The inactive equipment cannot be updated.");
+        }
 
         Users user = this.userRepository.findById(user_id).orElseThrow(() -> new NotFoundException("Id not found"));
         var userlog = new UserLog(user,"Area", id_post.toString(),null,"Infos update",EnumAction.UPDATE);

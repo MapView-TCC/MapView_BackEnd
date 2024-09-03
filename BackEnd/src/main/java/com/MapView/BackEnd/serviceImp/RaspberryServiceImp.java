@@ -2,6 +2,7 @@ package com.MapView.BackEnd.serviceImp;
 
 import com.MapView.BackEnd.entities.*;
 import com.MapView.BackEnd.enums.EnumAction;
+import com.MapView.BackEnd.infra.OperativeFalseException;
 import com.MapView.BackEnd.repository.*;
 import com.MapView.BackEnd.service.RaspberryService;
 import com.MapView.BackEnd.dtos.Raspberry.RaspberryCreateDTO;
@@ -81,9 +82,13 @@ public class RaspberryServiceImp implements RaspberryService {
 
     @Override
     public RaspberryDetailsDTO updateRaspberry(Long id_raspberry, RaspberryUpdateDTO dados, Long user_id) {
-        Users user = this.userRepository.findById(user_id).orElseThrow(() -> new NotFoundException("Id not found"));
         var raspberry = raspberryRepository.findById(id_raspberry)
                 .orElseThrow(() -> new NotFoundException("Raspberry id not found"));
+        if(!raspberry.isOperative()){
+            throw new OperativeFalseException("The inactive equipment cannot be updated.");
+        }
+
+        Users user = this.userRepository.findById(user_id).orElseThrow(() -> new NotFoundException("Id not found"));
         var userlog = new UserLog(user,"Raspberry",id_raspberry.toString(),null,"Update Raspberry: ",EnumAction.UPDATE);
 
 
