@@ -1,6 +1,7 @@
 package com.MapView.BackEnd.entities;
 
 import com.MapView.BackEnd.dtos.Equipment.EquipmentCreateDTO;
+import com.MapView.BackEnd.enums.EnumModelEquipment;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -23,7 +24,8 @@ public class Equipment {
 
     private String rfid;
     private String type;
-    private String model;
+    @Enumerated(EnumType.STRING)
+    private EnumModelEquipment model;
     private String validity; // periodo de utilização, quando tem que ser devolvido
     private String admin_rights; // codigo que eles tem para fazer as requisições
     private String observation;

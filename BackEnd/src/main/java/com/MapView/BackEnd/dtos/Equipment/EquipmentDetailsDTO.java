@@ -3,13 +3,14 @@ package com.MapView.BackEnd.dtos.Equipment;
 import com.MapView.BackEnd.entities.Equipment;
 import com.MapView.BackEnd.entities.Location;
 import com.MapView.BackEnd.entities.MainOwner;
+import com.MapView.BackEnd.enums.EnumModelEquipment;
 
 public record EquipmentDetailsDTO(
         String id_equipment,
         String name_equipment,
         String rfid,
         String type,
-        String model,
+        EnumModelEquipment model,
         String validity,
         String admin_rights,
         String observation,
