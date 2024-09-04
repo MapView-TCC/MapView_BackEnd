@@ -46,7 +46,7 @@ public class AccessHistoryServiceImp implements AccessHistoryService {
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado!"));
 
         AccessHistory history = new AccessHistory();
-        history.setId_user(user);
+        history.setUser(user);
 
         // O campo login_datetime será preenchido automaticamente
         accessHistoryRepository.save(history);

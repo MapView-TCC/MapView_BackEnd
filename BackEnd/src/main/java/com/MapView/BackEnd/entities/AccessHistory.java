@@ -23,7 +23,7 @@ public class AccessHistory {
     //cascade = CascadeType.ALL
     @OneToOne()
     @JoinColumn(name = "id_user")
-    private Users id_user;
+    private Users user;
     @CreationTimestamp
     private Instant login_datetime;
     private LocalDateTime logout_datetime;

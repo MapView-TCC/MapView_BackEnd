@@ -7,6 +7,6 @@ import com.MapView.BackEnd.enums.EnumTrackingAction;
 import java.time.Instant;
 
 public record TrackingHistoryCreateDTO(String id_equipment,
-                                       String name_raspberry
-) {
+                                       Long id_environment
+                                       ) {
 }

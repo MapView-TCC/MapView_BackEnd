@@ -73,7 +73,7 @@ public class ClassesServiceImp implements ClassesService {
 
         if(data.user_id() != null){
             var user = userRepository.findById(data.user_id()).orElseThrow(() -> new NotFoundException("User Id Not Found"));
-            classes.setId_user(user);
+            classes.setUser(user);
             userlog.setField("user_id");
             userlog.setDescription("user_id to: " + data.user_id());
         }

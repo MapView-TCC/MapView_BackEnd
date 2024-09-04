@@ -83,8 +83,8 @@ public class ReportServiceImp implements ReportService {
             createDataCell(dataRow, 3, equipment.getValidity(), dataStyle);
 
             // Extrair informações textuais das entidades Location e MainOwner
-            String IdownerName = equipment.getId_owner() != null ? equipment.getId_owner().getId_owner() : "N/A";
-            Location location = equipment.getId_location();
+            String IdownerName = equipment.getOwner() != null ? equipment.getOwner().getId_owner() : "N/A";
+            Location location = equipment.getLocation();
             String environment = (location != null && location.getEnvironment() != null) ? location.getEnvironment().getEnvironment_name() : "N/A";
             String postName = (location != null && location.getPost() != null) ? location.getPost().getPost() : "N/A";
 

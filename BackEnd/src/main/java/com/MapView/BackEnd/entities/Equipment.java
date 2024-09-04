@@ -33,10 +33,10 @@ public class Equipment {
     private String observation;
     @OneToOne
     @JoinColumn(name = "id_location")
-    private Location id_location;
+    private Location location;
     @OneToOne
     @JoinColumn(name = "id_owner")
-    private MainOwner id_owner;
+    private MainOwner owner;
 
     private String image;
     private boolean operative;
@@ -54,8 +54,8 @@ public class Equipment {
         this.validity = data.validity();
         this.admin_rights = data.admin_rights();
         this.observation = data.observation();
-        this.id_location = location;
-        this.id_owner = id_owner;
+        this.location = location;
+        this.owner = id_owner;
         this.operative = true;
     }
 

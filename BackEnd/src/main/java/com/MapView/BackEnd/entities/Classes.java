@@ -27,7 +27,7 @@ public class Classes {
     private String classes;
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_user")
-    private Users id_user;
+    private Users user;
     private LocalDate creation_date;
     private boolean operative;
 
@@ -35,7 +35,7 @@ public class Classes {
     public Classes(ClassesCreateDTO data, Users user){
         this.enumCourse = data.enumCourse();
         this.classes = data.classes();
-        this.id_user = user;
+        this.user = user;
         this.creation_date = data.criation_date();
         this.operative = true;
     }

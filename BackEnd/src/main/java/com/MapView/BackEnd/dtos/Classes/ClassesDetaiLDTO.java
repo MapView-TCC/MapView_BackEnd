@@ -18,6 +18,6 @@ public record ClassesDetaiLDTO (Long id_classes,
                                 LocalDate criation_date) {
 
     public ClassesDetaiLDTO(Classes classes){
-        this(classes.getId_classes(),classes.getEnumCourse(), classes.getClasses(), classes.getId_user(),classes.getCreation_date());
+        this(classes.getId_classes(),classes.getEnumCourse(), classes.getClasses(), classes.getUser(),classes.getCreation_date());
     }
 }

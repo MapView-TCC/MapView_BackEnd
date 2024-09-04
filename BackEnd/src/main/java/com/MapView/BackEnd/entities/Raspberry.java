@@ -13,7 +13,7 @@ import lombok.*;
 @EqualsAndHashCode(of = "raspberry_name")
 public class Raspberry {
     @Id
-    private String raspberry_name;
+    private String id_raspberry;
     @OneToOne
     @JoinColumn(name = "id_building")
     private Building id_building;
@@ -24,7 +24,7 @@ public class Raspberry {
 
 
     public Raspberry(RaspberryCreateDTO dados, Building id_building, Area id_area) {
-        this.raspberry_name = dados.raspberry_name();
+        this.id_raspberry = dados.raspberry_name();
         this.id_building = id_building;
         this.id_area = id_area;
         this.operative = true;

@@ -147,14 +147,14 @@ public class EquipmentServiceImp implements EquipmentService {
         if (dados.id_location() != null) {
             var location = locationRepository.findById(dados.id_location())
                     .orElseThrow(() -> new NotFoundException("Location id not found"));
-            equipment.setId_location(location);
+            equipment.setLocation(location);
             userlog.setField(userlog.getField()+" ,"+"equipment location to: " + dados.id_location());
         }
 
         if (dados.id_owner() != null) {
             var owner = mainOwnerRepository.findById(dados.id_owner())
                     .orElseThrow(() -> new NotFoundException("Owner id not found"));
-            equipment.setId_owner(owner);
+            equipment.setOwner(owner);
             userlog.setField(userlog.getField()+" ,"+"equipment main owner to: " + dados.id_owner());
         }
 
@@ -202,12 +202,12 @@ public class EquipmentServiceImp implements EquipmentService {
         List<Equipment> filteredEquipments = equipmentRepository.findAllByOperativeTrue(PageRequest.of(page, itens))
                 .stream()
                 .filter(e -> (validity == null || e.getValidity().equals(validity)) &&
-                        (environment == null || e.getId_location().getEnvironment().getEnvironment_name().equals(environment)) &&
-                        (mainOwner == null || e.getId_owner().getOwner_name().equals(mainOwner)) &&
-                        (id_owner == null || e.getId_owner().getId_owner().equals(id_owner)) &&
+                        (environment == null || e.getLocation().getEnvironment().getEnvironment_name().equals(environment)) &&
+                        (mainOwner == null || e.getOwner().getOwner_name().equals(mainOwner)) &&
+                        (id_owner == null || e.getOwner().getId_owner().equals(id_owner)) &&
                         (id_equipment == null || e.getId_equipment().equals(id_equipment)) &&
                         (name_equipment == null || e.getName_equipment().equals(name_equipment)) &&
-                        (post == null || e.getId_location().getPost().getPost().equals(post)))
+                        (post == null || e.getLocation().getPost().getPost().equals(post)))
                 .toList();
 
 

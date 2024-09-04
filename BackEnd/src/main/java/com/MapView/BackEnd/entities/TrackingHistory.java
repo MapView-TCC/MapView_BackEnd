@@ -29,7 +29,7 @@ public class TrackingHistory {
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name ="id_equipment")
-    private Equipment id_equipment;
+    private Equipment idEquipment;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name ="id_environment")
@@ -44,7 +44,7 @@ public class TrackingHistory {
 
 
     public TrackingHistory(Enviroment environment, Equipment equipment, EnumTrackingAction action, EnumColors colors) {
-        this.id_equipment = equipment;
+        this.idEquipment = equipment;
         this.id_environment = environment;
         this.action = action;
         this.colors = colors;

@@ -43,8 +43,7 @@ CREATE TABLE IF NOT EXISTS area (
 
 -- Creating the Raspberry table
 CREATE TABLE IF NOT EXISTS raspberry (
-    id_raspberry INT AUTO_INCREMENT PRIMARY KEY,
-    raspberry_name VARCHAR(255) UNIQUE NOT NULL,
+    id_raspberry VARCHAR(255) PRIMARY KEY UNIQUE NOT NULL,
     id_building INT NOT NULL,
     id_area INT NOT NULL,
     operative TINYINT NOT NULL,
@@ -56,7 +55,7 @@ CREATE TABLE IF NOT EXISTS raspberry (
 CREATE TABLE IF NOT EXISTS environment (
     id_environment INT AUTO_INCREMENT PRIMARY KEY,
     environment_name VARCHAR(255) NOT NULL,
-    id_raspberry INT NOT NULL,
+    id_raspberry VARCHAR(255) NOT NULL,
     operative TINYINT NOT NULL,
     FOREIGN KEY(id_raspberry) REFERENCES raspberry(id_raspberry)
 );

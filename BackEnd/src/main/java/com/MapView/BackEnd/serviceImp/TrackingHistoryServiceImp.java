@@ -1,6 +1,7 @@
 package com.MapView.BackEnd.serviceImp;
 
 import com.MapView.BackEnd.entities.Raspberry;
+import com.MapView.BackEnd.enums.EnumAction;
 import com.MapView.BackEnd.enums.EnumColors;
 import com.MapView.BackEnd.enums.EnumTrackingAction;
 import com.MapView.BackEnd.repository.EnviromentRepository;
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -30,13 +32,13 @@ public class TrackingHistoryServiceImp implements TrackingHistoryService {
     private final EnviromentRepository enviromentRepository;
     private final EquipmentRepository equipmentRepository;
 
-    private final RaspberryRepository raspberryRepository;
 
-    public TrackingHistoryServiceImp(TrackingHistoryRepository trackingHistoryRepository, EnviromentRepository enviromentRepository, EquipmentRepository equipmentRepository, RaspberryRepository raspberryRepository) {
+
+    public TrackingHistoryServiceImp(TrackingHistoryRepository trackingHistoryRepository, EnviromentRepository enviromentRepository, EquipmentRepository equipmentRepository) {
         this.trackingHistoryRepository = trackingHistoryRepository;
         this.enviromentRepository = enviromentRepository;
         this.equipmentRepository = equipmentRepository;
-        this.raspberryRepository = raspberryRepository;
+
     }
 
     @Override
@@ -54,28 +56,52 @@ public class TrackingHistoryServiceImp implements TrackingHistoryService {
 
     @Override
     public TrackingHistoryDetailsDTO createTrackingHistory(TrackingHistoryCreateDTO dados) {
-        Raspberry raspberry = raspberryRepository.findById(dados.name_raspberry()).orElseThrow(() -> new NotFoundException("Id not found"));
+
 
         Equipment equipment = equipmentRepository.findById(dados.id_equipment())
                 .orElseThrow(() -> new NotFoundException("Id not found"));
 
-        Enviroment environment = enviromentRepository.findById(dados.id_environment())
+        Enviroment local_tracking = enviromentRepository.findById(dados.id_environment())
                 .orElseThrow(() -> new NotFoundException("Id not found"));
 
-        
+        TrackingHistory last_track = trackingHistoryRepository.findTopByIdEquipmentOrderByDatetimeDesc(equipment);
+        Enviroment last_track_local = last_track.getId_environment();
+        Enviroment local_notebook = equipment.getLocation().getEnvironment();
 
+        if(local_notebook == local_tracking) {
 
+            if (last_track_local.equals(local_tracking)) {
+                if (last_track.getAction().equals(EnumTrackingAction.OUT)) {
+                    TrackingHistory trackingHistory = trackingHistoryRepository.save(new TrackingHistory(local_tracking, equipment, EnumTrackingAction.ENTER, EnumColors.GREEN));
+                    System.out.println("_-----1--------");
+                    return new TrackingHistoryDetailsDTO(trackingHistory);
+                }
+                System.out.println("_-----2--------");
+                TrackingHistory trackingHistory = trackingHistoryRepository.save(new TrackingHistory(local_tracking, equipment, EnumTrackingAction.OUT, EnumColors.GREEN));
+                return new TrackingHistoryDetailsDTO(trackingHistory);
+            }
+            System.out.println("_-----3--------");
 
+            TrackingHistory trackingHistory = trackingHistoryRepository.save(new TrackingHistory(local_tracking, equipment, EnumTrackingAction.ENTER, EnumColors.GREEN));
+            return new TrackingHistoryDetailsDTO(trackingHistory);
 
+        }
 
+        if (last_track_local == local_tracking){
 
+            if (last_track.getAction() == EnumTrackingAction.ENTER){
+                System.out.println("_-----4--------");
+                TrackingHistory trackingHistory = trackingHistoryRepository.save(new TrackingHistory(local_tracking, equipment, EnumTrackingAction.OUT, EnumColors.GREEN));
+                return new TrackingHistoryDetailsDTO(trackingHistory);
 
-        TrackingHistory trackingHistory = new TrackingHistory(environment,equipment,dados.action(),dados.colors());
+            }
+            System.out.println("_-----5--------");
+            TrackingHistory trackingHistory = trackingHistoryRepository.save(new TrackingHistory(local_tracking, equipment, EnumTrackingAction.ENTER, EnumColors.GREEN));
+            return new TrackingHistoryDetailsDTO(trackingHistory);
+        }
+        System.out.println("_-----6--------");
+        return new TrackingHistoryDetailsDTO(last_track);
 
-
-        trackingHistoryRepository.save(trackingHistory);
-
-        return new TrackingHistoryDetailsDTO(trackingHistory);
     }
 
     @Override

@@ -20,8 +20,8 @@ public record EquipmentDetailsDTO(
 
     public EquipmentDetailsDTO(Equipment equipment){
         this(equipment.getId_equipment(), equipment.getName_equipment(), equipment.getRfid(), equipment.getType(), equipment.getModel(),
-             equipment.getValidity(), equipment.getAdmin_rights(), equipment.getObservation(), equipment.getId_location(),
-             equipment.getId_owner(), equipment.isOperative());
+             equipment.getValidity(), equipment.getAdmin_rights(), equipment.getObservation(), equipment.getLocation(),
+             equipment.getOwner(), equipment.isOperative());
     }
 
 

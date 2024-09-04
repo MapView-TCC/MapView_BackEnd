@@ -30,7 +30,7 @@ public class RaspberryController {
 
         // boa pratica, para retornar o caminho
         var uri = uriBuilder.path("/api/v1/raspberry/{id}").buildAndExpand(raspberry.id_raspberry()).toUri();
-        return ResponseEntity.created(uri).body(new RaspberryDetailsDTO(raspberry.id_raspberry(),raspberry.raspberry_name(), raspberry.id_building(), raspberry.id_area(), raspberry.operative()));
+        return ResponseEntity.created(uri).body(new RaspberryDetailsDTO(raspberry.id_raspberry(), raspberry.id_building(), raspberry.id_area(), raspberry.operative()));
     }
 
     @GetMapping
@@ -40,28 +40,28 @@ public class RaspberryController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<RaspberryDetailsDTO> getRaspberry(@PathVariable Long id, @RequestParam Long user_id){
+    public ResponseEntity<RaspberryDetailsDTO> getRaspberry(@PathVariable String id, @RequestParam Long user_id){
         RaspberryDetailsDTO raspberry = raspberryServiceImp.getRaspberry(id, user_id);
         return ResponseEntity.ok(raspberry);
     }
 
     @PostMapping("/{id_raspberry}")
     @Transactional
-    public ResponseEntity<RaspberryDetailsDTO> updateRaspberry(@PathVariable Long id_raspberry, @RequestBody RaspberryUpdateDTO dados, @RequestParam Long user_id){
+    public ResponseEntity<RaspberryDetailsDTO> updateRaspberry(@PathVariable String id_raspberry, @RequestBody RaspberryUpdateDTO dados, @RequestParam Long user_id){
         RaspberryDetailsDTO updateRaspberry = raspberryServiceImp.updateRaspberry(id_raspberry, dados, user_id);
         return ResponseEntity.ok(updateRaspberry);
     }
 
     @PutMapping("/inactivate/{id}")
     @Transactional
-    public ResponseEntity<Void> inactivate(@PathVariable Long id, @RequestParam Long user_id){
+    public ResponseEntity<Void> inactivate(@PathVariable String id, @RequestParam Long user_id){
         raspberryServiceImp.inactivateRaspberry(id, user_id);
         return ResponseEntity.ok().build();
     }
 
     @PutMapping("/active/{id}")
     @Transactional
-    public ResponseEntity<Void> active(@PathVariable Long id, @RequestParam Long user_id){
+    public ResponseEntity<Void> active(@PathVariable String id, @RequestParam Long user_id){
         raspberryServiceImp.activeRaspberry(id, user_id);
         return ResponseEntity.ok().build();
     }
