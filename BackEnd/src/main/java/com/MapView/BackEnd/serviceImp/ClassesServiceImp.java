@@ -12,11 +12,10 @@ import com.MapView.BackEnd.dtos.Classes.ClassesDetaiLDTO;
 import com.MapView.BackEnd.dtos.Classes.ClassesUpdateDTO;
 import com.MapView.BackEnd.entities.Classes;
 import com.MapView.BackEnd.infra.NotFoundException;
-import com.MapView.BackEnd.service.UserLogService;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
 
+import java.time.Clock;
 import java.util.List;
 @Service
 
@@ -25,12 +24,14 @@ public class ClassesServiceImp implements ClassesService {
     private final ClassesRepository classesRepository;
     private final UserRepository userRepository;
     private final UserLogRepository userLogRepository;
+    private  final Clock clock;
 
-    public ClassesServiceImp(ClassesRepository classesRepository, UserRepository userRepository,  UserLogRepository userLogRepository) {
+    public ClassesServiceImp(ClassesRepository classesRepository, UserRepository userRepository, UserLogRepository userLogRepository, Clock clock) {
         this.classesRepository = classesRepository;
         this.userRepository = userRepository;
         this.userLogRepository = userLogRepository;
 
+        this.clock = clock;
     }
     @Override
     public ClassesDetaiLDTO createClasses(ClassesCreateDTO data, Long user_id) {
@@ -38,6 +39,7 @@ public class ClassesServiceImp implements ClassesService {
 
         var usuario_log = userRepository.findById(user_id).orElseThrow(() -> new NotFoundException("User Id Not Found"));
         var classe = new Classes(data,user);
+
         Long id_classes = classesRepository.save(classe).getId_classes();
 
         var userLog = new UserLog(usuario_log,"Classes", id_classes.toString(),"Create new classes", EnumAction.CREATE);
