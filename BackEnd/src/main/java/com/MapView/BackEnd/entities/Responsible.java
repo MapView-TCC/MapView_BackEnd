@@ -31,16 +31,9 @@ public class Responsible {
     private Users id_user;
     private boolean operative;
 
-//    @OneToMany(mappedBy = "id_responsible")
-//    private Set<EquipmentResponsible> equipmentResponsibles;
-    @ManyToMany
-    @JoinTable(
-            name = "equipment_responsible",
-            joinColumns = @JoinColumn(name = "id_equipment"),
-            inverseJoinColumns = @JoinColumn(name = "id_responsible"))
+    @OneToMany(mappedBy = "id_responsible")
     @JsonManagedReference
-    private Set<Equipment> responsibles;
-
+    private Set<EquipmentResponsible> equipmentResponsibles;
 
 
     public  Responsible(String responsible_name, String edv,Classes classes,Users users){
