@@ -41,13 +41,11 @@ public class TrackingHistory {
     @Enumerated(value = EnumType.STRING)
     private EnumColors colors;
 
-    public TrackingHistory(Long id_tracking, Instant dateTime, Equipment id_equipment,
-                           Enviroment id_environment,
-                           EnumTrackingAction action, EnumColors colors) {
-        this.id_tracking = id_tracking;
-        this.datetime = dateTime;
-        this.id_equipment = id_equipment;
-        this.id_environment = id_environment;
+
+
+    public TrackingHistory(Enviroment environment, Equipment equipment, EnumTrackingAction action, EnumColors colors) {
+        this.id_equipment = equipment;
+        this.id_environment = environment;
         this.action = action;
         this.colors = colors;
     }

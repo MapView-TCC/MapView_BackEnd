@@ -1,10 +1,11 @@
 package com.MapView.BackEnd.serviceImp;
 
-import com.MapView.BackEnd.dtos.Equipment.EquipmentDetailsDTO;
+import com.MapView.BackEnd.entities.Raspberry;
 import com.MapView.BackEnd.enums.EnumColors;
 import com.MapView.BackEnd.enums.EnumTrackingAction;
 import com.MapView.BackEnd.repository.EnviromentRepository;
 import com.MapView.BackEnd.repository.EquipmentRepository;
+import com.MapView.BackEnd.repository.RaspberryRepository;
 import com.MapView.BackEnd.repository.TrackingHistoryRepository;
 import com.MapView.BackEnd.service.TrackingHistoryService;
 import com.MapView.BackEnd.dtos.TrackingHistory.TrackingHistoryCreateDTO;
@@ -15,7 +16,6 @@ import com.MapView.BackEnd.entities.TrackingHistory;
 import com.MapView.BackEnd.infra.NotFoundException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -27,17 +27,16 @@ public class TrackingHistoryServiceImp implements TrackingHistoryService {
 
 
     private final TrackingHistoryRepository trackingHistoryRepository;
-
-
     private final EnviromentRepository enviromentRepository;
-
-
     private final EquipmentRepository equipmentRepository;
 
-    public TrackingHistoryServiceImp(TrackingHistoryRepository trackingHistoryRepository, EnviromentRepository enviromentRepository, EquipmentRepository equipmentRepository) {
+    private final RaspberryRepository raspberryRepository;
+
+    public TrackingHistoryServiceImp(TrackingHistoryRepository trackingHistoryRepository, EnviromentRepository enviromentRepository, EquipmentRepository equipmentRepository, RaspberryRepository raspberryRepository) {
         this.trackingHistoryRepository = trackingHistoryRepository;
         this.enviromentRepository = enviromentRepository;
         this.equipmentRepository = equipmentRepository;
+        this.raspberryRepository = raspberryRepository;
     }
 
     @Override
@@ -55,18 +54,24 @@ public class TrackingHistoryServiceImp implements TrackingHistoryService {
 
     @Override
     public TrackingHistoryDetailsDTO createTrackingHistory(TrackingHistoryCreateDTO dados) {
+        Raspberry raspberry = raspberryRepository.findById(dados.name_raspberry()).orElseThrow(() -> new NotFoundException("Id not found"));
+
         Equipment equipment = equipmentRepository.findById(dados.id_equipment())
-                .orElseThrow(() -> new RuntimeException("Id not found"));
+                .orElseThrow(() -> new NotFoundException("Id not found"));
 
         Enviroment environment = enviromentRepository.findById(dados.id_environment())
-                .orElseThrow(() -> new RuntimeException("Id not found"));
+                .orElseThrow(() -> new NotFoundException("Id not found"));
+
+        
 
 
-        TrackingHistory trackingHistory = new TrackingHistory();
-        trackingHistory.setId_environment(environment);
-        trackingHistory.setId_equipment(equipment);
-        trackingHistory.setAction(dados.action());
-        trackingHistory.setColors(dados.colors());
+
+
+
+
+
+        TrackingHistory trackingHistory = new TrackingHistory(environment,equipment,dados.action(),dados.colors());
+
 
         trackingHistoryRepository.save(trackingHistory);
 

@@ -10,11 +10,9 @@ import lombok.*;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode(of = "id_raspberry")
+@EqualsAndHashCode(of = "raspberry_name")
 public class Raspberry {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id_raspberry;
     private String raspberry_name;
     @OneToOne
     @JoinColumn(name = "id_building")
@@ -31,6 +29,7 @@ public class Raspberry {
         this.id_area = id_area;
         this.operative = true;
     }
+
 
 }
 

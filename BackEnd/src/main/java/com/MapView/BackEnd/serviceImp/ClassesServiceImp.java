@@ -24,14 +24,12 @@ public class ClassesServiceImp implements ClassesService {
     private final ClassesRepository classesRepository;
     private final UserRepository userRepository;
     private final UserLogRepository userLogRepository;
-    private  final Clock clock;
 
-    public ClassesServiceImp(ClassesRepository classesRepository, UserRepository userRepository, UserLogRepository userLogRepository, Clock clock) {
+
+    public ClassesServiceImp(ClassesRepository classesRepository, UserRepository userRepository, UserLogRepository userLogRepository) {
         this.classesRepository = classesRepository;
         this.userRepository = userRepository;
         this.userLogRepository = userLogRepository;
-
-        this.clock = clock;
     }
     @Override
     public ClassesDetaiLDTO createClasses(ClassesCreateDTO data, Long user_id) {
