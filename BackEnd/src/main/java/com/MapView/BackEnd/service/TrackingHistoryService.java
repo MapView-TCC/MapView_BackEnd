@@ -14,5 +14,7 @@ public interface TrackingHistoryService {
     TrackingHistoryDetailsDTO createTrackingHistory(TrackingHistoryCreateDTO dados);
 
     // tentativa dos filtros
-    List<TrackingHistoryDetailsDTO> FilterTracking(int page, int itens, EnumTrackingAction action, Integer day, Integer month, Integer year, EnumColors colors);
+    List<TrackingHistoryDetailsDTO> FilterTracking(int page, int itens, EnumTrackingAction action,
+                                                   Integer day, Integer month, Integer year, EnumColors colors,
+                                                   String id_equipment);
 }

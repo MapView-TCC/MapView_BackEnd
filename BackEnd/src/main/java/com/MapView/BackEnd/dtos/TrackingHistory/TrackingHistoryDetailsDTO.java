@@ -14,11 +14,11 @@ public record TrackingHistoryDetailsDTO(Long id_tracking,
                                         Equipment id_equipment,
                                         Enviroment id_environment,
                                         EnumTrackingAction action,
-                                        EnumColors colors) {
+                                        EnumColors warning) {
 
     public TrackingHistoryDetailsDTO(TrackingHistory trackingHistory) {
         this(trackingHistory.getId_tracking(), trackingHistory.getDatetime(), trackingHistory.getIdEquipment(),
                 trackingHistory.getId_environment(), trackingHistory.getAction(),
-                trackingHistory.getColors());
+                trackingHistory.getWarning());
     }
 }

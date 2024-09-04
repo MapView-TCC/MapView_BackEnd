@@ -105,14 +105,16 @@ public class TrackingHistoryServiceImp implements TrackingHistoryService {
     }
 
     @Override
-    public List<TrackingHistoryDetailsDTO> FilterTracking(int page, int itens, EnumTrackingAction action, Integer day, Integer month, Integer year, EnumColors colors) {
+    public List<TrackingHistoryDetailsDTO> FilterTracking(int page, int itens, EnumTrackingAction action, Integer day,
+                                                          Integer month, Integer year, EnumColors colors, String id_equipment) {
 
         List<TrackingHistory> filterTracking;
 
         // Se a ação não for nula, filtra pelo valor da ação
         filterTracking = trackingHistoryRepository.findAll(PageRequest.of(page, itens)).stream()
                 .filter(t -> (action == null || t.getAction() == action))
-                .filter(t -> (colors == null || t.getColors() == colors))
+                .filter(t -> (colors == null || t.getWarning() == colors))
+                .filter(t -> (id_equipment == null || (t.getIdEquipment() != null && t.getIdEquipment().getId_equipment().equals(id_equipment))))
                 .filter(t -> {
                     // Converte o Instant para LocalDateTime no fuso horário local
                     LocalDateTime dateTime = t.getDatetime().atZone(ZoneId.systemDefault()).toLocalDateTime();

@@ -1,5 +1,6 @@
 package com.MapView.BackEnd.serviceImp;
 
+import com.MapView.BackEnd.infra.OperativeFalseException;
 import com.MapView.BackEnd.repository.EquipmentRepository;
 import com.MapView.BackEnd.repository.EquipmentResponsibleRepository;
 import com.MapView.BackEnd.repository.ResponsibleRepository;
@@ -83,7 +84,17 @@ public class EquipmentResponsibleServiceImp implements EquipmentResponsibleServi
             equipmentResponsible.setStart_usage(dados.start_usage());
         }
 
-        if (dados.end_usage() != null){
+        if (dados.end_usage() != null) {
+            // ver se a data inicial não está vazia
+            if (dados.start_usage() == null) {
+                throw new IllegalArgumentException("Start date must be set before setting the end date.");
+            }
+
+            // O método isBefore é usado para comparar instantes de tempo, datas e horas.
+            if (dados.end_usage().isBefore(dados.start_usage())) {
+                throw new IllegalArgumentException("The end date must be greater than or equal to the start date.");
+            }
+
             equipmentResponsible.setEnd_usage(dados.end_usage());
         }
 

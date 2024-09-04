@@ -29,7 +29,7 @@ public class TrackingHistoryController {
         var tracking = trackingHistoryServiceImp.createTrackingHistory(dados);
 
         var uri = uriBuilder.path("/api/v1/trackingHistory/{id}").buildAndExpand(tracking.id_tracking()).toUri();
-        return ResponseEntity.created(uri).body(new TrackingHistoryDetailsDTO(tracking.id_tracking(), tracking.datetime(), tracking.id_equipment(), tracking.id_environment(), tracking.action(), tracking.colors())).getBody();
+        return ResponseEntity.created(uri).body(new TrackingHistoryDetailsDTO(tracking.id_tracking(), tracking.datetime(), tracking.id_equipment(), tracking.id_environment(), tracking.action(), tracking.warning())).getBody();
     }
 
     @GetMapping("/{id}")
@@ -47,8 +47,8 @@ public class TrackingHistoryController {
     @GetMapping("/filter")
     public ResponseEntity<List<TrackingHistoryDetailsDTO>> getAllTrackingFilter(@RequestParam int page, @RequestParam int itens, @RequestParam(required = false)EnumTrackingAction action,
                                                                                 @RequestParam(required = false)Integer day, @RequestParam(required = false)Integer month, @RequestParam(required = false)Integer year,
-                                                                                @RequestParam(required = false)EnumColors colors){
-        var list = trackingHistoryServiceImp.FilterTracking(page, itens, action, day, month, year, colors);
+                                                                                @RequestParam(required = false)EnumColors colors, @RequestParam(required = false)String id_equipment){
+        var list = trackingHistoryServiceImp.FilterTracking(page, itens, action, day, month, year, colors, id_equipment);
         return ResponseEntity.ok(list);
     }
 }
