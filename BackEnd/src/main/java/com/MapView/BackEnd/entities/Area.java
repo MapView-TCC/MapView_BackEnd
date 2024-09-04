@@ -24,5 +24,4 @@ public class Area {
         this.area_code = dados.area_code();
         this.area_name = dados.area_name();
         this.operative = true;
-    }
-}
+    }}
