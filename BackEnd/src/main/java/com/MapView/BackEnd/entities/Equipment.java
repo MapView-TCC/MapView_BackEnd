@@ -2,6 +2,7 @@ package com.MapView.BackEnd.entities;
 
 import com.MapView.BackEnd.dtos.Equipment.EquipmentCreateDTO;
 import com.MapView.BackEnd.enums.EnumModelEquipment;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -39,8 +40,11 @@ public class Equipment {
     private String image;
     private boolean operative;
 
-    @OneToMany(mappedBy = "id_equipment")
-    private Set<EquipmentResponsible> equipmentResponsibles;
+//    @OneToMany(mappedBy = "id_equipment")
+//    private Set<EquipmentResponsible> equipmentResponsibles;
+    @ManyToMany(mappedBy = "responsibles")
+    @JsonBackReference
+    private Set<Responsible> equipments;
 
 
     public Equipment(EquipmentCreateDTO data, Location location, MainOwner id_owner) {

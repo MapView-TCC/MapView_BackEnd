@@ -1,5 +1,6 @@
 package com.MapView.BackEnd.entities;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 import org.apache.catalina.User;
@@ -30,8 +31,15 @@ public class Responsible {
     private Users id_user;
     private boolean operative;
 
-    @OneToMany(mappedBy = "id_responsible")
-    private Set<EquipmentResponsible> equipmentResponsibles;
+//    @OneToMany(mappedBy = "id_responsible")
+//    private Set<EquipmentResponsible> equipmentResponsibles;
+    @ManyToMany
+    @JoinTable(
+            name = "equipment_responsible",
+            joinColumns = @JoinColumn(name = "id_equipment"),
+            inverseJoinColumns = @JoinColumn(name = "id_responsible"))
+    @JsonManagedReference
+    private Set<Equipment> responsibles;
 
 
 
