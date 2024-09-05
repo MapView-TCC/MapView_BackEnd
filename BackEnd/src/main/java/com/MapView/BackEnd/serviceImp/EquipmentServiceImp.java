@@ -211,18 +211,14 @@ public class EquipmentServiceImp implements EquipmentService {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Equipment> criteriaQuery = criteriaBuilder.createQuery(Equipment.class);
 
-
-
         //Select From Equipment
         Root<Equipment> equipmentRoot = criteriaQuery.from(Equipment.class);
-        Root<Post> postRoot = criteriaQuery.from(Post.class);
-        Root<Location> locationRootRoot = criteriaQuery.from(Location.class);
 
+        //Inner Join
         Join<Equipment,MainOwner> mainOwnerJoin = equipmentRoot.join("owner");
         Join<Equipment, Location> locationJoin = equipmentRoot.join("location");
         Join<Equipment, Location> locationPostJoin = equipmentRoot.join("post");
         Join<Location, Post> PostJoin = locationPostJoin.join("post");
-
         Join<Location, Enviroment> enviromentJoin = locationJoin.join("id_environment");
 
 
@@ -262,9 +258,7 @@ public class EquipmentServiceImp implements EquipmentService {
 
 
         criteriaQuery.where(criteriaBuilder.and(predicate.toArray(new Predicate[0])));
-
-
-
+        
         TypedQuery<Equipment> query = entityManager.createQuery((criteriaQuery));
         return query.getResultList().stream()
                 .map(EquipmentDetailsDTO::new)
