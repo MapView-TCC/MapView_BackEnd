@@ -30,7 +30,7 @@ public class CostCenterController {
 
         // boa pratica, para retornar o caminho
         var uri = uriBuilder.path("/api/v1/costcenter/{id}").buildAndExpand(costcenter.id_cost_center()).toUri();
-        return ResponseEntity.created(uri).body(new CostCenterDetailsDTO(costcenter.id_cost_center(), costcenter.cost_center_name(), costcenter.operative()));
+        return ResponseEntity.created(uri).body(new CostCenterDetailsDTO(costcenter.id_cost_center(), costcenter.cost_center_name()));
     }
 
     @GetMapping

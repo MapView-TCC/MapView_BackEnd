@@ -75,13 +75,13 @@ public class TrackingHistoryServiceImp implements TrackingHistoryService {
             return new TrackingHistoryDetailsDTO(trackingHistory);
         }
 
-        TrackingHistory last_track = trackingHistoryRepository.findTopByIdEquipmentOrderByDatetimeDesc(equipment);
+        TrackingHistory last_track = trackingHistoryRepository.findTopByEquipmentOrderByDatetimeDesc(equipment);
 
 
 
 
 
-        Enviroment last_track_local = last_track.getId_environment();
+        Enviroment last_track_local = last_track.getEnvironment();
         Enviroment local_notebook = equipment.getLocation().getEnvironment();
 
         if (last_track_local.equals(local_tracking)) {
@@ -185,7 +185,7 @@ public class TrackingHistoryServiceImp implements TrackingHistoryService {
         filterTracking = trackingHistoryRepository.findAll(PageRequest.of(page, itens)).stream()
                 .filter(t -> (action == null || t.getAction() == action))
                 .filter(t -> (colors == null || t.getWarning() == colors))
-                .filter(t -> (id_equipment == null || (t.getIdEquipment() != null && t.getIdEquipment().getId_equipment().equals(id_equipment))))
+                .filter(t -> (id_equipment == null || (t.getEquipment() != null && t.getEquipment().getId_equipment().equals(id_equipment))))
                 .filter(t -> {
                     // Converte o Instant para LocalDateTime no fuso horário local
                     LocalDateTime dateTime = t.getDatetime().atZone(ZoneId.systemDefault()).toLocalDateTime();

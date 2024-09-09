@@ -30,7 +30,7 @@ public class ResponsibleController {
     public ResponseEntity<ResponsibleDetailsDTO> createResponsible(@RequestBody @Valid ResponsibleCrateDTO data, UriComponentsBuilder uriBuilder, @RequestParam Long user_id){
         var responsible  = responsibleServiceImp.createResposible(data, user_id);
         var uri = uriBuilder.path("/ap1/v1/responsible/{id}").buildAndExpand(responsible.responsible_id()).toUri();
-        return ResponseEntity.created(uri).body(new ResponsibleDetailsDTO(responsible.responsible_id(), responsible.responsible_name(), responsible.edv(), responsible.classes(),responsible.users(),responsible.operative()));
+        return ResponseEntity.created(uri).body(new ResponsibleDetailsDTO(responsible.responsible_id(), responsible.responsible_name(), responsible.edv(), responsible.classes(),responsible.users()));
     }
     @PostMapping("/{responsible_id}")
     @Transactional

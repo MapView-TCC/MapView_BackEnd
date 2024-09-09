@@ -89,7 +89,7 @@ public class EnviromentServiceImp implements EnviromentService {
             userlog.setDescription("enviroment_name to: " + data.environment_name());
         }
         if (data.id_raspberry() != null){
-            enviroment.setId_raspberry(rasp);
+            enviroment.setRaspberry(rasp);
             userlog.setField("id_raspberry");
             userlog.setDescription("id_raspberry to: ");
         }

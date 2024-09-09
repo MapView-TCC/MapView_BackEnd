@@ -16,17 +16,17 @@ public class Raspberry {
     private String id_raspberry;
     @OneToOne
     @JoinColumn(name = "id_building")
-    private Building id_building;
+    private Building building;
     @OneToOne
     @JoinColumn(name = "id_area")
-    private Area id_area;
+    private Area area;
     private boolean operative;
 
 
     public Raspberry(RaspberryCreateDTO dados, Building id_building, Area id_area) {
         this.id_raspberry = dados.raspberry_name();
-        this.id_building = id_building;
-        this.id_area = id_area;
+        this.building = id_building;
+        this.area = id_area;
         this.operative = true;
     }
 

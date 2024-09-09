@@ -30,7 +30,7 @@ public class BuildingController {
 
 
         var uri = uriBuilder.path("/api/v1/bulding/{id}").buildAndExpand(building.id_building()).toUri();
-        return ResponseEntity.created(uri).body(new BuildingDetailsDTO(building.id_building(), building.building_code(), building.operative()));
+        return ResponseEntity.created(uri).body(new BuildingDetailsDTO(building.id_building(), building.building_code()));
     }
 
     @GetMapping

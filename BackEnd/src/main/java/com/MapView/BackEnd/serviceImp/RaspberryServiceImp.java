@@ -101,14 +101,14 @@ public class RaspberryServiceImp implements RaspberryService {
 
         if (dados.id_building() != null){
             var building = buildingRepository.findById(dados.id_building()).orElseThrow(() -> new NotFoundException("Building id not found"));
-            raspberry.setId_building(building);
+            raspberry.setBuilding(building);
             userlog.setField("id_building");
             userlog.setDescription("id_building to: " + dados.id_building());
         }
 
         if (dados.id_area() != null){
             var area = areaRepository.findById(dados.id_area()).orElseThrow(() -> new NotFoundException("Area id not found"));
-            raspberry.setId_area(area);
+            raspberry.setArea(area);
             userlog.setField("id_area");
             userlog.setDescription("id_area to: " + dados.id_area());
         }

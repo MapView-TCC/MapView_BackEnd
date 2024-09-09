@@ -25,10 +25,10 @@ public class Responsible {
     private String edv;
     @OneToOne
     @JoinColumn(name = "id_classes")
-    private Classes id_classes;
+    private Classes classes;
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_user")
-    private Users id_user;
+    private Users user;
     private boolean operative;
 
     @OneToMany(mappedBy = "id_responsible")
@@ -39,8 +39,8 @@ public class Responsible {
     public  Responsible(String responsible_name, String edv,Classes classes,Users users){
         this.responsible_name = responsible_name;
         this.edv = edv;
-        this.id_classes = classes;
-        this.id_user = users;
+        this.classes = classes;
+        this.user = users;
         this.operative = true;
 
     }

@@ -30,7 +30,7 @@ public class RaspberryController {
 
         // boa pratica, para retornar o caminho
         var uri = uriBuilder.path("/api/v1/raspberry/{id}").buildAndExpand(raspberry.id_raspberry()).toUri();
-        return ResponseEntity.created(uri).body(new RaspberryDetailsDTO(raspberry.id_raspberry(), raspberry.id_building(), raspberry.id_area(), raspberry.operative()));
+        return ResponseEntity.created(uri).body(new RaspberryDetailsDTO(raspberry.id_raspberry(), raspberry.building(), raspberry.area()));
     }
 
     @GetMapping

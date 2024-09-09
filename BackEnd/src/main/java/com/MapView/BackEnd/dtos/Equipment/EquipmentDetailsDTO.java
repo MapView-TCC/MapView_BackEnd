@@ -14,14 +14,13 @@ public record EquipmentDetailsDTO(
         String validity,
         String admin_rights,
         String observation,
-        Location id_location,
-        MainOwner id_owner,
-        boolean operative) {
+        Location location,
+        MainOwner owner) {
 
     public EquipmentDetailsDTO(Equipment equipment){
         this(equipment.getId_equipment(), equipment.getName_equipment(), equipment.getRfid(), equipment.getType(), equipment.getModel(),
              equipment.getValidity(), equipment.getAdmin_rights(), equipment.getObservation(), equipment.getLocation(),
-             equipment.getOwner(), equipment.isOperative());
+             equipment.getOwner());
     }
 
 }

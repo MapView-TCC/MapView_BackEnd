@@ -29,11 +29,11 @@ public class TrackingHistory {
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name ="id_equipment")
-    private Equipment idEquipment;
+    private Equipment equipment;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name ="id_environment")
-    private Enviroment id_environment;
+    private Enviroment environment;
 
     private int rfid;
 
@@ -46,17 +46,16 @@ public class TrackingHistory {
 
 
     public TrackingHistory(Enviroment environment, Equipment equipment,int rfid, EnumTrackingAction action, EnumColors warning) {
-        this.idEquipment = equipment;
-        this.id_environment = environment;
+        this.equipment = equipment;
+        this.environment = environment;
         this.rfid= rfid;
         this.action = action;
         this.warning = warning;
     }
     public TrackingHistory(int rfid, Enviroment enviroment, EnumColors warning) {
-        this.idEquipment = null;
-        this.id_environment = null;
+        this.equipment = null;
         this.rfid = rfid;
-        this.id_environment = enviroment;
+        this.environment = enviroment;
         this.action = null;
         this.warning = warning;
     }

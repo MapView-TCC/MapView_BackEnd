@@ -28,7 +28,7 @@ public class AccessHistoryController {
 
         // boa pratica, para retornar o caminho
         var uri = uriBuilder.path("/api/v1/accessHistory/{id}").buildAndExpand(history.id_history()).toUri();
-        return ResponseEntity.created(uri).body(new AccessHistoryDetailsDTO(history.id_history(), history.id_users(), history.login_dateTime(), history.logout_dateTime())).getBody();
+        return ResponseEntity.created(uri).body(new AccessHistoryDetailsDTO(history.id_history(), history.users(), history.login_dateTime(), history.logout_dateTime())).getBody();
     }
 
     @PostMapping("/{id}")

@@ -11,14 +11,14 @@ import java.time.Instant;
 
 public record TrackingHistoryDetailsDTO(Long id_tracking,
                                         Instant datetime,
-                                        Equipment id_equipment,
-                                        Enviroment id_environment,
+                                        Equipment equipment,
+                                        Enviroment environment,
                                         EnumTrackingAction action,
                                         EnumColors warning) {
 
     public TrackingHistoryDetailsDTO(TrackingHistory trackingHistory) {
-        this(trackingHistory.getId_tracking(), trackingHistory.getDatetime(), trackingHistory.getIdEquipment(),
-                trackingHistory.getId_environment(), trackingHistory.getAction(),
+        this(trackingHistory.getId_tracking(), trackingHistory.getDatetime(), trackingHistory.getEquipment(),
+                trackingHistory.getEnvironment(), trackingHistory.getAction(),
                 trackingHistory.getWarning());
     }
 }

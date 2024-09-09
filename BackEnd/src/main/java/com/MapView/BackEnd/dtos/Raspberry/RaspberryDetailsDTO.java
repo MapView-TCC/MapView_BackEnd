@@ -6,12 +6,11 @@ import com.MapView.BackEnd.entities.Raspberry;
 
 public record RaspberryDetailsDTO(
         String id_raspberry,
-        Building id_building,
-        Area id_area,
-        boolean operative) {
+        Building building,
+        Area area) {
 
     public RaspberryDetailsDTO(Raspberry raspberry){
-        this(raspberry.getId_raspberry(), raspberry.getId_building(), raspberry.getId_area(), raspberry.isOperative());
+        this(raspberry.getId_raspberry(), raspberry.getBuilding(), raspberry.getArea());
     }
 
 

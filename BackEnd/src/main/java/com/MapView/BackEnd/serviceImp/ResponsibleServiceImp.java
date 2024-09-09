@@ -98,11 +98,11 @@ public class ResponsibleServiceImp implements ResponsibleService {
             userlog.setField(userlog.getField() + " ," + "Responsible edv to: " + data.edv());
         }
         if(data.id_classes() != null){
-            responsible.setId_classes(classeEntity);
+            responsible.setClasses(classeEntity);
             userlog.setField(userlog.getField() + " ," + "Responsible id classes to: " + data.id_classes());
         }
         if(data.id_user() != null){
-            responsible.setId_user(userEntity);
+            responsible.setUser(userEntity);
             userlog.setField(userlog.getField() + " ," + "Responsible id user to: " + data.id_user());
         }
 

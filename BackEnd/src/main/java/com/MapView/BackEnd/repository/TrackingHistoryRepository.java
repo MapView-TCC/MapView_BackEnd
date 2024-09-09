@@ -13,5 +13,5 @@ import java.util.Optional;
 @Repository
 public interface TrackingHistoryRepository extends JpaRepository<TrackingHistory,Long> {
     Page<TrackingHistory> findAll(Pageable pageable);
-    TrackingHistory findTopByIdEquipmentOrderByDatetimeDesc(Equipment id_equipment);
+    TrackingHistory findTopByEquipmentOrderByDatetimeDesc(Equipment id_equipment);
 }

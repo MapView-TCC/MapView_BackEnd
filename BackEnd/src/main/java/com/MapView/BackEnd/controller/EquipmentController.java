@@ -34,8 +34,8 @@ public class EquipmentController {
         // boa pratica, para retornar o caminho
         var uri = uriBuilder.path("/api/v1/equipment/{id}").buildAndExpand(equipment.id_equipment()).toUri();
         return ResponseEntity.created(uri).body(new EquipmentDetailsDTO(equipment.id_equipment(), equipment.name_equipment(), equipment.rfid(), equipment.type(),
-                equipment.model(), equipment.validity(), equipment.admin_rights(), equipment.observation(), equipment.id_location(),
-                equipment.id_owner(), equipment.operative()));
+                equipment.model(), equipment.validity(), equipment.admin_rights(), equipment.observation(), equipment.location(),
+                equipment.owner()));
     }
 
     @PostMapping("/image")

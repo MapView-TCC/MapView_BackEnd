@@ -23,7 +23,7 @@ public class Enviroment {
     private String environment_name;
     @OneToOne
     @JoinColumn(name = "id_raspberry")
-    private Raspberry id_raspberry;
+    private Raspberry raspberry;
     private boolean operative;
     @ManyToMany
     @JoinTable(
@@ -36,7 +36,7 @@ public class Enviroment {
 
     public Enviroment(EnviromentCreateDTO data,Raspberry raspberry){
         this.environment_name = data.environment_name();
-        this.id_raspberry = raspberry;
+        this.raspberry = raspberry;
         this.operative = true;
     }
 }

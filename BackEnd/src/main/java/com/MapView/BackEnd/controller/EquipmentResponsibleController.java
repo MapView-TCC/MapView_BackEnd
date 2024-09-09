@@ -42,7 +42,7 @@ public class EquipmentResponsibleController {
 
         // boa pratica, para retornar o caminho
         var uri = uriBuilder.path("/api/v1/equipmentresponsible/{id}").buildAndExpand(equipmentResponsible.id_equip_resp()).toUri();
-        return ResponseEntity.created(uri).body(new EquipmentResponsibleDetailsDTO(equipmentResponsible.id_equip_resp(), equipmentResponsible.id_equipment(), equipmentResponsible.id_responsible(), equipmentResponsible.start_usage(), equipmentResponsible.end_usage(), equipmentResponsible.operative()));
+        return ResponseEntity.created(uri).body(new EquipmentResponsibleDetailsDTO(equipmentResponsible.id_equip_resp(), equipmentResponsible.equipment(), equipmentResponsible.responsible(), equipmentResponsible.start_usage(), equipmentResponsible.end_usage()));
     }
 
     @PostMapping("/{id_equip_resp}")

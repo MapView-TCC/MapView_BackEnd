@@ -32,7 +32,7 @@ public class MainOwnerController {
 
         // boa pratica, para retornar o caminho
         var uri = uriBuilder.path("/api/v1/mainowner/{id}").buildAndExpand(mainOwner.id_owner()).toUri();
-        return ResponseEntity.created(uri).body(new MainOwnerDetailsDTO(mainOwner.id_owner(), mainOwner.owner_name(), mainOwner.id_cost_center(), mainOwner.operative()));
+        return ResponseEntity.created(uri).body(new MainOwnerDetailsDTO(mainOwner.id_owner(), mainOwner.owner_name(), mainOwner.costCenter()));
     }
 
     @GetMapping

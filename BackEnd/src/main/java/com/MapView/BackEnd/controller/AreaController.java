@@ -30,7 +30,7 @@ public class AreaController {
 
         // boa pratica, para retornar o caminho
         var uri = uriBuilder.path("/api/v1/area/{id}").buildAndExpand(area.id_area()).toUri();
-        return ResponseEntity.created(uri).body(new AreaDetailsDTO(area.id_area(), area.area_code(), area.area_name(), area.operative())).getBody();
+        return ResponseEntity.created(uri).body(new AreaDetailsDTO(area.id_area(), area.area_code(), area.area_name())).getBody();
     }
 
     @GetMapping("/{id_area}")

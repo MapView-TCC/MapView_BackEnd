@@ -2,8 +2,8 @@ package com.MapView.BackEnd.dtos.Area;
 
 import com.MapView.BackEnd.entities.Area;
 
-public record AreaDetailsDTO(Long id_area, String area_code, String area_name, boolean operative) {
+public record AreaDetailsDTO(Long id_area, String area_code, String area_name) {
     public AreaDetailsDTO(Area area){
-        this(area.getId_area(), area.getArea_code(), area.getArea_name(), area.isOperative());
+        this(area.getId_area(), area.getArea_code(), area.getArea_name());
     }
 }

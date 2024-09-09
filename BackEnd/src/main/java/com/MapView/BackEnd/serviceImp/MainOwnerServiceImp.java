@@ -102,7 +102,7 @@ public class MainOwnerServiceImp implements MainOwnerService {
 
         if (dados.id_cost_center() != null){
             var costcenter = costCenterRepository.findById(dados.id_cost_center()).orElseThrow(() -> new NotFoundException("Cost Center id not found"));
-            mainowner.setId_cost_center(costcenter);
+            mainowner.setCostCenter(costcenter);
             userlog.setField(userlog.getField()+"Cost_id to: "+dados.id_cost_center());
         }
 
