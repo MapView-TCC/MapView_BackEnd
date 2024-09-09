@@ -1,4 +1,7 @@
 package com.MapView.BackEnd.dtos.CostCenter;
 
-public record CostCenterUpdateDTO(String cost_center_name) {
+import jakarta.validation.constraints.NotBlank;
+
+public record CostCenterUpdateDTO(@NotBlank(message = "costCenter name cannot be blank")
+                                  String costCenter_name) {
 }

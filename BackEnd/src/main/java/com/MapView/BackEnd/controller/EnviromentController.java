@@ -5,6 +5,7 @@ import com.MapView.BackEnd.dtos.Enviroment.EnviromentCreateDTO;
 import com.MapView.BackEnd.dtos.Enviroment.EnviromentDetailsDTO;
 import com.MapView.BackEnd.dtos.Enviroment.EnviromentUpdateDTO;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -24,7 +25,7 @@ public class EnviromentController {
 
     @PostMapping
     @Transactional
-    public ResponseEntity<EnviromentDetailsDTO> createEnviroment(EnviromentCreateDTO data, @RequestParam Long user_id, UriComponentsBuilder uriBuilder){
+    public ResponseEntity<EnviromentDetailsDTO> createEnviroment(@RequestBody @Valid EnviromentCreateDTO data, @RequestParam Long user_id, UriComponentsBuilder uriBuilder){
         var enviroment = enviromentServiceImp.createEnviroment(data, user_id);
         var uri = uriBuilder.path("/api/v1/enviroment/{id}").buildAndExpand(enviroment.id_enviroment()).toUri();
         return ResponseEntity.created(uri).body(new EnviromentDetailsDTO(enviroment.id_enviroment(),enviroment.environment_name(),enviroment.raspberry()));

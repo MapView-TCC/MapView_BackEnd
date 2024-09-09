@@ -1,4 +1,9 @@
 package com.MapView.BackEnd.dtos.Building;
 
-public record BuildingCreateDTO(String building_code) {
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
+public record BuildingCreateDTO(@NotBlank
+                                @NotNull
+                                String building_code) {
 }

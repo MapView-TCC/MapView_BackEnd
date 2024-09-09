@@ -1,4 +1,6 @@
 package com.MapView.BackEnd.dtos.Area;
 
-public record AreaUpdateDTO(String area_code, String area_name) {
+import jakarta.validation.constraints.NotBlank;
+
+public record AreaUpdateDTO(@NotBlank String area_code, @NotBlank String area_name) {
 }
