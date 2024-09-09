@@ -121,7 +121,7 @@ public class EquipmentServiceImp implements EquipmentService {
             userlog.setField(userlog.getField()+" ,"+"equipment name to: " + dados.name_equipment());
         }
 
-        if (dados.rfid() != null) {
+        if (dados.rfid() != 0) {
             equipment.setRfid(dados.rfid());
             userlog.setField(userlog.getField()+" ,"+"equipment rfid to: " + dados.rfid());
         }

@@ -24,7 +24,7 @@ public class Equipment {
     // novo campo
     private String name_equipment;
 
-    private String rfid;
+    private int rfid;
     private String type;
     @Enumerated(EnumType.STRING)
     private EnumModelEquipment model;
