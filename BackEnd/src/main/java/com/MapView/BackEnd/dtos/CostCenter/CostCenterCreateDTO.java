@@ -1,4 +1,7 @@
 package com.MapView.BackEnd.dtos.CostCenter;
 
-public record CostCenterCreateDTO(String cost_center_name) {
+import jakarta.validation.constraints.NotBlank;
+
+public record CostCenterCreateDTO(@NotBlank
+                                  String cost_center_name) {
 }
