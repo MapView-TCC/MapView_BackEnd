@@ -56,8 +56,6 @@ public class LocationServiceImp implements LocationService {
         var post = postRepository.findById(data.id_post()).orElseThrow(() -> new NotFoundException("Post Id not Found"));
         var enviroment = enviromentRepository.findById(data.id_enviromnet()).orElseThrow(() -> new NotFoundException("Enviroment Id Not Found"));
 
-
-
         if(data.id_enviromnet() != null){
             location.setEnvironment(enviroment);
         }

@@ -64,7 +64,15 @@ public class TrackingHistoryServiceImp implements TrackingHistoryService {
         Enviroment local_tracking = enviromentRepository.findById(dados.id_environment())
                 .orElseThrow(() -> new NotFoundException("Id not found"));
 
+
         TrackingHistory last_track = trackingHistoryRepository.findTopByIdEquipmentOrderByDatetimeDesc(equipment);
+
+        // Se não houver registro anterior, considere a etiqueta não cadastrada
+        if (last_track == null) {
+            TrackingHistory trackingHistory = trackingHistoryRepository.save(new TrackingHistory(local_tracking, equipment, EnumTrackingAction.ENTER, EnumColors.RED));
+            return new TrackingHistoryDetailsDTO(trackingHistory);
+        }
+
         Enviroment last_track_local = last_track.getId_environment();
         Enviroment local_notebook = equipment.getLocation().getEnvironment();
 
@@ -77,32 +85,101 @@ public class TrackingHistoryServiceImp implements TrackingHistoryService {
                     return new TrackingHistoryDetailsDTO(trackingHistory);
                 }
                 System.out.println("_-----2--------");
-                TrackingHistory trackingHistory = trackingHistoryRepository.save(new TrackingHistory(local_tracking, equipment, EnumTrackingAction.OUT, EnumColors.GREEN));
+                TrackingHistory trackingHistory = trackingHistoryRepository.save(new TrackingHistory(local_tracking, equipment, EnumTrackingAction.OUT, EnumColors.YELLOW));
                 return new TrackingHistoryDetailsDTO(trackingHistory);
             }
-            System.out.println("_-----3--------");
 
+            System.out.println("_-----3--------");
             TrackingHistory trackingHistory = trackingHistoryRepository.save(new TrackingHistory(local_tracking, equipment, EnumTrackingAction.ENTER, EnumColors.GREEN));
             return new TrackingHistoryDetailsDTO(trackingHistory);
 
         }
+        TrackingHistory trackingHistory2 = trackingHistoryRepository.save(new TrackingHistory(last_track_local, equipment, EnumTrackingAction.OUT, EnumColors.GREEN));
+        trackingHistoryRepository.save(trackingHistory2);
+        TrackingHistory trackingHistory1 = trackingHistoryRepository.save(new TrackingHistory(local_tracking, equipment, EnumTrackingAction.ENTER, EnumColors.GREEN));
+        trackingHistoryRepository.save(trackingHistory1);
+
+
+
 
         if (last_track_local == local_tracking){
 
             if (last_track.getAction() == EnumTrackingAction.ENTER){
                 System.out.println("_-----4--------");
-                TrackingHistory trackingHistory = trackingHistoryRepository.save(new TrackingHistory(local_tracking, equipment, EnumTrackingAction.OUT, EnumColors.GREEN));
+                TrackingHistory trackingHistory = trackingHistoryRepository.save(new TrackingHistory(local_tracking, equipment, EnumTrackingAction.OUT, EnumColors.YELLOW));
                 return new TrackingHistoryDetailsDTO(trackingHistory);
 
             }
             System.out.println("_-----5--------");
-            TrackingHistory trackingHistory = trackingHistoryRepository.save(new TrackingHistory(local_tracking, equipment, EnumTrackingAction.ENTER, EnumColors.GREEN));
+            TrackingHistory trackingHistory = trackingHistoryRepository.save(new TrackingHistory(local_tracking, equipment, EnumTrackingAction.ENTER, EnumColors.YELLOW));
             return new TrackingHistoryDetailsDTO(trackingHistory);
         }
         System.out.println("_-----6--------");
         return new TrackingHistoryDetailsDTO(last_track);
 
     }
+
+//    @Override
+//    public TrackingHistoryDetailsDTO createTrackingHistory(TrackingHistoryCreateDTO dados) {
+//
+//        // Verifica se o equipamento existe na tabela
+//        Equipment equipment = equipmentRepository.findById(dados.id_equipment())
+//                .orElse(null);
+//
+//        if (equipment == null) {
+//            // Se o equipamento não existe, define a cor como vermelho
+//            Enviroment local_tracking = enviromentRepository.findById(dados.id_environment())
+//                    .orElseThrow(() -> new NotFoundException("Id not found"));
+//
+//            TrackingHistory trackingHistory = trackingHistoryRepository.save(new TrackingHistory(local_tracking, null, EnumTrackingAction.ENTER, EnumColors.RED));
+//            return new TrackingHistoryDetailsDTO(trackingHistory);
+//        }
+//
+//        // Equipamento encontrado, continua com a lógica normal
+//        Enviroment local_tracking = enviromentRepository.findById(dados.id_environment())
+//                .orElseThrow(() -> new NotFoundException("Id not found"));
+//
+//        TrackingHistory last_track = trackingHistoryRepository.findTopByIdEquipmentOrderByDatetimeDesc(equipment);
+//
+//        // Se não houver registro anterior, o equipamento foi visto pela primeira vez
+//        if (last_track == null) {
+//            TrackingHistory trackingHistory = trackingHistoryRepository.save(new TrackingHistory(local_tracking, equipment, EnumTrackingAction.ENTER, EnumColors.YELLOW));
+//            return new TrackingHistoryDetailsDTO(trackingHistory);
+//        }
+//
+//        Enviroment last_track_local = last_track.getId_environment();
+//        Enviroment local_notebook = equipment.getLocation().getEnvironment();
+//
+//        if (local_notebook.equals(local_tracking)) {
+//            // Equipamento está na sala de origem
+//            if (last_track_local.equals(local_tracking)) {
+//                // Já estava na mesma sala
+//                if (last_track.getAction().equals(EnumTrackingAction.OUT)) {
+//                    // Última ação foi saída
+//                    TrackingHistory trackingHistory = trackingHistoryRepository.save(new TrackingHistory(local_tracking, equipment, EnumTrackingAction.ENTER, EnumColors.GREEN));
+//                    return new TrackingHistoryDetailsDTO(trackingHistory);
+//                }
+//                // Última ação foi entrada
+//                TrackingHistory trackingHistory = trackingHistoryRepository.save(new TrackingHistory(local_tracking, equipment, EnumTrackingAction.ENTER, EnumColors.GREEN));
+//                return new TrackingHistoryDetailsDTO(trackingHistory);
+//            }
+//            // Equipamento entrou na sala de origem
+//            TrackingHistory trackingHistory = trackingHistoryRepository.save(new TrackingHistory(local_tracking, equipment, EnumTrackingAction.ENTER, EnumColors.GREEN));
+//            return new TrackingHistoryDetailsDTO(trackingHistory);
+//        }
+//
+//        // Equipamento está fora da sala de origem
+//        if (last_track_local.equals(local_notebook)) {
+//            // Última localização foi a sala de origem
+//            TrackingHistory trackingHistory = trackingHistoryRepository.save(new TrackingHistory(local_tracking, equipment, EnumTrackingAction.OUT, EnumColors.YELLOW));
+//            return new TrackingHistoryDetailsDTO(trackingHistory);
+//        }
+//
+//        // Última localização foi diferente e agora está em um novo local
+//        TrackingHistory trackingHistory = trackingHistoryRepository.save(new TrackingHistory(local_tracking, equipment, EnumTrackingAction.ENTER, EnumColors.YELLOW));
+//        return new TrackingHistoryDetailsDTO(trackingHistory);
+//    }
+
 
     @Override
     public List<TrackingHistoryDetailsDTO> FilterTracking(int page, int itens, EnumTrackingAction action, Integer day,

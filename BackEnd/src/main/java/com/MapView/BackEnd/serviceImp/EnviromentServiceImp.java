@@ -63,7 +63,9 @@ public class EnviromentServiceImp implements EnviromentService {
 
         Long id_enviroment = enviromentRepository.save(enviroment).getId_environment();
 
-        var userLog = new UserLog(null,"Enviroment", id_enviroment.toString(),"Create new Enviroment", EnumAction.CREATE);
+        Users users = this.userRepository.findById(user_id).orElseThrow(() -> new NotFoundException("Id not found!"));
+
+        var userLog = new UserLog(users,"Enviroment", id_enviroment.toString(),"Create new Enviroment", EnumAction.CREATE);
         userLogRepository.save(userLog);
 
         return new EnviromentDetailsDTO(enviroment);

@@ -15,4 +15,6 @@ public interface EquipmentRepository extends JpaRepository<Equipment,String> {
 
     Optional<Equipment> findByValidity(String validity);
     List<Equipment> findByModel(EnumModelEquipment equipment);
+
+    //Equipment findByRfid(String rfid);
 }
