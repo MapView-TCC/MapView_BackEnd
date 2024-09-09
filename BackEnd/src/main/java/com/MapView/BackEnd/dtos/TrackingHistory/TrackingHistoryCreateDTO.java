@@ -6,7 +6,7 @@ import com.MapView.BackEnd.enums.EnumTrackingAction;
 
 import java.time.Instant;
 
-public record TrackingHistoryCreateDTO(String id_equipment,
+public record TrackingHistoryCreateDTO(int rfid,
                                        Long id_environment
                                        ) {
 }

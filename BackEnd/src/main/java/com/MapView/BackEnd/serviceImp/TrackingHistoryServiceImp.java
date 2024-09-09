@@ -18,10 +18,12 @@ import com.MapView.BackEnd.infra.NotFoundException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import javax.sound.midi.VoiceStatus;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -52,72 +54,64 @@ public class TrackingHistoryServiceImp implements TrackingHistoryService {
     @Override
     public List<TrackingHistoryDetailsDTO> getAllTrackingHistory(int page, int itens) {
         return trackingHistoryRepository.findAll(PageRequest.of(page, itens)).stream().map(TrackingHistoryDetailsDTO::new).toList();
+
+
+    }
+    public String qweqwe ( ){
+        return "qweqwe";
     }
 
     @Override
     public TrackingHistoryDetailsDTO createTrackingHistory(TrackingHistoryCreateDTO dados) {
-
-
-        Equipment equipment = equipmentRepository.findById(dados.id_equipment())
-                .orElseThrow(() -> new NotFoundException("Id not found"));
-
         Enviroment local_tracking = enviromentRepository.findById(dados.id_environment())
                 .orElseThrow(() -> new NotFoundException("Id not found"));
 
 
-        TrackingHistory last_track = trackingHistoryRepository.findTopByIdEquipmentOrderByDatetimeDesc(equipment);
 
-        // Se não houver registro anterior, considere a etiqueta não cadastrada
-        if (last_track == null) {
-            TrackingHistory trackingHistory = trackingHistoryRepository.save(new TrackingHistory(local_tracking, equipment, EnumTrackingAction.ENTER, EnumColors.RED));
+        Equipment equipment = equipmentRepository.findByRfid(dados.rfid());
+
+        if (equipment == null){
+            TrackingHistory trackingHistory = trackingHistoryRepository.save(new TrackingHistory(dados.rfid(),local_tracking, EnumColors.RED));
             return new TrackingHistoryDetailsDTO(trackingHistory);
         }
+
+        TrackingHistory last_track = trackingHistoryRepository.findTopByIdEquipmentOrderByDatetimeDesc(equipment);
+
+
+
+
 
         Enviroment last_track_local = last_track.getId_environment();
         Enviroment local_notebook = equipment.getLocation().getEnvironment();
 
-        if(local_notebook == local_tracking) {
-
-            if (last_track_local.equals(local_tracking)) {
-                if (last_track.getAction().equals(EnumTrackingAction.OUT)) {
-                    TrackingHistory trackingHistory = trackingHistoryRepository.save(new TrackingHistory(local_tracking, equipment, EnumTrackingAction.ENTER, EnumColors.GREEN));
+        if (last_track_local.equals(local_tracking)) {
+            if (last_track.getAction().equals(EnumTrackingAction.OUT)){
+                if (local_tracking.equals("BTC")){
                     System.out.println("_-----1--------");
+                    TrackingHistory trackingHistory = trackingHistoryRepository.save(new TrackingHistory(local_tracking, equipment, dados.rfid(), EnumTrackingAction.ENTER, EnumColors.GREEN));
                     return new TrackingHistoryDetailsDTO(trackingHistory);
                 }
-                System.out.println("_-----2--------");
-                TrackingHistory trackingHistory = trackingHistoryRepository.save(new TrackingHistory(local_tracking, equipment, EnumTrackingAction.OUT, EnumColors.YELLOW));
+                System.out.println("_-----1--------");
+                TrackingHistory trackingHistory = trackingHistoryRepository.save(new TrackingHistory(local_tracking, equipment, dados.rfid(), EnumTrackingAction.OUT, EnumColors.GREEN));
                 return new TrackingHistoryDetailsDTO(trackingHistory);
             }
-
-            System.out.println("_-----3--------");
-            TrackingHistory trackingHistory = trackingHistoryRepository.save(new TrackingHistory(local_tracking, equipment, EnumTrackingAction.ENTER, EnumColors.GREEN));
-            return new TrackingHistoryDetailsDTO(trackingHistory);
-
-        }
-        TrackingHistory trackingHistory2 = trackingHistoryRepository.save(new TrackingHistory(last_track_local, equipment, EnumTrackingAction.OUT, EnumColors.GREEN));
-        trackingHistoryRepository.save(trackingHistory2);
-        TrackingHistory trackingHistory1 = trackingHistoryRepository.save(new TrackingHistory(local_tracking, equipment, EnumTrackingAction.ENTER, EnumColors.GREEN));
-        trackingHistoryRepository.save(trackingHistory1);
-
-
-
-
-        if (last_track_local == local_tracking){
-
-            if (last_track.getAction() == EnumTrackingAction.ENTER){
-                System.out.println("_-----4--------");
-                TrackingHistory trackingHistory = trackingHistoryRepository.save(new TrackingHistory(local_tracking, equipment, EnumTrackingAction.OUT, EnumColors.YELLOW));
+            if (local_tracking.equals("BTC")){
+                System.out.println("_-----1--------");
+                TrackingHistory trackingHistory = trackingHistoryRepository.save(new TrackingHistory(local_tracking, equipment, dados.rfid(), EnumTrackingAction.OUT, EnumColors.YELLOW));
                 return new TrackingHistoryDetailsDTO(trackingHistory);
-
             }
-            System.out.println("_-----5--------");
-            TrackingHistory trackingHistory = trackingHistoryRepository.save(new TrackingHistory(local_tracking, equipment, EnumTrackingAction.ENTER, EnumColors.YELLOW));
+            TrackingHistory trackingHistory = trackingHistoryRepository.save(new TrackingHistory(local_tracking, equipment, dados.rfid(), EnumTrackingAction.ENTER, EnumColors.GREEN));
+            System.out.println("_-----1--------");
             return new TrackingHistoryDetailsDTO(trackingHistory);
         }
-        System.out.println("_-----6--------");
-        return new TrackingHistoryDetailsDTO(last_track);
-
+        System.out.println("_-----2--------");
+        TrackingHistory trackingHistory = trackingHistoryRepository.save(new TrackingHistory(local_tracking, equipment, dados.rfid(), EnumTrackingAction.ENTER, EnumColors.GREEN));
+        return new TrackingHistoryDetailsDTO(trackingHistory);
     }
+
+
+
+
 
 //    @Override
 //    public TrackingHistoryDetailsDTO createTrackingHistory(TrackingHistoryCreateDTO dados) {

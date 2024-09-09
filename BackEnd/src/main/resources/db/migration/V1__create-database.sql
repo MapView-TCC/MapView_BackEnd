@@ -113,8 +113,9 @@ CREATE TABLE IF NOT EXISTS equipment (
 -- Creating the Tracking History table (historico de rastreio)
 CREATE TABLE IF NOT EXISTS tracking_history (
     id_tracking INT AUTO_INCREMENT PRIMARY KEY,
-    id_equipment VARCHAR(255) NOT NULL,
-    id_environment INT NOT NULL,
+    id_equipment VARCHAR(255),
+    id_environment INT,
+    rfid INT NOT NULL,
     action ENUM ('ENTER','OUT'),
     warning ENUM ('RED', 'YELLOW', 'GREEN'),
     dateTime TIMESTAMP,
