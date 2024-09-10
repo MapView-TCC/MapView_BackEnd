@@ -4,6 +4,7 @@ import com.MapView.BackEnd.serviceImp.AccessHistoryServiceImp;
 import com.MapView.BackEnd.dtos.AccessHistory.AccessHistoryCreateDTO;
 import com.MapView.BackEnd.dtos.AccessHistory.AccessHistoryDetailsDTO;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -23,7 +24,7 @@ public class AccessHistoryController {
 
     @PostMapping
     @Transactional
-    public AccessHistoryDetailsDTO createAccessHistory(@RequestBody AccessHistoryCreateDTO accessHistoryCreateDTO, UriComponentsBuilder uriBuilder){
+    public AccessHistoryDetailsDTO createAccessHistory(@RequestBody @Valid AccessHistoryCreateDTO accessHistoryCreateDTO, UriComponentsBuilder uriBuilder){
         var history = accessHistoryServiceImp.createAccessHistory(accessHistoryCreateDTO);
 
         // boa pratica, para retornar o caminho

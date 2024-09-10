@@ -40,7 +40,7 @@ public class EnviromentServiceImp implements EnviromentService {
     public EnviromentDetailsDTO getEnviroment(Long enviroment_id, Long user_id) {
         var enviroment = enviromentRepository.findById(enviroment_id).orElseThrow(() -> new NotFoundException("Enviroment Id Not Found"));
         if(!enviroment.isOperative()){
-            return null;
+            throw new OperativeFalseException("C");
         }
         var userLog = new UserLog(null,"Enviroment",enviroment_id.toString(),"Read Enviroment", EnumAction.READ);
         userLogRepository.save(userLog);
@@ -77,7 +77,7 @@ public class EnviromentServiceImp implements EnviromentService {
         var enviroment = enviromentRepository.findById(enviroment_id).orElseThrow(()->new NotFoundException("Id Enviroment Not Found"));
 
         if(!enviroment.isOperative()){
-            throw new OperativeFalseException("The inactive equipment cannot be updated.");
+            throw new OperativeFalseException("The inactive enviroment cannot be updated.");
         }
 
         var rasp = raspberryRepository.findById(data.id_raspberry()).orElseThrow(()->new NotFoundException("Id Raspberry Not Found"));

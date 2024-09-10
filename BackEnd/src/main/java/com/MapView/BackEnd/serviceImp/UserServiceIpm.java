@@ -1,5 +1,6 @@
 package com.MapView.BackEnd.serviceImp;
 
+import com.MapView.BackEnd.dtos.User.UserCreateDTO;
 import com.MapView.BackEnd.dtos.User.UserDetailsDTO;
 import com.MapView.BackEnd.repository.UserRepository;
 import com.MapView.BackEnd.service.UserService;
@@ -38,8 +39,8 @@ public class UserServiceIpm implements UserService {
 
 
     @Override
-    public UserDetailsDTO createUser(String email) {
-        var user = new Users(email);
+    public UserDetailsDTO createUser(UserCreateDTO data) {
+        var user = new Users(data.email());
         userRepository.save(user);
         return new UserDetailsDTO(user);
     }

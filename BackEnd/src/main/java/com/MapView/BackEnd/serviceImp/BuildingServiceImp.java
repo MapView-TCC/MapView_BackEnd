@@ -38,7 +38,7 @@ public class BuildingServiceImp implements BuildingService {
         Building building = this.buildingRepository.findById(building_id).orElseThrow(() -> new NotFoundException("Id not found"));
         Users user = this.userRepository.findById(user_id).orElseThrow(() -> new NotFoundException("Id not found"));
         if (!building.isOperative()){
-            return null;
+            throw new OperativeFalseException("The inactive Build cannot be read..");
         }
         var userLog = new UserLog(user,"Building",building_id.toString(),"Read building",EnumAction.READ);
         userLogRepository.save(userLog);

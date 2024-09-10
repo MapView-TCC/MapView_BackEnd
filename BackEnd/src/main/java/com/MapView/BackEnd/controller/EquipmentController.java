@@ -40,7 +40,7 @@ public class EquipmentController {
 
     @PostMapping("/image")
     @Transactional
-    public ResponseEntity<String> uploadImage(@RequestBody UploadCreateDTO data){
+    public ResponseEntity<String> uploadImage(@RequestBody @Valid UploadCreateDTO data){
         return equipmentServiceImp.uploadImageEquipament(data.file(),data.equipment());
     }
 
@@ -83,7 +83,7 @@ public class EquipmentController {
 
     @PostMapping("/{id}")
     @Transactional
-    public ResponseEntity<EquipmentDetailsDTO> updateEquipment(@PathVariable String id, @RequestBody EquipmentUpdateDTO dados, @RequestParam Long user_id){
+    public ResponseEntity<EquipmentDetailsDTO> updateEquipment(@PathVariable String id, @RequestBody @Valid EquipmentUpdateDTO dados, @RequestParam Long user_id){
         EquipmentDetailsDTO equipmentDetailsDTO = equipmentServiceImp.updateEquipment(id, dados, user_id);
         return ResponseEntity.ok(equipmentDetailsDTO);
     }

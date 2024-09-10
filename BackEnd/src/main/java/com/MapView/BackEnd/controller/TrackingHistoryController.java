@@ -6,6 +6,7 @@ import com.MapView.BackEnd.serviceImp.TrackingHistoryServiceImp;
 import com.MapView.BackEnd.dtos.TrackingHistory.TrackingHistoryCreateDTO;
 import com.MapView.BackEnd.dtos.TrackingHistory.TrackingHistoryDetailsDTO;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -25,7 +26,7 @@ public class TrackingHistoryController {
 
     @PostMapping
     @Transactional
-    public TrackingHistoryDetailsDTO createTracking(@RequestBody TrackingHistoryCreateDTO dados, UriComponentsBuilder uriBuilder){
+    public TrackingHistoryDetailsDTO createTracking(@RequestBody @Valid TrackingHistoryCreateDTO dados, UriComponentsBuilder uriBuilder){
         var tracking = trackingHistoryServiceImp.createTrackingHistory(dados);
 
         var uri = uriBuilder.path("/api/v1/trackingHistory/{id}").buildAndExpand(tracking.id_tracking()).toUri();

@@ -44,7 +44,7 @@ public class MainOwnerServiceImp implements MainOwnerService {
         Users user = this.userRepository.findById(user_id).orElseThrow(() -> new NotFoundException("Id not found"));
 
         if (!mainOwner.isOperative()){
-            return  null;
+            throw new NotFoundException("The inactive mainowner cannot be accessed.");
         }
 
         var userLog = new UserLog(user,"MainOwner",id_owner.toString(),"Read MainOwner",EnumAction.READ);

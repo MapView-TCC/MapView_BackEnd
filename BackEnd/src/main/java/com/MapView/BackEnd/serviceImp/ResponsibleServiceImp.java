@@ -3,6 +3,7 @@ package com.MapView.BackEnd.serviceImp;
 import com.MapView.BackEnd.entities.UserLog;
 import com.MapView.BackEnd.entities.Users;
 import com.MapView.BackEnd.enums.EnumAction;
+import com.MapView.BackEnd.infra.OperativeFalseException;
 import com.MapView.BackEnd.repository.ClassesRepository;
 import com.MapView.BackEnd.repository.ResponsibleRepository;
 import com.MapView.BackEnd.repository.UserLogRepository;
@@ -35,13 +36,17 @@ public class ResponsibleServiceImp implements ResponsibleService {
     }
     @Override
     public ResponsibleDetailsDTO createResposible(ResponsibleCrateDTO data, Long user_id) {
-        // salavr no user log
         Users users = this.userRepository.findById(user_id).orElseThrow(() -> new NotFoundException("Id not found"));
 
-        // salvar na entidade
         var user = userRepository.findById(data.id_user()).orElseThrow(() -> new NotFoundException("User Id Not Found"));
+        if(!user.isOperative()){
+            throw new OperativeFalseException("The inactive  cannot be accessed.");
+        }
 
         var classe = classesRepository.findById(data.id_classes()).orElseThrow(() -> new NotFoundException("Class Id Not Found"));
+        if(!classe.isOperative()){
+
+        }
 
         var responsible = new Responsible(data.responsible_name(), data.edv(), classe,user);
         Long id_responsible = responsibleRepository.save(responsible).getId_responsible();
@@ -59,8 +64,8 @@ public class ResponsibleServiceImp implements ResponsibleService {
 
         var responsible = responsibleRepository.findById(id_Resposible).orElseThrow(() -> new NotFoundException("Responsible Id Not Found"));
 
-        if (!responsible.status_check()){
-            return null;
+        if (!responsible.isOperative()){
+            throw new OperativeFalseException("The inactive responsible cannot be accessed.");
         }
 
         var userLog = new UserLog(user, "Resposible", id_Resposible.toString(), "Read Resposible", EnumAction.READ);

@@ -1,6 +1,11 @@
 package com.MapView.BackEnd.dtos.User;
 
-public record UserCreateDTO(String email) {
+import jakarta.validation.constraints.Email;
+import org.hibernate.validator.constraints.NotBlank;
+
+public record UserCreateDTO(@Email
+                            @NotBlank
+                            String email) {
 
 
 }

@@ -43,7 +43,14 @@ public class LocationServiceImp implements LocationService {
     @Override
     public LocationDetalsDTO createLocation(LocationCreateDTO data) {
         var post = postRepository.findById(data.id_post()).orElseThrow(() -> new NotFoundException("Post Id not Found"));
+        if(!post.isOperative()){
+            throw new OperativeFalseException("The inactive post cannot be accessed.");
+        }
+
         var enviroment = enviromentRepository.findById(data.id_eviroment()).orElseThrow(() -> new NotFoundException("Enviroment Id Not Found"));
+        if(!enviroment.isOperative()){
+            throw new OperativeFalseException("The inactive enviroment cannot be accessed.");
+        }
 
         var location = new Location(post,enviroment);
         locationRepository.save(location);
@@ -53,8 +60,15 @@ public class LocationServiceImp implements LocationService {
     @Override
     public LocationDetalsDTO updateLocation(Long id_location, LocationUpdateDTO data) {
         var location = locationRepository.findById(id_location).orElseThrow(() -> new NotFoundException("Location Id Not Found"));
+
         var post = postRepository.findById(data.id_post()).orElseThrow(() -> new NotFoundException("Post Id not Found"));
+        if(!post.isOperative()){
+            throw new OperativeFalseException("The inactive post cannot be accessed.");
+        }
         var enviroment = enviromentRepository.findById(data.id_enviromnet()).orElseThrow(() -> new NotFoundException("Enviroment Id Not Found"));
+        if(!enviroment.isOperative()){
+            throw new OperativeFalseException("The inactive enviroment cannot be accessed.");
+        }
 
         if(data.id_enviromnet() != null){
             location.setEnvironment(enviroment);

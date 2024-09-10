@@ -38,7 +38,7 @@ public class CostCenterServiceImp implements CostCenterService {
         Users user = this.userRepository.findById(user_id).orElseThrow(() -> new NotFoundException("Id not found"));
 
         if (!costCenter.status_check()){
-            return null;
+            throw new OperativeFalseException("The inactive CostCenter cannot be read..");
         }
         var userLog = new UserLog(user,"CostCenter",id_cost_center.toString(),"Read CostCenter", EnumAction.READ);
         userLogRepository.save(userLog);
@@ -78,9 +78,9 @@ public class CostCenterServiceImp implements CostCenterService {
         Users user = this.userRepository.findById(user_id).orElseThrow(() -> new NotFoundException("Id not found"));
         var userlog = new UserLog(user,"Area", id.toString(),null,"Infos update",EnumAction.UPDATE);
 
-        if (dados.cost_center_name() != null){
-            costCenter.setCost_center_name(dados.cost_center_name());
-            userlog.setField("const_center_name to: "+ dados.cost_center_name());
+        if (dados.costCenter_name() != null){
+            costCenter.setCost_center_name(dados.costCenter_name());
+            userlog.setField("const_center_name to: "+ dados.costCenter_name());
         }
 
         costCenterRepository.save(costCenter);

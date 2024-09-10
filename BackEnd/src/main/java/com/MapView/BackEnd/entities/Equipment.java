@@ -58,8 +58,4 @@ public class Equipment {
         this.owner = id_owner;
         this.operative = true;
     }
-
-    public boolean status_check(){
-        return this.operative;
-    }
 }

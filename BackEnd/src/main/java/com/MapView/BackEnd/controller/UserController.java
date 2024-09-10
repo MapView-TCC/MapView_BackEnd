@@ -1,9 +1,11 @@
 package com.MapView.BackEnd.controller;
 
+import com.MapView.BackEnd.dtos.User.UserCreateDTO;
 import com.MapView.BackEnd.serviceImp.UserServiceIpm;
 import com.MapView.BackEnd.dtos.User.UserDetailsDTO;
 import com.MapView.BackEnd.dtos.User.UserUpdateDTO;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 
 import org.springframework.web.bind.annotation.*;
@@ -25,16 +27,16 @@ public class UserController {
     @PostMapping
     @CrossOrigin(origins = "http://localhost:5173")
     @Transactional
-    public ResponseEntity<UserDetailsDTO> createUser(String email, UriComponentsBuilder uriBuilder){
+    public ResponseEntity<UserDetailsDTO> createUser(@RequestBody @Valid UserCreateDTO data, UriComponentsBuilder uriBuilder){
         //String email= jwt.getClaimAsString("email");
-        UserDetailsDTO user = userServiceIpm.createUser(email);
+        UserDetailsDTO user = userServiceIpm.createUser(data);
         var uri  = uriBuilder.path("/user/{id}").buildAndExpand(user.id()).toUri();
         return ResponseEntity.created(uri).body(new UserDetailsDTO(user.id(), user.email(), user.roleUser()));
     }
 
     @PostMapping("/{user_id}")
     @Transactional
-    public ResponseEntity<Void> setPrivilege(@RequestBody UserUpdateDTO data, @PathVariable("user_id") Long user_id){
+    public ResponseEntity<Void> setPrivilege(@RequestBody @Valid UserUpdateDTO data, @PathVariable("user_id") Long user_id){
         userServiceIpm.setPrivilege(user_id,data.roleUser());
         return ResponseEntity.ok().build();
 

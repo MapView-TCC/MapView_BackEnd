@@ -7,7 +7,7 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 
 public record AccessHistoryCreateDTO(@Positive(message = "user id cannot be negative.")
-                                     @Min(1)
+                                     @Min(value = 1 )
                                      Long user_id,
                                      LocalDateTime logout_dateTime
 ) {

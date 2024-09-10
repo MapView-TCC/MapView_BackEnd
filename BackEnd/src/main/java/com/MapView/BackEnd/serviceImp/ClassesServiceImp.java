@@ -51,7 +51,7 @@ public class ClassesServiceImp implements ClassesService {
         var usuario_log = userRepository.findById(user_id).orElseThrow(() -> new NotFoundException("User Id Not Found"));
         var classe = classesRepository.findById(id).orElseThrow(() -> new NotFoundException("Classe id Not Found"));
         if (!classe.check_status()){
-            return null;
+            throw new OperativeFalseException("The classe area cannot be read..");
         }
 
         var userLog = new UserLog(usuario_log,"Classe",id.toString(),"Read Area",EnumAction.READ);

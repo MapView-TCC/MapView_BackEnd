@@ -47,7 +47,7 @@ public class EquipmentResponsibleController {
 
     @PostMapping("/{id_equip_resp}")
     @Transactional
-    public ResponseEntity<EquipmentResponsibleDetailsDTO> updateEquipmentResponsible(@PathVariable Long id_equip_resp, @RequestBody EquipmentResponsibleUpdateDTO dados){
+    public ResponseEntity<EquipmentResponsibleDetailsDTO> updateEquipmentResponsible(@PathVariable Long id_equip_resp, @RequestBody @Valid EquipmentResponsibleUpdateDTO dados){
         EquipmentResponsibleDetailsDTO updateEquipmentResponsible = equipmentResponsibleServiceImp.updateEquipmentResponsible(id_equip_resp, dados);
         return ResponseEntity.ok(updateEquipmentResponsible);
     }

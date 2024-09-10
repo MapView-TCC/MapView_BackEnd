@@ -65,18 +65,25 @@ public class EquipmentResponsibleServiceImp implements EquipmentResponsibleServi
 
     @Override
     public EquipmentResponsibleDetailsDTO updateEquipmentResponsible(Long id_equip_resp, EquipmentResponsibleUpdateDTO dados) {
+
         var equipmentResponsible = equipmentResponsibleRepository.findById(id_equip_resp)
                 .orElseThrow(() -> new NotFoundException("Equipment responsible id not found"));
 
         if (dados.id_equipment() != null){
             var equipment = equipmentRepository.findById(dados.id_equipment())
                     .orElseThrow(() -> new NotFoundException("Equipment id not found"));
+            if (!equipment.isOperative()){
+                throw new OperativeFalseException("The inactive equipment cannot be accessed.");
+            }
             equipmentResponsible.setId_equipment(equipment);
         }
 
         if (dados.id_responsible() != null){
             var responsible = responsibleRepository.findById(dados.id_responsible())
                     .orElseThrow(() -> new NotFoundException("Responsible id not found"));
+            if (!responsible.isOperative()){
+                throw new OperativeFalseException("The inactive responsible cannot be accessed.");
+            }
             equipmentResponsible.setId_responsible(responsible);
         }
 
@@ -89,7 +96,6 @@ public class EquipmentResponsibleServiceImp implements EquipmentResponsibleServi
             if (dados.start_usage() == null) {
                 throw new IllegalArgumentException("Start date must be set before setting the end date.");
             }
-
             // O método isBefore é usado para comparar instantes de tempo, datas e horas.
             if (dados.end_usage().isBefore(dados.start_usage())) {
                 throw new IllegalArgumentException("The end date must be greater than or equal to the start date.");
@@ -101,6 +107,7 @@ public class EquipmentResponsibleServiceImp implements EquipmentResponsibleServi
         equipmentResponsibleRepository.save(equipmentResponsible);
         return new EquipmentResponsibleDetailsDTO(equipmentResponsible);
     }
+
 
     @Override
     public void activateEquipmentResponsible(Long id_equip_resp) {
