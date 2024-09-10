@@ -3,6 +3,7 @@ package com.MapView.BackEnd.dtos.UserLog;
 import com.MapView.BackEnd.entities.UserLog;
 import com.MapView.BackEnd.entities.Users;
 import com.MapView.BackEnd.enums.EnumAction;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.apache.catalina.User;
 
 import java.time.Instant;
@@ -14,6 +15,7 @@ public record UserLogDetailDTO (Long id_log,
                                 Long id_altered,
                                 String field,
                                 String description,
+                                @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy HH:mm")
                                 Instant datetime,
                                 EnumAction action) {
     public UserLogDetailDTO (UserLog userLog){

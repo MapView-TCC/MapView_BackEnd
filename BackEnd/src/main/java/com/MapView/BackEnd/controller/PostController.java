@@ -5,6 +5,7 @@ import com.MapView.BackEnd.dtos.Post.PostCreateDTO;
 import com.MapView.BackEnd.dtos.Post.PostDetailDTO;
 import com.MapView.BackEnd.dtos.Post.PostUpdateDTO;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -46,7 +47,7 @@ public class PostController {
 
     @PostMapping("/{id_post}")
     @Transactional
-    public ResponseEntity<PostDetailDTO> updatePost (@PathVariable("id_post") Long id_post, @RequestBody PostUpdateDTO data,@RequestParam Long user_id){
+    public ResponseEntity<PostDetailDTO> updatePost (@PathVariable("id_post") Long id_post, @RequestBody @Valid PostUpdateDTO data, @RequestParam Long user_id){
          var post =  postServiceImp.updatePost(id_post,data,user_id);
          return ResponseEntity.ok(post);
 

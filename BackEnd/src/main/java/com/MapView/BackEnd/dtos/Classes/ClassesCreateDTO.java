@@ -11,10 +11,10 @@ import java.time.LocalDateTime;
 
 public record ClassesCreateDTO(@NotBlank
                                EnumCourse enumCourse,
-                               @NotBlank
+                               @NotBlank(message = "Classes cannot be blank")
                                String classes,
                                @Min(1)
-                               @Positive
+                               @Positive(message = "User id must be Positive")
                                Long user_id,
                                LocalDate criation_date) {
 

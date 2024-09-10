@@ -4,6 +4,7 @@ import com.MapView.BackEnd.serviceImp.UserServiceIpm;
 import com.MapView.BackEnd.dtos.User.UserDetailsDTO;
 import com.MapView.BackEnd.dtos.User.UserUpdateDTO;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 
 import org.springframework.web.bind.annotation.*;
@@ -34,7 +35,7 @@ public class UserController {
 
     @PostMapping("/{user_id}")
     @Transactional
-    public ResponseEntity<Void> setPrivilege(@RequestBody UserUpdateDTO data, @PathVariable("user_id") Long user_id){
+    public ResponseEntity<Void> setPrivilege(@RequestBody @Valid UserUpdateDTO data, @PathVariable("user_id") Long user_id){
         userServiceIpm.setPrivilege(user_id,data.roleUser());
         return ResponseEntity.ok().build();
 

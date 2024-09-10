@@ -53,7 +53,7 @@ public class MainOwnerController {
 
     @PostMapping("{id}")
     @Transactional
-    public ResponseEntity<MainOwnerDetailsDTO> updateMainOwner(@RequestParam Long user_id,@PathVariable String mainowner_id, @RequestBody MainOwnerUpdateDTO dados){
+    public ResponseEntity<MainOwnerDetailsDTO> updateMainOwner(@RequestParam Long user_id,@PathVariable String mainowner_id, @RequestBody @Valid MainOwnerUpdateDTO dados){
         MainOwnerDetailsDTO updateMainOwner = mainOwnerServiceImp.updateMainOwner(mainowner_id, dados,user_id);
         return ResponseEntity.ok(updateMainOwner);
     }

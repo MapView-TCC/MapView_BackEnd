@@ -23,7 +23,7 @@ public class CostCenter {
     private boolean operative;
 
     public CostCenter(CostCenterCreateDTO dados) {
-        this.cost_center_name = dados.cost_center_name();
+        this.cost_center_name = dados.costCenter_name();
         this.operative = true;
     }
 

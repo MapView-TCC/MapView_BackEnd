@@ -46,7 +46,7 @@ public class ClassesController {
     }
     @PostMapping("/{class_id}")
     @Transactional
-    public ResponseEntity<ClassesDetaiLDTO> updateClass(@PathVariable("class_id") Long class_id, @RequestBody ClassesUpdateDTO data, @RequestParam Long user_id){
+    public ResponseEntity<ClassesDetaiLDTO> updateClass(@PathVariable("class_id") Long class_id, @RequestBody @Valid ClassesUpdateDTO data, @RequestParam Long user_id){
         var classe = classesServiceImp.updateClasses(class_id, data, user_id);
         return ResponseEntity.ok(classe);
     }

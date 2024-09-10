@@ -34,7 +34,7 @@ public class ResponsibleController {
     }
     @PostMapping("/{responsible_id}")
     @Transactional
-    public ResponseEntity<ResponsibleDetailsDTO> updateResponsible(@PathVariable("responsible_id") Long responsible_id, @RequestBody ResponsibleUpdateDTO data, @RequestParam Long user_id){
+    public ResponseEntity<ResponsibleDetailsDTO> updateResponsible(@PathVariable("responsible_id") Long responsible_id, @RequestBody @Valid ResponsibleUpdateDTO data, @RequestParam Long user_id){
         var responsible = responsibleServiceImp.updateResposible(responsible_id,data, user_id);
         return ResponseEntity.ok(responsible);
 
