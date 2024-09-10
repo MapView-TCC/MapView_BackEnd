@@ -57,8 +57,8 @@ public class EquipmentServiceImp implements EquipmentService {
         var equipment = equipmentRepository.findById(String.valueOf(id_equipment)).orElseThrow(() -> new NotFoundException("Id equipment not found!"));
         Users user = this.userRepository.findById(user_id).orElseThrow(() -> new NotFoundException("Id not found"));
 
-        if (!equipment.status_check()){
-            return null;
+        if (!equipment.isOperative()){
+            throw new OperativeFalseException("The inactive responsible cannot be accessed.");
         }
 
         var userLog = new UserLog(user, "Equipment", id_equipment, "Read Equipment", EnumAction.READ);
@@ -84,13 +84,17 @@ public class EquipmentServiceImp implements EquipmentService {
         Location location = locationRepository.findById(Long.valueOf(dados.id_location()))
                 .orElseThrow(() -> new RuntimeException("Id location Não encontrado!"));
 
+
         // main owner
         MainOwner mainOwner = mainOwnerRepository.findById(String.valueOf(dados.id_owner()))
                 .orElseThrow(() -> new RuntimeException("Id main owner Não encontrado"));
 
+        if(!mainOwner.isOperative()){
+            throw new OperativeFalseException("The inactive mainowner cannot be accessed.");
+        }
+
 
         Equipment equipment = new Equipment(dados,location,mainOwner);
-
         equipmentRepository.save(equipment);
 
         var userLog = new UserLog(users,"Equipment", dados.id_equipment(), "Create new Equipment", EnumAction.CREATE);
@@ -115,12 +119,10 @@ public class EquipmentServiceImp implements EquipmentService {
             equipment.setId_equipment(dados.id_equipment());
             userlog.setField("equipment id to: " + dados.id_equipment());
         }
-
         if (dados.name_equipment() != null){
             equipment.setName_equipment(dados.name_equipment());
             userlog.setField(userlog.getField()+" ,"+"equipment name to: " + dados.name_equipment());
         }
-
         if (dados.rfid() != 0) {
             equipment.setRfid(dados.rfid());
             userlog.setField(userlog.getField()+" ,"+"equipment rfid to: " + dados.rfid());
@@ -255,11 +257,13 @@ public class EquipmentServiceImp implements EquipmentService {
                     .collect(Collectors.toList());
         }
 
-
+        predicate.add(criteriaBuilder.equal(equipmentRoot.get("operative"), true));
 
         criteriaQuery.where(criteriaBuilder.and(predicate.toArray(new Predicate[0])));
         
         TypedQuery<Equipment> query = entityManager.createQuery((criteriaQuery));
+
+
         return query.getResultList().stream()
                 .map(EquipmentDetailsDTO::new)
                 .collect(Collectors.toList());

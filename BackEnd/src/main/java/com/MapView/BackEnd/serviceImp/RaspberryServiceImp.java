@@ -39,9 +39,8 @@ public class RaspberryServiceImp implements RaspberryService {
 
         Raspberry raspberry = this.raspberryRepository.findById(id_Raspberry)
                 .orElseThrow(() -> new NotFoundException("Raspberry id not found"));
-
         if (!raspberry.isOperative()){
-            return null;
+            throw new OperativeFalseException("The inactive raspberry cannot be accessed.");
         }
 
         var userLog = new UserLog(user,"Raspberry",id_Raspberry.toString(),"Read Raspberry",EnumAction.READ);
@@ -65,12 +64,17 @@ public class RaspberryServiceImp implements RaspberryService {
 
         Building building = buildingRepository.findById(raspberryCreateDTO.id_building())
                 .orElseThrow(() -> new NotFoundException("Building id not found."));
+        if (!building.isOperative()){
+            throw new OperativeFalseException("The inactive building cannot be accessed.");
+        }
 
         Area area = areaRepository.findById(raspberryCreateDTO.id_area())
                 .orElseThrow(() -> new NotFoundException("Area id not found"));
+        if (!area.isOperative()){
+            throw new OperativeFalseException("The inactive area cannot be accessed.");
+        }
 
         Raspberry raspberry = new Raspberry(raspberryCreateDTO, building, area);
-
         String id_raspberry = raspberryRepository.save(raspberry).getId_raspberry();
 
         var userLog = new UserLog(user,"Raspberry", id_raspberry,"Create new Raspberry", EnumAction.CREATE);
@@ -85,7 +89,7 @@ public class RaspberryServiceImp implements RaspberryService {
         var raspberry = raspberryRepository.findById(id_raspberry)
                 .orElseThrow(() -> new NotFoundException("Raspberry id not found"));
         if(!raspberry.isOperative()){
-            throw new OperativeFalseException("The inactive equipment cannot be updated.");
+            throw new OperativeFalseException("The inactive raspberry:"+ raspberry.getId_raspberry() + "cannot be accessed.");
         }
 
         Users user = this.userRepository.findById(user_id).orElseThrow(() -> new NotFoundException("Id not found"));

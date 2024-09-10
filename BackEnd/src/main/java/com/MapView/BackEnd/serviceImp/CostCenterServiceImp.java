@@ -38,7 +38,7 @@ public class CostCenterServiceImp implements CostCenterService {
         Users user = this.userRepository.findById(user_id).orElseThrow(() -> new NotFoundException("Id not found"));
 
         if (!costCenter.status_check()){
-            return null;
+            throw new OperativeFalseException("The inactive CostCenter cannot be read..");
         }
         var userLog = new UserLog(user,"CostCenter",id_cost_center.toString(),"Read CostCenter", EnumAction.READ);
         userLogRepository.save(userLog);

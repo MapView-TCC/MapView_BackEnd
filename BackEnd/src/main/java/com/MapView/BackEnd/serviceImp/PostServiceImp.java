@@ -33,11 +33,12 @@ public class PostServiceImp implements PostService {
     @Override
     public PostDetailDTO getPost(Long id_post,Long user_id) {
         Users user = this.userRepository.findById(user_id).orElseThrow(() -> new NotFoundException("Id not found"));
-
         Post post = this.postRepository.findById(id_post).orElseThrow(() -> new NotFoundException("Post id Not Found"));
+
         if(!post.isOperative()){
-            return null;
+            throw new OperativeFalseException("The inactive post cannot be accessed.");
         }
+
         var userLog = new UserLog(user,"Post",id_post.toString(),"Read Post", EnumAction.READ);
         userLogRepository.save(userLog);
 
@@ -73,7 +74,7 @@ public class PostServiceImp implements PostService {
         var post = this.postRepository.findById(id_post).orElseThrow(() ->new NotFoundException("Post Id Not Found"));
 
         if(!post.isOperative()){
-            throw new OperativeFalseException("The inactive equipment cannot be updated.");
+            throw new OperativeFalseException("The inactive post cannot be accessed.");
         }
 
         Users user = this.userRepository.findById(user_id).orElseThrow(() -> new NotFoundException("Id not found"));

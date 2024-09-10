@@ -35,11 +35,11 @@ public class AreaServiceImp implements AreaService {
 
     @Override
     public AreaDetailsDTO getArea(Long user_id,Long id_area) {
-        Users user = this.userRepository.findById(user_id).orElseThrow(() -> new NotFoundException("Id not found"));
+        Users user = this.userRepository.findById(user_id).orElseThrow(() -> new NotFoundException("Area id not found"));
 
-        Area area = this.areaRepository.findById(id_area).orElseThrow(() -> new NotFoundException("Id not found"));
+        Area area = this.areaRepository.findById(id_area).orElseThrow(() -> new NotFoundException("Area id not found"));
         if (!area.isOperative()){
-            return null;
+            throw new OperativeFalseException("The inactive area cannot be read..");
         }
 
         var userLog = new UserLog(user,"Area",id_area.toString(),"Read Area",EnumAction.READ);
