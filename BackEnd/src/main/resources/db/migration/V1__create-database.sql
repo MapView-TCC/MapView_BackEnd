@@ -92,11 +92,11 @@ CREATE TABLE IF NOT EXISTS main_owner (
     FOREIGN KEY(id_cost_center) REFERENCES cost_center(id_cost_center)
 );
 
--- Creating the Equipment table
+-- Creating the Equipment table, para teste eu tirei o unique do rfid
 CREATE TABLE IF NOT EXISTS equipment (
     id_equipment VARCHAR(255) PRIMARY KEY,
     name_equipment VARCHAR(255),
-    rfid VARCHAR(255) UNIQUE,
+    rfid BIGINT NOT NULL,
     type VARCHAR(255) NOT NULL,
     model ENUM('T16','T14','ZBOOK') NOT NULL,
     validity VARCHAR(255) NOT NULL,
@@ -115,7 +115,7 @@ CREATE TABLE IF NOT EXISTS tracking_history (
     id_tracking INT AUTO_INCREMENT PRIMARY KEY,
     id_equipment VARCHAR(255),
     id_environment INT,
-    rfid INT NOT NULL,
+    rfid BIGINT NOT NULL,
     action ENUM ('ENTER','OUT'),
     warning ENUM ('RED', 'YELLOW', 'GREEN'),
     dateTime TIMESTAMP,

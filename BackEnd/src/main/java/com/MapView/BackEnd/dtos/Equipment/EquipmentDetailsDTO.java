@@ -8,7 +8,7 @@ import com.MapView.BackEnd.enums.EnumModelEquipment;
 public record EquipmentDetailsDTO(
         String id_equipment,
         String name_equipment,
-        int rfid,
+        long rfid,
         String type,
         EnumModelEquipment model,
         String validity,
