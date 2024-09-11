@@ -160,4 +160,3 @@ CREATE TABLE IF NOT EXISTS user_log (
     FOREIGN KEY(id_user) REFERENCES Users(id_user)
 );
 
-

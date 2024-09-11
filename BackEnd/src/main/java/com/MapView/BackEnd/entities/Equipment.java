@@ -24,7 +24,7 @@ public class Equipment {
     // novo campo
     private String name_equipment;
 
-    private long rfid;
+    private Long rfid;
     private String type;
     @Enumerated(EnumType.STRING)
     private EnumModelEquipment model;
@@ -56,6 +56,18 @@ public class Equipment {
         this.observation = data.observation();
         this.location = location;
         this.owner = id_owner;
+        this.operative = true;
+    }
+    public Equipment(Long rfid) {
+        this.id_equipment = null;
+        this.rfid = rfid;
+        this.type = null;
+        this.model = null;
+        this.validity = null;
+        this.admin_rights = null;
+        this.observation = null;
+        this.location = null;
+        this.owner = null;
         this.operative = true;
     }
 }
