@@ -4,6 +4,7 @@ import com.MapView.BackEnd.entities.UserLog;
 import com.MapView.BackEnd.entities.Users;
 import com.MapView.BackEnd.enums.EnumAction;
 import com.MapView.BackEnd.infra.OperativeFalseException;
+import com.MapView.BackEnd.infra.OpetativeTrueException;
 import com.MapView.BackEnd.repository.EnviromentRepository;
 import com.MapView.BackEnd.repository.RaspberryRepository;
 import com.MapView.BackEnd.repository.UserLogRepository;
@@ -106,30 +107,33 @@ public class EnviromentServiceImp implements EnviromentService {
 
     @Override
     public void activateEnviroment(Long id_environment, Long user_id) {
-        Users user = this.userRepository.findById(user_id).orElseThrow(() -> new NotFoundException("Id not found"));
         var enviroment = enviromentRepository.findById(id_environment).orElseThrow(()->new NotFoundException("Id Enviroment Not Found"));
-        if(!enviroment.isOperative()){
-            enviroment.setOperative(true);
+        if(enviroment.isOperative()){
+            throw new OpetativeTrueException("It is already activate");
         }
-
-        enviromentRepository.save(enviroment);
-
+        enviroment.setOperative(true);
+        Users user = this.userRepository.findById(user_id).orElseThrow(() -> new NotFoundException("Id not found"));
         var userLog = new UserLog(user,"Enviroment",id_environment.toString(),"Operative","Activated Enviroment",EnumAction.UPDATE);
+        enviromentRepository.save(enviroment);
         userLogRepository.save(userLog);
+
 
     }
 
     @Override
     public void inactivateEnviroment(Long id_environment, Long user_id) {
-        Users user = this.userRepository.findById(user_id).orElseThrow(() -> new NotFoundException("Id not found"));
         var enviroment = enviromentRepository.findById(id_environment).orElseThrow(()->new NotFoundException("Id Enviroment Not Found"));
-        if(enviroment.isOperative()){
-            enviroment.setOperative(false);
+        if(!enviroment.isOperative()){
+            throw new OperativeFalseException("It is already inactivate");
         }
-        enviromentRepository.save(enviroment);
-
+        enviroment.setOperative(false);
+        Users user = this.userRepository.findById(user_id).orElseThrow(() -> new NotFoundException("Id not found"));
         var userLog = new UserLog(user,"Enviroment",id_environment.toString(),"Operative","Inactivated Enviroment",EnumAction.UPDATE);
+        enviromentRepository.save(enviroment);
         userLogRepository.save(userLog);
+
+
+
 
     }
 

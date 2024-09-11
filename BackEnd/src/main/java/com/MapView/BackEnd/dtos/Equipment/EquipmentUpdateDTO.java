@@ -13,7 +13,7 @@ public record EquipmentUpdateDTO(
         String name_equipment,
         @Positive
         @Size(min = 15)
-        int rfid,
+        Long rfid,
         @NotBlank(message = "Type cannot be blank")
         String type,
         EnumModelEquipment model,

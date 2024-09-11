@@ -6,6 +6,7 @@ import com.MapView.BackEnd.enums.EnumAction;
 import com.MapView.BackEnd.enums.EnumModelEquipment;
 import com.MapView.BackEnd.infra.NotFoundException;
 import com.MapView.BackEnd.infra.OperativeFalseException;
+import com.MapView.BackEnd.infra.OpetativeTrueException;
 import com.MapView.BackEnd.repository.*;
 import com.MapView.BackEnd.service.EquipmentService;
 import com.MapView.BackEnd.dtos.Equipment.EquipmentCreateDTO;
@@ -177,28 +178,30 @@ public class EquipmentServiceImp implements EquipmentService {
     @Override
     public void activateEquipment(String id_equipment, Long user_id) {
         Users users = this.userRepository.findById(user_id).orElseThrow(() -> new NotFoundException("Id not found"));
+        var equipment = equipmentRepository.findById(id_equipment).orElseThrow(() -> new NotFoundException("Id not found"));
 
-        var equipmentClass = equipmentRepository.findById(id_equipment);
-        if (equipmentClass.isPresent()){
-            var equipment = equipmentClass.get();
-            equipment.setOperative(true);
+        if (equipment.isOperative()){
+            throw new OpetativeTrueException("It is already activate");
         }
 
+        equipment.setOperative(true);
         var userLog = new UserLog(users, "Equipment", id_equipment, "Operative", "Activated area", EnumAction.UPDATE);
+        equipmentRepository.save(equipment);
         userLogRepository.save(userLog);
     }
 
     @Override
     public void inactivateEquipment(String id_equipment, Long user_id) {
-        Users users = this.userRepository.findById(user_id).orElseThrow(() -> new NotFoundException("Id not found"));
 
-        var equipmentClass = equipmentRepository.findById(id_equipment);
-        if (equipmentClass.isPresent()){
-            var equipment = equipmentClass.get();
-            equipment.setOperative(false);
+        var equipment = equipmentRepository.findById(id_equipment).orElseThrow(() -> new NotFoundException("Id not found"));
+
+        if (!equipment.isOperative()){
+            throw new OperativeFalseException("It is already inactivate");
         }
-
+        Users users = this.userRepository.findById(user_id).orElseThrow(() -> new NotFoundException("Id not found"));
+        equipment.setOperative(false);
         var userLog = new UserLog(users, "Equipment", id_equipment, "Operative", "Inactivated area", EnumAction.UPDATE);
+        equipmentRepository.save(equipment);
         userLogRepository.save(userLog);
     }
 

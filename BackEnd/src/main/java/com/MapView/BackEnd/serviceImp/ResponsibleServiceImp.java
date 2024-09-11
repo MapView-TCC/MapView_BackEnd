@@ -4,6 +4,7 @@ import com.MapView.BackEnd.entities.UserLog;
 import com.MapView.BackEnd.entities.Users;
 import com.MapView.BackEnd.enums.EnumAction;
 import com.MapView.BackEnd.infra.OperativeFalseException;
+import com.MapView.BackEnd.infra.OpetativeTrueException;
 import com.MapView.BackEnd.repository.ClassesRepository;
 import com.MapView.BackEnd.repository.ResponsibleRepository;
 import com.MapView.BackEnd.repository.UserLogRepository;
@@ -130,27 +131,30 @@ public class ResponsibleServiceImp implements ResponsibleService {
 
     @Override
     public void activeResposible(Long id_resposible, Long user_id) {
-        Users user = this.userRepository.findById(user_id).orElseThrow(() -> new NotFoundException("Id not found"));
 
-        var responsibleClass = responsibleRepository.findById(id_resposible);
-        if (responsibleClass.isPresent()){
-            var responsible = responsibleClass.get();
-            responsible.setOperative(true);
+        var responsible = responsibleRepository.findById(id_resposible).orElseThrow(() -> new NotFoundException("Id not found"));
+        if (responsible.isOperative()){
+            throw new OpetativeTrueException("It is already activate");
         }
-
+        responsible.setOperative(true);
+        Users user = this.userRepository.findById(user_id).orElseThrow(() -> new NotFoundException("Id not found"));
         var userLog = new UserLog(user, "Resposible", id_resposible.toString(), "Operative", "Activated Resposible", EnumAction.UPDATE);
+        responsibleRepository.save(responsible);
         userLogRepository.save(userLog);
     }
 
     @Override
     public void inactivateResposible(Long id_resposible, Long user_id) {
-        Users user = this.userRepository.findById(user_id).orElseThrow(() -> new NotFoundException("Id not found"));
+
 
         var responsibleClass = responsibleRepository.findById(id_resposible).orElseThrow(()-> new NotFoundException("Responsible id not found"));
+        if (!responsibleClass.isOperative()){
+            throw new OperativeFalseException("It is already inactivate");
+        }
         responsibleClass.setOperative(false);
-        responsibleRepository.save(responsibleClass);
-
+        Users user = this.userRepository.findById(user_id).orElseThrow(() -> new NotFoundException("Id not found"));
         var userLog = new UserLog(user, "Resposible", id_resposible.toString(), "Operative", "Inactivated Resposible", EnumAction.UPDATE);
+        responsibleRepository.save(responsibleClass);
         userLogRepository.save(userLog);
     }
 }

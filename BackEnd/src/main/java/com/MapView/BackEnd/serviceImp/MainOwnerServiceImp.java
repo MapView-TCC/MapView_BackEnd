@@ -6,6 +6,7 @@ import com.MapView.BackEnd.entities.UserLog;
 import com.MapView.BackEnd.entities.Users;
 import com.MapView.BackEnd.enums.EnumAction;
 import com.MapView.BackEnd.infra.OperativeFalseException;
+import com.MapView.BackEnd.infra.OpetativeTrueException;
 import com.MapView.BackEnd.repository.CostCenterRepository;
 import com.MapView.BackEnd.repository.MainOwnerRepository;
 import com.MapView.BackEnd.repository.UserLogRepository;
@@ -112,24 +113,26 @@ public class MainOwnerServiceImp implements MainOwnerService {
 
     @Override
     public void activateMainOwner(String id_owner,Long user_id) {
-        Users user = this.userRepository.findById(user_id).orElseThrow(() -> new NotFoundException("Id not found"));
-
         var mainowner = this.mainOwnerRepository.findById(id_owner).orElseThrow(() -> new NotFoundException("Cost Center id not found"));
+        if (mainowner.isOperative()){
+            throw new OperativeFalseException("It is already activate");
+        }
+        Users user = this.userRepository.findById(user_id).orElseThrow(() -> new NotFoundException("Id not found"));
         mainowner.setOperative(true);
         mainOwnerRepository.save(mainowner);
-
         var userLog = new UserLog(user,"MainOwner",id_owner,"Operative","Activated MainOwner",EnumAction.UPDATE);
         userLogRepository.save(userLog);
     }
 
     @Override
     public void inactivateMainOwner(String id_owner,Long user_id) {
-        Users user = this.userRepository.findById(user_id).orElseThrow(() -> new NotFoundException("Id not found"));
-
         var mainowner = this.mainOwnerRepository.findById(id_owner).orElseThrow(()-> new NotFoundException("id NOT FOUND"));
+        if (!mainowner.isOperative()){
+            throw new OpetativeTrueException("It is already inactivate");
+        }
+        Users user = this.userRepository.findById(user_id).orElseThrow(() -> new NotFoundException("Id not found"));
         mainowner.setOperative(false);
         mainOwnerRepository.save(mainowner);
-
         var userLog = new UserLog(user,"MainOwner",id_owner,"Operative","Inactivated MainOwner",EnumAction.UPDATE);
         userLogRepository.save(userLog);
     }

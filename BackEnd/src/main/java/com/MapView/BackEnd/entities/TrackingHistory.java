@@ -35,7 +35,7 @@ public class TrackingHistory {
     @JoinColumn(name ="id_environment")
     private Enviroment environment;
 
-    private long rfid;
+    private Long rfid;
 
     @Enumerated(value = EnumType.STRING)
     private EnumTrackingAction action;
@@ -45,14 +45,14 @@ public class TrackingHistory {
 
 
 
-    public TrackingHistory(Enviroment environment, Equipment equipment,int rfid, EnumTrackingAction action, EnumColors warning) {
+    public TrackingHistory(Enviroment environment, Equipment equipment,Long rfid, EnumTrackingAction action, EnumColors warning) {
         this.equipment = equipment;
         this.environment = environment;
         this.rfid= rfid;
         this.action = action;
         this.warning = warning;
     }
-    public TrackingHistory(int rfid, Enviroment enviroment, EnumColors warning) {
+    public TrackingHistory(Long rfid, Enviroment enviroment, EnumColors warning) {
         this.equipment = null;
         this.rfid = rfid;
         this.environment = enviroment;

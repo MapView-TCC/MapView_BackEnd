@@ -4,6 +4,7 @@ import com.MapView.BackEnd.entities.UserLog;
 import com.MapView.BackEnd.entities.Users;
 import com.MapView.BackEnd.enums.EnumAction;
 import com.MapView.BackEnd.infra.OperativeFalseException;
+import com.MapView.BackEnd.infra.OpetativeTrueException;
 import com.MapView.BackEnd.repository.BuildingRepository;
 import com.MapView.BackEnd.repository.UserLogRepository;
 import com.MapView.BackEnd.repository.UserRepository;
@@ -89,25 +90,31 @@ public class BuildingServiceImp implements BuildingService {
 
     @Override
     public void activateBuilding(Long building_id, Long user_id) {
-        var buildingClass = buildingRepository.findById(building_id);
-        Users user = this.userRepository.findById(user_id).orElseThrow(() -> new NotFoundException("Id not found"));
+        var building = buildingRepository.findById(building_id).orElseThrow(() -> new RuntimeException("Building Id not found"));
 
-        if (buildingClass.isPresent()){
-            var building = buildingClass.get();
-            building.setOperative(true);
+        if (building.isOperative()){
+            throw new OpetativeTrueException("It is already activate");
+
         }
-        var userLog = new UserLog(null,"Building",building_id.toString(),"Operative","Activated Area", EnumAction.UPDATE);
+        building.setOperative(true);
+        Users user = this.userRepository.findById(user_id).orElseThrow(() -> new NotFoundException("Id not found"));
+        var userLog = new UserLog(user,"Building",building_id.toString(),"Operative","Activated Area", EnumAction.UPDATE);
+        buildingRepository.save(building);
         userLogRepository.save(userLog);
+
     }
 
     @Override
     public void inactivateBuilding(Long building_id,Long user_id) {
-        var buildingClass = buildingRepository.findById(building_id);
-        if (buildingClass.isPresent()){
-            var building = buildingClass.get();
-            building.setOperative(false);
+        var building = buildingRepository.findById(building_id).orElseThrow(() -> new RuntimeException("Building Id not found"));
+        if (!building.isOperative()){
+            throw new OperativeFalseException("It is already inactivate");
         }
-        var userLog = new UserLog(null,"Building",building_id.toString(),"Operative","Inactivated Area", EnumAction.UPDATE);
-         userLogRepository.save(userLog);
+        building.setOperative(false);
+        Users user = this.userRepository.findById(user_id).orElseThrow(() -> new NotFoundException("Id not found"));
+        var userLog = new UserLog(user,"Building",building_id.toString(),"Operative","Inactivated Area", EnumAction.UPDATE);
+        buildingRepository.save(building);
+        userLogRepository.save(userLog);
+
     }
 }

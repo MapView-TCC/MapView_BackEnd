@@ -3,6 +3,7 @@ package com.MapView.BackEnd.serviceImp;
 import com.MapView.BackEnd.entities.UserLog;
 import com.MapView.BackEnd.enums.EnumAction;
 import com.MapView.BackEnd.infra.OperativeFalseException;
+import com.MapView.BackEnd.infra.OpetativeTrueException;
 import com.MapView.BackEnd.repository.ClassesRepository;
 import com.MapView.BackEnd.repository.UserLogRepository;
 import com.MapView.BackEnd.repository.UserRepository;
@@ -106,26 +107,26 @@ public class ClassesServiceImp implements ClassesService {
     public void activeClass(Long class_id, Long user_id) {
         var usuario_log = userRepository.findById(user_id).orElseThrow(() -> new NotFoundException("User Id Not Found"));
         if(usuario_log.isOperative()) {
-            var classes = classesRepository.findById(class_id).orElseThrow(() -> new NotFoundException("User Id Not Found"));
-            classes.setOperative(true);
-            classesRepository.save(classes);
-            var userLog = new UserLog(usuario_log,"Classes",class_id.toString(),"Operative","Activated Classes",EnumAction.UPDATE);
-            userLogRepository.save(userLog);
+            throw new OpetativeTrueException("It is already activate");
         }
-
-
+        var classes = classesRepository.findById(class_id).orElseThrow(() -> new NotFoundException("User Id Not Found"));
+        classes.setOperative(true);
+        classesRepository.save(classes);
+        var userLog = new UserLog(usuario_log,"Classes",class_id.toString(),"Operative","Activated Classes",EnumAction.UPDATE);
+        userLogRepository.save(userLog);
     }
 
     @Override
     public void inactiveClass(Long class_id, Long user_id) {
-        var usuario_log = userRepository.findById(user_id).orElseThrow(() -> new NotFoundException("User Id Not Found"));
-        if(usuario_log.isOperative()) {
-            var classes = classesRepository.findById(class_id).orElseThrow(() -> new NotFoundException("User Id Not Found"));
-            classes.setOperative(false);
-            classesRepository.save(classes);
-            var userLog = new UserLog(usuario_log,"Classes",class_id.toString(),"Operative","Inactivate Classes",EnumAction.UPDATE);
-            userLogRepository.save(userLog);
+        var classes = classesRepository.findById(class_id).orElseThrow(() -> new NotFoundException("User Id Not Found"));
+        if(classes.isOperative()) {
+            throw new OperativeFalseException("It is already inactivate");
         }
+        var usuario_log = userRepository.findById(user_id).orElseThrow(() -> new NotFoundException("User Id Not Found"));
+        classes.setOperative(false);
+        classesRepository.save(classes);
+        var userLog = new UserLog(usuario_log,"Classes",class_id.toString(),"Operative","Inactivate Classes",EnumAction.UPDATE);
+        userLogRepository.save(userLog);
 
     }
 

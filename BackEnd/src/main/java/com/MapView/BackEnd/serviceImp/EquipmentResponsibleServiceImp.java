@@ -1,6 +1,7 @@
 package com.MapView.BackEnd.serviceImp;
 
 import com.MapView.BackEnd.infra.OperativeFalseException;
+import com.MapView.BackEnd.infra.OpetativeTrueException;
 import com.MapView.BackEnd.repository.EquipmentRepository;
 import com.MapView.BackEnd.repository.EquipmentResponsibleRepository;
 import com.MapView.BackEnd.repository.ResponsibleRepository;
@@ -111,20 +112,21 @@ public class EquipmentResponsibleServiceImp implements EquipmentResponsibleServi
 
     @Override
     public void activateEquipmentResponsible(Long id_equip_resp) {
-        var equipmentResponsibleClass = equipmentResponsibleRepository.findById(id_equip_resp);
-        if (equipmentResponsibleClass.isPresent()){
-            var equipmentResponsible = equipmentResponsibleClass.get();
-            equipmentResponsible.setOperative(true);
+        var equipmentResponsible = equipmentResponsibleRepository.findById(id_equip_resp) .orElseThrow(() -> new NotFoundException("Equipment id not found"));
+        if (equipmentResponsible.isOperative()){
+            throw new OpetativeTrueException("It is already activate");
         }
+        equipmentResponsible.setOperative(true);
+        throw new OperativeFalseException("");
     }
 
     @Override
     public void inactivateEquipmentResponsible(Long id_equip_resp) {
-        var equipmentResponsibleClass = equipmentResponsibleRepository.findById(id_equip_resp);
-        if (equipmentResponsibleClass.isPresent()){
-            var equipmentResponsible = equipmentResponsibleClass.get();
-            equipmentResponsible.setOperative(false);
+        var equipmentResponsible = equipmentResponsibleRepository.findById(id_equip_resp).orElseThrow(() -> new NotFoundException("Equipment id not found"));
+        if (!equipmentResponsible.isOperative()){
+            throw new OperativeFalseException("It is already inactivate");
         }
-
+        equipmentResponsible.setOperative(false);
+        throw new OperativeFalseException("");
     }
 }

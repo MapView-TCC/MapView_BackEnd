@@ -3,6 +3,7 @@ package com.MapView.BackEnd.serviceImp;
 import com.MapView.BackEnd.entities.*;
 import com.MapView.BackEnd.enums.EnumAction;
 import com.MapView.BackEnd.infra.OperativeFalseException;
+import com.MapView.BackEnd.infra.OpetativeTrueException;
 import com.MapView.BackEnd.repository.*;
 import com.MapView.BackEnd.service.RaspberryService;
 import com.MapView.BackEnd.dtos.Raspberry.RaspberryCreateDTO;
@@ -125,30 +126,30 @@ public class RaspberryServiceImp implements RaspberryService {
 
     @Override
     public void activeRaspberry(String id_Raspberry, Long user_id) {
-        var user = userRepository.findById(user_id).orElseThrow(()->new NotFoundException("Id Enviroment Not Found"));
+
         var raspberry = this.raspberryRepository.findById(id_Raspberry).orElseThrow(()->new NotFoundException("Id Enviroment Not Found"));
-        if (!raspberry.isOperative()){
-            raspberry.setOperative(true);
+        if (raspberry.isOperative()){
+            throw new OpetativeTrueException("It is already activate");
 
-            var userLog = new UserLog(user,"Raspberry",id_Raspberry.toString(),"Operative","Activated Raspberry",EnumAction.UPDATE);
-            userLogRepository.save(userLog);
-
-            raspberryRepository.save(raspberry);
         }
+        var user = userRepository.findById(user_id).orElseThrow(()->new NotFoundException("Id Enviroment Not Found"));
+        raspberry.setOperative(true);
+        var userLog = new UserLog(user,"Raspberry",id_Raspberry.toString(),"Operative","Activated Raspberry",EnumAction.UPDATE);
+        raspberryRepository.save(raspberry);
+        userLogRepository.save(userLog);
     }
 
     @Override
     public void inactivateRaspberry(String id_Raspberry, Long user_id) {
-
-        var user = userRepository.findById(user_id).orElseThrow(()->new NotFoundException("Id Enviroment Not Found"));
-        var raspberry = this.raspberryRepository.findById(id_Raspberry).orElseThrow(()->new NotFoundException("Id Enviroment Not Found"));;
-        if (raspberry.isOperative()){
-            raspberry.setOperative(false);
-
-            var userLog = new UserLog(user,"Raspberry",id_Raspberry.toString(),"Operative","Inactivated Raspberry",EnumAction.UPDATE);
-            userLogRepository.save(userLog);
-
-            raspberryRepository.save(raspberry);
+        var raspberry = this.raspberryRepository.findById(id_Raspberry).orElseThrow(()->new NotFoundException("Id Enviroment Not Found"));
+        if (!raspberry.isOperative()){
+            throw new OperativeFalseException("It is already inactivate");
         }
+
+        raspberry.setOperative(false);
+        var user = userRepository.findById(user_id).orElseThrow(()->new NotFoundException("Id Enviroment Not Found"));
+        var userLog = new UserLog(user,"Raspberry",id_Raspberry.toString(),"Operative","Inactivated Raspberry",EnumAction.UPDATE);
+        userLogRepository.save(userLog);
+        raspberryRepository.save(raspberry);
     }
 }
