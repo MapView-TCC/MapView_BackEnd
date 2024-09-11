@@ -72,6 +72,5 @@ public class UserServiceIpm implements UserService {
             var user = userClass.get();
             user.setOperative(false);
         }
-
     }
 }
