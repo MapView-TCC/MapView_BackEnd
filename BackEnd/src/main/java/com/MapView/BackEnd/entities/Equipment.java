@@ -48,6 +48,7 @@ public class Equipment {
 
     public Equipment(EquipmentCreateDTO data, Location location, MainOwner id_owner) {
         this.id_equipment = data.id_equipment();
+        this.name_equipment = getName_equipment();
         this.rfid = data.rfid();
         this.type = data.type();
         this.model = data.model();
@@ -58,8 +59,8 @@ public class Equipment {
         this.owner = id_owner;
         this.operative = true;
     }
-    public Equipment(Long rfid) {
-        this.id_equipment = null;
+    public Equipment(String id_equipment, Long rfid) {
+        this.id_equipment = id_equipment;
         this.rfid = rfid;
         this.type = null;
         this.model = null;
