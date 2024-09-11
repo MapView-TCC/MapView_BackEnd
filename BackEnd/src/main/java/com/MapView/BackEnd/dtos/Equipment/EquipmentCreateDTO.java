@@ -9,7 +9,6 @@ public record EquipmentCreateDTO(
         @NotBlank(message = "Equipment name cannot be blank")
         String name_equipment,
         @Positive
-        @Size(min = 15)
         Long rfid,
         @NotBlank(message = "Type cannot be blank")
         String type,
@@ -24,8 +23,7 @@ public record EquipmentCreateDTO(
         @Positive
         @Min(1)
         Long id_location,
-        @Positive
-        @Min(1)
+        @NotBlank
         String id_owner
 ) {
 }

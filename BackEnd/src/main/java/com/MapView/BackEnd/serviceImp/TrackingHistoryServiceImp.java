@@ -1,12 +1,9 @@
 package com.MapView.BackEnd.serviceImp;
 
-import com.MapView.BackEnd.entities.Raspberry;
-import com.MapView.BackEnd.enums.EnumAction;
 import com.MapView.BackEnd.enums.EnumColors;
 import com.MapView.BackEnd.enums.EnumTrackingAction;
 import com.MapView.BackEnd.repository.EnviromentRepository;
 import com.MapView.BackEnd.repository.EquipmentRepository;
-import com.MapView.BackEnd.repository.RaspberryRepository;
 import com.MapView.BackEnd.repository.TrackingHistoryRepository;
 import com.MapView.BackEnd.service.TrackingHistoryService;
 import com.MapView.BackEnd.dtos.TrackingHistory.TrackingHistoryCreateDTO;
@@ -18,12 +15,9 @@ import com.MapView.BackEnd.infra.NotFoundException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import javax.sound.midi.VoiceStatus;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -33,7 +27,6 @@ public class TrackingHistoryServiceImp implements TrackingHistoryService {
     private final TrackingHistoryRepository trackingHistoryRepository;
     private final EnviromentRepository enviromentRepository;
     private final EquipmentRepository equipmentRepository;
-
 
 
     public TrackingHistoryServiceImp(TrackingHistoryRepository trackingHistoryRepository, EnviromentRepository enviromentRepository, EquipmentRepository equipmentRepository) {
@@ -65,44 +58,16 @@ public class TrackingHistoryServiceImp implements TrackingHistoryService {
 
         Equipment equipment = equipmentRepository.findByRfid(dados.rfid());
 
-        if (equipment == null){
-            TrackingHistory trackingHistory = trackingHistoryRepository.save(new TrackingHistory(dados.rfid(),local_tracking, EnumColors.RED));
-            Equipment emptyEquipment = new Equipment(dados.rfid());
+
+        if (equipment == null) {
+            TrackingHistory trackingHistory = trackingHistoryRepository.save(new TrackingHistory(dados.rfid(), local_tracking, EnumColors.RED));
+            Equipment emptyEquipment = new Equipment(UUID.randomUUID().toString().substring(0,8), dados.rfid());
             equipmentRepository.save(emptyEquipment);
-            throw new NotFoundException("RFID tag is not linked to any equipment");
+            trackingHistoryRepository.save(trackingHistory);
+
         }
-
-        TrackingHistory last_track = trackingHistoryRepository.findTopByEquipmentOrderByDatetimeDesc(equipment);
-
-        
-        Enviroment last_track_local = last_track.getEnvironment();
-        Enviroment local_notebook = equipment.getLocation().getEnvironment();
-
-        if (last_track_local.equals(local_tracking)) {
-            if (last_track.getAction().equals(EnumTrackingAction.OUT)){
-                if (local_tracking.equals("BTC")){
-                    System.out.println("_-----1--------");
-                    TrackingHistory trackingHistory = trackingHistoryRepository.save(new TrackingHistory(local_tracking, equipment, EnumTrackingAction.ENTER, EnumColors.GREEN));
-                    return new TrackingHistoryDetailsDTO(trackingHistory);
-                }
-                System.out.println("_-----1--------");
-                TrackingHistory trackingHistory = trackingHistoryRepository.save(new TrackingHistory(local_tracking, equipment, EnumTrackingAction.OUT, EnumColors.GREEN));
-                return new TrackingHistoryDetailsDTO(trackingHistory);
-            }
-            if (local_tracking.equals("BTC")){
-                System.out.println("_-----1--------");
-                TrackingHistory trackingHistory = trackingHistoryRepository.save(new TrackingHistory(local_tracking, equipment, EnumTrackingAction.OUT, EnumColors.YELLOW));
-                return new TrackingHistoryDetailsDTO(trackingHistory);
-            }
-            TrackingHistory trackingHistory = trackingHistoryRepository.save(new TrackingHistory(local_tracking, equipment, EnumTrackingAction.ENTER, EnumColors.GREEN));
-            System.out.println("_-----1--------");
-            return new TrackingHistoryDetailsDTO(trackingHistory);
-        }
-        System.out.println("_-----2--------");
-        TrackingHistory trackingHistory = trackingHistoryRepository.save(new TrackingHistory(local_tracking, equipment, EnumTrackingAction.ENTER, EnumColors.GREEN));
-        return new TrackingHistoryDetailsDTO(trackingHistory);
+        return null;
     }
-
 
 
     @Override
@@ -142,3 +107,6 @@ public class TrackingHistoryServiceImp implements TrackingHistoryService {
                 .collect(Collectors.toList());
     }
 }
+
+
+
