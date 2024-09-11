@@ -63,21 +63,18 @@ public class TrackingHistoryServiceImp implements TrackingHistoryService {
         Enviroment local_tracking = enviromentRepository.findById(dados.id_environment())
                 .orElseThrow(() -> new NotFoundException("Id not found"));
 
-
-
         Equipment equipment = equipmentRepository.findByRfid(dados.rfid());
 
         if (equipment == null){
             TrackingHistory trackingHistory = trackingHistoryRepository.save(new TrackingHistory(dados.rfid(),local_tracking, EnumColors.RED));
-            return new TrackingHistoryDetailsDTO(trackingHistory);
+            Equipment emptyEquipment = new Equipment(dados.rfid());
+            equipmentRepository.save(emptyEquipment);
+            throw new NotFoundException("RFID tag is not linked to any equipment");
         }
 
         TrackingHistory last_track = trackingHistoryRepository.findTopByEquipmentOrderByDatetimeDesc(equipment);
 
-
-
-
-
+        
         Enviroment last_track_local = last_track.getEnvironment();
         Enviroment local_notebook = equipment.getLocation().getEnvironment();
 
@@ -85,24 +82,24 @@ public class TrackingHistoryServiceImp implements TrackingHistoryService {
             if (last_track.getAction().equals(EnumTrackingAction.OUT)){
                 if (local_tracking.equals("BTC")){
                     System.out.println("_-----1--------");
-                    TrackingHistory trackingHistory = trackingHistoryRepository.save(new TrackingHistory(local_tracking, equipment, dados.rfid(), EnumTrackingAction.ENTER, EnumColors.GREEN));
+                    TrackingHistory trackingHistory = trackingHistoryRepository.save(new TrackingHistory(local_tracking, equipment, EnumTrackingAction.ENTER, EnumColors.GREEN));
                     return new TrackingHistoryDetailsDTO(trackingHistory);
                 }
                 System.out.println("_-----1--------");
-                TrackingHistory trackingHistory = trackingHistoryRepository.save(new TrackingHistory(local_tracking, equipment, dados.rfid(), EnumTrackingAction.OUT, EnumColors.GREEN));
+                TrackingHistory trackingHistory = trackingHistoryRepository.save(new TrackingHistory(local_tracking, equipment, EnumTrackingAction.OUT, EnumColors.GREEN));
                 return new TrackingHistoryDetailsDTO(trackingHistory);
             }
             if (local_tracking.equals("BTC")){
                 System.out.println("_-----1--------");
-                TrackingHistory trackingHistory = trackingHistoryRepository.save(new TrackingHistory(local_tracking, equipment, dados.rfid(), EnumTrackingAction.OUT, EnumColors.YELLOW));
+                TrackingHistory trackingHistory = trackingHistoryRepository.save(new TrackingHistory(local_tracking, equipment, EnumTrackingAction.OUT, EnumColors.YELLOW));
                 return new TrackingHistoryDetailsDTO(trackingHistory);
             }
-            TrackingHistory trackingHistory = trackingHistoryRepository.save(new TrackingHistory(local_tracking, equipment, dados.rfid(), EnumTrackingAction.ENTER, EnumColors.GREEN));
+            TrackingHistory trackingHistory = trackingHistoryRepository.save(new TrackingHistory(local_tracking, equipment, EnumTrackingAction.ENTER, EnumColors.GREEN));
             System.out.println("_-----1--------");
             return new TrackingHistoryDetailsDTO(trackingHistory);
         }
         System.out.println("_-----2--------");
-        TrackingHistory trackingHistory = trackingHistoryRepository.save(new TrackingHistory(local_tracking, equipment, dados.rfid(), EnumTrackingAction.ENTER, EnumColors.GREEN));
+        TrackingHistory trackingHistory = trackingHistoryRepository.save(new TrackingHistory(local_tracking, equipment, EnumTrackingAction.ENTER, EnumColors.GREEN));
         return new TrackingHistoryDetailsDTO(trackingHistory);
     }
 
