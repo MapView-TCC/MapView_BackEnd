@@ -159,4 +159,3 @@ CREATE TABLE IF NOT EXISTS user_log (
     action ENUM('CREATE', 'UPDATE', 'READ', 'DELETE'),
     FOREIGN KEY(id_user) REFERENCES Users(id_user)
 );
-
