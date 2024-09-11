@@ -35,8 +35,8 @@ public class RaspberryServiceImp implements RaspberryService {
 
 
     @Override
-    public RaspberryDetailsDTO getRaspberry(String id_Raspberry, Long user_id) {
-        Users user = this.userRepository.findById(user_id).orElseThrow(() -> new NotFoundException("Id not found"));
+    public RaspberryDetailsDTO getRaspberry(String id_Raspberry, Long userLog_id) {
+        Users user = this.userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("Id not found"));
 
         Raspberry raspberry = this.raspberryRepository.findById(id_Raspberry)
                 .orElseThrow(() -> new NotFoundException("Raspberry id not found"));
@@ -51,8 +51,8 @@ public class RaspberryServiceImp implements RaspberryService {
     }
 
     @Override
-    public List<RaspberryDetailsDTO> getAllRaspberry(int page, int itens, Long user_id) {
-        Users user = this.userRepository.findById(user_id).orElseThrow(() -> new NotFoundException("Id not found"));
+    public List<RaspberryDetailsDTO> getAllRaspberry(int page, int itens, Long userLog_id) {
+        Users user = this.userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("Id not found"));
         var userLog = new UserLog(user,"Raspberry","Read All Raspberry", EnumAction.READ);
         userLogRepository.save(userLog);
 
@@ -60,8 +60,8 @@ public class RaspberryServiceImp implements RaspberryService {
     }
 
     @Override
-    public RaspberryDetailsDTO createRaspberry(RaspberryCreateDTO raspberryCreateDTO, Long user_id) {
-        Users user = this.userRepository.findById(user_id).orElseThrow(() -> new NotFoundException("Id not found"));
+    public RaspberryDetailsDTO createRaspberry(RaspberryCreateDTO raspberryCreateDTO, Long userLog_id) {
+        Users user = this.userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("Id not found"));
 
         Building building = buildingRepository.findById(raspberryCreateDTO.id_building())
                 .orElseThrow(() -> new NotFoundException("Building id not found."));
@@ -86,21 +86,21 @@ public class RaspberryServiceImp implements RaspberryService {
     }
 
     @Override
-    public RaspberryDetailsDTO updateRaspberry(String id_raspberry, RaspberryUpdateDTO dados, Long user_id) {
+    public RaspberryDetailsDTO updateRaspberry(String id_raspberry, RaspberryUpdateDTO dados, Long userLog_id) {
         var raspberry = raspberryRepository.findById(id_raspberry)
                 .orElseThrow(() -> new NotFoundException("Raspberry id not found"));
         if(!raspberry.isOperative()){
             throw new OperativeFalseException("The inactive raspberry:"+ raspberry.getId_raspberry() + "cannot be accessed.");
         }
 
-        Users user = this.userRepository.findById(user_id).orElseThrow(() -> new NotFoundException("Id not found"));
+        Users user = this.userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("Id not found"));
         var userlog = new UserLog(user,"Raspberry",id_raspberry.toString(),null,"Update Raspberry: ",EnumAction.UPDATE);
 
 
         if (dados.raspberry_name() != null){
             raspberry.setId_raspberry(dados.raspberry_name());
             userlog.setField("raspberry_name");
-            userlog.setDescription("user_id to: " + dados.raspberry_name());
+            userlog.setDescription("userLog_id to: " + dados.raspberry_name());
         }
 
         if (dados.id_building() != null){
@@ -125,14 +125,14 @@ public class RaspberryServiceImp implements RaspberryService {
     }
 
     @Override
-    public void activeRaspberry(String id_Raspberry, Long user_id) {
+    public void activeRaspberry(String id_Raspberry, Long userLog_id) {
 
         var raspberry = this.raspberryRepository.findById(id_Raspberry).orElseThrow(()->new NotFoundException("Id Enviroment Not Found"));
         if (raspberry.isOperative()){
             throw new OpetativeTrueException("It is already activate");
 
         }
-        var user = userRepository.findById(user_id).orElseThrow(()->new NotFoundException("Id Enviroment Not Found"));
+        var user = userRepository.findById(userLog_id).orElseThrow(()->new NotFoundException("Id Enviroment Not Found"));
         raspberry.setOperative(true);
         var userLog = new UserLog(user,"Raspberry",id_Raspberry.toString(),"Operative","Activated Raspberry",EnumAction.UPDATE);
         raspberryRepository.save(raspberry);
@@ -140,14 +140,14 @@ public class RaspberryServiceImp implements RaspberryService {
     }
 
     @Override
-    public void inactivateRaspberry(String id_Raspberry, Long user_id) {
+    public void inactivateRaspberry(String id_Raspberry, Long userLog_id) {
         var raspberry = this.raspberryRepository.findById(id_Raspberry).orElseThrow(()->new NotFoundException("Id Enviroment Not Found"));
         if (!raspberry.isOperative()){
             throw new OperativeFalseException("It is already inactivate");
         }
 
         raspberry.setOperative(false);
-        var user = userRepository.findById(user_id).orElseThrow(()->new NotFoundException("Id Enviroment Not Found"));
+        var user = userRepository.findById(userLog_id).orElseThrow(()->new NotFoundException("Id Enviroment Not Found"));
         var userLog = new UserLog(user,"Raspberry",id_Raspberry.toString(),"Operative","Inactivated Raspberry",EnumAction.UPDATE);
         userLogRepository.save(userLog);
         raspberryRepository.save(raspberry);

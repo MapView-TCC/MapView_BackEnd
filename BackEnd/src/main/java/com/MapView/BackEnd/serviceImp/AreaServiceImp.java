@@ -34,8 +34,8 @@ public class AreaServiceImp implements AreaService {
     }
 
     @Override
-    public AreaDetailsDTO getArea(Long user_id,Long id_area) {
-        Users user = this.userRepository.findById(user_id).orElseThrow(() -> new NotFoundException("Area id not found"));
+    public AreaDetailsDTO getArea(Long userLog_id,Long id_area) {
+        Users user = this.userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("Area id not found"));
 
         Area area = this.areaRepository.findById(id_area).orElseThrow(() -> new NotFoundException("Area id not found"));
         if (!area.isOperative()){
@@ -48,8 +48,8 @@ public class AreaServiceImp implements AreaService {
     }
 
     @Override
-    public List<AreaDetailsDTO> getAllArea(int page, int itens,Long user_id) {
-        Users user = this.userRepository.findById(user_id).orElseThrow(() -> new NotFoundException("Id not found"));
+    public List<AreaDetailsDTO> getAllArea(int page, int itens,Long userLog_id) {
+        Users user = this.userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("Id not found"));
         var userLog = new UserLog(user,"Area","Read All Area", EnumAction.READ);
         userLogRepository.save(userLog);
 
@@ -57,8 +57,8 @@ public class AreaServiceImp implements AreaService {
     }
 
     @Override
-    public AreaDetailsDTO createArea(AreaCreateDTO dados, Long user_id) {
-        Users user = this.userRepository.findById(user_id).orElseThrow(() -> new NotFoundException("Id not found"));
+    public AreaDetailsDTO createArea(AreaCreateDTO dados, Long userLog_id) {
+        Users user = this.userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("Id not found"));
         var area = new Area(dados);
         Long id_area = areaRepository.save(area).getId_area();
 
@@ -69,13 +69,13 @@ public class AreaServiceImp implements AreaService {
     }
 
     @Override
-    public AreaDetailsDTO updateArea(Long id_area, AreaUpdateDTO dados,Long user_id) {
+    public AreaDetailsDTO updateArea(Long id_area, AreaUpdateDTO dados,Long userLog_id) {
         var area = areaRepository.findById(id_area).orElseThrow(() -> new NotFoundException("Id not found"));
         if(!area.isOperative()){
             throw new OperativeFalseException("The inactive area cannot be updated.");
         }
 
-        Users user = this.userRepository.findById(user_id).orElseThrow(() -> new NotFoundException("Id not found"));
+        Users user = this.userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("Id not found"));
         var userlog = new UserLog(user,"Area", id_area.toString(),null,"Infos update",EnumAction.UPDATE);
 
 
@@ -94,8 +94,8 @@ public class AreaServiceImp implements AreaService {
     }
 
     @Override
-    public void activateArea(Long id_area,Long user_id) {
-        Users user = this.userRepository.findById(user_id).orElseThrow(() -> new NotFoundException("Id not found"));
+    public void activateArea(Long id_area,Long userLog_id) {
+        Users user = this.userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("Id not found"));
 
         var area = areaRepository.findById(id_area).orElseThrow(() -> new NotFoundException("Id not found"));
         area.setOperative(true);
@@ -106,8 +106,8 @@ public class AreaServiceImp implements AreaService {
     }
 
     @Override
-    public void inactivateArea(Long id_area,Long user_id) {
-        Users user = this.userRepository.findById(user_id).orElseThrow(() -> new NotFoundException("Id not found"));
+    public void inactivateArea(Long id_area,Long userLog_id) {
+        Users user = this.userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("Id not found"));
 
         var area = areaRepository.findById(id_area).orElseThrow(() -> new NotFoundException("Id not found"));
         area.setOperative(false);

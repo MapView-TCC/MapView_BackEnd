@@ -27,8 +27,8 @@ public class MainOwnerController {
 
     @PostMapping
     @Transactional
-    public ResponseEntity<MainOwnerDetailsDTO> createMainOwner(@RequestBody @Valid MainOwnerCreateDTO mainOwnerDTO,@RequestParam Long user_id, UriComponentsBuilder uriBuilder){
-        var mainOwner = mainOwnerServiceImp.createMainOwner(mainOwnerDTO,user_id);
+    public ResponseEntity<MainOwnerDetailsDTO> createMainOwner(@RequestBody @Valid MainOwnerCreateDTO mainOwnerDTO,@RequestParam Long userLog_id, UriComponentsBuilder uriBuilder){
+        var mainOwner = mainOwnerServiceImp.createMainOwner(mainOwnerDTO,userLog_id);
 
         // boa pratica, para retornar o caminho
         var uri = uriBuilder.path("/api/v1/mainowner/{id}").buildAndExpand(mainOwner.id_owner()).toUri();
@@ -36,15 +36,15 @@ public class MainOwnerController {
     }
 
     @GetMapping
-    public ResponseEntity<List<MainOwnerDetailsDTO>> getAllMainOwner(@RequestParam Long user_id,@RequestParam int page, @RequestParam int itens){
-        var list = mainOwnerServiceImp.getAllMainOwner(page, itens, user_id);
+    public ResponseEntity<List<MainOwnerDetailsDTO>> getAllMainOwner(@RequestParam Long userLog_id,@RequestParam int page, @RequestParam int itens){
+        var list = mainOwnerServiceImp.getAllMainOwner(page, itens, userLog_id);
         return ResponseEntity.ok(list);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<MainOwnerDetailsDTO> getMainOwner(@RequestParam Long user_id, @PathVariable String mainowner_id){
+    public ResponseEntity<MainOwnerDetailsDTO> getMainOwner(@RequestParam Long userLog_id, @PathVariable String mainowner_id){
         try {
-            MainOwnerDetailsDTO mainOwner = mainOwnerServiceImp.getMainOwner(mainowner_id,user_id);
+            MainOwnerDetailsDTO mainOwner = mainOwnerServiceImp.getMainOwner(mainowner_id,userLog_id);
             return ResponseEntity.ok(mainOwner);
         } catch (NotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
@@ -53,22 +53,22 @@ public class MainOwnerController {
 
     @PostMapping("{id}")
     @Transactional
-    public ResponseEntity<MainOwnerDetailsDTO> updateMainOwner(@RequestParam Long user_id,@PathVariable String mainowner_id, @RequestBody @Valid MainOwnerUpdateDTO dados){
-        MainOwnerDetailsDTO updateMainOwner = mainOwnerServiceImp.updateMainOwner(mainowner_id, dados,user_id);
+    public ResponseEntity<MainOwnerDetailsDTO> updateMainOwner(@RequestParam Long userLog_id,@PathVariable String mainowner_id, @RequestBody @Valid MainOwnerUpdateDTO dados){
+        MainOwnerDetailsDTO updateMainOwner = mainOwnerServiceImp.updateMainOwner(mainowner_id, dados,userLog_id);
         return ResponseEntity.ok(updateMainOwner);
     }
 
     @PutMapping("/inactivate/{id}")
     @Transactional
-    public ResponseEntity<Void> inactivate(@RequestParam Long user_id,@PathVariable String mainowner_id){
-        mainOwnerServiceImp.inactivateMainOwner(mainowner_id,user_id);
+    public ResponseEntity<Void> inactivate(@RequestParam Long userLog_id,@PathVariable String mainowner_id){
+        mainOwnerServiceImp.inactivateMainOwner(mainowner_id,userLog_id);
         return ResponseEntity.ok().build();
     }
 
     @PutMapping("/active/{id}")
     @Transactional
-    public ResponseEntity<Void> active(@RequestParam Long user_id,@PathVariable String id){
-        mainOwnerServiceImp.activateMainOwner(id, user_id);
+    public ResponseEntity<Void> active(@RequestParam Long userLog_id,@PathVariable String id){
+        mainOwnerServiceImp.activateMainOwner(id, userLog_id);
         return ResponseEntity.ok().build();
     }
 

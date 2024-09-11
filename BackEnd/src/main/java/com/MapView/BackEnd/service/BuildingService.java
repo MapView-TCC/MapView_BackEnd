@@ -8,11 +8,11 @@ import java.util.List;
 
 public interface BuildingService {
 
-    BuildingDetailsDTO getBuilding(Long id_building,Long user_id);
-    List<BuildingDetailsDTO> getAllBuilding(int page, int itens,Long user_id);
-    BuildingDetailsDTO createBuilding(BuildingCreateDTO dados,Long user_id);
-    BuildingDetailsDTO updateBuilding(Long id_building, BuildingUpdateDTO dados,Long user_id);
-    void activateBuilding(Long id_building, Long user_id); // put
-    void inactivateBuilding(Long id_building, Long user_id); // put
+    BuildingDetailsDTO getBuilding(Long id_building,Long userLog_id);
+    List<BuildingDetailsDTO> getAllBuilding(int page, int itens,Long userLog_id);
+    BuildingDetailsDTO createBuilding(BuildingCreateDTO dados,Long userLog_id);
+    BuildingDetailsDTO updateBuilding(Long id_building, BuildingUpdateDTO dados,Long userLog_id);
+    void activateBuilding(Long id_building, Long userLog_id); // put
+    void inactivateBuilding(Long id_building, Long userLog_id); // put
 
 }

@@ -33,10 +33,10 @@ public class ClassesServiceImp implements ClassesService {
         this.userLogRepository = userLogRepository;
     }
     @Override
-    public ClassesDetaiLDTO createClasses(ClassesCreateDTO data, Long user_id) {
+    public ClassesDetaiLDTO createClasses(ClassesCreateDTO data, Long userLog_id) {
         var user = userRepository.findById(data.user_id()).orElseThrow(() -> new NotFoundException("User Id Not Found"));
 
-        var usuario_log = userRepository.findById(user_id).orElseThrow(() -> new NotFoundException("User Id Not Found"));
+        var usuario_log = userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("User Id Not Found"));
         var classe = new Classes(data,user);
 
         Long id_classes = classesRepository.save(classe).getId_classes();
@@ -48,8 +48,8 @@ public class ClassesServiceImp implements ClassesService {
     }
 
     @Override
-    public ClassesDetaiLDTO getClasse(Long id, Long user_id) {
-        var usuario_log = userRepository.findById(user_id).orElseThrow(() -> new NotFoundException("User Id Not Found"));
+    public ClassesDetaiLDTO getClasse(Long id, Long userLog_id) {
+        var usuario_log = userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("User Id Not Found"));
         var classe = classesRepository.findById(id).orElseThrow(() -> new NotFoundException("Classe id Not Found"));
         if (!classe.check_status()){
             throw new OperativeFalseException("The classe area cannot be read..");
@@ -62,14 +62,14 @@ public class ClassesServiceImp implements ClassesService {
     }
 
     @Override
-    public ClassesDetaiLDTO updateClasses(Long classes_id ,ClassesUpdateDTO data, Long user_id) {
+    public ClassesDetaiLDTO updateClasses(Long classes_id ,ClassesUpdateDTO data, Long userLog_id) {
         var classes = classesRepository.findById(data.user_id()).orElseThrow(() -> new NotFoundException("Class Id Not Found"));
 
         if(!classes.isOperative()){
             throw new OperativeFalseException("The inactive equipment cannot be updated.");
         }
 
-        var usuario_log = userRepository.findById(user_id).orElseThrow(() -> new NotFoundException("User Id Not Found"));
+        var usuario_log = userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("User Id Not Found"));
         var userlog = new UserLog(usuario_log,"Classes",classes_id.toString(),null,"Update Classes: ",EnumAction.UPDATE);
 
         if(data.user_id() != null){
@@ -78,8 +78,8 @@ public class ClassesServiceImp implements ClassesService {
                 throw new OperativeFalseException("The inactive user cannot be updated.");
             }
             classes.setUser(user);
-            userlog.setField("user_id");
-            userlog.setDescription("user_id to: " + data.user_id());
+            userlog.setField("userLog_id");
+            userlog.setDescription("userLog_id to: " + data.user_id());
         }
 
         if(data.classes() != null){
@@ -94,8 +94,8 @@ public class ClassesServiceImp implements ClassesService {
     }
 
     @Override
-    public List<ClassesDetaiLDTO> getAllClasses(int page, int itens, Long user_id) {
-        var usuario_log = userRepository.findById(user_id).orElseThrow(() -> new NotFoundException("User Id Not Found"));
+    public List<ClassesDetaiLDTO> getAllClasses(int page, int itens, Long userLog_id) {
+        var usuario_log = userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("User Id Not Found"));
         if(usuario_log.isOperative()) {
             var userLog = new UserLog(usuario_log, "Classes", "Read All Classes", EnumAction.READ);
             userLogRepository.save( userLog);
@@ -104,8 +104,8 @@ public class ClassesServiceImp implements ClassesService {
     }
 
     @Override
-    public void activeClass(Long class_id, Long user_id) {
-        var usuario_log = userRepository.findById(user_id).orElseThrow(() -> new NotFoundException("User Id Not Found"));
+    public void activeClass(Long class_id, Long userLog_id) {
+        var usuario_log = userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("User Id Not Found"));
         if(usuario_log.isOperative()) {
             throw new OpetativeTrueException("It is already activate");
         }
@@ -117,12 +117,12 @@ public class ClassesServiceImp implements ClassesService {
     }
 
     @Override
-    public void inactiveClass(Long class_id, Long user_id) {
+    public void inactiveClass(Long class_id, Long userLog_id) {
         var classes = classesRepository.findById(class_id).orElseThrow(() -> new NotFoundException("User Id Not Found"));
         if(classes.isOperative()) {
             throw new OperativeFalseException("It is already inactivate");
         }
-        var usuario_log = userRepository.findById(user_id).orElseThrow(() -> new NotFoundException("User Id Not Found"));
+        var usuario_log = userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("User Id Not Found"));
         classes.setOperative(false);
         classesRepository.save(classes);
         var userLog = new UserLog(usuario_log,"Classes",class_id.toString(),"Operative","Inactivate Classes",EnumAction.UPDATE);

@@ -12,12 +12,12 @@ import java.util.List;
 
 public interface EquipmentService {
 
-    EquipmentDetailsDTO getEquipment(String id_equipment, Long user_id);
-    List<EquipmentDetailsDTO> getAllEquipment(int page, int itens, Long user_id);
-    EquipmentDetailsDTO createEquipment(EquipmentCreateDTO dados, Long user_id);
-    EquipmentDetailsDTO updateEquipment(String id_equipment, EquipmentUpdateDTO dados, Long user_id);
-    void activateEquipment(String id_equipment, Long user_id); // put
-    void inactivateEquipment(String id_equipment, Long user_id); // put
+    EquipmentDetailsDTO getEquipment(String id_equipment, Long userLog_id);
+    List<EquipmentDetailsDTO> getAllEquipment(int page, int itens, Long userLog_id);
+    EquipmentDetailsDTO createEquipment(EquipmentCreateDTO dados, Long userLog_id);
+    EquipmentDetailsDTO updateEquipment(String id_equipment, EquipmentUpdateDTO dados, Long userLog_id);
+    void activateEquipment(String id_equipment, Long userLog_id); // put
+    void inactivateEquipment(String id_equipment, Long userLog_id); // put
 
     // tentativa dos filtros
     List<EquipmentDetailsDTO> getEquipmentValidation(int page, int itens, String validity,String eviroment,String mainowner, String id_owner, String id_equipment, String name_equipment, String post);

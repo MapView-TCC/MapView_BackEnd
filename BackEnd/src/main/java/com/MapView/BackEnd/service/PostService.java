@@ -8,11 +8,11 @@ import java.util.List;
 
 public interface PostService {
 
-    PostDetailDTO getPost(Long id_post,Long user_id);
-    List<PostDetailDTO> getAllPost(int page, int itens,Long user_id);
-    PostDetailDTO createPost(PostCreateDTO data,Long user_id);
-    PostDetailDTO updatePost(Long id, PostUpdateDTO data,Long user_id);
-    void activePost(Long id_post,Long user_id);
-    void inactivatePost(Long id_Post,Long user_id);
+    PostDetailDTO getPost(Long id_post,Long userLog_id);
+    List<PostDetailDTO> getAllPost(int page, int itens,Long userLog_id);
+    PostDetailDTO createPost(PostCreateDTO data,Long userLog_id);
+    PostDetailDTO updatePost(Long id, PostUpdateDTO data,Long userLog_id);
+    void activePost(Long id_post,Long userLog_id);
+    void inactivatePost(Long id_Post,Long userLog_id);
 
 }

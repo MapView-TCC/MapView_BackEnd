@@ -54,9 +54,9 @@ public class EquipmentServiceImp implements EquipmentService {
 
 
     @Override
-    public EquipmentDetailsDTO getEquipment(String id_equipment, Long user_id) {
+    public EquipmentDetailsDTO getEquipment(String id_equipment, Long userLog_id) {
         var equipment = equipmentRepository.findById(String.valueOf(id_equipment)).orElseThrow(() -> new NotFoundException("Id equipment not found!"));
-        Users user = this.userRepository.findById(user_id).orElseThrow(() -> new NotFoundException("Id not found"));
+        Users user = this.userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("Id not found"));
 
         if (!equipment.isOperative()){
             throw new OperativeFalseException("The inactive responsible cannot be accessed.");
@@ -68,8 +68,8 @@ public class EquipmentServiceImp implements EquipmentService {
     }
 
     @Override
-    public List<EquipmentDetailsDTO> getAllEquipment(int page, int itens, Long user_id) {
-        Users user = this.userRepository.findById(user_id).orElseThrow(() -> new NotFoundException("Id not found"));
+    public List<EquipmentDetailsDTO> getAllEquipment(int page, int itens, Long userLog_id) {
+        Users user = this.userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("Id not found"));
         var userLog = new UserLog(user,"Equipment","Read All Equipment", EnumAction.READ);
         userLogRepository.save(userLog);
 
@@ -78,8 +78,8 @@ public class EquipmentServiceImp implements EquipmentService {
 
 
     @Override
-    public EquipmentDetailsDTO createEquipment(EquipmentCreateDTO dados, Long user_id) {
-        Users users = this.userRepository.findById(user_id).orElseThrow(() -> new NotFoundException("Id not found!"));
+    public EquipmentDetailsDTO createEquipment(EquipmentCreateDTO dados, Long userLog_id) {
+        Users users = this.userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("Id not found!"));
 
         // location
         Location location = locationRepository.findById(Long.valueOf(dados.id_location()))
@@ -105,7 +105,7 @@ public class EquipmentServiceImp implements EquipmentService {
     }
 
     @Override
-    public EquipmentDetailsDTO updateEquipment(String id_equipment, EquipmentUpdateDTO dados, Long user_id) {
+    public EquipmentDetailsDTO updateEquipment(String id_equipment, EquipmentUpdateDTO dados, Long userLog_id) {
         var equipment = equipmentRepository.findById(id_equipment)
                 .orElseThrow(() -> new NotFoundException("Id not found"));
 
@@ -113,7 +113,7 @@ public class EquipmentServiceImp implements EquipmentService {
             throw new OperativeFalseException("The inactive equipment cannot be updated.");
         }
 
-        Users user = this.userRepository.findById(user_id).orElseThrow(() -> new NotFoundException("Id not found"));
+        Users user = this.userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("Id not found"));
         var userlog = new UserLog(user,"Equipment",dados.id_equipment(),null,"Infos update",EnumAction.UPDATE);
 
         if (dados.id_equipment() != null){
@@ -176,8 +176,8 @@ public class EquipmentServiceImp implements EquipmentService {
     }
 
     @Override
-    public void activateEquipment(String id_equipment, Long user_id) {
-        Users users = this.userRepository.findById(user_id).orElseThrow(() -> new NotFoundException("Id not found"));
+    public void activateEquipment(String id_equipment, Long userLog_id) {
+        Users users = this.userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("Id not found"));
         var equipment = equipmentRepository.findById(id_equipment).orElseThrow(() -> new NotFoundException("Id not found"));
 
         if (equipment.isOperative()){
@@ -191,14 +191,14 @@ public class EquipmentServiceImp implements EquipmentService {
     }
 
     @Override
-    public void inactivateEquipment(String id_equipment, Long user_id) {
+    public void inactivateEquipment(String id_equipment, Long userLog_id) {
 
         var equipment = equipmentRepository.findById(id_equipment).orElseThrow(() -> new NotFoundException("Id not found"));
 
         if (!equipment.isOperative()){
             throw new OperativeFalseException("It is already inactivate");
         }
-        Users users = this.userRepository.findById(user_id).orElseThrow(() -> new NotFoundException("Id not found"));
+        Users users = this.userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("Id not found"));
         equipment.setOperative(false);
         var userLog = new UserLog(users, "Equipment", id_equipment, "Operative", "Inactivated area", EnumAction.UPDATE);
         equipmentRepository.save(equipment);
