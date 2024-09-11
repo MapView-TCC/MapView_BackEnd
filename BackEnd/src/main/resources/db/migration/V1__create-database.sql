@@ -98,7 +98,7 @@ CREATE TABLE IF NOT EXISTS equipment (
     name_equipment VARCHAR(255),
     rfid BIGINT NOT NULL,
     type VARCHAR(255) NOT NULL,
-    model ENUM('T16','T14','ZBOOK') NOT NULL,
+    model ENUM('DESKTOP_TINK','NOTEBOOK_STANDARD','DESKTOP_EXTERNO', 'NOTEBOOK_ENHANCED') NOT NULL,
     validity VARCHAR(255) NOT NULL,
     admin_rights VARCHAR(255) NOT NULL,
     observation TEXT,
