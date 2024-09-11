@@ -9,10 +9,10 @@ import java.util.List;
 
 public interface RaspberryService {
 
-    RaspberryDetailsDTO getRaspberry(String id_Raspberry, Long user_id);
-    List<RaspberryDetailsDTO> getAllRaspberry(int page, int itens, Long user_id);
-    RaspberryDetailsDTO createRaspberry(RaspberryCreateDTO raspberryCreateDTO, Long user_id);
-    RaspberryDetailsDTO updateRaspberry(String id_raspberry, RaspberryUpdateDTO dados, Long user_id);
-    void activeRaspberry(String id_Raspberry, Long user_id);
-    void inactivateRaspberry(String id_Raspberry,Long user_id);
+    RaspberryDetailsDTO getRaspberry(String id_Raspberry, Long userLog_id);
+    List<RaspberryDetailsDTO> getAllRaspberry(int page, int itens, Long userLog_id);
+    RaspberryDetailsDTO createRaspberry(RaspberryCreateDTO raspberryCreateDTO, Long userLog_id);
+    RaspberryDetailsDTO updateRaspberry(String id_raspberry, RaspberryUpdateDTO dados, Long userLog_id);
+    void activeRaspberry(String id_Raspberry, Long userLog_id);
+    void inactivateRaspberry(String id_Raspberry,Long userLog_id);
 }

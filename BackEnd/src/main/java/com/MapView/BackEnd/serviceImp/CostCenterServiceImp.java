@@ -34,9 +34,9 @@ public class CostCenterServiceImp implements CostCenterService {
     }
 
     @Override
-    public CostCenterDetailsDTO getCostCenter(Long id_cost_center,Long user_id) {
+    public CostCenterDetailsDTO getCostCenter(Long id_cost_center,Long userLog_id) {
         CostCenter costCenter = this.costCenterRepository.findById(id_cost_center).orElseThrow(() -> new NotFoundException("Id not found"));
-        Users user = this.userRepository.findById(user_id).orElseThrow(() -> new NotFoundException("Id not found"));
+        Users user = this.userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("Id not found"));
 
         if (!costCenter.status_check()){
             throw new OperativeFalseException("The inactive CostCenter cannot be read..");
@@ -47,8 +47,8 @@ public class CostCenterServiceImp implements CostCenterService {
     }
 
     @Override
-    public List<CostCenterDetailsDTO> getAllCostCenter(int page,int itens,Long user_id) {
-        Users user = this.userRepository.findById(user_id).orElseThrow(() -> new NotFoundException("Id not found"));
+    public List<CostCenterDetailsDTO> getAllCostCenter(int page,int itens,Long userLog_id) {
+        Users user = this.userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("Id not found"));
         var userLog = new UserLog(user,"CostCenter","Read All CostCenter", EnumAction.READ);
         userLogRepository.save(userLog);
 
@@ -56,8 +56,8 @@ public class CostCenterServiceImp implements CostCenterService {
     }
 
     @Override
-    public CostCenterDetailsDTO createCostCenter(CostCenterCreateDTO dados,Long user_id) {
-        Users user = this.userRepository.findById(user_id).orElseThrow(() -> new NotFoundException("Id not found"));
+    public CostCenterDetailsDTO createCostCenter(CostCenterCreateDTO dados,Long userLog_id) {
+        Users user = this.userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("Id not found"));
 
         var costcenter = new CostCenter(dados);
         Long cost_id = costCenterRepository.save(costcenter).getId_cost_center();
@@ -69,14 +69,14 @@ public class CostCenterServiceImp implements CostCenterService {
     }
 
     @Override
-    public CostCenterDetailsDTO updateCostCenter(Long id, CostCenterUpdateDTO dados,Long user_id) {
+    public CostCenterDetailsDTO updateCostCenter(Long id, CostCenterUpdateDTO dados,Long userLog_id) {
         var costCenter =  costCenterRepository.findById(id).orElseThrow(() -> new NotFoundException("Cost Center Id Not Found"));
 
         if(!costCenter.isOperative()){
             throw new OperativeFalseException("The inactive equipment cannot be updated.");
         }
 
-        Users user = this.userRepository.findById(user_id).orElseThrow(() -> new NotFoundException("Id not found"));
+        Users user = this.userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("Id not found"));
         var userlog = new UserLog(user,"Area", id.toString(),null,"Infos update",EnumAction.UPDATE);
 
         if (dados.costCenter_name() != null){
@@ -91,13 +91,13 @@ public class CostCenterServiceImp implements CostCenterService {
 
     // funções para ativer e inativar
     @Override
-    public void activateCostCenter(Long id_cost_center,Long user_id) {
+    public void activateCostCenter(Long id_cost_center,Long userLog_id) {
 
         var costCenter = costCenterRepository.findById(id_cost_center).orElseThrow(() -> new NotFoundException("Id not found"));
         if(costCenter.isOperative()){
             throw new OpetativeTrueException("It is already activate");
         }
-        Users user = this.userRepository.findById(user_id).orElseThrow(() -> new NotFoundException("Id not found"));
+        Users user = this.userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("Id not found"));
         costCenter.setOperative(true);
         var userLog = new UserLog(user,"CostCenter",id_cost_center.toString(),"Operative","Inactivated Cost Center",EnumAction.UPDATE);
         costCenterRepository.save(costCenter);
@@ -108,12 +108,12 @@ public class CostCenterServiceImp implements CostCenterService {
     }
 
     @Override
-    public void inactivateCostCenter(Long id_cost_center,Long user_id) {
+    public void inactivateCostCenter(Long id_cost_center,Long userLog_id) {
         var costCenter = costCenterRepository.findById(id_cost_center).orElseThrow(() -> new NotFoundException("Const Center Not Found"));
         if(!costCenter.isOperative()){
             throw new OperativeFalseException("It is already inactivate");
         }
-        Users user = this.userRepository.findById(user_id).orElseThrow(() -> new NotFoundException("Id not found"));
+        Users user = this.userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("Id not found"));
         costCenter.setOperative(false);
         var userLog = new UserLog(user,"Cost Center",id_cost_center.toString(),"Operative","Inactivated Area",EnumAction.UPDATE);
         costCenterRepository.save(costCenter);

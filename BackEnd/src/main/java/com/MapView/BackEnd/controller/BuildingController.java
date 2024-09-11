@@ -25,8 +25,8 @@ public class BuildingController {
 
     @PostMapping
     @Transactional
-    public ResponseEntity<BuildingDetailsDTO> createBuilding(@RequestBody @Valid BuildingCreateDTO dados,@RequestParam Long user_id, UriComponentsBuilder uriBuilder){
-        var building = buildingServiceImp.createBuilding(dados,user_id);
+    public ResponseEntity<BuildingDetailsDTO> createBuilding(@RequestBody @Valid BuildingCreateDTO dados,@RequestParam Long userLog_id, UriComponentsBuilder uriBuilder){
+        var building = buildingServiceImp.createBuilding(dados,userLog_id);
 
 
         var uri = uriBuilder.path("/api/v1/bulding/{id}").buildAndExpand(building.id_building()).toUri();
@@ -34,35 +34,35 @@ public class BuildingController {
     }
 
     @GetMapping
-    public ResponseEntity<List<BuildingDetailsDTO>> getAllBuilding(@RequestParam int page, @RequestParam int itens,@RequestParam Long user_id){
-        var list = buildingServiceImp.getAllBuilding(page, itens,user_id);
+    public ResponseEntity<List<BuildingDetailsDTO>> getAllBuilding(@RequestParam int page, @RequestParam int itens,@RequestParam Long userLog_id){
+        var list = buildingServiceImp.getAllBuilding(page, itens,userLog_id);
         return ResponseEntity.ok(list);
     }
 
     @GetMapping("{id_building}")
-    public ResponseEntity<BuildingDetailsDTO> getBuilding(@PathVariable Long id_building,@RequestParam Long user_id){
-        var building = buildingServiceImp.getBuilding(id_building,user_id);
+    public ResponseEntity<BuildingDetailsDTO> getBuilding(@PathVariable Long id_building,@RequestParam Long userLog_id){
+        var building = buildingServiceImp.getBuilding(id_building,userLog_id);
         return ResponseEntity.ok(building);
     }
 
     @PostMapping("{id_building}")
     @Transactional
-    public ResponseEntity<BuildingDetailsDTO> updateBuilding(@PathVariable Long id_building,@RequestBody @Valid BuildingUpdateDTO dados,@RequestParam Long user_id){
-        BuildingDetailsDTO updateBuilding = buildingServiceImp.updateBuilding(id_building, dados, user_id);
+    public ResponseEntity<BuildingDetailsDTO> updateBuilding(@PathVariable Long id_building,@RequestBody @Valid BuildingUpdateDTO dados,@RequestParam Long userLog_id){
+        BuildingDetailsDTO updateBuilding = buildingServiceImp.updateBuilding(id_building, dados, userLog_id);
         return ResponseEntity.ok(updateBuilding);
     }
 
     @PutMapping("/inactivate/{id_building}")
     @Transactional
-    public ResponseEntity<Void> inactivate(@PathVariable Long id_building,@RequestParam Long user_id){
-        buildingServiceImp.inactivateBuilding(id_building,user_id);
+    public ResponseEntity<Void> inactivate(@PathVariable Long id_building,@RequestParam Long userLog_id){
+        buildingServiceImp.inactivateBuilding(id_building,userLog_id);
         return ResponseEntity.ok().build();
     }
 
     @PutMapping("/active/{id_building}")
     @Transactional
-    public ResponseEntity<Void> active(@PathVariable Long id_building,@RequestParam Long user_id){
-        buildingServiceImp.activateBuilding(id_building,user_id);
+    public ResponseEntity<Void> active(@PathVariable Long id_building,@RequestParam Long userLog_id){
+        buildingServiceImp.activateBuilding(id_building,userLog_id);
         return ResponseEntity.ok().build();
     }
 }

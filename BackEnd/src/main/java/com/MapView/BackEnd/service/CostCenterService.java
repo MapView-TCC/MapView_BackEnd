@@ -10,10 +10,10 @@ import java.util.List;
 
 public interface CostCenterService {
 
-    CostCenterDetailsDTO getCostCenter(Long id_cost_center,Long user_id);
-    List<CostCenterDetailsDTO> getAllCostCenter(int page, int itens,Long user_id);
-    CostCenterDetailsDTO createCostCenter(CostCenterCreateDTO dados,Long user_id);
-    CostCenterDetailsDTO updateCostCenter(Long id, CostCenterUpdateDTO dados,Long user_id);
-    void activateCostCenter(Long id_cost_cente,Long user_id); // put
-    void inactivateCostCenter(Long id_cost_center,Long user_id); // put
+    CostCenterDetailsDTO getCostCenter(Long id_cost_center,Long userLog_id);
+    List<CostCenterDetailsDTO> getAllCostCenter(int page, int itens,Long userLog_id);
+    CostCenterDetailsDTO createCostCenter(CostCenterCreateDTO dados,Long userLog_id);
+    CostCenterDetailsDTO updateCostCenter(Long id, CostCenterUpdateDTO dados,Long userLog_id);
+    void activateCostCenter(Long id_cost_cente,Long userLog_id); // put
+    void inactivateCostCenter(Long id_cost_center,Long userLog_id); // put
 }

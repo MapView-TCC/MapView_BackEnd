@@ -11,7 +11,7 @@ import java.time.Instant;
 import java.util.List;
 
 public interface UserLogService {
-    UserLogDetailDTO getUserLog(Long id_user);
+    UserLogDetailDTO getUserLog(Long userLog_id);
     List<UserLogDetailDTO> getAllUserLog(int page, int itens);
     Void createUserLog(Long user_id, UserLog userLog);
 

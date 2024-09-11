@@ -40,9 +40,9 @@ public class MainOwnerServiceImp implements MainOwnerService {
     }
 
     @Override
-    public MainOwnerDetailsDTO getMainOwner(String id_owner,Long user_id) {
+    public MainOwnerDetailsDTO getMainOwner(String id_owner,Long userLog_id) {
         var mainOwner = this.mainOwnerRepository.findById(id_owner).orElseThrow(() -> new NotFoundException("Id not found"));
-        Users user = this.userRepository.findById(user_id).orElseThrow(() -> new NotFoundException("Id not found"));
+        Users user = this.userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("Id not found"));
         if (!mainOwner.isOperative()){
             throw new NotFoundException("The inactive mainowner cannot be accessed.");
         }
@@ -54,8 +54,8 @@ public class MainOwnerServiceImp implements MainOwnerService {
     }
 
     @Override
-    public List<MainOwnerDetailsDTO> getAllMainOwner(int page, int itens,Long user_id) {
-        Users user = this.userRepository.findById(user_id).orElseThrow(() -> new NotFoundException("Id not found"));
+    public List<MainOwnerDetailsDTO> getAllMainOwner(int page, int itens,Long userLog_id) {
+        Users user = this.userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("Id not found"));
         var userLog = new UserLog(user,"MainOwner","Read All MainOwner", EnumAction.READ);
         userLogRepository.save(userLog);
 
@@ -64,8 +64,8 @@ public class MainOwnerServiceImp implements MainOwnerService {
     }
 
     @Override
-    public MainOwnerDetailsDTO createMainOwner(MainOwnerCreateDTO mainOwnerDTO,Long user_id) {
-        Users user = this.userRepository.findById(user_id).orElseThrow(() -> new NotFoundException("Id not found"));
+    public MainOwnerDetailsDTO createMainOwner(MainOwnerCreateDTO mainOwnerDTO,Long userLog_id) {
+        Users user = this.userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("Id not found"));
 
         CostCenter costCenter = costCenterRepository.findById(mainOwnerDTO.id_cost_center())
                 .orElseThrow(() -> new RuntimeException("Não encontrado!"));
@@ -81,8 +81,8 @@ public class MainOwnerServiceImp implements MainOwnerService {
     }
 
     @Override
-    public MainOwnerDetailsDTO updateMainOwner(String id_owner, MainOwnerUpdateDTO dados,Long user_id) {
-        Users user = this.userRepository.findById(user_id).orElseThrow(() -> new NotFoundException("Id not found"));
+    public MainOwnerDetailsDTO updateMainOwner(String id_owner, MainOwnerUpdateDTO dados,Long userLog_id) {
+        Users user = this.userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("Id not found"));
         var mainowner = mainOwnerRepository.findById(id_owner).orElseThrow(() -> new NotFoundException("Main Owner id not found"));
 
         if(!mainowner.isOperative()){
@@ -112,12 +112,12 @@ public class MainOwnerServiceImp implements MainOwnerService {
     }
 
     @Override
-    public void activateMainOwner(String id_owner,Long user_id) {
+    public void activateMainOwner(String id_owner,Long userLog_id) {
         var mainowner = this.mainOwnerRepository.findById(id_owner).orElseThrow(() -> new NotFoundException("Cost Center id not found"));
         if (mainowner.isOperative()){
             throw new OperativeFalseException("It is already activate");
         }
-        Users user = this.userRepository.findById(user_id).orElseThrow(() -> new NotFoundException("Id not found"));
+        Users user = this.userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("Id not found"));
         mainowner.setOperative(true);
         mainOwnerRepository.save(mainowner);
         var userLog = new UserLog(user,"MainOwner",id_owner,"Operative","Activated MainOwner",EnumAction.UPDATE);
@@ -125,12 +125,12 @@ public class MainOwnerServiceImp implements MainOwnerService {
     }
 
     @Override
-    public void inactivateMainOwner(String id_owner,Long user_id) {
+    public void inactivateMainOwner(String id_owner,Long userLog_id) {
         var mainowner = this.mainOwnerRepository.findById(id_owner).orElseThrow(()-> new NotFoundException("id NOT FOUND"));
         if (!mainowner.isOperative()){
             throw new OpetativeTrueException("It is already inactivate");
         }
-        Users user = this.userRepository.findById(user_id).orElseThrow(() -> new NotFoundException("Id not found"));
+        Users user = this.userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("Id not found"));
         mainowner.setOperative(false);
         mainOwnerRepository.save(mainowner);
         var userLog = new UserLog(user,"MainOwner",id_owner,"Operative","Inactivated MainOwner",EnumAction.UPDATE);

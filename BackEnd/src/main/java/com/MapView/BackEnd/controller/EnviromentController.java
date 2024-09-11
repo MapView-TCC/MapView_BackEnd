@@ -25,8 +25,8 @@ public class EnviromentController {
 
     @PostMapping
     @Transactional
-    public ResponseEntity<EnviromentDetailsDTO> createEnviroment(@RequestBody @Valid EnviromentCreateDTO data, @RequestParam Long user_id, UriComponentsBuilder uriBuilder){
-        var enviroment = enviromentServiceImp.createEnviroment(data, user_id);
+    public ResponseEntity<EnviromentDetailsDTO> createEnviroment(@RequestBody @Valid EnviromentCreateDTO data, @RequestParam Long userLog_id, UriComponentsBuilder uriBuilder){
+        var enviroment = enviromentServiceImp.createEnviroment(data, userLog_id);
         var uri = uriBuilder.path("/api/v1/enviroment/{id}").buildAndExpand(enviroment.id_enviroment()).toUri();
         return ResponseEntity.created(uri).body(new EnviromentDetailsDTO(enviroment.id_enviroment(),enviroment.environment_name(),enviroment.raspberry()));
     }
@@ -34,36 +34,36 @@ public class EnviromentController {
 
     @PostMapping("{enviroment_id}")
     @Transactional
-    public ResponseEntity<EnviromentDetailsDTO> updateEnviroment(@PathVariable("enviroment_id") Long enviroment_id, @RequestBody @Valid EnviromentUpdateDTO data, @RequestParam Long user_id){
-        var enviroment = enviromentServiceImp.updateEnviroment(enviroment_id, data, user_id);
+    public ResponseEntity<EnviromentDetailsDTO> updateEnviroment(@PathVariable("enviroment_id") Long enviroment_id, @RequestBody @Valid EnviromentUpdateDTO data, @RequestParam Long userLog_id){
+        var enviroment = enviromentServiceImp.updateEnviroment(enviroment_id, data, userLog_id);
         return ResponseEntity.ok(enviroment);
     }
 
     @GetMapping("/{enviroment_id}")
-    public ResponseEntity<EnviromentDetailsDTO> getEnviroment(@PathVariable("enviroment_id") Long enviroment_id, @RequestParam Long user_id){
-        var enviroment = enviromentServiceImp.getEnviroment(enviroment_id, user_id);
+    public ResponseEntity<EnviromentDetailsDTO> getEnviroment(@PathVariable("enviroment_id") Long enviroment_id, @RequestParam Long userLog_id){
+        var enviroment = enviromentServiceImp.getEnviroment(enviroment_id, userLog_id);
         return ResponseEntity.ok(enviroment);
 
     }
 
     @GetMapping
-    public ResponseEntity<List<EnviromentDetailsDTO>> getAllEnviroment(@RequestParam int page, @RequestParam int itens, @RequestParam Long user_id){
-        var enviroment = enviromentServiceImp.getAllEnviroment(page, itens, user_id);
+    public ResponseEntity<List<EnviromentDetailsDTO>> getAllEnviroment(@RequestParam int page, @RequestParam int itens, @RequestParam Long userLog_id){
+        var enviroment = enviromentServiceImp.getAllEnviroment(page, itens, userLog_id);
         return ResponseEntity.ok(enviroment);
 
     }
 
     @PutMapping("/active/{enviroment_id}")
     @Transactional
-    public ResponseEntity<Void> activeEnviroment(@PathVariable("enviroment_id") Long enviroment_id, @RequestParam Long user_id){
-        enviromentServiceImp.activateEnviroment(enviroment_id, user_id);
+    public ResponseEntity<Void> activeEnviroment(@PathVariable("enviroment_id") Long enviroment_id, @RequestParam Long userLog_id){
+        enviromentServiceImp.activateEnviroment(enviroment_id, userLog_id);
         return ResponseEntity.ok().build();
 
     }
     @PutMapping("/inactivate/{enviroment_id}")
     @Transactional
-    public ResponseEntity<Void> inactiveEnviroment(@PathVariable("enviroment_id") Long enviroment_id, @RequestParam Long user_id){
-        enviromentServiceImp.inactivateEnviroment(enviroment_id, user_id);
+    public ResponseEntity<Void> inactiveEnviroment(@PathVariable("enviroment_id") Long enviroment_id, @RequestParam Long userLog_id){
+        enviromentServiceImp.inactivateEnviroment(enviroment_id, userLog_id);
         return ResponseEntity.ok().build();
 
     }

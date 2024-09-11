@@ -27,42 +27,42 @@ public class ResponsibleController {
 
     @PostMapping
     @Transactional
-    public ResponseEntity<ResponsibleDetailsDTO> createResponsible(@RequestBody @Valid ResponsibleCrateDTO data, UriComponentsBuilder uriBuilder, @RequestParam Long user_id){
-        var responsible  = responsibleServiceImp.createResposible(data, user_id);
+    public ResponseEntity<ResponsibleDetailsDTO> createResponsible(@RequestBody @Valid ResponsibleCrateDTO data, UriComponentsBuilder uriBuilder, @RequestParam Long userLog_id){
+        var responsible  = responsibleServiceImp.createResposible(data, userLog_id);
         var uri = uriBuilder.path("/ap1/v1/responsible/{id}").buildAndExpand(responsible.responsible_id()).toUri();
         return ResponseEntity.created(uri).body(new ResponsibleDetailsDTO(responsible.responsible_id(), responsible.responsible_name(), responsible.edv(), responsible.classes(),responsible.users()));
     }
     @PostMapping("/{responsible_id}")
     @Transactional
-    public ResponseEntity<ResponsibleDetailsDTO> updateResponsible(@PathVariable("responsible_id") Long responsible_id, @RequestBody @Valid ResponsibleUpdateDTO data, @RequestParam Long user_id){
-        var responsible = responsibleServiceImp.updateResposible(responsible_id,data, user_id);
+    public ResponseEntity<ResponsibleDetailsDTO> updateResponsible(@PathVariable("responsible_id") Long responsible_id, @RequestBody @Valid ResponsibleUpdateDTO data, @RequestParam Long userLog_id){
+        var responsible = responsibleServiceImp.updateResposible(responsible_id,data, userLog_id);
         return ResponseEntity.ok(responsible);
 
     }
     @GetMapping("/{responsible_id}")
-    public ResponseEntity<ResponsibleDetailsDTO> getReponsible(@PathVariable("responsible_id") Long responsible_id, @RequestParam Long user_id){
-        var user = responsibleServiceImp.getResposible(responsible_id, user_id);
+    public ResponseEntity<ResponsibleDetailsDTO> getReponsible(@PathVariable("responsible_id") Long responsible_id, @RequestParam Long userLog_id){
+        var user = responsibleServiceImp.getResposible(responsible_id, userLog_id);
         return ResponseEntity.ok(user);
 
     }
     @GetMapping
-    public ResponseEntity<List<ResponsibleDetailsDTO>> getAllReponsible(@RequestParam int page, @RequestParam int itens, @RequestParam Long user_id){
-        var user = responsibleServiceImp.getAllResposible(page, itens, user_id);
+    public ResponseEntity<List<ResponsibleDetailsDTO>> getAllReponsible(@RequestParam int page, @RequestParam int itens, @RequestParam Long userLog_id){
+        var user = responsibleServiceImp.getAllResposible(page, itens, userLog_id);
         return ResponseEntity.ok(user);
 
     }
 
     @PutMapping("/inactivate/{responsible_id}")
     @Transactional
-    public ResponseEntity<AreaDetailsDTO> inactivate(@PathVariable Long responsible_id, @RequestParam Long user_id){
-        responsibleServiceImp.inactivateResposible(responsible_id,user_id);
+    public ResponseEntity<AreaDetailsDTO> inactivate(@PathVariable Long responsible_id, @RequestParam Long userLog_id){
+        responsibleServiceImp.inactivateResposible(responsible_id,userLog_id);
         return ResponseEntity.ok().build();
     }
 
     @PutMapping("/active/{responsible_id}")
     @Transactional
-    public ResponseEntity<AreaDetailsDTO> active( @PathVariable Long responsible_id,@RequestParam Long user_id){
-        responsibleServiceImp.activeResposible(responsible_id,user_id);
+    public ResponseEntity<AreaDetailsDTO> active( @PathVariable Long responsible_id,@RequestParam Long userLog_id){
+        responsibleServiceImp.activeResposible(responsible_id,userLog_id);
         return ResponseEntity.ok().build();
     }
 }

@@ -27,8 +27,8 @@ public class UserLogImp implements UserLogService {
     }
 
     @Override
-    public UserLogDetailDTO getUserLog(Long id_user) {
-        UserLog userLog = this.userLogRepository.findById(id_user).orElseThrow(() -> new NotFoundException("User Id not found"));
+    public UserLogDetailDTO getUserLog(Long userLog_id) {
+        UserLog userLog = this.userLogRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("User Id not found"));
 
         return new UserLogDetailDTO(userLog);
     }
