@@ -32,19 +32,22 @@ public class ResponsibleController {
         var uri = uriBuilder.path("/ap1/v1/responsible/{id}").buildAndExpand(responsible.responsible_id()).toUri();
         return ResponseEntity.created(uri).body(new ResponsibleDetailsDTO(responsible.responsible_id(), responsible.responsible_name(), responsible.edv(), responsible.classes(),responsible.users()));
     }
-    @PostMapping("/{responsible_id}")
+
+    @PutMapping("/{responsible_id}")
     @Transactional
     public ResponseEntity<ResponsibleDetailsDTO> updateResponsible(@PathVariable("responsible_id") Long responsible_id, @RequestBody @Valid ResponsibleUpdateDTO data, @RequestParam Long userLog_id){
         var responsible = responsibleServiceImp.updateResposible(responsible_id,data, userLog_id);
         return ResponseEntity.ok(responsible);
 
     }
+
     @GetMapping("/{responsible_id}")
     public ResponseEntity<ResponsibleDetailsDTO> getReponsible(@PathVariable("responsible_id") Long responsible_id, @RequestParam Long userLog_id){
         var user = responsibleServiceImp.getResposible(responsible_id, userLog_id);
         return ResponseEntity.ok(user);
 
     }
+
     @GetMapping
     public ResponseEntity<List<ResponsibleDetailsDTO>> getAllReponsible(@RequestParam int page, @RequestParam int itens, @RequestParam Long userLog_id){
         var user = responsibleServiceImp.getAllResposible(page, itens, userLog_id);

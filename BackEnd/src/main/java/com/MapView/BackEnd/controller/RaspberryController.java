@@ -39,30 +39,30 @@ public class RaspberryController {
         return ResponseEntity.ok(list);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<RaspberryDetailsDTO> getRaspberry(@PathVariable String id, @RequestParam Long userLog_id){
-        RaspberryDetailsDTO raspberry = raspberryServiceImp.getRaspberry(id, userLog_id);
+    @GetMapping("/{id_raspberry}")
+    public ResponseEntity<RaspberryDetailsDTO> getIdRaspberry(@PathVariable String id_raspberry, @RequestParam Long userLog_id){
+        RaspberryDetailsDTO raspberry = raspberryServiceImp.getRaspberry(id_raspberry, userLog_id);
         return ResponseEntity.ok(raspberry);
     }
 
-    @PostMapping("/{id_raspberry}")
+    @PutMapping("/{id_raspberry}")
     @Transactional
     public ResponseEntity<RaspberryDetailsDTO> updateRaspberry(@PathVariable String id_raspberry, @RequestBody @Valid RaspberryUpdateDTO dados, @RequestParam Long userLog_id){
         RaspberryDetailsDTO updateRaspberry = raspberryServiceImp.updateRaspberry(id_raspberry, dados, userLog_id);
         return ResponseEntity.ok(updateRaspberry);
     }
 
-    @PutMapping("/inactivate/{id}")
+    @PutMapping("/inactivate/{id_raspberry}")
     @Transactional
-    public ResponseEntity<Void> inactivate(@PathVariable String id, @RequestParam Long userLog_id){
-        raspberryServiceImp.inactivateRaspberry(id, userLog_id);
+    public ResponseEntity<Void> inactivate(@PathVariable String id_raspberry, @RequestParam Long userLog_id){
+        raspberryServiceImp.inactivateRaspberry(id_raspberry, userLog_id);
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping("/active/{id}")
+    @PutMapping("/active/{id_raspberry}")
     @Transactional
-    public ResponseEntity<Void> active(@PathVariable String id, @RequestParam Long userLog_id){
-        raspberryServiceImp.activeRaspberry(id, userLog_id);
+    public ResponseEntity<Void> active(@PathVariable String id_raspberry, @RequestParam Long userLog_id){
+        raspberryServiceImp.activeRaspberry(id_raspberry, userLog_id);
         return ResponseEntity.ok().build();
     }
 

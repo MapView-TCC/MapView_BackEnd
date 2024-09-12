@@ -7,29 +7,27 @@ import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 
 public record EquipmentUpdateDTO(
-        @NotBlank(message = "Equipment id cannot be blank") @Size(min = 9)
+        //@NotBlank(message = "Equipment id cannot be blank") @Size(min = 9)
         String id_equipment,
-        @NotBlank(message = "Equipment name cannot be blank")
+        //@NotBlank(message = "Equipment name cannot be blank")
         String name_equipment,
         @Positive
-        @Size(min = 15)
+        //@Size(min = 15)
         Long rfid,
-        @NotBlank(message = "Type cannot be blank")
+        //@NotBlank(message = "Type cannot be blank")
         String type,
         EnumModelEquipment model,
-        @NotBlank(message = "Validity cannot be blank")
+        //@NotBlank(message = "Validity cannot be blank")
         String validity,
-        @NotBlank(message = "Admin cannot be blank")
+        //@NotBlank(message = "Admin cannot be blank")
         String admin_rights,
-        @NotBlank(message = "Observation cannot be blank")
-        @Size(min = 5,message = "Observation must be under than 0")
+        //@NotBlank(message = "Observation cannot be blank")
+        //@Size(min = 5,message = "Observation must be under than 0")
         String observation,
         @Positive
         @Min(1)
         Long id_location,
-        @Positive
-        @Min(1)
-        String id_owner
+        String id_owner // id owner é um string
 ) {
 
 

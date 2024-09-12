@@ -9,8 +9,7 @@ import jakarta.validation.constraints.Positive;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-public record ClassesCreateDTO(@NotBlank
-                               EnumCourse enumCourse,
+public record ClassesCreateDTO(EnumCourse enumCourse,
                                @NotBlank(message = "Classes cannot be blank")
                                String classes,
                                @Min(1)

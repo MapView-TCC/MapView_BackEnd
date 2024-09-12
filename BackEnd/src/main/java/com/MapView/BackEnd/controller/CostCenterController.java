@@ -39,30 +39,30 @@ public class CostCenterController {
         return ResponseEntity.ok(list);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<CostCenterDetailsDTO> getIdCostCenter(@PathVariable Long id,@RequestParam Long userLog_id){
-        var costCenter = costCenterServiceImp.getCostCenter(id,userLog_id);
+    @GetMapping("/{id_costcenter}")
+    public ResponseEntity<CostCenterDetailsDTO> getIdCostCenter(@PathVariable Long id_costcenter,@RequestParam Long userLog_id){
+        var costCenter = costCenterServiceImp.getCostCenter(id_costcenter,userLog_id);
         return ResponseEntity.ok(costCenter);
     }
 
-    @PostMapping("{id}")
+    @PutMapping("{id_costcenter}")
     @Transactional
-    public ResponseEntity<CostCenterDetailsDTO> updateCostCenter(@PathVariable Long id,@RequestBody @Valid CostCenterUpdateDTO dados,@RequestParam Long userLog_id){
-        CostCenterDetailsDTO updateCost = costCenterServiceImp.updateCostCenter(id, dados,userLog_id);
+    public ResponseEntity<CostCenterDetailsDTO> updateCostCenter(@PathVariable Long id_costcenter,@RequestBody @Valid CostCenterUpdateDTO dados,@RequestParam Long userLog_id){
+        CostCenterDetailsDTO updateCost = costCenterServiceImp.updateCostCenter(id_costcenter, dados,userLog_id);
         return ResponseEntity.ok(updateCost);
     }
 
-    @PutMapping("/inactivate/{id}")
+    @PutMapping("/inactivate/{id_costcenter}")
     @Transactional
-    public ResponseEntity<Void> inactivate(@PathVariable Long cost_center_id,@RequestParam Long userLog_id){
-        costCenterServiceImp.inactivateCostCenter(cost_center_id,userLog_id);
+    public ResponseEntity<Void> inactivate(@PathVariable Long id_costcenter,@RequestParam Long userLog_id){
+        costCenterServiceImp.inactivateCostCenter(id_costcenter,userLog_id);
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping("/active/{id}")
+    @PutMapping("/active/{id_costcenter}")
     @Transactional
-    public ResponseEntity<Void> active(@PathVariable Long cost_center_id,@RequestParam Long userLog_id){
-        costCenterServiceImp.activateCostCenter(cost_center_id,userLog_id);
+    public ResponseEntity<Void> active(@PathVariable Long id_costcenter,@RequestParam Long userLog_id){
+        costCenterServiceImp.activateCostCenter(id_costcenter,userLog_id);
         return ResponseEntity.ok().build();
     }
 }

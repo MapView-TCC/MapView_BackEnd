@@ -29,9 +29,9 @@ public class EquipmentResponsibleController {
         return ResponseEntity.ok(list);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<EquipmentResponsibleDetailsDTO> getEquipmentResponsible(@PathVariable Long id){
-        EquipmentResponsibleDetailsDTO equipment = equipmentResponsibleServiceImp.getEquipmentResponsible(id);
+    @GetMapping("/{id_equip_resp}")
+    public ResponseEntity<EquipmentResponsibleDetailsDTO> getEquipmentResponsible(@PathVariable Long id_equip_resp){
+        EquipmentResponsibleDetailsDTO equipment = equipmentResponsibleServiceImp.getEquipmentResponsible(id_equip_resp);
         return ResponseEntity.ok(equipment);
     }
 
@@ -45,24 +45,24 @@ public class EquipmentResponsibleController {
         return ResponseEntity.created(uri).body(new EquipmentResponsibleDetailsDTO(equipmentResponsible.id_equip_resp(), equipmentResponsible.equipment(), equipmentResponsible.responsible(), equipmentResponsible.start_usage(), equipmentResponsible.end_usage()));
     }
 
-    @PostMapping("/{id_equip_resp}")
+    @PutMapping("/{id_equip_resp}")
     @Transactional
     public ResponseEntity<EquipmentResponsibleDetailsDTO> updateEquipmentResponsible(@PathVariable Long id_equip_resp, @RequestBody @Valid EquipmentResponsibleUpdateDTO dados){
         EquipmentResponsibleDetailsDTO updateEquipmentResponsible = equipmentResponsibleServiceImp.updateEquipmentResponsible(id_equip_resp, dados);
         return ResponseEntity.ok(updateEquipmentResponsible);
     }
 
-    @PutMapping("/inactivate/{id}")
+    @PutMapping("/inactivate/{id_equip_resp}")
     @Transactional
-    public ResponseEntity<Void> inactivate(@PathVariable Long id){
-        equipmentResponsibleServiceImp.inactivateEquipmentResponsible(id);
+    public ResponseEntity<Void> inactivate(@PathVariable Long id_equip_resp){
+        equipmentResponsibleServiceImp.inactivateEquipmentResponsible(id_equip_resp);
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping("/active/{id}")
+    @PutMapping("/active/{id_equip_resp}")
     @Transactional
-    public ResponseEntity<Void> active(@PathVariable Long id){
-        equipmentResponsibleServiceImp.activateEquipmentResponsible(id);
+    public ResponseEntity<Void> active(@PathVariable Long id_equip_resp){
+        equipmentResponsibleServiceImp.activateEquipmentResponsible(id_equip_resp);
         return ResponseEntity.ok().build();
     }
 }

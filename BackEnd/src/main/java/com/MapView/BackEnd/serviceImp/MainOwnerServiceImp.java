@@ -95,6 +95,7 @@ public class MainOwnerServiceImp implements MainOwnerService {
         if (!mainowner.isOperative()){
             return null;
         }
+
         if (dados.owner_name() != null){
             mainowner.setOwner_name(dados.owner_name());
             userlog.setField("Main Owner name to: "+dados.owner_name());

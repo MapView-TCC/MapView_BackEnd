@@ -32,16 +32,16 @@ public class AccessHistoryController {
         return ResponseEntity.created(uri).body(new AccessHistoryDetailsDTO(history.id_history(), history.users(), history.login_dateTime(), history.logout_dateTime())).getBody();
     }
 
-    @PostMapping("/{id}")
+    @PutMapping("/{id_access_history}")
     @Transactional
-    public ResponseEntity<AccessHistoryDetailsDTO> updateAccessHistory(@PathVariable Long id){
-        AccessHistoryDetailsDTO historyDetailsDTO = accessHistoryServiceImp.updateAccessHistory(id);
+    public ResponseEntity<AccessHistoryDetailsDTO> updateAccessHistory(@PathVariable Long id_access_history){
+        AccessHistoryDetailsDTO historyDetailsDTO = accessHistoryServiceImp.updateAccessHistory(id_access_history);
         return ResponseEntity.ok(historyDetailsDTO);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<AccessHistoryDetailsDTO> getAccessHistory(@PathVariable Long id){
-        var accessHistory = accessHistoryServiceImp.getAccessHistory(id);
+    @GetMapping("/{id_access_history}")
+    public ResponseEntity<AccessHistoryDetailsDTO> getAccessHistory(@PathVariable Long id_access_history){
+        var accessHistory = accessHistoryServiceImp.getAccessHistory(id_access_history);
         return ResponseEntity.ok(accessHistory);
     }
 

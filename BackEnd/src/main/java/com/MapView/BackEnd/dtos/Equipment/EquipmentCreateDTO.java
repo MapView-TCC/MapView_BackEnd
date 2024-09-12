@@ -4,7 +4,7 @@ import com.MapView.BackEnd.enums.EnumModelEquipment;
 import jakarta.validation.constraints.*;
 
 public record EquipmentCreateDTO(
-        @NotBlank(message = "Equipment id cannot be blank") @Size(min = 9)
+        @NotBlank(message = "Equipment id cannot be blank") @Size(min = 7)
         String id_equipment,
         @NotBlank(message = "Equipment name cannot be blank")
         String name_equipment,

@@ -74,7 +74,7 @@ public class ClassesServiceImp implements ClassesService {
 
         if(data.user_id() != null){
             var user = userRepository.findById(data.user_id()).orElseThrow(() -> new NotFoundException("User Id Not Found"));
-            if (user.isOperative()){
+            if (!user.isOperative()){
                 throw new OperativeFalseException("The inactive user cannot be updated.");
             }
             classes.setUser(user);

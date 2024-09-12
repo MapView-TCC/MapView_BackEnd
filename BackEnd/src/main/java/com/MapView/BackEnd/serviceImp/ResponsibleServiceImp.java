@@ -86,48 +86,59 @@ public class ResponsibleServiceImp implements ResponsibleService {
     }
 
     @Override
-    public ResponsibleDetailsDTO updateResposible(Long id_responsible, ResponsibleUpdateDTO data, Long userLog_id ) {
-        var responsible = responsibleRepository.findById(id_responsible).orElseThrow(() -> new NotFoundException("Responsible Id Not Found"));
-        if(responsible.isOperative()){
-            throw new OperativeFalseException("The inactive classes cannot be accessed.");
+    public ResponsibleDetailsDTO updateResposible(Long id_responsible, ResponsibleUpdateDTO data, Long userLog_id) {
+
+        var responsible = responsibleRepository.findById(id_responsible)
+                .orElseThrow(() -> new NotFoundException("Responsible Id Not Found"));
+
+        if (!responsible.isOperative()) {
+            throw new OperativeFalseException("The inactive responsible cannot be accessed.");
         }
 
-        Users userLog = this.userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("Id not found"));
-        var userlog = new UserLog(userLog,"Resposible", id_responsible.toString(),null,"Infos update",EnumAction.UPDATE);
+        Users userLog = this.userRepository.findById(userLog_id)
+                .orElseThrow(() -> new NotFoundException("User Log Id Not Found"));
+        var userlog = new UserLog(userLog, "Responsible", id_responsible.toString(), null, "Info update", EnumAction.UPDATE);
 
-        if(data.responsible_name() != null){
+
+        if (data.responsible_name() != null) {
             responsible.setResponsible_name(data.responsible_name());
-            userlog.setField("Responsible name to: " + data.responsible_name());
+            userlog.setField("Responsible name updated to: " + data.responsible_name());
         }
 
-        if(data.edv() != null){
+
+        if (data.edv() != null) {
             responsible.setEdv(data.edv());
-            userlog.setField(userlog.getField() + " ," + "Responsible edv to: " + data.edv());
+            userlog.setField(userlog.getField() + " ,Responsible EDV updated to: " + data.edv());
         }
 
-        if(data.id_classes() != null){
-            var classeEntity = classesRepository.findById(data.id_classes()).orElseThrow(() -> new NotFoundException("Responsible Id Not Found"));
-            if(classeEntity.isOperative()){
+
+        if (data.id_classes() != null) {
+            var classEntity = classesRepository.findById(data.id_classes())
+                    .orElseThrow(() -> new NotFoundException("Class Id Not Found"));
+            if (!classEntity.isOperative()) {
                 throw new OperativeFalseException("The inactive classes cannot be accessed.");
             }
-            responsible.setClasses(classeEntity);
-            userlog.setField(userlog.getField() + " ," + "Responsible id classes to: " + data.id_classes());
+            responsible.setClasses(classEntity);
+            userlog.setField(userlog.getField() + " ,Responsible class updated to: " + data.id_classes());
         }
 
-        if(data.id_user() != null){
-            var user = userRepository.findById(data.id_user()).orElseThrow(() -> new NotFoundException("User Id Not Found"));
-            if (user.isOperative()){
-                throw new OperativeFalseException("The inactive classes cannot be accessed.");
+
+        if (data.id_user() != null) {
+            var user = userRepository.findById(data.id_user())
+                    .orElseThrow(() -> new NotFoundException("User Id Not Found"));
+            if (!user.isOperative()) {
+                throw new OperativeFalseException("The inactive user cannot be accessed.");
             }
             responsible.setUser(user);
-            userlog.setField(userlog.getField() + " ," + "Responsible id user to: " + data.id_user());
+            userlog.setField(userlog.getField() + " ,Responsible user updated to: " + data.id_user());
         }
 
         userLogRepository.save(userlog);
         responsibleRepository.save(responsible);
-        return new ResponsibleDetailsDTO(responsible);
 
+        return new ResponsibleDetailsDTO(responsible);
     }
+
 
     @Override
     public void activeResposible(Long id_resposible, Long userLog_id) {

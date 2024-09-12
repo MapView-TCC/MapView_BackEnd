@@ -45,7 +45,7 @@ public class BuildingController {
         return ResponseEntity.ok(building);
     }
 
-    @PostMapping("{id_building}")
+    @PutMapping("{id_building}")
     @Transactional
     public ResponseEntity<BuildingDetailsDTO> updateBuilding(@PathVariable Long id_building,@RequestBody @Valid BuildingUpdateDTO dados,@RequestParam Long userLog_id){
         BuildingDetailsDTO updateBuilding = buildingServiceImp.updateBuilding(id_building, dados, userLog_id);

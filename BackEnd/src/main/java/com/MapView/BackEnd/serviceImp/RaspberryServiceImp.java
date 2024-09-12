@@ -89,6 +89,7 @@ public class RaspberryServiceImp implements RaspberryService {
     public RaspberryDetailsDTO updateRaspberry(String id_raspberry, RaspberryUpdateDTO dados, Long userLog_id) {
         var raspberry = raspberryRepository.findById(id_raspberry)
                 .orElseThrow(() -> new NotFoundException("Raspberry id not found"));
+
         if(!raspberry.isOperative()){
             throw new OperativeFalseException("The inactive raspberry:"+ raspberry.getId_raspberry() + "cannot be accessed.");
         }
@@ -127,12 +128,12 @@ public class RaspberryServiceImp implements RaspberryService {
     @Override
     public void activeRaspberry(String id_Raspberry, Long userLog_id) {
 
-        var raspberry = this.raspberryRepository.findById(id_Raspberry).orElseThrow(()->new NotFoundException("Id Enviroment Not Found"));
+        var raspberry = this.raspberryRepository.findById(id_Raspberry).orElseThrow(()->new NotFoundException("Id Raspberry Not Found"));
         if (raspberry.isOperative()){
             throw new OpetativeTrueException("It is already activate");
 
         }
-        var user = userRepository.findById(userLog_id).orElseThrow(()->new NotFoundException("Id Enviroment Not Found"));
+        var user = userRepository.findById(userLog_id).orElseThrow(()->new NotFoundException("Id Raspberry Not Found"));
         raspberry.setOperative(true);
         var userLog = new UserLog(user,"Raspberry",id_Raspberry.toString(),"Operative","Activated Raspberry",EnumAction.UPDATE);
         raspberryRepository.save(raspberry);
@@ -141,13 +142,14 @@ public class RaspberryServiceImp implements RaspberryService {
 
     @Override
     public void inactivateRaspberry(String id_Raspberry, Long userLog_id) {
-        var raspberry = this.raspberryRepository.findById(id_Raspberry).orElseThrow(()->new NotFoundException("Id Enviroment Not Found"));
+        var raspberry = this.raspberryRepository.findById(id_Raspberry).orElseThrow(() -> new NotFoundException("Id Raspberry Not Found"));
+
         if (!raspberry.isOperative()){
             throw new OperativeFalseException("It is already inactivate");
         }
 
         raspberry.setOperative(false);
-        var user = userRepository.findById(userLog_id).orElseThrow(()->new NotFoundException("Id Enviroment Not Found"));
+        var user = userRepository.findById(userLog_id).orElseThrow(()->new NotFoundException("Id Raspberry Not Found"));
         var userLog = new UserLog(user,"Raspberry",id_Raspberry.toString(),"Operative","Inactivated Raspberry",EnumAction.UPDATE);
         userLogRepository.save(userLog);
         raspberryRepository.save(raspberry);

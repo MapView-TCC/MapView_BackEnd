@@ -27,7 +27,7 @@ public class LocationController {
     public ResponseEntity<LocationDetalsDTO> createLocation(LocationCreateDTO data, UriComponentsBuilder uriBuilder){
         //String email= jwt.getClaimAsString("email");
         var loc = locationServiceImp.createLocation(data);
-        var uri  = uriBuilder.path("/ap1/v1/location/{location_id}").buildAndExpand(loc.id_location()).toUri();
+        var uri  = uriBuilder.path("/ap1/v1/location/{id_location}").buildAndExpand(loc.id_location()).toUri();
         return ResponseEntity.created(uri).body(new LocationDetalsDTO(loc.id_location(),loc.post(),loc.enviroment()));
     }
 
@@ -37,9 +37,9 @@ public class LocationController {
         return ResponseEntity.ok(loc);
     }
 
-    @GetMapping("/{location_id}")
-    public ResponseEntity<LocationDetalsDTO> getLocation(@PathVariable("location_id") Long location_id){
-        var loc = locationServiceImp.getLocation(location_id);
+    @GetMapping("/{id_location}")
+    public ResponseEntity<LocationDetalsDTO> getLocation(@PathVariable("id_location") Long id_location){
+        var loc = locationServiceImp.getLocation(id_location);
         return ResponseEntity.ok(loc);
 
     }

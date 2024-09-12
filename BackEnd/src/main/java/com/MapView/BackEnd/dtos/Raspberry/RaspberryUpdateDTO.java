@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
 
 public record RaspberryUpdateDTO(
-        @NotBlank(message = "Raspberry name cannot be blank.")
+        //@NotBlank(message = "Raspberry name cannot be blank.")
         String raspberry_name,
         @Min(value = 1, message = "CostCenter Id cannot be smaller than 0.")
         @Positive(message = "CostCenter Id must be Positive.")

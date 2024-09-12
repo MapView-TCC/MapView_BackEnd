@@ -222,9 +222,9 @@ public class EquipmentServiceImp implements EquipmentService {
         //Inner Join
         Join<Equipment,MainOwner> mainOwnerJoin = equipmentRoot.join("owner");
         Join<Equipment, Location> locationJoin = equipmentRoot.join("location");
-        Join<Equipment, Location> locationPostJoin = equipmentRoot.join("post");
+        Join<Equipment, Location> locationPostJoin = equipmentRoot.join("location");
         Join<Location, Post> PostJoin = locationPostJoin.join("post");
-        Join<Location, Enviroment> enviromentJoin = locationJoin.join("id_environment");
+        Join<Location, Enviroment> enviromentJoin = locationJoin.join("environment");
 
 
         List<Predicate> predicate = new ArrayList<>();

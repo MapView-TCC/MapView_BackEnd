@@ -41,34 +41,36 @@ public class MainOwnerController {
         return ResponseEntity.ok(list);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<MainOwnerDetailsDTO> getMainOwner(@RequestParam Long userLog_id, @PathVariable String mainowner_id){
-        try {
-            MainOwnerDetailsDTO mainOwner = mainOwnerServiceImp.getMainOwner(mainowner_id,userLog_id);
-            return ResponseEntity.ok(mainOwner);
-        } catch (NotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        }
+    @GetMapping("/{mainowner_id}")
+    public ResponseEntity<MainOwnerDetailsDTO> getMainOwner(@PathVariable String mainowner_id, @RequestParam Long userLog_id){
+        MainOwnerDetailsDTO mainOwnerDetailsDTO = mainOwnerServiceImp.getMainOwner(mainowner_id, userLog_id);
+        return ResponseEntity.ok(mainOwnerDetailsDTO);
+//        try {
+//            MainOwnerDetailsDTO mainOwner = mainOwnerServiceImp.getMainOwner(mainowner_id,userLog_id);
+//            return ResponseEntity.ok(mainOwner);
+//        } catch (NotFoundException e) {
+//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+//        }
     }
 
-    @PostMapping("{id}")
+    @PutMapping("{mainowner_id}")
     @Transactional
     public ResponseEntity<MainOwnerDetailsDTO> updateMainOwner(@RequestParam Long userLog_id,@PathVariable String mainowner_id, @RequestBody @Valid MainOwnerUpdateDTO dados){
         MainOwnerDetailsDTO updateMainOwner = mainOwnerServiceImp.updateMainOwner(mainowner_id, dados,userLog_id);
         return ResponseEntity.ok(updateMainOwner);
     }
 
-    @PutMapping("/inactivate/{id}")
+    @PutMapping("/inactivate/{mainowner_id}")
     @Transactional
     public ResponseEntity<Void> inactivate(@RequestParam Long userLog_id,@PathVariable String mainowner_id){
         mainOwnerServiceImp.inactivateMainOwner(mainowner_id,userLog_id);
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping("/active/{id}")
+    @PutMapping("/active/{mainowner_id}")
     @Transactional
-    public ResponseEntity<Void> active(@RequestParam Long userLog_id,@PathVariable String id){
-        mainOwnerServiceImp.activateMainOwner(id, userLog_id);
+    public ResponseEntity<Void> active(@RequestParam Long userLog_id,@PathVariable String mainowner_id){
+        mainOwnerServiceImp.activateMainOwner(mainowner_id, userLog_id);
         return ResponseEntity.ok().build();
     }
 

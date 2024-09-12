@@ -61,30 +61,30 @@ public class EquipmentController {
         return ResponseEntity.ok(list);
     }
 
-    @GetMapping("/{equipament_id}")
-    public ResponseEntity<EquipmentDetailsDTO> getById(@PathVariable("equipament_id") String id, @RequestParam Long userLog_id){
-        var equipment = equipmentServiceImp.getEquipment(id, userLog_id);
+    @GetMapping("/{id_equipment}")
+    public ResponseEntity<EquipmentDetailsDTO> getById(@PathVariable("id_equipment") String id_equipment, @RequestParam Long userLog_id){
+        var equipment = equipmentServiceImp.getEquipment(id_equipment, userLog_id);
         return ResponseEntity.ok(equipment);
     }
 
-    @PutMapping("/inactivate/{id}")
+    @PutMapping("/inactivate/{id_equipment}")
     @Transactional
-    public ResponseEntity<Void> inactivate(@PathVariable String id, @RequestParam Long userLog_id){
-        equipmentServiceImp.inactivateEquipment(id, userLog_id);
+    public ResponseEntity<Void> inactivate(@PathVariable String id_equipment, @RequestParam Long userLog_id){
+        equipmentServiceImp.inactivateEquipment(id_equipment, userLog_id);
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping("/active/{id}")
+    @PutMapping("/active/{id_equipment}")
     @Transactional
-    public ResponseEntity<Void> active(@PathVariable String id, @RequestParam Long userLog_id){
-        equipmentServiceImp.activateEquipment(id, userLog_id);
+    public ResponseEntity<Void> active(@PathVariable String id_equipment, @RequestParam Long userLog_id){
+        equipmentServiceImp.activateEquipment(id_equipment, userLog_id);
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/{id}")
+    @PutMapping("/{id_equipment}")
     @Transactional
-    public ResponseEntity<EquipmentDetailsDTO> updateEquipment(@PathVariable String id, @RequestBody @Valid EquipmentUpdateDTO dados, @RequestParam Long userLog_id){
-        EquipmentDetailsDTO equipmentDetailsDTO = equipmentServiceImp.updateEquipment(id, dados, userLog_id);
+    public ResponseEntity<EquipmentDetailsDTO> updateEquipment(@PathVariable String id_equipment, @RequestBody @Valid EquipmentUpdateDTO dados, @RequestParam Long userLog_id){
+        EquipmentDetailsDTO equipmentDetailsDTO = equipmentServiceImp.updateEquipment(id_equipment, dados, userLog_id);
         return ResponseEntity.ok(equipmentDetailsDTO);
     }
 

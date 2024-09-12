@@ -7,8 +7,7 @@ import jakarta.validation.constraints.Positive;
 
 import java.time.LocalDateTime;
 
-public record ClassesUpdateDTO(@NotBlank(message = "Classes cannot be blank")
-                               EnumCourse enumCourse,
+public record ClassesUpdateDTO(EnumCourse enumCourse,
                                @NotBlank(message = "Classes cannot be blank")
                                String classes,
                                @Min(1)

@@ -33,9 +33,9 @@ public class ClassesController {
 
     }
 
-    @GetMapping("/{classes_id}")
-    public ResponseEntity<ClassesDetaiLDTO> getClasses(@PathVariable("classes_id") Long classes_id, @RequestParam Long userLog_id) {
-        var classe = classesServiceImp.getClasse(classes_id, userLog_id);
+    @GetMapping("/{id_classes}")
+    public ResponseEntity<ClassesDetaiLDTO> getClasses(@PathVariable("id_classes") Long id_classes, @RequestParam Long userLog_id) {
+        var classe = classesServiceImp.getClasse(id_classes, userLog_id);
         return ResponseEntity.ok(classe);
     }
 
@@ -44,26 +44,27 @@ public class ClassesController {
         var classes = classesServiceImp.getAllClasses(page, itens, userLog_id);
         return ResponseEntity.ok(classes);
     }
-    @PostMapping("/{class_id}")
+
+    @PutMapping("/{id_classes}")
     @Transactional
-    public ResponseEntity<ClassesDetaiLDTO> updateClass(@PathVariable("class_id") Long class_id, @RequestBody @Valid ClassesUpdateDTO data, @RequestParam Long userLog_id){
-        var classe = classesServiceImp.updateClasses(class_id, data, userLog_id);
+    public ResponseEntity<ClassesDetaiLDTO> updateClass(@PathVariable("id_classes") Long id_classes, @RequestBody @Valid ClassesUpdateDTO data, @RequestParam Long userLog_id){
+        var classe = classesServiceImp.updateClasses(id_classes, data, userLog_id);
         return ResponseEntity.ok(classe);
     }
 
 
 
-    @PutMapping("/active/{class_id}")
+    @PutMapping("/active/{id_classes}")
     @Transactional
-    public ResponseEntity<Void> activeClass(@PathVariable("class_id") Long class_id, @RequestParam Long userLog_id){
-        classesServiceImp.activeClass(class_id, userLog_id);
+    public ResponseEntity<Void> activeClass(@PathVariable("id_classes") Long id_classes, @RequestParam Long userLog_id){
+        classesServiceImp.activeClass(id_classes, userLog_id);
         return ResponseEntity.ok().build();
 
     }
-    @PutMapping("/inactive/{class_id}")
+    @PutMapping("/inactive/{id_classes}")
     @Transactional
-    public ResponseEntity<Void> inactiveClass(@PathVariable("class_id") Long class_id, @RequestParam Long userLog_id){
-        classesServiceImp.inactiveClass(class_id, userLog_id);
+    public ResponseEntity<Void> inactiveClass(@PathVariable("id_classes") Long id_classes, @RequestParam Long userLog_id){
+        classesServiceImp.inactiveClass(id_classes, userLog_id);
         return ResponseEntity.ok().build();
 
     }

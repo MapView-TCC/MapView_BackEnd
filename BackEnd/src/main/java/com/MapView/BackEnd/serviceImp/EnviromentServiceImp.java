@@ -40,10 +40,13 @@ public class EnviromentServiceImp implements EnviromentService {
     @Override
     public EnviromentDetailsDTO getEnviroment(Long enviroment_id, Long userLog_id) {
         var enviroment = enviromentRepository.findById(enviroment_id).orElseThrow(() -> new NotFoundException("Enviroment Id Not Found"));
+
         if(!enviroment.isOperative()){
-            throw new OperativeFalseException("C");
+            throw new OperativeFalseException("Id Inactive");
         }
-        var userLog = new UserLog(null,"Enviroment",enviroment_id.toString(),"Read Enviroment", EnumAction.READ);
+
+        var id_user = userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("User Id Not Found"));
+        var userLog = new UserLog(id_user,"Enviroment",enviroment_id.toString(),"Read Enviroment", EnumAction.READ);
         userLogRepository.save(userLog);
 
         return new EnviromentDetailsDTO(enviroment);
@@ -51,7 +54,8 @@ public class EnviromentServiceImp implements EnviromentService {
 
     @Override
     public List<EnviromentDetailsDTO> getAllEnviroment(int page, int itens, Long userLog_id) {
-        var userLog = new UserLog(null,"Enviroment","Read All Enviroment", EnumAction.READ);
+        var id_user = userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("User Id Not Found"));
+        var userLog = new UserLog(id_user,"Enviroment","Read All Enviroment", EnumAction.READ);
         userLogRepository.save(userLog);
 
         return this.enviromentRepository.findEnviromentByOperativeTrue(PageRequest.of(page, itens)).stream().map(EnviromentDetailsDTO::new).toList();
