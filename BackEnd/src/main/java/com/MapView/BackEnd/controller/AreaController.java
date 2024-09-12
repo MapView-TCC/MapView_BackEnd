@@ -7,6 +7,7 @@ import com.MapView.BackEnd.dtos.Area.AreaUpdateDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +20,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/area")
+@Tag(name ="Area")
 public class AreaController {
 
 
@@ -27,7 +29,7 @@ public class AreaController {
     public AreaController(AreaServiceImp areaServiceImp) {
         this.areaServiceImp = areaServiceImp;
     }
-    @Operation(description = "Operation to create a new area.")
+    @Operation(description = "Operation to create a new area.", method = "GET",tags = "Pesquisar um usuario.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Area successfully saved."),
             @ApiResponse(responseCode = "200", description = "Area successfully saved."),
