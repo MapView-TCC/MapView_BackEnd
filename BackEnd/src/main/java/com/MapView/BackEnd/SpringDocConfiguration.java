@@ -2,6 +2,7 @@ package com.MapView.BackEnd;
 
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.security.SecurityScheme;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -11,7 +12,10 @@ import org.springframework.context.annotation.Configuration;
 public class SpringDocConfiguration {
     @Bean
     public OpenAPI customOpenAPI() {
-        return new OpenAPI()
+        return new OpenAPI().info(
+                new Info().description("A api do MapView ela tem como objetivo controlar e rastrear os acesos de equipamentos por meio de uma estrutara RFID no ambiente da CaP/ETS a")
+                        .version("1.0.0").title("Api MapView")
+                )
                 .components(new Components()
                         .addSecuritySchemes("bearer-key", new SecurityScheme()
                                 .type(SecurityScheme.Type.HTTP)

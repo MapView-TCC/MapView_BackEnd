@@ -10,6 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Target;
 import java.util.List;
 
 @RestController
@@ -22,8 +24,8 @@ public class AreaController {
     public AreaController(AreaServiceImp areaServiceImp) {
         this.areaServiceImp = areaServiceImp;
     }
-
-    @PostMapping
+    
+    @PostMapping(produces="application/json", consumes="application/json")
     @Transactional
     public AreaDetailsDTO createArea(@RequestBody @Valid AreaCreateDTO dados,@RequestParam Long userLog_id, UriComponentsBuilder uriBuilder){
         var area = areaServiceImp.createArea(dados,userLog_id);
