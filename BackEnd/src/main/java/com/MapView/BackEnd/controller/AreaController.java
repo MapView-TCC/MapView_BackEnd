@@ -4,6 +4,9 @@ import com.MapView.BackEnd.serviceImp.AreaServiceImp;
 import com.MapView.BackEnd.dtos.Area.AreaCreateDTO;
 import com.MapView.BackEnd.dtos.Area.AreaDetailsDTO;
 import com.MapView.BackEnd.dtos.Area.AreaUpdateDTO;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +27,14 @@ public class AreaController {
     public AreaController(AreaServiceImp areaServiceImp) {
         this.areaServiceImp = areaServiceImp;
     }
-    
+    @Operation(description = "Operation to create a new area.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Area successfully saved."),
+            @ApiResponse(responseCode = "200", description = "Area successfully saved."),
+            @ApiResponse(responseCode = "417", description = "Data validation error."),
+            @ApiResponse(responseCode = "500", description = "Internal server error.")
+    })
+
     @PostMapping(produces="application/json", consumes="application/json")
     @Transactional
     public AreaDetailsDTO createArea(@RequestBody @Valid AreaCreateDTO dados,@RequestParam Long userLog_id, UriComponentsBuilder uriBuilder){
