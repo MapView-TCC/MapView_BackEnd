@@ -3,6 +3,7 @@ package com.MapView.BackEnd.serviceImp;
 import com.MapView.BackEnd.entities.UserLog;
 import com.MapView.BackEnd.entities.Users;
 import com.MapView.BackEnd.enums.EnumAction;
+import com.MapView.BackEnd.infra.BlankErrorException;
 import com.MapView.BackEnd.infra.OperativeFalseException;
 import com.MapView.BackEnd.infra.OpetativeTrueException;
 import com.MapView.BackEnd.repository.ClassesRepository;
@@ -41,12 +42,12 @@ public class ResponsibleServiceImp implements ResponsibleService {
 
         var user = userRepository.findById(data.id_user()).orElseThrow(() -> new NotFoundException("User Id Not Found"));
         if(!user.isOperative()){
-            throw new OperativeFalseException("The inactive  cannot be accessed.");
+            throw new OperativeFalseException("The inactive User cannot be accessed.");
         }
 
         var classe = classesRepository.findById(data.id_classes()).orElseThrow(() -> new NotFoundException("Class Id Not Found"));
         if(!classe.isOperative()){
-
+            throw new OperativeFalseException("The inactive Class cannot be accessed.");
         }
 
         var responsible = new Responsible(data.responsible_name(), data.edv(), classe,user);
@@ -101,12 +102,18 @@ public class ResponsibleServiceImp implements ResponsibleService {
 
 
         if (data.responsible_name() != null) {
+            if(data.edv().isBlank()){
+                throw new BlankErrorException("Responsible name cannot be blank");
+            }
             responsible.setResponsible_name(data.responsible_name());
             userlog.setField("Responsible name updated to: " + data.responsible_name());
         }
 
 
         if (data.edv() != null) {
+            if(data.edv().isBlank()){
+                throw new BlankErrorException("Edv cannot be blank");
+            }
             responsible.setEdv(data.edv());
             userlog.setField(userlog.getField() + " ,Responsible EDV updated to: " + data.edv());
         }
