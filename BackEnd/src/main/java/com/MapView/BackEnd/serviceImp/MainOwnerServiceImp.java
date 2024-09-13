@@ -5,6 +5,7 @@ import com.MapView.BackEnd.dtos.MainOwner.MainOwnerDetailsDTO;
 import com.MapView.BackEnd.entities.UserLog;
 import com.MapView.BackEnd.entities.Users;
 import com.MapView.BackEnd.enums.EnumAction;
+import com.MapView.BackEnd.infra.BlankErrorException;
 import com.MapView.BackEnd.infra.OperativeFalseException;
 import com.MapView.BackEnd.infra.OpetativeTrueException;
 import com.MapView.BackEnd.repository.CostCenterRepository;
@@ -64,13 +65,14 @@ public class MainOwnerServiceImp implements MainOwnerService {
     }
 
     @Override
-    public MainOwnerDetailsDTO createMainOwner(MainOwnerCreateDTO mainOwnerDTO,Long userLog_id) {
+    public MainOwnerDetailsDTO createMainOwner(MainOwnerCreateDTO data,Long userLog_id) {
         Users user = this.userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("Id not found"));
 
-        CostCenter costCenter = costCenterRepository.findById(mainOwnerDTO.id_cost_center())
+        CostCenter costCenter = costCenterRepository.findById(data.id_cost_center())
                 .orElseThrow(() -> new RuntimeException("Não encontrado!"));
 
-        MainOwner mainOwner = new MainOwner(mainOwnerDTO, costCenter);
+
+        MainOwner mainOwner = new MainOwner(data, costCenter);
         String mainowner_id = mainOwnerRepository.save(mainOwner).getId_owner();
 
         var userLog = new UserLog(user,"MainOwner",mainowner_id.toString(),"Create new MainOwner", EnumAction.CREATE);
@@ -97,6 +99,9 @@ public class MainOwnerServiceImp implements MainOwnerService {
         }
 
         if (dados.owner_name() != null){
+            if (dados.owner_name().isBlank()){
+                throw new BlankErrorException("Owner name cannot be blank");
+            }
             mainowner.setOwner_name(dados.owner_name());
             userlog.setField("Main Owner name to: "+dados.owner_name());
         }

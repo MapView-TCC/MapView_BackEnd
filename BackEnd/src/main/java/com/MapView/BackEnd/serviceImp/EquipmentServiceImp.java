@@ -4,6 +4,7 @@ import com.MapView.BackEnd.dtos.Equipment.EquipmentUpdateDTO;
 import com.MapView.BackEnd.entities.*;
 import com.MapView.BackEnd.enums.EnumAction;
 import com.MapView.BackEnd.enums.EnumModelEquipment;
+import com.MapView.BackEnd.infra.BlankErrorException;
 import com.MapView.BackEnd.infra.NotFoundException;
 import com.MapView.BackEnd.infra.OperativeFalseException;
 import com.MapView.BackEnd.infra.OpetativeTrueException;
@@ -78,16 +79,16 @@ public class EquipmentServiceImp implements EquipmentService {
 
 
     @Override
-    public EquipmentDetailsDTO createEquipment(EquipmentCreateDTO dados, Long userLog_id) {
+    public EquipmentDetailsDTO createEquipment(EquipmentCreateDTO data, Long userLog_id) {
         Users users = this.userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("Id not found!"));
 
         // location
-        Location location = locationRepository.findById(Long.valueOf(dados.id_location()))
+        Location location = locationRepository.findById(Long.valueOf(data.id_location()))
                 .orElseThrow(() -> new RuntimeException("Id location Não encontrado!"));
 
 
         // main owner
-        MainOwner mainOwner = mainOwnerRepository.findById(String.valueOf(dados.id_owner()))
+        MainOwner mainOwner = mainOwnerRepository.findById(String.valueOf(data.id_owner()))
                 .orElseThrow(() -> new RuntimeException("Id main owner Não encontrado"));
 
         if(!mainOwner.isOperative()){
@@ -95,17 +96,17 @@ public class EquipmentServiceImp implements EquipmentService {
         }
 
 
-        Equipment equipment = new Equipment(dados,location,mainOwner);
+        Equipment equipment = new Equipment(data,location,mainOwner);
         equipmentRepository.save(equipment);
 
-        var userLog = new UserLog(users,"Equipment", dados.id_equipment(), "Create new Equipment", EnumAction.CREATE);
+        var userLog = new UserLog(users,"Equipment", data.id_equipment(), "Create new Equipment", EnumAction.CREATE);
         userLogRepository.save(userLog);
 
         return new EquipmentDetailsDTO(equipment);
     }
 
     @Override
-    public EquipmentDetailsDTO updateEquipment(String id_equipment, EquipmentUpdateDTO dados, Long userLog_id) {
+    public EquipmentDetailsDTO updateEquipment(String id_equipment, EquipmentUpdateDTO data, Long userLog_id) {
         var equipment = equipmentRepository.findById(id_equipment)
                 .orElseThrow(() -> new NotFoundException("Id not found"));
 
@@ -114,58 +115,79 @@ public class EquipmentServiceImp implements EquipmentService {
         }
 
         Users user = this.userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("Id not found"));
-        var userlog = new UserLog(user,"Equipment",dados.id_equipment(),null,"Infos update",EnumAction.UPDATE);
+        var userlog = new UserLog(user,"Equipment",data.id_equipment(),null,"Infos update",EnumAction.UPDATE);
 
-        if (dados.id_equipment() != null){
-            equipment.setId_equipment(dados.id_equipment());
-            userlog.setField("equipment id to: " + dados.id_equipment());
+        if (data.id_equipment() != null){
+            if(data.id_equipment().isBlank()){
+                throw new BlankErrorException("Equipment id cannot be blank");
+            }
+            equipment.setId_equipment(data.id_equipment());
+            userlog.setField("equipment id to: " + data.id_equipment());
         }
-        if (dados.name_equipment() != null){
-            equipment.setName_equipment(dados.name_equipment());
-            userlog.setField(userlog.getField()+" ,"+"equipment name to: " + dados.name_equipment());
+        if (data.name_equipment() != null){
+            if(data.name_equipment().isBlank()){
+                throw new BlankErrorException("Equipment name cannot be blank");
+            }
+            equipment.setName_equipment(data.name_equipment());
+            userlog.setField(userlog.getField()+" ,"+"equipment name to: " + data.name_equipment());
         }
-        if (dados.rfid() != 0) {
-            equipment.setRfid(dados.rfid());
-            userlog.setField(userlog.getField()+" ,"+"equipment rfid to: " + dados.rfid());
-        }
-
-        if (dados.type() != null) {
-            equipment.setType(dados.type());
-            userlog.setField(userlog.getField()+" ,"+"equipment type to: " + dados.type());
-        }
-
-        if (dados.model() != null) {
-            equipment.setModel(dados.model());
-            userlog.setField(userlog.getField()+" ,"+"equipment model to: " + dados.model());
+        if (data.rfid() != 0) {
+            equipment.setRfid(data.rfid());
+            userlog.setField(userlog.getField()+" ,"+"equipment rfid to: " + data.rfid());
         }
 
-        if (dados.validity() != null) {
-            equipment.setValidity(dados.validity());
-            userlog.setField(userlog.getField()+" ,"+"equipment validity to: " + dados.validity());
+        if (data.type() != null) {
+            if(data.type().isBlank()){
+                throw new BlankErrorException("Equipment type cannot be blank");
+            }
+            equipment.setType(data.type());
+            userlog.setField(userlog.getField()+" ,"+"equipment type to: " + data.type());
         }
 
-        if (dados.admin_rights() != null) {
-            equipment.setAdmin_rights(dados.admin_rights());
-            userlog.setField(userlog.getField()+" ,"+"equipment admin rights to: " + dados.admin_rights());
+        if (data.model() != null) {
+            equipment.setModel(data.model());
+            userlog.setField(userlog.getField()+" ,"+"equipment model to: " + data.model());
         }
 
-        if (dados.observation() != null) {
-            equipment.setObservation(dados.observation());
-            userlog.setField(userlog.getField()+" ,"+"equipment observation to: " + dados.observation());
+        if (data.validity() != null) {
+            if(data.validity().isBlank()){
+                throw new BlankErrorException("Equipment validity cannot be blank");
+            }
+            equipment.setValidity(data.validity());
+            userlog.setField(userlog.getField()+" ,"+"equipment validity to: " + data.validity());
         }
 
-        if (dados.id_location() != null) {
-            var location = locationRepository.findById(dados.id_location())
+        if (data.admin_rights() != null) {
+            if(data.admin_rights().isBlank()){
+                throw new BlankErrorException("Admin rights cannot be blank");
+            }
+            equipment.setAdmin_rights(data.admin_rights());
+            userlog.setField(userlog.getField()+" ,"+"equipment admin rights to: " + data.admin_rights());
+        }
+
+        if (data.observation() != null) {
+            if(data.observation().isBlank()){
+                throw new BlankErrorException("Observation cannot be blank");
+            }
+            equipment.setObservation(data.observation());
+            userlog.setField(userlog.getField()+" ,"+"equipment observation to: " + data.observation());
+        }
+
+        if (data.id_location() != null) {
+            var location = locationRepository.findById(data.id_location())
                     .orElseThrow(() -> new NotFoundException("Location id not found"));
             equipment.setLocation(location);
-            userlog.setField(userlog.getField()+" ,"+"equipment location to: " + dados.id_location());
+            userlog.setField(userlog.getField()+" ,"+"equipment location to: " + data.id_location());
         }
 
-        if (dados.id_owner() != null) {
-            var owner = mainOwnerRepository.findById(dados.id_owner())
+        if (data.id_owner() != null) {
+            if(data.id_owner().isBlank()){
+                throw new BlankErrorException("Owner id cannot be blank");
+            }
+            var owner = mainOwnerRepository.findById(data.id_owner())
                     .orElseThrow(() -> new NotFoundException("Owner id not found"));
             equipment.setOwner(owner);
-            userlog.setField(userlog.getField()+" ,"+"equipment main owner to: " + dados.id_owner());
+            userlog.setField(userlog.getField()+" ,"+"equipment main owner to: " + data.id_owner());
         }
 
         userLogRepository.save(userlog);

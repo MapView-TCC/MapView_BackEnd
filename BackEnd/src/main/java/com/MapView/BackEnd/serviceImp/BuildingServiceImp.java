@@ -3,6 +3,7 @@ package com.MapView.BackEnd.serviceImp;
 import com.MapView.BackEnd.entities.UserLog;
 import com.MapView.BackEnd.entities.Users;
 import com.MapView.BackEnd.enums.EnumAction;
+import com.MapView.BackEnd.infra.BlankErrorException;
 import com.MapView.BackEnd.infra.OperativeFalseException;
 import com.MapView.BackEnd.infra.OpetativeTrueException;
 import com.MapView.BackEnd.repository.BuildingRepository;
@@ -67,7 +68,7 @@ public class BuildingServiceImp implements BuildingService {
     }
 
     @Override
-    public BuildingDetailsDTO updateBuilding(Long building_id, BuildingUpdateDTO dados,Long userLog_id) {
+    public BuildingDetailsDTO updateBuilding(Long building_id, BuildingUpdateDTO data,Long userLog_id) {
         var building = buildingRepository.findById(building_id). orElseThrow(() -> new RuntimeException("Building Id not found"));
         if(!building.isOperative()){
             throw new OperativeFalseException("The inactive equipment cannot be updated.");
@@ -76,11 +77,15 @@ public class BuildingServiceImp implements BuildingService {
         Users user = this.userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("Id not found"));
         var userlog = new UserLog(user,"Building",building_id.toString(),null,"Update building: ",EnumAction.UPDATE);
 
-        if (dados.building_code() != null){
-            building.setBuilding_code(dados.building_code());
+        if (data.building_code() != null){
+            if(data.building_code().isBlank() || data.building_code().isBlank()){
+                throw new BlankErrorException("This fields cannot not be blank");
+            }
+
+            building.setBuilding_code(data.building_code());
 
             userlog.setField("building_code");
-            userlog.setDescription("building_code to:"+ dados.building_code());
+            userlog.setDescription("building_code to:"+ data.building_code());
         }
 
         buildingRepository.save(building);

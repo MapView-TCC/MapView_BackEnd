@@ -2,6 +2,7 @@ package com.MapView.BackEnd.serviceImp;
 
 import com.MapView.BackEnd.entities.*;
 import com.MapView.BackEnd.enums.EnumAction;
+import com.MapView.BackEnd.infra.BlankErrorException;
 import com.MapView.BackEnd.infra.OperativeFalseException;
 import com.MapView.BackEnd.infra.OpetativeTrueException;
 import com.MapView.BackEnd.repository.*;
@@ -60,22 +61,22 @@ public class RaspberryServiceImp implements RaspberryService {
     }
 
     @Override
-    public RaspberryDetailsDTO createRaspberry(RaspberryCreateDTO raspberryCreateDTO, Long userLog_id) {
+    public RaspberryDetailsDTO createRaspberry(RaspberryCreateDTO data, Long userLog_id) {
         Users user = this.userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("Id not found"));
 
-        Building building = buildingRepository.findById(raspberryCreateDTO.id_building())
+        Building building = buildingRepository.findById(data.id_building())
                 .orElseThrow(() -> new NotFoundException("Building id not found."));
         if (!building.isOperative()){
             throw new OperativeFalseException("The inactive building cannot be accessed.");
         }
 
-        Area area = areaRepository.findById(raspberryCreateDTO.id_area())
+        Area area = areaRepository.findById(data.id_area())
                 .orElseThrow(() -> new NotFoundException("Area id not found"));
         if (!area.isOperative()){
             throw new OperativeFalseException("The inactive area cannot be accessed.");
         }
 
-        Raspberry raspberry = new Raspberry(raspberryCreateDTO, building, area);
+        Raspberry raspberry = new Raspberry(data, building, area);
         String id_raspberry = raspberryRepository.save(raspberry).getId_raspberry();
 
         var userLog = new UserLog(user,"Raspberry", id_raspberry,"Create new Raspberry", EnumAction.CREATE);
@@ -86,7 +87,7 @@ public class RaspberryServiceImp implements RaspberryService {
     }
 
     @Override
-    public RaspberryDetailsDTO updateRaspberry(String id_raspberry, RaspberryUpdateDTO dados, Long userLog_id) {
+    public RaspberryDetailsDTO updateRaspberry(String id_raspberry, RaspberryUpdateDTO data, Long userLog_id) {
         var raspberry = raspberryRepository.findById(id_raspberry)
                 .orElseThrow(() -> new NotFoundException("Raspberry id not found"));
 
@@ -94,28 +95,32 @@ public class RaspberryServiceImp implements RaspberryService {
             throw new OperativeFalseException("The inactive raspberry:"+ raspberry.getId_raspberry() + "cannot be accessed.");
         }
 
+
         Users user = this.userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("Id not found"));
         var userlog = new UserLog(user,"Raspberry",id_raspberry.toString(),null,"Update Raspberry: ",EnumAction.UPDATE);
 
 
-        if (dados.raspberry_name() != null){
-            raspberry.setId_raspberry(dados.raspberry_name());
+        if (data.raspberry_name() != null){
+            if(data.raspberry_name().isBlank()) {
+                throw new BlankErrorException("Raspberry name Cannot be blank");
+            }
+            raspberry.setId_raspberry(data.raspberry_name());
             userlog.setField("raspberry_name");
-            userlog.setDescription("userLog_id to: " + dados.raspberry_name());
+            userlog.setDescription("userLog_id to: " + data.raspberry_name());
         }
 
-        if (dados.id_building() != null){
-            var building = buildingRepository.findById(dados.id_building()).orElseThrow(() -> new NotFoundException("Building id not found"));
+        if (data.id_building() != null){
+            var building = buildingRepository.findById(data.id_building()).orElseThrow(() -> new NotFoundException("Building id not found"));
             raspberry.setBuilding(building);
             userlog.setField("id_building");
-            userlog.setDescription("id_building to: " + dados.id_building());
+            userlog.setDescription("id_building to: " + data.id_building());
         }
 
-        if (dados.id_area() != null){
-            var area = areaRepository.findById(dados.id_area()).orElseThrow(() -> new NotFoundException("Area id not found"));
+        if (data.id_area() != null){
+            var area = areaRepository.findById(data.id_area()).orElseThrow(() -> new NotFoundException("Area id not found"));
             raspberry.setArea(area);
             userlog.setField("id_area");
-            userlog.setDescription("id_area to: " + dados.id_area());
+            userlog.setDescription("id_area to: " + data.id_area());
         }
 
         raspberryRepository.save(raspberry);

@@ -3,6 +3,7 @@ package com.MapView.BackEnd.dtos.EquipmentResponsible;
 import com.MapView.BackEnd.entities.Equipment;
 import com.MapView.BackEnd.entities.EquipmentResponsible;
 import com.MapView.BackEnd.entities.Responsible;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.time.LocalDate;
 
@@ -10,7 +11,9 @@ public record EquipmentResponsibleDetailsDTO(
         Long id_equip_resp,
         Equipment equipment,
         Responsible responsible,
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
         LocalDate start_usage,
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
         LocalDate end_usage
 ) {
     public EquipmentResponsibleDetailsDTO(EquipmentResponsible equipmentResponsible){

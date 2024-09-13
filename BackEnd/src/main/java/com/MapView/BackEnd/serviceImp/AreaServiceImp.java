@@ -3,6 +3,7 @@ package com.MapView.BackEnd.serviceImp;
 import com.MapView.BackEnd.entities.UserLog;
 import com.MapView.BackEnd.entities.Users;
 import com.MapView.BackEnd.enums.EnumAction;
+import com.MapView.BackEnd.infra.BlankErrorException;
 import com.MapView.BackEnd.infra.OperativeFalseException;
 import com.MapView.BackEnd.repository.AreaRepository;
 import com.MapView.BackEnd.repository.UserLogRepository;
@@ -57,9 +58,10 @@ public class AreaServiceImp implements AreaService {
     }
 
     @Override
-    public AreaDetailsDTO createArea(AreaCreateDTO dados, Long userLog_id) {
+    public AreaDetailsDTO createArea(AreaCreateDTO data, Long userLog_id) {
         Users user = this.userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("Id not found"));
-        var area = new Area(dados);
+
+        var area = new Area(data);
         Long id_area = areaRepository.save(area).getId_area();
 
         var userLog = new UserLog(user,"Area",id_area.toString(),"Create new Area", EnumAction.CREATE);
@@ -69,7 +71,7 @@ public class AreaServiceImp implements AreaService {
     }
 
     @Override
-    public AreaDetailsDTO updateArea(Long id_area, AreaUpdateDTO dados,Long userLog_id) {
+    public AreaDetailsDTO updateArea(Long id_area, AreaUpdateDTO data,Long userLog_id) {
         var area = areaRepository.findById(id_area).orElseThrow(() -> new NotFoundException("Id not found"));
         if(!area.isOperative()){
             throw new OperativeFalseException("The inactive area cannot be updated.");
@@ -79,13 +81,19 @@ public class AreaServiceImp implements AreaService {
         var userlog = new UserLog(user,"Area", id_area.toString(),null,"Infos update",EnumAction.UPDATE);
 
 
-        if (dados.area_name() != null){
-            area.setArea_name(dados.area_name());
-            userlog.setField("area_name to: "+ dados.area_name());
+        if (data.area_name() != null){
+            if(data.area_code().isBlank()){
+                throw new BlankErrorException("Area name cannot not be blank");
+            }
+            area.setArea_name(data.area_name());
+            userlog.setField("area_name to: "+ data.area_name());
         }
-        if (dados.area_code() != null){
-            area.setArea_code(dados.area_code());
-            userlog.setField(userlog.getField()+" ,"+"area_code to: "+dados.area_code());
+        if (data.area_code() != null){
+            if(data.area_code().isBlank()){
+                throw new BlankErrorException("Area code cannot not be blank");
+            }
+            area.setArea_code(data.area_code());
+            userlog.setField(userlog.getField()+" ,"+"area_code to: "+data.area_code());
         }
         areaRepository.save(area);
 

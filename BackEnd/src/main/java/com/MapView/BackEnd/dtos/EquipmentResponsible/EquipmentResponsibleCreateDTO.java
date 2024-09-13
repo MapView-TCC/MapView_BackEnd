@@ -1,13 +1,14 @@
 package com.MapView.BackEnd.dtos.EquipmentResponsible;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDate;
 
 public record EquipmentResponsibleCreateDTO(
-        @NotBlank(message = "Equipment id cannot be blank")
+        @NotNull(message = "Equipment id cannot be null")
         String id_equipment,
-        @NotBlank(message = "Responsible id cannot be blank")
+        @NotNull(message = "Responsible id cannot be null")
         Long id_responsible,
         LocalDate start_usage,
         LocalDate end_usage

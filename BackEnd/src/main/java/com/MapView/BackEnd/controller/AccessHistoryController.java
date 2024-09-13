@@ -5,6 +5,7 @@ import com.MapView.BackEnd.dtos.AccessHistory.AccessHistoryCreateDTO;
 import com.MapView.BackEnd.dtos.AccessHistory.AccessHistoryDetailsDTO;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;

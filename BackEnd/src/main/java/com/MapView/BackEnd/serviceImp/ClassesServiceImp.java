@@ -2,6 +2,7 @@ package com.MapView.BackEnd.serviceImp;
 
 import com.MapView.BackEnd.entities.UserLog;
 import com.MapView.BackEnd.enums.EnumAction;
+import com.MapView.BackEnd.infra.BlankErrorException;
 import com.MapView.BackEnd.infra.OperativeFalseException;
 import com.MapView.BackEnd.infra.OpetativeTrueException;
 import com.MapView.BackEnd.repository.ClassesRepository;
@@ -51,7 +52,7 @@ public class ClassesServiceImp implements ClassesService {
     public ClassesDetaiLDTO getClasse(Long id, Long userLog_id) {
         var usuario_log = userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("User Id Not Found"));
         var classe = classesRepository.findById(id).orElseThrow(() -> new NotFoundException("Classe id Not Found"));
-        if (!classe.check_status()){
+        if (!classe.isOperative()){
             throw new OperativeFalseException("The classe area cannot be read..");
         }
 
@@ -81,8 +82,14 @@ public class ClassesServiceImp implements ClassesService {
             userlog.setField("userLog_id");
             userlog.setDescription("userLog_id to: " + data.user_id());
         }
+        if(data.criation_date() != null){
+
+        }
 
         if(data.classes() != null){
+            if (data.classes().isBlank()){
+                throw new BlankErrorException("Classes cannot be blank");
+            }
             classes.setClasses(data.classes());
             userlog.setField("classes");
             userlog.setDescription("classes to: " + data.classes());

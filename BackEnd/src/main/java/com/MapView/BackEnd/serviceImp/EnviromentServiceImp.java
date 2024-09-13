@@ -3,6 +3,7 @@ package com.MapView.BackEnd.serviceImp;
 import com.MapView.BackEnd.entities.UserLog;
 import com.MapView.BackEnd.entities.Users;
 import com.MapView.BackEnd.enums.EnumAction;
+import com.MapView.BackEnd.infra.BlankErrorException;
 import com.MapView.BackEnd.infra.OperativeFalseException;
 import com.MapView.BackEnd.infra.OpetativeTrueException;
 import com.MapView.BackEnd.repository.EnviromentRepository;
@@ -88,6 +89,9 @@ public class EnviromentServiceImp implements EnviromentService {
         var userlog = new UserLog(user,"Enviroment",enviroment_id.toString(),null,"Update Enviroment: ",EnumAction.UPDATE);
 
         if (data.environment_name() != null){
+            if(data.environment_name().isBlank()){
+                throw new BlankErrorException("Enviroment name cannot be blank");
+            }
             enviroment.setEnvironment_name(data.environment_name());
             userlog.setField("enviroment_name");
             userlog.setDescription("enviroment_name to: " + data.environment_name());

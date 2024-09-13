@@ -39,8 +39,4 @@ public class Classes {
         this.creation_date = data.criation_date();
         this.operative = true;
     }
-
-    public boolean check_status(){
-        return this.operative;
-    }
 }
