@@ -13,7 +13,7 @@ spring:
             client-secret: CnS8Q~2WbfXrqPcWMJNwfZZaNcjRieYvkZY44bqm
             scope: openid,profile,email
 
-            redirect-uri: http://localhost:5173/callback
+            redirect-uri: http://localhost:4200/callback
             provider: azure
 
 
@@ -34,7 +34,7 @@ spring:
           filters:
             - name: TokenRelay
 
-            - AddResponseHeader=Access-Control-Allow-Origin, http://localhost:5173
+            - AddResponseHeader=Access-Control-Allow-Origin, http://localhost:5173,http://localhost:4200
             - AddResponseHeader=Access-Control-Allow-Methods, GET, POST, PUT, DELETE, OPTIONS
             - AddResponseHeader=Access-Control-Allow-Headers, Authorization, Content-Type
 

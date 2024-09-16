@@ -15,7 +15,7 @@ import java.util.Map;
 public class ProfillerController {
 
     @GetMapping("/userinfo")
-    @CrossOrigin("http://localhost:5173")
+    @CrossOrigin({"http://localhost:5173,http://localhost:4200"})
 
     public Map<String, Object> userInfo(@AuthenticationPrincipal OidcUser oidcUser, @RegisteredOAuth2AuthorizedClient OAuth2AuthorizedClient auth2AuthorizedClient){
         Map<String, Object> attributesMap = new HashMap<>(oidcUser.getAttributes());

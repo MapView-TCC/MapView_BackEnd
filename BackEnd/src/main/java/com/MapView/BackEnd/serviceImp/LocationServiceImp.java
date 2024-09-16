@@ -65,12 +65,12 @@ public class LocationServiceImp implements LocationService {
         if(!post.isOperative()){
             throw new OperativeFalseException("The inactive post cannot be accessed.");
         }
-        var enviroment = enviromentRepository.findById(data.id_enviromnet()).orElseThrow(() -> new NotFoundException("Enviroment Id Not Found"));
+        var enviroment = enviromentRepository.findById(data.id_enviroment()).orElseThrow(() -> new NotFoundException("Enviroment Id Not Found"));
         if(!enviroment.isOperative()){
             throw new OperativeFalseException("The inactive enviroment cannot be accessed.");
         }
 
-        if(data.id_enviromnet() != null){
+        if(data.id_enviroment() != null){
             location.setEnvironment(enviroment);
         }
         if(data.id_post() != null){

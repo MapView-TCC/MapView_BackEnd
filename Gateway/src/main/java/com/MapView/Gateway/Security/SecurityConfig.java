@@ -37,7 +37,7 @@ public class SecurityConfig {
                 // - Redireciona para "/profile" após a autenticação bem-sucedida.
 
                 .oauth2Login(conf -> conf
-                        .authenticationSuccessHandler(new RedirectServerAuthenticationSuccessHandler("http://localhost:5173/profile")))
+                        .authenticationSuccessHandler(new RedirectServerAuthenticationSuccessHandler("http://localhost:5173/ambiente")))
 
                 // - Define o decodificador JWT para validar tokens de acesso.
 
