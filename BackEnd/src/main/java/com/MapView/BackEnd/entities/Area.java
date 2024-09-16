@@ -1,6 +1,7 @@
 package com.MapView.BackEnd.entities;
 
 import com.MapView.BackEnd.dtos.Area.AreaCreateDTO;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -15,9 +16,11 @@ public class Area {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id_area;
+    @Schema(description = "Area code", example = "CA600", required = true)
     private String area_code;
+    @Schema(description = "Area name", example = "Área A", required = true)
     private String area_name;
-
+    @Schema(description = "Operative", example = "True or False")
     private boolean operative;
 
     public Area(AreaCreateDTO dados) {
