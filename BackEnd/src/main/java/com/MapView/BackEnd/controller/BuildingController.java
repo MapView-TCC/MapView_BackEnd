@@ -85,13 +85,9 @@ public class BuildingController {
     })
     @GetMapping
     public ResponseEntity<List<BuildingDetailsDTO>> getAllBuildings(
-            @Parameter(description = "Page number for pagination", required = true)
-            @RequestParam int page,
-            @Parameter(description = "Number of items per page", required = true)
-            @RequestParam int items,
             @Parameter(description = "User log ID for tracking changes", required = true)
             @RequestParam Long userLog_id) {
-        var buildings = buildingServiceImp.getAllBuilding(page, items, userLog_id);
+        var buildings = buildingServiceImp.getAllBuilding(userLog_id);
         return ResponseEntity.ok(buildings);
     }
 

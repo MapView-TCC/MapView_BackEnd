@@ -1,0 +1,59 @@
+version: '3.3'
+services:
+  mapview-db:
+    image: mysql:8.0
+    container_name: mapview-db
+    enviroment:
+      MYSQL_ROOT_PASSWORD: 1234
+      MYSQL_DATABASE: mapview
+    ports:
+      - "3306:3306"
+    networks:
+      - mapview-net
+    volumes:
+      - mysql-data:/var/lib/mysql
+  api-gateway:
+    container_name: api-geteway
+    build:
+      context: ./MapView-BackEnd/Getway
+    enviroment:
+      # nao sei
+    ports:
+      - "8000:8000"
+    networks:
+      - mapview-net
+  api-mapview:
+    depends_on:
+      - api-gateway
+      - mapview-db
+    container_name: api-mapview
+    build:
+      context: ./MapView-BackEnd/BackEnd
+      dockerfile: Dockerfile
+    environment:
+      SPRING_DATASOURCE_URL=jdbc:mysql://localhost/mapview?createDatabaseIfNotExist=true
+      SPRING_DATASOURCE_USERNAME=root
+      SPRING_DATASOURCE_PASSWORD=1234
+    ports:
+      - "8081:8081"
+    networks:
+      - mapview-net
+
+  frontend:
+    container_name: frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "4200:4200"
+    networks:
+      - mapview-net
+      -
+  volumes:
+    mysql-data:
+
+  networks:
+    mapview-net:
+      driver: bridge
+
+
