@@ -49,10 +49,10 @@ public class BuildingServiceImp implements BuildingService {
     }
 
     @Override
-    public List<BuildingDetailsDTO> getAllBuilding(int page, int itens, Long userLog_id) {
+    public List<BuildingDetailsDTO> getAllBuilding(Long userLog_id) {
         Users user = this.userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("Id not found"));
 
-        return buildingRepository.findAllByOperativeTrue(PageRequest.of(page, itens)).stream().map(BuildingDetailsDTO::new).toList();
+        return buildingRepository.findAllByOperativeTrue().stream().map(BuildingDetailsDTO::new).toList();
     }
 
     @Override

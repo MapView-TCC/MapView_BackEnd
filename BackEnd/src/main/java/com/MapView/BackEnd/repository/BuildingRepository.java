@@ -10,5 +10,5 @@ import java.util.List;
 @Repository
 
 public interface BuildingRepository extends JpaRepository<Building,Long> {
-    List<Building> findAllByOperativeTrue(Pageable pageable);
+    List<Building> findAllByOperativeTrue();
 }
