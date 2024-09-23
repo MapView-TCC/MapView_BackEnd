@@ -49,14 +49,14 @@ public class EquipmentResponsibleServiceImp implements EquipmentResponsibleServi
     }
 
     @Override
-    public EquipmentResponsibleDetailsDTO createEquipmentResponsible(EquipmentResponsibleCreateDTO equipmentResponsibleCreateDTO) {
-        Equipment equipment = equipmentRepository.findById(equipmentResponsibleCreateDTO.id_equipment())
+    public EquipmentResponsibleDetailsDTO createEquipmentResponsible(EquipmentResponsibleCreateDTO data) {
+        Equipment equipment = equipmentRepository.findById(data.id_equipment())
                 .orElseThrow(() -> new NotFoundException("Equipment id not found"));
 
-        Responsible responsible = responsibleRepository.findById(equipmentResponsibleCreateDTO.id_responsible())
+        Responsible responsible = responsibleRepository.findById(data.id_responsible())
                 .orElseThrow(() -> new NotFoundException("Responsible id not found"));
 
-        EquipmentResponsible equipmentResponsible = new EquipmentResponsible(equipmentResponsibleCreateDTO, equipment, responsible);
+        EquipmentResponsible equipmentResponsible = new EquipmentResponsible(data, equipment, responsible);
 
         equipmentResponsibleRepository.save(equipmentResponsible);
 
