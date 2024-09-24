@@ -5,8 +5,8 @@ import com.MapView.BackEnd.enums.RoleUser;
 import jakarta.persistence.*;
 import lombok.*;
 
-@Table(name = "Users")
-@Entity(name = "Users")
+@Table(name = "users")
+@Entity(name = "users")
 @Getter
 @Setter
 @AllArgsConstructor
