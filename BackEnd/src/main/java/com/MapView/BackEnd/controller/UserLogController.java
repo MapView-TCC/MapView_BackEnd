@@ -4,6 +4,11 @@ import com.MapView.BackEnd.service.UserLogService;
 
 import com.MapView.BackEnd.dtos.User.UserDetailsDTO;
 import com.MapView.BackEnd.dtos.UserLog.UserLogDetailDTO;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,7 +17,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/userlog")
-
+@Tag(name = "User Log", description = "Operations related to user log management")
 public class UserLogController {
 
     private final UserLogService userLogService;
@@ -22,12 +27,30 @@ public class UserLogController {
     }
 
 
+    @Operation(
+            summary = "Get user log details",
+            description = "Retrieve the details of a specific user log by its ID.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "User log found.",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserLogDetailDTO.class))),
+                    @ApiResponse(responseCode = "404", description = "User log not found.")
+            }
+    )
     @GetMapping("/{userlog_id}")
     public UserLogDetailDTO getUserLog(@PathVariable("userlog_id") Long userlog_id){
         var userlog = userLogService.getUserLog(userlog_id);
         return ResponseEntity.ok(userlog).getBody();
     }
 
+    @Operation(
+            summary = "Get all user logs",
+            description = "Retrieve a paginated list of all user logs.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "User logs successfully retrieved.",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserLogDetailDTO.class))),
+                    @ApiResponse(responseCode = "500", description = "Internal server error.")
+            }
+    )
     @GetMapping
     public ResponseEntity<List<UserLogDetailDTO>> getAllUser(@RequestParam int page,@RequestParam int itens){
         var user = userLogService.getAllUserLog(page,itens);
