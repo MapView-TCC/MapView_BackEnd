@@ -99,29 +99,14 @@ public class EquipmentServiceImp implements EquipmentService {
             throw new OperativeFalseException("The inactive mainowner cannot be accessed.");
         }
 
-        System.out.println(data.name_equipment());
+        Equipment equipment = equipmentRepository.save(new Equipment(data, location, mainOwner));;
 
-        // Cria o equipamento
-        Equipment equipment = new Equipment(data, location, mainOwner);
-
-        // Usa merge em vez de save
-        equipment = entityManager.merge(equipment);
-        //equipmentRepository.save(equipment);
+        TrackingHistory trackingHistory = new TrackingHistory(equipment, location.getEnvironment(), equipment.getRfid(), EnumTrackingAction.ENTER, EnumColors.GREEN);
+        trackingHistoryRepository.save(trackingHistory);
 
         var userLog = new UserLog(users, "Equipment", data.id_equipment(), "Create new Equipment", EnumAction.CREATE);
         userLogRepository.save(userLog);
 
-        // Salvar o tracking history
-        Enviroment enviroment = location.getEnvironment();
-
-        TrackingHistory trackingHistory = new TrackingHistory(
-                equipment, enviroment, equipment.getRfid(), EnumTrackingAction.ENTER,
-                EnumColors.GREEN
-        );
-
-        trackingHistoryRepository.save(trackingHistory);
-
-        System.out.println(new EquipmentDetailsDTO(equipment));
         return new EquipmentDetailsDTO(equipment);
     }
 
