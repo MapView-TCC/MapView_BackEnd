@@ -1,5 +1,5 @@
 -- Inserir novos usuários
-INSERT INTO Users (email, role, operative) VALUES
+INSERT INTO users (email, role, operative) VALUES
 ('john.doe@example.com', 'ADMIN', 1),
 ('jane.smith@example.com', 'USER', 1),
 ('alice.jones@example.com', 'SUPPORT', 1),

@@ -1,5 +1,5 @@
 -- Creating the User table
-CREATE TABLE IF NOT EXISTS Users (
+CREATE TABLE IF NOT EXISTS users (
     id_user INT AUTO_INCREMENT  PRIMARY KEY,
     email VARCHAR(255) NOT NULL,
     role ENUM('ADMIN', 'SUPPORT', 'USER'),
@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS access_history (
     id_user INT NOT NULL,
     login_datetime TIMESTAMP,
     logout_datetime DATETIME,
-    FOREIGN KEY(id_user) REFERENCES Users(id_user)
+    FOREIGN KEY(id_user) REFERENCES users(id_user)
 );
 
 -- Creating the Classes table
@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS classes (
     id_user INT NOT NULL,
     creation_date DATE NOT NULL,
     operative TINYINT NOT NULL,
-    FOREIGN KEY(id_user) REFERENCES Users(id_user)
+    FOREIGN KEY(id_user) REFERENCES users(id_user)
 );
 
 -- Creating the Building table (é a tabela Predio)
@@ -132,7 +132,7 @@ CREATE TABLE IF NOT EXISTS responsible (
     id_user INT NOT NULL,
     operative TINYINT NOT NULL,
     FOREIGN KEY(id_classes) REFERENCES classes(id_classes),
-    FOREIGN KEY(id_user) REFERENCES Users(id_user)
+    FOREIGN KEY(id_user) REFERENCES users(id_user)
 );
 
 -- Creating the auxiliary Equipment_Responsible table
@@ -157,5 +157,5 @@ CREATE TABLE IF NOT EXISTS user_log (
     description VARCHAR(255),
     datetime TIMESTAMP,
     action ENUM('CREATE', 'UPDATE', 'READ', 'DELETE'),
-    FOREIGN KEY(id_user) REFERENCES Users(id_user)
+    FOREIGN KEY(id_user) REFERENCES users(id_user)
 );
