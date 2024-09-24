@@ -45,7 +45,9 @@ public class Equipment {
     //@JsonBackReference // it will be omitted from serialization.
     private MainOwner owner;
 
-    private String image;
+    @ManyToOne
+    @JoinColumn(name = "id_image")
+    private Image id_image;
     private boolean operative;
 
     @OneToMany(mappedBy = "id_equipment")

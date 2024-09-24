@@ -1,6 +1,7 @@
 package com.MapView.BackEnd.serviceImp;
 
 import com.MapView.BackEnd.dtos.Equipment.EquipmentUpdateDTO;
+import com.MapView.BackEnd.dtos.ImageUpload.UploadCreateDTO;
 import com.MapView.BackEnd.entities.*;
 import com.MapView.BackEnd.enums.EnumAction;
 import com.MapView.BackEnd.enums.EnumColors;
@@ -43,10 +44,11 @@ public class EquipmentServiceImp implements EquipmentService {
     private final UserRepository userRepository;
     private final Path fileStorageLocation;
     private final TrackingHistoryRepository trackingHistoryRepository;
+    private final ImageRepository imageRepository;
 
 
     public EquipmentServiceImp(EntityManager entityManager, EquipmentRepository equipmentRepository, LocationRepository locationRepository, MainOwnerRepository mainOwnerRepository,
-                               UserLogRepository userLogRepository, UserRepository userRepository, FileStorageProperties fileStorageProperties, TrackingHistoryRepository trackingHistoryRepository) {
+                               UserLogRepository userLogRepository, UserRepository userRepository, FileStorageProperties fileStorageProperties, TrackingHistoryRepository trackingHistoryRepository, ImageRepository imageRepository) {
         this.entityManager = entityManager;
         this.equipmentRepository = equipmentRepository;
         this.locationRepository = locationRepository;
@@ -55,6 +57,7 @@ public class EquipmentServiceImp implements EquipmentService {
         this.userRepository = userRepository;
         this.fileStorageLocation = Paths.get(fileStorageProperties.getUploadDir()).toAbsolutePath().normalize();
         this.trackingHistoryRepository = trackingHistoryRepository;
+        this.imageRepository = imageRepository;
     }
 
 
@@ -262,7 +265,7 @@ public class EquipmentServiceImp implements EquipmentService {
             predicate.add(criteriaBuilder.like(equipmentRoot.get("validity"), "%"+validity+"%"));
         }
         if (environment != null){
-            predicate.add(criteriaBuilder.like(enviromentJoin.get("id_location"), "%"+environment+"%"));
+            predicate.add(criteriaBuilder.like(enviromentJoin.get("environment_name"), "%"+environment+"%"));
         }
         if (mainOwner != null){
             predicate.add(criteriaBuilder.like(mainOwnerJoin.get("owner_name"), "%" + mainOwner + "%"));
@@ -299,14 +302,15 @@ public class EquipmentServiceImp implements EquipmentService {
                 .collect(Collectors.toList());
     }
 
-    public ResponseEntity<String> uploadImageEquipament (MultipartFile file,EnumModelEquipment equipment){
-        String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+    public ResponseEntity<String> uploadImageEquipament (UploadCreateDTO data){
+        String fileName = StringUtils.cleanPath(data.file().getOriginalFilename());
+        EnumModelEquipment type = EnumModelEquipment.DESKTOP_TINK;
 
         try {
             Path targetLocation = fileStorageLocation.resolve(fileName);
-            file.transferTo(targetLocation);
+            data.file().transferTo(targetLocation);
 
-            equipament_image(targetLocation,equipment);
+            equipament_image(targetLocation,type);
 
             String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
                     .path("/api/files/download/")
@@ -326,9 +330,19 @@ public class EquipmentServiceImp implements EquipmentService {
 
         List<Equipment> allEquipments = equipmentRepository.findByModel(equipmentModel);
 
-        for (Equipment equipment : allEquipments) {
-            equipment.setImage(targetLocatioString);
+        Image image  = imageRepository.findByModel(equipmentModel);
+        if(image==null){
+
+            Image newimage = imageRepository.save(new Image(targetLocatioString,equipmentModel));
+            for (Equipment equipment : allEquipments) {
+                equipment.setId_image(newimage);
+            }
         }
+
+        image.setImage(targetLocatioString);
+        imageRepository.save(image);
+
+
 
         equipmentRepository.saveAll(allEquipments);
     }

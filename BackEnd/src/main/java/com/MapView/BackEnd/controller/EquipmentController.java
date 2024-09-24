@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -40,8 +41,7 @@ public class EquipmentController {
     @Transactional
     public ResponseEntity<EquipmentDetailsDTO> createEquipament(
             @Parameter(description = "Data transfer object for creating a new equipment", required = true)
-            @RequestBody @Valid EquipmentCreateDTO dados,
-            UriComponentsBuilder uriBuilder,
+            @RequestBody @Valid EquipmentCreateDTO dados, UriComponentsBuilder uriBuilder,
             @Parameter(description = "User log ID for tracking changes", required = true)
             @RequestParam Long userLog_id) {
 
@@ -59,12 +59,12 @@ public class EquipmentController {
             @ApiResponse(responseCode = "200", description = "Image successfully uploaded"),
             @ApiResponse(responseCode = "400", description = "Invalid file or equipment ID")
     })
-    @PostMapping("/image")
+    @PostMapping(value = "/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Transactional
     public ResponseEntity<String> uploadImage(
             @Parameter(description = "Image upload data", required = true)
             @RequestBody @Valid UploadCreateDTO data) {
-        return equipmentServiceImp.uploadImageEquipament(data.file(), data.equipment());
+        return equipmentServiceImp.uploadImageEquipament(data);
     }
 
     @Operation(summary = "Retrieve all equipment", description = "Get a paginated list of all equipment in the system.")

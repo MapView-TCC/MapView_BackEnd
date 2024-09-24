@@ -95,12 +95,12 @@ INSERT INTO main_owner (id_owner, owner_name, id_cost_center, operative) VALUES
 ('O005', 'Owner 5', 5, 0);
 
 -- Inserir novos equipamentos
-INSERT INTO equipment (id_equipment, name_equipment, rfid, type, model, validity, admin_rights, observation, id_location, id_owner, image, operative) VALUES
-('E001', 'Laptop A', 123456789012345, 'Laptop', 'NOTEBOOK_STANDARD', '2025-01-01', 'Admin', 'Good condition', 1, 'O001', 'laptop_a.jpg', 1),
-('E002', 'Desktop B', 234567890123456, 'Desktop', 'DESKTOP_TINK', '2024-12-31', 'User', 'Needs repair', 2, 'O002', 'desktop_b.jpg', 0),
-('E003', 'Tablet C', 345678901234567, 'Tablet', 'NOTEBOOK_ENHANCED', '2026-01-01', 'Admin', 'New', 3, 'O003', 'tablet_c.jpg', 1),
-('E004', 'Monitor D', 456789012345678, 'Monitor', 'DESKTOP_EXTERNO', '2024-11-30', 'User', 'Old', 4, 'O004', 'monitor_d.jpg', 1),
-('E005', 'Printer E', 567890123456789, 'Printer', 'DESKTOP_TINK', '2025-05-01', 'User', 'Average condition', 5, 'O005', 'printer_e.jpg', 0);
+INSERT INTO equipment (id_equipment, name_equipment, rfid, type, model, validity, admin_rights, observation, id_location, id_owner, operative) VALUES
+('E001', 'Laptop A', 123456789012345, 'Laptop', 'NOTEBOOK_STANDARD', '2025-01-01', 'Admin', 'Good condition', 1, 'O001',  1),
+('E002', 'Desktop B', 234567890123456, 'Desktop', 'DESKTOP_TINK', '2024-12-31', 'User', 'Needs repair', 2, 'O002',  0),
+('E003', 'Tablet C', 345678901234567, 'Tablet', 'NOTEBOOK_ENHANCED', '2026-01-01', 'Admin', 'New', 3, 'O003',  1),
+('E004', 'Monitor D', 456789012345678, 'Monitor', 'DESKTOP_EXTERNO', '2024-11-30', 'User', 'Old', 4, 'O004',  1),
+('E005', 'Printer E', 567890123456789, 'Printer', 'DESKTOP_TINK', '2025-05-01', 'User', 'Average condition', 5, 'O005',  0);
 
 -- Inserir novos registros de histórico de rastreio
 INSERT INTO tracking_history (id_equipment, id_environment, rfid, action, warning, dateTime) VALUES
