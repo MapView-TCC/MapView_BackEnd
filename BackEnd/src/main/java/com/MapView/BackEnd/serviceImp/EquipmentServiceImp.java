@@ -302,13 +302,13 @@ public class EquipmentServiceImp implements EquipmentService {
                 .collect(Collectors.toList());
     }
 
-    public ResponseEntity<String> uploadImageEquipament (UploadCreateDTO data){
-        String fileName = StringUtils.cleanPath(data.file().getOriginalFilename());
+    public ResponseEntity<String> uploadImageEquipament (MultipartFile file){
+        String fileName = StringUtils.cleanPath(file.getOriginalFilename());
         EnumModelEquipment type = EnumModelEquipment.DESKTOP_TINK;
 
         try {
             Path targetLocation = fileStorageLocation.resolve(fileName);
-            data.file().transferTo(targetLocation);
+            file.transferTo(targetLocation);
 
             equipament_image(targetLocation,type);
 

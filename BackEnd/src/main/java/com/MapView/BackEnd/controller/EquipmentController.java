@@ -15,6 +15,7 @@ import jakarta.validation.Valid;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
@@ -63,8 +64,8 @@ public class EquipmentController {
     @Transactional
     public ResponseEntity<String> uploadImage(
             @Parameter(description = "Image upload data", required = true)
-            @RequestBody @Valid UploadCreateDTO data) {
-        return equipmentServiceImp.uploadImageEquipament(data);
+            @RequestParam("file") MultipartFile file) {
+        return equipmentServiceImp.uploadImageEquipament(file);
     }
 
     @Operation(summary = "Retrieve all equipment", description = "Get a paginated list of all equipment in the system.")
@@ -124,6 +125,7 @@ public class EquipmentController {
     public ResponseEntity<Void> inactivate(
             @Parameter(description = "The ID of the equipment to inactivate", required = true)
             @PathVariable String id_equipment,
+
             @Parameter(description = "User log ID for tracking changes", required = true)
             @RequestParam Long userLog_id) {
         equipmentServiceImp.inactivateEquipment(id_equipment, userLog_id);
@@ -140,6 +142,7 @@ public class EquipmentController {
     public ResponseEntity<Void> active(
             @Parameter(description = "The ID of the equipment to activate", required = true)
             @PathVariable String id_equipment,
+
             @Parameter(description = "User log ID for tracking changes", required = true)
             @RequestParam Long userLog_id) {
         equipmentServiceImp.activateEquipment(id_equipment, userLog_id);
@@ -156,10 +159,13 @@ public class EquipmentController {
     public ResponseEntity<EquipmentDetailsDTO> updateEquipment(
             @Parameter(description = "The ID of the equipment to update", required = true)
             @PathVariable String id_equipment,
+
             @Parameter(description = "Data transfer object for updating the equipment", required = true)
             @RequestBody @Valid EquipmentUpdateDTO dados,
+
             @Parameter(description = "User log ID for tracking changes", required = true)
-            @RequestParam Long userLog_id) {
+            @RequestParam Long userLog_id)
+    {
         EquipmentDetailsDTO equipmentDetailsDTO = equipmentServiceImp.updateEquipment(id_equipment, dados, userLog_id);
         return ResponseEntity.ok(equipmentDetailsDTO);
     }
