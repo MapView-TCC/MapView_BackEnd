@@ -1,19 +1,14 @@
 package com.MapView.BackEnd.serviceImp;
 
 import com.MapView.BackEnd.dtos.Equipment.EquipmentDetailsDTO;
-import com.MapView.BackEnd.entities.Location;
+import com.MapView.BackEnd.dtos.TrackingHistory.TrackingHistoryWrongLocationDTO;
+import com.MapView.BackEnd.entities.*;
 import com.MapView.BackEnd.enums.EnumColors;
 import com.MapView.BackEnd.enums.EnumTrackingAction;
-import com.MapView.BackEnd.repository.EnviromentRepository;
-import com.MapView.BackEnd.repository.EquipmentRepository;
-import com.MapView.BackEnd.repository.LocationRepository;
-import com.MapView.BackEnd.repository.TrackingHistoryRepository;
+import com.MapView.BackEnd.repository.*;
 import com.MapView.BackEnd.service.TrackingHistoryService;
 import com.MapView.BackEnd.dtos.TrackingHistory.TrackingHistoryCreateDTO;
 import com.MapView.BackEnd.dtos.TrackingHistory.TrackingHistoryDetailsDTO;
-import com.MapView.BackEnd.entities.Enviroment;
-import com.MapView.BackEnd.entities.Equipment;
-import com.MapView.BackEnd.entities.TrackingHistory;
 import com.MapView.BackEnd.infra.NotFoundException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -31,14 +26,15 @@ public class TrackingHistoryServiceImp implements TrackingHistoryService {
     private final EnviromentRepository enviromentRepository;
     private final EquipmentRepository equipmentRepository;
     private final LocationRepository locationRepository;
+    private final EquipmentResponsibleRepository equipmentResponsibleRepository;
 
 
-    public TrackingHistoryServiceImp(TrackingHistoryRepository trackingHistoryRepository, EnviromentRepository enviromentRepository, EquipmentRepository equipmentRepository, LocationRepository locationRepository) {
+    public TrackingHistoryServiceImp(TrackingHistoryRepository trackingHistoryRepository, EnviromentRepository enviromentRepository, EquipmentRepository equipmentRepository, LocationRepository locationRepository, EquipmentResponsibleRepository equipmentResponsibleRepository) {
         this.trackingHistoryRepository = trackingHistoryRepository;
         this.enviromentRepository = enviromentRepository;
         this.equipmentRepository = equipmentRepository;
-
         this.locationRepository = locationRepository;
+        this.equipmentResponsibleRepository = equipmentResponsibleRepository;
     }
 
     @Override
@@ -85,25 +81,29 @@ public class TrackingHistoryServiceImp implements TrackingHistoryService {
                 if (local_tracking.getEnvironment_name().equals("BTC")){
 
                     System.out.println("_-----1--------");
-                    TrackingHistory trackingHistory = trackingHistoryRepository.save(new TrackingHistory(local_tracking, equipment.get(), EnumTrackingAction.ENTER, EnumColors.GREEN));
+                    TrackingHistory trackingHistory = trackingHistoryRepository.save(new TrackingHistory(local_tracking, equipment.get(), dados.rfid(),EnumTrackingAction.ENTER, EnumColors.GREEN));
                     return new TrackingHistoryDetailsDTO(trackingHistory);
                 }
                 System.out.println("_-----2--------");
-                TrackingHistory trackingHistory = trackingHistoryRepository.save(new TrackingHistory(local_tracking, equipment.get(), EnumTrackingAction.OUT, EnumColors.GREEN));
+                TrackingHistory trackingHistory = trackingHistoryRepository.save(new TrackingHistory(local_tracking, equipment.get(), dados.rfid(),EnumTrackingAction.OUT, EnumColors.GREEN));
                 return new TrackingHistoryDetailsDTO(trackingHistory);
             }
             if (local_tracking.getEnvironment_name().equals("BTC")){
                 System.out.println("_-----3--------");
-                TrackingHistory trackingHistory = trackingHistoryRepository.save(new TrackingHistory(local_tracking, equipment.get(), EnumTrackingAction.OUT, EnumColors.YELLOW));
+                TrackingHistory trackingHistory = trackingHistoryRepository.save(new TrackingHistory(local_tracking, equipment.get(), dados.rfid(),EnumTrackingAction.OUT, EnumColors.YELLOW));
                 return new TrackingHistoryDetailsDTO(trackingHistory);
             }
-            TrackingHistory trackingHistory = trackingHistoryRepository.save(new TrackingHistory(local_tracking, equipment.get(), EnumTrackingAction.OUT, EnumColors.GREEN));
+            TrackingHistory trackingHistory = trackingHistoryRepository.save(new TrackingHistory(local_tracking, equipment.get(), dados.rfid(),EnumTrackingAction.OUT, EnumColors.GREEN));
             System.out.println("_-----4--------");
             return new TrackingHistoryDetailsDTO(trackingHistory);
         }
         System.out.println("_-----5--------");
-        trackingHistoryRepository.save(new TrackingHistory(last_track_local,equipment.get(),EnumTrackingAction.OUT,EnumColors.GREEN));
-        TrackingHistory trackingHistory = trackingHistoryRepository.save(new TrackingHistory(local_tracking, equipment.get(), EnumTrackingAction.ENTER, EnumColors.GREEN));
+        trackingHistoryRepository.save(new TrackingHistory(last_track_local,equipment.get(), dados.rfid(), EnumTrackingAction.OUT,EnumColors.GREEN));
+        TrackingHistory trackingHistory = trackingHistoryRepository.save(new TrackingHistory(local_tracking, equipment.get(), dados.rfid(), EnumTrackingAction.ENTER, EnumColors.GREEN));
+
+        System.out.println("Se o rfid ta salvando aqui " + dados.rfid());
+        System.out.println(trackingHistory.getRfid());
+
         return new TrackingHistoryDetailsDTO(trackingHistory);
     }
 
@@ -144,27 +144,45 @@ public class TrackingHistoryServiceImp implements TrackingHistoryService {
                 .map(TrackingHistoryDetailsDTO::new)
                 .collect(Collectors.toList());
     }
+
     @Override
-    public List<EquipmentDetailsDTO> findWrongLocationEquipments (Long id_enviroment){
-        Enviroment enviroment = enviromentRepository.findById(id_enviroment).orElseThrow(() -> new NotFoundException("Enviroment not found"));
+    public List<TrackingHistoryWrongLocationDTO> findWrongLocationEquipments(Long id_enviroment) {
+        Enviroment enviroment = enviromentRepository.findById(id_enviroment)
+                .orElseThrow(() -> new NotFoundException("Enviroment not found"));
 
         List<TrackingHistory> trackingHistory = trackingHistoryRepository.findByEnvironment(enviroment);
-        List<Equipment> wrongLocationEquipments  = new ArrayList<>();
 
-        for (TrackingHistory track :trackingHistory) {
+        // Mapa para armazenar equipamentos e seus responsáveis
+        Map<String, Equipment> equipmentMap = new HashMap<>();
+
+        for (TrackingHistory track : trackingHistory) {
             String id_equipment = track.getEquipment().getId_equipment();
-            Equipment equipment = equipmentRepository.findById(id_equipment).orElseThrow(() -> new NotFoundException("Enviroment not found"));
+            Equipment equipment = equipmentRepository.findById(id_equipment)
+                    .orElseThrow(() -> new NotFoundException("Equipment not found"));
 
-            if (equipment.getLocation().getEnvironment().getId_environment() != enviroment.getId_environment()) {
-                wrongLocationEquipments .add(equipment);
+            if (!equipment.getLocation().getEnvironment().getId_environment().equals(enviroment.getId_environment())) {
+                equipmentMap.putIfAbsent(id_equipment, equipment);
+                System.out.println("Wrong location equipment added: " + equipment);
             }
         }
 
+        // Lista para armazenar o resultado final
+        List<TrackingHistoryWrongLocationDTO> result = new ArrayList<>();
 
-        return wrongLocationEquipments .stream()
-                .map(EquipmentDetailsDTO::new)
-                .collect(Collectors.toList());
+        for (Equipment equipment : equipmentMap.values()) {
+            // Coletando os responsáveis
+            List<String> responsibleNames = equipment.getEquipmentResponsibles().stream()
+                    .map(resp -> resp.getId_responsible().getResponsible_name())
+                    .collect(Collectors.toList());
+
+            result.add(new TrackingHistoryWrongLocationDTO(equipment, responsibleNames));
+        }
+
+        return result;
     }
+
+
+
 }
 
 

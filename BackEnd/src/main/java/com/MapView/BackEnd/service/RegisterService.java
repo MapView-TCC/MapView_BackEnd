@@ -3,8 +3,7 @@ package com.MapView.BackEnd.service;
 import com.MapView.BackEnd.dtos.Equipment.EquipmentCreateDTO;
 import com.MapView.BackEnd.dtos.EquipmentResponsible.EquipmentResponsibleCreateDTO;
 import com.MapView.BackEnd.dtos.Location.LocationCreateDTO;
-import com.MapView.BackEnd.dtos.RegisterCreateDTO;
-import com.MapView.BackEnd.dtos.RegisterDetailsDTO;
+import com.MapView.BackEnd.dtos.Register.RegisterDetailsDTO;
 
 public interface RegisterService {
 

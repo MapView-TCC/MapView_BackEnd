@@ -1,4 +1,4 @@
-package com.MapView.BackEnd.dtos;
+package com.MapView.BackEnd.dtos.Register;
 
 import com.MapView.BackEnd.enums.EnumModelEquipment;
 import jakarta.validation.constraints.Min;

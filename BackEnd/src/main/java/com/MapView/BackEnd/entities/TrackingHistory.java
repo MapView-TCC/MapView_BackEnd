@@ -53,9 +53,9 @@ public class TrackingHistory {
         this.warning = warning;
     }
 
-    public TrackingHistory(Enviroment enviroment, Equipment equipment, EnumTrackingAction action, EnumColors warning) {
+    public TrackingHistory(Enviroment enviroment, Equipment equipment, Long rfid, EnumTrackingAction action, EnumColors warning) {
         this.equipment = equipment;
-        this.rfid = null;
+        this.rfid = rfid;
         this.environment = enviroment;
         this.action = action;
         this.warning = warning;

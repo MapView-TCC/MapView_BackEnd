@@ -1,9 +1,5 @@
-package com.MapView.BackEnd.dtos;
+package com.MapView.BackEnd.dtos.Register;
 
-import com.MapView.BackEnd.dtos.Equipment.EquipmentCreateDTO;
-import com.MapView.BackEnd.dtos.Equipment.EquipmentDetailsDTO;
-import com.MapView.BackEnd.dtos.EquipmentResponsible.EquipmentResponsibleCreateDTO;
-import com.MapView.BackEnd.dtos.Location.LocationCreateDTO;
 import com.MapView.BackEnd.entities.*;
 import com.MapView.BackEnd.enums.EnumModelEquipment;
 import com.fasterxml.jackson.annotation.JsonFormat;
