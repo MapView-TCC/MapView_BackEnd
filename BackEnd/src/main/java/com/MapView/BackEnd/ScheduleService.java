@@ -13,11 +13,12 @@ import java.util.List;
 
 public class ScheduleService {
 
-    private EquipmentRepository equipmentRepository;
+    private final EquipmentRepository equipmentRepository;
     public ScheduleService(EquipmentRepository equipmentRepository) {
         this.equipmentRepository = equipmentRepository;
     }
 
+    // toda a segunda feira ele vai fazer essa função
     @Scheduled(cron = "0 0 0 * * MON")
     public void executed(){
         List<Equipment> equipment = equipmentRepository.findAllByOperativeTrue();
