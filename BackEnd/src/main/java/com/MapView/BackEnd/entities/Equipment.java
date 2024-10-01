@@ -7,6 +7,8 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 @Table(name = "equipment")
@@ -51,9 +53,9 @@ public class Equipment {
     private Image id_image;
     private boolean operative;
 
-    @OneToMany(mappedBy = "idEquipment")
+    @OneToMany(mappedBy = "idEquipment",fetch = FetchType.LAZY)
     @JsonManagedReference
-    private Set<EquipmentResponsible> equipmentResponsibles;
+    private List<EquipmentResponsible> equipmentResponsibles = new ArrayList<>();
 
 
     public Equipment(EquipmentCreateDTO data, Location location, MainOwner id_owner) {

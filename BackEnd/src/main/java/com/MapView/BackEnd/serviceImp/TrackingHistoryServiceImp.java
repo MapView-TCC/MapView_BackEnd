@@ -3,6 +3,7 @@ package com.MapView.BackEnd.serviceImp;
 import com.MapView.BackEnd.dtos.Equipment.EquipmentDetailsDTO;
 import com.MapView.BackEnd.dtos.TrackingHistory.TrackingHistoryWrongLocationDTO;
 import com.MapView.BackEnd.entities.*;
+import com.MapView.BackEnd.enums.EnumAction;
 import com.MapView.BackEnd.enums.EnumColors;
 import com.MapView.BackEnd.enums.EnumTrackingAction;
 import com.MapView.BackEnd.repository.*;
@@ -154,38 +155,34 @@ public class TrackingHistoryServiceImp implements TrackingHistoryService {
         List<TrackingHistory> trackingHistory = trackingHistoryRepository.findByEnvironment(enviroment);
 
 
-        List<TrackingHistoryWrongLocationDTO> wrongLocationEquipments = new ArrayList<>();
+        List<Equipment> wrongLocationEquipments = new ArrayList<>();
 
 
         Set<Long> addedResponsibleIds = new HashSet<>();
 
 
         for (TrackingHistory track : trackingHistory) {
-            Equipment id_equipment = track.getEquipment();
+            if (track.getAction().equals(EnumTrackingAction.ENTER)) {
 
+                Equipment equipment = track.getEquipment();
 
-            List<EquipmentResponsible> equipmentResponsibles = equipmentResponsibleRepository.findByIdEquipment(id_equipment);
+                Long locationequip = equipment.getLocation().getEnvironment().getId_environment();
 
-            for (EquipmentResponsible equipmentResponsible : equipmentResponsibles) {
-                Long idLocationEquip = equipmentResponsible.getIdEquipment()
-                        .getLocation().getEnvironment().getId_environment();
+                if (!locationequip.equals(id_environment)) {
+                    wrongLocationEquipments.add(equipment);
+                    List<EquipmentResponsible> equipmentResponsibles = equipmentResponsibleRepository.findByIdEquipment(equipment);
 
+                    List<String> responsibles = new ArrayList<>();
 
-                if (!idLocationEquip.equals(enviroment.getId_environment())) {
-                    if (track.getAction() == EnumTrackingAction.ENTER) {
-
-                        if (!addedResponsibleIds.contains(equipmentResponsible.getId_equip_resp())) {
-
-                            wrongLocationEquipments.add(new TrackingHistoryWrongLocationDTO(equipmentResponsible));
-                            addedResponsibleIds.add(equipmentResponsible.getId_equip_resp());
-                        }
+                    for (EquipmentResponsible responsible : equipmentResponsibles) {
+                        responsibles.add(responsible.getId_responsible().getResponsible_name());
+                        return Collections.singletonList(new TrackingHistoryWrongLocationDTO(equipment, enviroment, responsibles));
                     }
                 }
+
             }
-        }
+        }return null;
 
-
-        return wrongLocationEquipments;
     }
 
 

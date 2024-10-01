@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.apache.catalina.User;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 @Table(name = "responsible")
@@ -31,10 +33,9 @@ public class Responsible {
     private Users user;
     private boolean operative;
 
-    @OneToMany(mappedBy = "id_responsible")
-    @JsonManagedReference
-    private Set<EquipmentResponsible> equipmentResponsibles;
+    @OneToMany(mappedBy = "id_responsible",fetch = FetchType.LAZY)
 
+    private List<EquipmentResponsible> equipmentResponsibles = new ArrayList<>();
 
     public  Responsible(String responsible_name, String edv,Classes classes,Users users){
         this.responsible_name = responsible_name;

@@ -26,8 +26,8 @@ public class EquipmentResponsible {
     @JsonBackReference
     private Equipment idEquipment;
 
-    @ManyToOne
-    @JoinColumn(name = "id_responsible", nullable = false)
+    @ManyToOne()
+    @JoinColumn(name = "id_responsible", nullable = false )
     @JsonBackReference
     private Responsible id_responsible;
 
