@@ -11,19 +11,15 @@ import java.time.LocalDate;
 import java.util.List;
 
 public record TrackingHistoryWrongLocationDTO(
-        Long id_equip_resp,
-        Equipment equipment,
-        Responsible responsible,
-        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
-        LocalDate start_usage,
-        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
-        LocalDate end_usage
+
+
+        Responsible responsible
+
+
 
 ) {
     public TrackingHistoryWrongLocationDTO(EquipmentResponsible equipmentResponsible){
-        this(equipmentResponsible.getId_equip_resp(), equipmentResponsible.getIdEquipment(),
-                equipmentResponsible.getId_responsible(), equipmentResponsible.getStart_usage(),
-                equipmentResponsible.getEnd_usage());
+        this(equipmentResponsible.getId_responsible());
     }
 }
 

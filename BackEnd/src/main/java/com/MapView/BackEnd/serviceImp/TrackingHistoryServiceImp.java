@@ -150,38 +150,49 @@ public class TrackingHistoryServiceImp implements TrackingHistoryService {
         Enviroment enviroment = enviromentRepository.findById(id_environment)
                 .orElseThrow(() -> new NotFoundException("Enviroment not found"));
 
-        // Busca o histórico de rastreamento pelo ambiente
+
         List<TrackingHistory> trackingHistory = trackingHistoryRepository.findByEnvironment(enviroment);
 
-        // Lista para armazenar os equipamentos que estão fora da localização esperada
+
         List<TrackingHistoryWrongLocationDTO> wrongLocationEquipments = new ArrayList<>();
 
-        // Itera sobre cada histórico de rastreamento
+
+        Set<Long> addedResponsibleIds = new HashSet<>();
+
+
         for (TrackingHistory track : trackingHistory) {
             Equipment id_equipment = track.getEquipment();
 
-            // Busca todos os responsáveis pelo equipamento
+
             List<EquipmentResponsible> equipmentResponsibles = equipmentResponsibleRepository.findByIdEquipment(id_equipment);
 
             for (EquipmentResponsible equipmentResponsible : equipmentResponsibles) {
                 Long idLocationEquip = equipmentResponsible.getIdEquipment()
                         .getLocation().getEnvironment().getId_environment();
 
-                // Verifica se o equipamento está na localização correta
+
                 if (!idLocationEquip.equals(enviroment.getId_environment())) {
                     if (track.getAction() == EnumTrackingAction.ENTER) {
-                        // Adiciona o equipamento à lista de equipamentos fora da localização
-                        wrongLocationEquipments.add(new TrackingHistoryWrongLocationDTO(equipmentResponsible));
+
+                        if (!addedResponsibleIds.contains(equipmentResponsible.getId_equip_resp())) {
+
+                            wrongLocationEquipments.add(new TrackingHistoryWrongLocationDTO(equipmentResponsible));
+                            addedResponsibleIds.add(equipmentResponsible.getId_equip_resp());
+                        }
                     }
                 }
             }
         }
 
-        // Retorna a lista de DTOs com os equipamentos fora da localização
+
         return wrongLocationEquipments;
     }
 
 
+    // Retorna a lista de DTOs com os equipamentos fora da localização
+       // return wrongLocationEquipments.stream()
+               // .map(TrackingHistoryWrongLocationDTO::new)
+               // .collect(Collectors.toList());
 
 }
 

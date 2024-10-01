@@ -11,6 +11,5 @@ import java.util.Optional;
 @Repository
 public interface EquipmentResponsibleRepository extends JpaRepository<EquipmentResponsible,Long> {
     List<EquipmentResponsible> findAllByOperativeTrue();
-
-   List<EquipmentResponsible> findByIdEquipment(Equipment equipment);
+    List <EquipmentResponsible> findByIdEquipment(Equipment equipment);
 }
