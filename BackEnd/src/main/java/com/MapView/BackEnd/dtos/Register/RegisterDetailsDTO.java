@@ -28,7 +28,7 @@ public record RegisterDetailsDTO (String id_equipment,
                                   LocalDate end_usage) {
 
     public RegisterDetailsDTO(Equipment equipment, Location location, EquipmentResponsible equipmentResponsible){
-        this(equipment.getId_equipment(),
+        this(equipment.getIdEquipment(),
                 equipment.getName_equipment(),
                 equipment.getRfid(),
                 equipment.getType(),
@@ -42,7 +42,7 @@ public record RegisterDetailsDTO (String id_equipment,
                 location.getPost(),
                 location.getEnvironment(),
                 equipmentResponsible.getId_equip_resp(),
-                equipmentResponsible.getId_equipment(),
+                equipmentResponsible.getIdEquipment(),
                 equipmentResponsible.getId_responsible(),
                 equipmentResponsible.getStart_usage(),
                 equipmentResponsible.getEnd_usage());

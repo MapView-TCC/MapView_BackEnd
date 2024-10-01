@@ -70,7 +70,7 @@ public class RegisterServiceImp implements RegisterService {
 
 
         Equipment equipment = equipmentRepository.save(new Equipment(dataEquipment,locationEquip,mainOwner));
-        UserlogCreate(user,"Equipment",equipment.getId_equipment(),"Create new Equipment");
+        UserlogCreate(user,"Equipment",equipment.getIdEquipment(),"Create new Equipment");
 
         Location location = locationRepository.save(new Location(post,enviroment));
         UserlogCreate(user,"Location",location.getId_location().toString(),"Create new Location");

@@ -144,7 +144,7 @@ public class EquipmentServiceImp implements EquipmentService {
             if(data.id_equipment().isBlank()){
                 throw new BlankErrorException("Equipment id cannot be blank");
             }
-            equipment.setId_equipment(data.id_equipment());
+            equipment.setIdEquipment(data.id_equipment());
             userlog.setField("equipment id to: " + data.id_equipment());
         }
         if (data.name_equipment() != null){

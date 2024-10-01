@@ -118,7 +118,7 @@ public class TrackingHistoryServiceImp implements TrackingHistoryService {
         filterTracking = trackingHistoryRepository.findAll(PageRequest.of(page, itens)).stream()
                 .filter(t -> (action == null || t.getAction() == action))
                 .filter(t -> (colors == null || t.getWarning() == colors))
-                .filter(t -> (id_equipment == null || (t.getEquipment() != null && t.getEquipment().getId_equipment().equals(id_equipment))))
+                .filter(t -> (id_equipment == null || (t.getEquipment() != null && t.getEquipment().getIdEquipment().equals(id_equipment))))
                 .filter(t -> {
                     // Converte o Instant para LocalDateTime no fuso horário local
                     LocalDateTime dateTime = t.getDatetime().atZone(ZoneId.systemDefault()).toLocalDateTime();
@@ -153,9 +153,9 @@ public class TrackingHistoryServiceImp implements TrackingHistoryService {
         List<EquipmentResponsible> wrongLocationEquipments  = new ArrayList<>();
 
         for (TrackingHistory track :trackingHistory) {
-            String id_equipment = track.getEquipment().getId_equipment();
+            Equipment id_equipment = track.getEquipment();
             EquipmentResponsible equipment =  equipmentResponsibleRepository.findByIdEquipment(id_equipment);
-            Long idLocationequip = equipment.getId_equipment().getLocation().getEnvironment().getId_environment();
+            Long idLocationequip = equipment.getIdEquipment().getLocation().getEnvironment().getId_environment();
 
             if (idLocationequip != enviroment.getId_environment()) {
                 if(track.getAction() == EnumTrackingAction.ENTER){

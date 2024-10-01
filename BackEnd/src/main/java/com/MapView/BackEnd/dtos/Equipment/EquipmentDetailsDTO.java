@@ -18,7 +18,7 @@ public record EquipmentDetailsDTO(
         MainOwner owner) {
 
     public EquipmentDetailsDTO(Equipment equipment){
-        this(equipment.getId_equipment(), equipment.getName_equipment(), equipment.getRfid(), equipment.getType(), equipment.getModel(),
+        this(equipment.getIdEquipment(), equipment.getName_equipment(), equipment.getRfid(), equipment.getType(), equipment.getModel(),
              equipment.getValidity(), equipment.getAdmin_rights(), equipment.getObservation(), equipment.getLocation(),
              equipment.getOwner());
     }

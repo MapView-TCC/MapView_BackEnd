@@ -19,7 +19,8 @@ import java.util.Set;
 public class Equipment {
 
     @Id
-    private String id_equipment;
+    @Column(name = "id_equipment")
+    private String idEquipment;
 
     // novo campo
     private String name_equipment;
@@ -50,13 +51,13 @@ public class Equipment {
     private Image id_image;
     private boolean operative;
 
-    @OneToMany(mappedBy = "id_equipment")
+    @OneToMany(mappedBy = "idEquipment")
     @JsonManagedReference
     private Set<EquipmentResponsible> equipmentResponsibles;
 
 
     public Equipment(EquipmentCreateDTO data, Location location, MainOwner id_owner) {
-        this.id_equipment = data.id_equipment();
+        this.idEquipment = data.id_equipment();
         this.name_equipment = data.name_equipment();
         this.rfid = data.rfid();
         this.type = data.type();
@@ -69,7 +70,7 @@ public class Equipment {
         this.operative = true;
     }
     public Equipment(String id_equipment, Long rfid) {
-        this.id_equipment = id_equipment;
+        this.idEquipment = id_equipment;
         this.rfid = rfid;
         this.type = null;
         this.model = null;

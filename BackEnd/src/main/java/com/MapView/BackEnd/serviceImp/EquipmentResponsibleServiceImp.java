@@ -76,7 +76,7 @@ public class EquipmentResponsibleServiceImp implements EquipmentResponsibleServi
             if (!equipment.isOperative()){
                 throw new OperativeFalseException("The inactive equipment cannot be accessed.");
             }
-            equipmentResponsible.setId_equipment(equipment);
+            equipmentResponsible.setIdEquipment(equipment);
         }
 
         if (dados.id_responsible() != null){
