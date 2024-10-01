@@ -144,41 +144,28 @@ public class TrackingHistoryServiceImp implements TrackingHistoryService {
                 .map(TrackingHistoryDetailsDTO::new)
                 .collect(Collectors.toList());
     }
-
     @Override
-    public List<TrackingHistoryWrongLocationDTO> findWrongLocationEquipments(Long id_enviroment) {
-        Enviroment enviroment = enviromentRepository.findById(id_enviroment)
-                .orElseThrow(() -> new NotFoundException("Enviroment not found"));
+    public List<TrackingHistoryWrongLocationDTO> findWrongLocationEquipments (Long id_enviroment){
+        Enviroment enviroment = enviromentRepository.findById(id_enviroment).orElseThrow(() -> new NotFoundException("Enviroment not found"));
 
         List<TrackingHistory> trackingHistory = trackingHistoryRepository.findByEnvironment(enviroment);
 
-        // Mapa para armazenar equipamentos e seus responsáveis
-        Map<String, Equipment> equipmentMap = new HashMap<>();
+        List<EquipmentResponsible> wrongLocationEquipments  = new ArrayList<>();
 
-        for (TrackingHistory track : trackingHistory) {
+        for (TrackingHistory track :trackingHistory) {
             String id_equipment = track.getEquipment().getId_equipment();
-            Equipment equipment = equipmentRepository.findById(id_equipment)
-                    .orElseThrow(() -> new NotFoundException("Equipment not found"));
+            EquipmentResponsible equipment =  equipmentResponsibleRepository.findByIdEquipment(id_equipment);
+            Long idLocationequip = equipment.getId_equipment().getLocation().getEnvironment().getId_environment();
 
-            if (!equipment.getLocation().getEnvironment().getId_environment().equals(enviroment.getId_environment())) {
-                equipmentMap.putIfAbsent(id_equipment, equipment);
-                System.out.println("Wrong location equipment added: " + equipment);
+            if (idLocationequip != enviroment.getId_environment()) {
+                if(track.getAction() == EnumTrackingAction.ENTER){
+                    wrongLocationEquipments.add(equipment);
+                }
             }
         }
-
-        // Lista para armazenar o resultado final
-        List<TrackingHistoryWrongLocationDTO> result = new ArrayList<>();
-
-        for (Equipment equipment : equipmentMap.values()) {
-            // Coletando os responsáveis
-            List<String> responsibleNames = equipment.getEquipmentResponsibles().stream()
-                    .map(resp -> resp.getId_responsible().getResponsible_name())
-                    .collect(Collectors.toList());
-
-            result.add(new TrackingHistoryWrongLocationDTO(equipment, responsibleNames));
-        }
-
-        return result;
+        return wrongLocationEquipments .stream()
+                .map(TrackingHistoryWrongLocationDTO::new)
+                .collect(Collectors.toList());
     }
 
 
