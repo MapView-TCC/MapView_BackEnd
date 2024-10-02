@@ -258,7 +258,7 @@ public class EquipmentServiceImp implements EquipmentService {
                                                             String id_owner, String id_equipment,
                                                             String name_equipment, String post) {
 
-
+        LocalDate validDate = getStartDateFromQuarter(validity);
 
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Equipment> criteriaQuery = criteriaBuilder.createQuery(Equipment.class);
@@ -279,7 +279,7 @@ public class EquipmentServiceImp implements EquipmentService {
         //WHERE
 
         if(validity != null){
-            predicate.add(criteriaBuilder.like(equipmentRoot.get("validity"), "%"+validity+"%"));
+            predicate.add(criteriaBuilder.like(equipmentRoot.get("validity"), "%"+validDate+"%"));
         }
         if (environment != null){
             predicate.add(criteriaBuilder.like(enviromentJoin.get("environment_name"), "%"+environment+"%"));
