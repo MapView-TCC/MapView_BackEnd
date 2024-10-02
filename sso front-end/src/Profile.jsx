@@ -25,6 +25,10 @@ const Profile = () => {
     fetchUserInfo();
   }, []);
 
+  const handleLogout = () => {
+    window.location.href = 'https://login.microsoftonline.com/0ae51e19-07c8-4e4b-bb6d-648ee58410f4/oauth2/v2.0/logout'; // Redireciona para o Login (SSO)
+  };
+
 // Apenas renderiza as informações
 
   return (
@@ -58,6 +62,10 @@ const Profile = () => {
                 ))}
             </ul>
           </div>
+      
+          <button onClick={handleLogout}>Logout</button>
+      
+
         </div>
       ) : (
         <p>Loading...</p>

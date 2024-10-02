@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.oauth2.client.registration.ReactiveClientRegistrationRepository;
@@ -12,16 +13,23 @@ import org.springframework.security.oauth2.jwt.ReactiveJwtDecoder;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 import org.springframework.security.web.server.authentication.RedirectServerAuthenticationSuccessHandler;
 
+import java.net.URI;
+
 @Configuration
 @EnableWebFluxSecurity
 public class SecurityConfig {
 
+    // Injeta o repositório de registro de clientes OAuth2, utilizado para gerenciar registros de clientes OAuth2.
     @Autowired
     private ReactiveClientRegistrationRepository clientRegistrationRepository;
 
-
+    // Injeta o URI do JWK Set (JSON Web Key Set) presente no `application.yaml`.
     @Value("${spring.security.oauth2.client.provider.azure.jwk-set-uri}")
     private String jwkSetUri;
+
+    // Injeta a url de logout
+    @Value("${spring.security.oauth2.client.provider.azure.logout}")
+    private String Setlogout;
 
     @Bean
     SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
@@ -31,6 +39,7 @@ public class SecurityConfig {
 
         http.authorizeExchange(conf -> conf
                         .pathMatchers("/login").permitAll()
+                        .pathMatchers("/logout").permitAll()
                         .anyExchange().authenticated())
 
                 // - Define o resolvedor de requisições de autorização.
@@ -39,8 +48,15 @@ public class SecurityConfig {
                 .oauth2Login(conf -> conf
                         .authenticationSuccessHandler(new RedirectServerAuthenticationSuccessHandler("http://localhost:5173/profile")))
 
-                // - Define o decodificador JWT para validar tokens de acesso.
+                .logout(logout -> logout
+                        .logoutSuccessHandler((exchange, authentication) -> {
+                            // Redireciona para o URL de logout do Azure
+                            exchange.getExchange().getResponse().setStatusCode(HttpStatus.FOUND);
+                            exchange.getExchange().getResponse().getHeaders().setLocation(URI.create(Setlogout));
+                            return exchange.getExchange().getResponse().setComplete(); // Finaliza a resposta
+                        }))
 
+                // - Define o decodificador JWT para validar tokens de acesso.
                 .oauth2ResourceServer(conf -> conf
                         .jwt(jwt -> jwt.jwtDecoder(jwtDecoder())));
         return http.build();

@@ -17,6 +17,9 @@ public class ProfillerController {
     @GetMapping("/userinfo")
     @CrossOrigin("http://localhost:5173")
 
+    // para obter informações do usuario logado
+    // @RegisteredOAuth2AuthorizedClient OAuth2AuthorizedClient authorizedClient -> Este parâmetro fornece acesso ao cliente OAuth2 autorizado, que inclui o access_token usado para autenticação.
+    // @AuthenticationPrincipal OidcUser oidcUser -> acessar as informações do usuário autenticado no contexto de OAuth2/OpenID
     public Map<String, Object> userInfo(@AuthenticationPrincipal OidcUser oidcUser, @RegisteredOAuth2AuthorizedClient OAuth2AuthorizedClient auth2AuthorizedClient){
         Map<String, Object> attributesMap = new HashMap<>(oidcUser.getAttributes());
         attributesMap.put("id_token", oidcUser.getIdToken().getTokenValue());
