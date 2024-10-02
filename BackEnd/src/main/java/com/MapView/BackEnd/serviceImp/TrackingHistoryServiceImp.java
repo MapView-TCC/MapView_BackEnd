@@ -144,49 +144,41 @@ public class TrackingHistoryServiceImp implements TrackingHistoryService {
                 .map(TrackingHistoryDetailsDTO::new)
                 .collect(Collectors.toList());
     }
-    @Override
     public List<TrackingHistoryWrongLocationDTO> findWrongLocationEquipments(Long id_environment) {
         // Verifica se o ambiente existe
         Enviroment enviroment = enviromentRepository.findById(id_environment)
                 .orElseThrow(() -> new NotFoundException("Enviroment not found"));
 
-
         List<TrackingHistory> trackingHistory = trackingHistoryRepository.findByEnvironment(enviroment);
+        List<TrackingHistoryWrongLocationDTO> wrongLocationDTOs = new ArrayList<>();
 
-
-        List<TrackingHistoryWrongLocationDTO> wrongLocationEquipments = new ArrayList<>();
-
-
-        Set<Long> addedResponsibleIds = new HashSet<>();
-
+        Set<String> addedEquipmentIds = new HashSet<>();  // Usar um Set para evitar duplicações
 
         for (TrackingHistory track : trackingHistory) {
-            Equipment id_equipment = track.getEquipment();
+            if (track.getAction().equals(EnumTrackingAction.ENTER)) {
+                Equipment equipment = track.getEquipment();
+                Long locationEquip = equipment.getLocation().getEnvironment().getId_environment();
 
+                if (!locationEquip.equals(id_environment)) {
+                    if (!addedEquipmentIds.contains(equipment.getIdEquipment())) {
+                        addedEquipmentIds.add(equipment.getIdEquipment());
 
-            List<EquipmentResponsible> equipmentResponsibles = equipmentResponsibleRepository.findByIdEquipment(id_equipment);
+                        List<EquipmentResponsible> equipmentResponsibles = equipmentResponsibleRepository.findByIdEquipment(equipment);
+                        List<String> responsibles = new ArrayList<>();
 
-            for (EquipmentResponsible equipmentResponsible : equipmentResponsibles) {
-                Long idLocationEquip = equipmentResponsible.getIdEquipment()
-                        .getLocation().getEnvironment().getId_environment();
-
-
-                if (!idLocationEquip.equals(enviroment.getId_environment())) {
-                    if (track.getAction() == EnumTrackingAction.ENTER) {
-
-                        if (!addedResponsibleIds.contains(equipmentResponsible.getId_equip_resp())) {
-
-                            wrongLocationEquipments.add(new TrackingHistoryWrongLocationDTO(equipmentResponsible));
-                            addedResponsibleIds.add(equipmentResponsible.getId_equip_resp());
+                        for (EquipmentResponsible responsible : equipmentResponsibles) {
+                            responsibles.add(responsible.getId_responsible().getResponsible_name());
                         }
+
+                        wrongLocationDTOs.add(new TrackingHistoryWrongLocationDTO(equipment, enviroment,responsibles));
                     }
                 }
             }
         }
 
-
-        return wrongLocationEquipments;
+        return wrongLocationDTOs;
     }
+
 
 
     // Retorna a lista de DTOs com os equipamentos fora da localização

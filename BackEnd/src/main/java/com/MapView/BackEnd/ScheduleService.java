@@ -1,6 +1,7 @@
 package com.MapView.BackEnd;
 
 import com.MapView.BackEnd.entities.Equipment;
+import com.MapView.BackEnd.entities.Location;
 import com.MapView.BackEnd.entities.TrackingHistory;
 import com.MapView.BackEnd.repository.EquipmentRepository;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -20,23 +21,26 @@ public class ScheduleService {
 
     // toda a segunda feira ele vai fazer essa função
     @Scheduled(cron = "0 0 0 * * MON")
-    public void executed(){
-        List<Equipment> equipment = equipmentRepository.findAllByOperativeTrue();
+    public void executed() {
+        List<Equipment> equipmentList = equipmentRepository.findAllByOperativeTrue();
 
-        for (Equipment e: equipment){
-            int ano = Integer.parseInt(e.getValidity().substring(0,4));
-            int trimestre = Integer.parseInt(e.getValidity().substring(6));
+        for (Equipment e : equipmentList) {
+            LocalDate validity = e.getValidity();
 
-            if(LocalDate.now().getYear() == ano){
-                if(getTrimestre() == trimestre){
-                    new TrackingHistory();
+            if (validity != null && LocalDate.now().getYear() == validity.getYear()) {
+
+                if (getTrimestre(validity.getMonthValue()) == getTrimestre(LocalDate.now().getMonthValue())) {
+
+                    TrackingHistory trackingHistory = new TrackingHistory();
+
                 }
             }
-
         }
     }
-    public static int getTrimestre() {
-        int month = LocalDate.now().getMonthValue();
-        return (month + 1) / 3 + 1 ;
+
+    // Função para calcular o trimestre baseado no mês
+    public static int getTrimestre(int month) {
+        return (month - 1) / 3 + 1;
     }
+
 }

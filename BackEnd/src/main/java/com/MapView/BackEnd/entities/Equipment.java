@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.util.Set;
 
 @Table(name = "equipment")
@@ -29,7 +30,7 @@ public class Equipment {
     private String type;
     @Enumerated(EnumType.STRING)
     private EnumModelEquipment model;
-    private String validity; // periodo de utilização, quando tem que ser devolvido
+    private LocalDate validity; // periodo de utilização, quando tem que ser devolvido
     private String admin_rights; // codigo que eles tem para fazer as requisições
     private String observation;
 
@@ -56,13 +57,13 @@ public class Equipment {
     private Set<EquipmentResponsible> equipmentResponsibles;
 
 
-    public Equipment(EquipmentCreateDTO data, Location location, MainOwner id_owner) {
+    public Equipment(EquipmentCreateDTO data, LocalDate date, Location location, MainOwner id_owner) {
         this.idEquipment = data.id_equipment();
         this.name_equipment = data.name_equipment();
         this.rfid = data.rfid();
         this.type = data.type();
         this.model = data.model();
-        this.validity = data.validity();
+        this.validity = date;
         this.admin_rights = data.admin_rights();
         this.observation = data.observation();
         this.location = location;

@@ -105,7 +105,7 @@ CREATE TABLE IF NOT EXISTS equipment (
     rfid BIGINT,
     type VARCHAR(255),
     model ENUM('DESKTOP_TINK','NOTEBOOK_STANDARD','DESKTOP_EXTERNO', 'NOTEBOOK_ENHANCED'),
-    validity VARCHAR(255),
+    validity DATE,
     admin_rights VARCHAR(255),
     observation TEXT,
     id_location INT,

@@ -12,6 +12,8 @@ import com.MapView.BackEnd.repository.*;
 import com.MapView.BackEnd.service.RegisterService;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+
 @Service
 
 public class RegisterServiceImp implements RegisterService {
@@ -68,8 +70,9 @@ public class RegisterServiceImp implements RegisterService {
         Responsible responsible = responsibleRepository.findById(dataResponsible.id_responsible())
                 .orElseThrow(() -> new NotFoundException("Responsible id not found"));
 
+        LocalDate stringToDate = stringToDate(dataEquipment.validity());
 
-        Equipment equipment = equipmentRepository.save(new Equipment(dataEquipment,locationEquip,mainOwner));
+        Equipment equipment = equipmentRepository.save(new Equipment(dataEquipment,stringToDate,locationEquip,mainOwner));
         UserlogCreate(user,"Equipment",equipment.getIdEquipment(),"Create new Equipment");
 
         Location location = locationRepository.save(new Location(post,enviroment));
@@ -79,6 +82,28 @@ public class RegisterServiceImp implements RegisterService {
         UserlogCreate(user,"EquipmentResponsible",equipmentResponsible.getId_equip_resp().toString(),"Create new EquipmentResponsible");
 
         return new RegisterDetailsDTO(equipment,location,equipmentResponsible);
+    }
+
+    public LocalDate stringToDate (String stringDate){
+        int ano = Integer.parseInt(stringDate.substring(0,4));
+        int trimestre = Integer.parseInt(stringDate.substring(6));
+        if(trimestre == 1){
+            LocalDate data = LocalDate.of(ano,3,1);
+            return data;
+        }
+        if(trimestre == 2){
+            LocalDate data = LocalDate.of(ano,6,1);
+            return data;
+        }
+        if(trimestre == 3){
+            LocalDate data = LocalDate.of(ano,9,1);
+            return data;
+        }
+        if(trimestre == 4){
+            LocalDate data = LocalDate.of(ano,12,1);
+            return data;
+        }
+        return null;
     }
 
     public void UserlogCreate(Users user, String tabela, String id,String descrption){
