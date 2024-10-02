@@ -5,13 +5,15 @@ import com.MapView.BackEnd.entities.Location;
 import com.MapView.BackEnd.entities.MainOwner;
 import com.MapView.BackEnd.enums.EnumModelEquipment;
 
+import java.time.LocalDate;
+
 public record EquipmentDetailsDTO(
         String id_equipment,
         String name_equipment,
         long rfid,
         String type,
         EnumModelEquipment model,
-        String validity,
+        LocalDate validity,
         String admin_rights,
         String observation,
         Location location,

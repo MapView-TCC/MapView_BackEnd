@@ -29,6 +29,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -104,12 +105,12 @@ public class EquipmentServiceImp implements EquipmentService {
 
         System.out.println(data.name_equipment());
 
-        // Cria o equipamento
-        Equipment equipment = new Equipment(data, location, mainOwner);
 
-        // Usa merge em vez de save
-        equipment = entityManager.merge(equipment);
-        //equipmentRepository.save(equipment);
+        // Cria o equipamento
+
+
+        Equipment equipment  = equipmentRepository.save(new Equipment(data,getStartDateFromQuarter(data.validity()), location, mainOwner));
+
 
         var userLog = new UserLog(users, "Equipment", data.id_equipment(), "Create new Equipment", EnumAction.CREATE);
         userLogRepository.save(userLog);
@@ -127,6 +128,7 @@ public class EquipmentServiceImp implements EquipmentService {
         System.out.println(new EquipmentDetailsDTO(equipment));
         return new EquipmentDetailsDTO(equipment);
     }
+
 
     @Override
     public EquipmentDetailsDTO updateEquipment(String id_equipment, EquipmentUpdateDTO data, Long userLog_id) {
@@ -176,7 +178,7 @@ public class EquipmentServiceImp implements EquipmentService {
             if(data.validity().isBlank()){
                 throw new BlankErrorException("Equipment validity cannot be blank");
             }
-            equipment.setValidity(data.validity());
+            equipment.setValidity(getStartDateFromQuarter(data.validity()));
             userlog.setField(userlog.getField()+" ,"+"equipment validity to: " + data.validity());
         }
 
@@ -256,7 +258,7 @@ public class EquipmentServiceImp implements EquipmentService {
                                                             String id_owner, String id_equipment,
                                                             String name_equipment, String post) {
 
-
+        LocalDate validDate = getStartDateFromQuarter(validity);
 
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Equipment> criteriaQuery = criteriaBuilder.createQuery(Equipment.class);
@@ -277,7 +279,7 @@ public class EquipmentServiceImp implements EquipmentService {
         //WHERE
 
         if(validity != null){
-            predicate.add(criteriaBuilder.like(equipmentRoot.get("validity"), "%"+validity+"%"));
+            predicate.add(criteriaBuilder.like(equipmentRoot.get("validity"), "%"+validDate+"%"));
         }
         if (environment != null){
             predicate.add(criteriaBuilder.like(enviromentJoin.get("environment_name"), "%"+environment+"%"));
@@ -317,15 +319,13 @@ public class EquipmentServiceImp implements EquipmentService {
                 .collect(Collectors.toList());
     }
 
-    public ResponseEntity<String> uploadImageEquipament (MultipartFile file){
+    public ResponseEntity<String> uploadImageEquipament (MultipartFile file,EnumModelEquipment equipType){
         String fileName = StringUtils.cleanPath(file.getOriginalFilename());
-        EnumModelEquipment type = EnumModelEquipment.DESKTOP_TINK;
-
         try {
             Path targetLocation = fileStorageLocation.resolve(fileName);
             file.transferTo(targetLocation);
 
-            equipament_image(targetLocation,type);
+            equipament_image(targetLocation,equipType);
 
             String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
                     .path("/api/files/download/")
@@ -362,5 +362,18 @@ public class EquipmentServiceImp implements EquipmentService {
         equipmentRepository.saveAll(allEquipments);
     }
 
+    public static LocalDate getStartDateFromQuarter(String quarterStr) {
+        // Dividir a string em ano e trimestre
+        String[] parts = quarterStr.split("\\.");
+        int year = Integer.parseInt(parts[0]);
+        int quarter = Integer.parseInt(parts[1].substring(1)); // Pega o número do trimestre
+
+        // Calcular o primeiro mês do trimestre
+        int month = (quarter - 1) * 3 + 1; // Q1 -> Janeiro, Q2 -> Abril, Q3 -> Julho, Q4 -> Outubro
+
+        // Retornar a data do primeiro dia do mês do trimestre
+        return LocalDate.of(year, month, 1);
+    }
 
 }
+
