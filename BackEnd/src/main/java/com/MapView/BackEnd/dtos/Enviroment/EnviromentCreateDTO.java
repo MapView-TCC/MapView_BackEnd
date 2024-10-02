@@ -7,7 +7,5 @@ import jakarta.validation.constraints.Positive;
 
 public record EnviromentCreateDTO (@NotBlank(message = "Enviroment name cannot be blank")
                                    String environment_name,
-                                   @Positive
-                                   @Min(1)
                                    String id_raspberry){
 }

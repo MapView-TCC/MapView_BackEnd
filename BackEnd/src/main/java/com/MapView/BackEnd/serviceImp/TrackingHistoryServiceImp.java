@@ -152,18 +152,22 @@ public class TrackingHistoryServiceImp implements TrackingHistoryService {
 
         List<EquipmentResponsible> wrongLocationEquipments  = new ArrayList<>();
 
-        for (TrackingHistory track :trackingHistory) {
+        for (TrackingHistory track : trackingHistory) {
             Equipment id_equipment = track.getEquipment();
-            EquipmentResponsible equipment =  equipmentResponsibleRepository.findByIdEquipment(id_equipment);
-            Long idLocationequip = equipment.getIdEquipment().getLocation().getEnvironment().getId_environment();
+            List<EquipmentResponsible> equipmentList = equipmentResponsibleRepository.findByIdEquipment(id_equipment);
 
-            if (idLocationequip != enviroment.getId_environment()) {
-                if(track.getAction() == EnumTrackingAction.ENTER){
-                    wrongLocationEquipments.add(equipment);
+            for (EquipmentResponsible equipment : equipmentList) {
+                Long idLocationequip = equipment.getIdEquipment().getLocation().getEnvironment().getId_environment();
+
+                if (idLocationequip != enviroment.getId_environment()) {
+                    if (track.getAction() == EnumTrackingAction.ENTER) {
+                        wrongLocationEquipments.add(equipment);
+                    }
                 }
             }
         }
-        return wrongLocationEquipments .stream()
+
+        return wrongLocationEquipments.stream()
                 .map(TrackingHistoryWrongLocationDTO::new)
                 .collect(Collectors.toList());
     }
