@@ -70,7 +70,7 @@ public class RegisterServiceImp implements RegisterService {
         Responsible responsible = responsibleRepository.findById(dataResponsible.id_responsible())
                 .orElseThrow(() -> new NotFoundException("Responsible id not found"));
 
-        LocalDate stringToDate = stringToDate(dataEquipment.validity());
+        LocalDate stringToDate = getStartDateFromQuarter(dataEquipment.validity());
 
         Equipment equipment = equipmentRepository.save(new Equipment(dataEquipment,stringToDate,locationEquip,mainOwner));
         UserlogCreate(user,"Equipment",equipment.getIdEquipment(),"Create new Equipment");
@@ -84,26 +84,17 @@ public class RegisterServiceImp implements RegisterService {
         return new RegisterDetailsDTO(equipment,location,equipmentResponsible);
     }
 
-    public LocalDate stringToDate (String stringDate){
-        int ano = Integer.parseInt(stringDate.substring(0,4));
-        int trimestre = Integer.parseInt(stringDate.substring(6));
-        if(trimestre == 1){
-            LocalDate data = LocalDate.of(ano,3,1);
-            return data;
-        }
-        if(trimestre == 2){
-            LocalDate data = LocalDate.of(ano,6,1);
-            return data;
-        }
-        if(trimestre == 3){
-            LocalDate data = LocalDate.of(ano,9,1);
-            return data;
-        }
-        if(trimestre == 4){
-            LocalDate data = LocalDate.of(ano,12,1);
-            return data;
-        }
-        return null;
+    public static LocalDate getStartDateFromQuarter(String quarterStr) {
+        // Dividir a string em ano e trimestre
+        String[] parts = quarterStr.split("\\.");
+        int year = Integer.parseInt(parts[0]);
+        int quarter = Integer.parseInt(parts[1].substring(1)); // Pega o número do trimestre
+
+        // Calcular o primeiro mês do trimestre
+        int month = (quarter - 1) * 3 + 1; // Q1 -> Janeiro, Q2 -> Abril, Q3 -> Julho, Q4 -> Outubro
+
+        // Retornar a data do primeiro dia do mês do trimestre
+        return LocalDate.of(year, month, 1);
     }
 
     public void UserlogCreate(Users user, String tabela, String id,String descrption){

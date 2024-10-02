@@ -2,6 +2,7 @@ package com.MapView.BackEnd.controller;
 
 import com.MapView.BackEnd.dtos.Equipment.*;
 import com.MapView.BackEnd.dtos.ImageUpload.UploadCreateDTO;
+import com.MapView.BackEnd.enums.EnumModelEquipment;
 import com.MapView.BackEnd.serviceImp.EquipmentServiceImp;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -64,8 +65,8 @@ public class EquipmentController {
     @Transactional
     public ResponseEntity<String> uploadImage(
             @Parameter(description = "Image upload data", required = true)
-            @RequestParam("file") MultipartFile file) {
-        return equipmentServiceImp.uploadImageEquipament(file);
+            @RequestParam("file") MultipartFile file, @RequestParam EnumModelEquipment type) {
+        return equipmentServiceImp.uploadImageEquipament(file,type);
     }
 
     @Operation(summary = "Retrieve all equipment", description = "Get a paginated list of all equipment in the system.")

@@ -12,6 +12,7 @@ import org.apache.poi.ss.util.CellRangeAddress;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -80,7 +81,7 @@ public class ReportServiceImp implements ReportService {
             createDataCell(dataRow, 0, equipment.getIdEquipment(), dataStyle);
             createDataCell(dataRow, 1, equipment.getType(), dataStyle);
             createDataCell(dataRow, 2, equipment.getModel().toString(), dataStyle);
-            createDataCell(dataRow, 3, equipment.getValidity(), dataStyle);
+            createDataCell(dataRow, 3, getQuarterStringFromDate(equipment.getValidity()), dataStyle);
 
             // Extrair informações textuais das entidades Location e MainOwner
             String IdownerName = equipment.getOwner() != null ? equipment.getOwner().getId_owner() : "N/A";
@@ -130,4 +131,18 @@ public class ReportServiceImp implements ReportService {
         cell.setCellValue(value);
         cell.setCellStyle(style);
     }
+
+        public static String getQuarterStringFromDate(LocalDate date) {
+            // Obter o ano
+            int year = date.getYear();
+
+            // Calcular o trimestre
+            int month = date.getMonthValue();
+            int quarter = (month - 1) / 3 + 1; // Q1 -> 1, Q2 -> 2, Q3 -> 3, Q4 -> 4
+
+            // Formatar a string no formato "YYYY.QX"
+            return year + ".Q" + quarter;
+        }
+    }
+
 }
