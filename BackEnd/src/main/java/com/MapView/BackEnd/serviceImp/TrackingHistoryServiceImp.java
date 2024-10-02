@@ -179,13 +179,6 @@ public class TrackingHistoryServiceImp implements TrackingHistoryService {
         return wrongLocationDTOs;
     }
 
-
-
-    // Retorna a lista de DTOs com os equipamentos fora da localização
-       // return wrongLocationEquipments.stream()
-               // .map(TrackingHistoryWrongLocationDTO::new)
-               // .collect(Collectors.toList());
-
 }
 
 
