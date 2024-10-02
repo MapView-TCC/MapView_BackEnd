@@ -151,38 +151,36 @@ public class TrackingHistoryServiceImp implements TrackingHistoryService {
         Enviroment enviroment = enviromentRepository.findById(id_environment)
                 .orElseThrow(() -> new NotFoundException("Enviroment not found"));
 
-
         List<TrackingHistory> trackingHistory = trackingHistoryRepository.findByEnvironment(enviroment);
+        List<TrackingHistoryWrongLocationDTO> wrongLocationDTOs = new ArrayList<>();
 
-
-        List<Equipment> wrongLocationEquipments = new ArrayList<>();
-
-
-        Set<Long> addedResponsibleIds = new HashSet<>();
-
+        Set<String> addedEquipmentIds = new HashSet<>();  // Usar um Set para evitar duplicações
 
         for (TrackingHistory track : trackingHistory) {
             if (track.getAction().equals(EnumTrackingAction.ENTER)) {
-
                 Equipment equipment = track.getEquipment();
+                Long locationEquip = equipment.getLocation().getEnvironment().getId_environment();
 
-                Long locationequip = equipment.getLocation().getEnvironment().getId_environment();
+                if (!locationEquip.equals(id_environment)) {
+                    if (!addedEquipmentIds.contains(equipment.getIdEquipment())) {
+                        addedEquipmentIds.add(equipment.getIdEquipment());
 
-                if (!locationequip.equals(id_environment)) {
-                    wrongLocationEquipments.add(equipment);
-                    List<EquipmentResponsible> equipmentResponsibles = equipmentResponsibleRepository.findByIdEquipment(equipment);
+                        List<EquipmentResponsible> equipmentResponsibles = equipmentResponsibleRepository.findByIdEquipment(equipment);
+                        List<String> responsibles = new ArrayList<>();
 
-                    List<String> responsibles = new ArrayList<>();
+                        for (EquipmentResponsible responsible : equipmentResponsibles) {
+                            responsibles.add(responsible.getId_responsible().getResponsible_name());
+                        }
 
-                    for (EquipmentResponsible responsible : equipmentResponsibles) {
-                        responsibles.add(responsible.getId_responsible().getResponsible_name());
-                        return Collections.singletonList(new TrackingHistoryWrongLocationDTO(equipment, enviroment, responsibles));
+                        wrongLocationDTOs.add(new TrackingHistoryWrongLocationDTO(equipment, enviroment, responsibles));
                     }
                 }
-
             }
-        }return null;
+        }
 
+        return wrongLocationDTOs.stream()
+                .map(TrackingHistoryWrongLocationDTO::new)
+                .collect(Collectors.toList());
     }
 
 

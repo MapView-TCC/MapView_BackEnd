@@ -22,5 +22,9 @@ public record TrackingHistoryWrongLocationDTO(
     public TrackingHistoryWrongLocationDTO(Equipment equipment, Enviroment enviroment,List<String> responsibles){
         this(equipment.getIdEquipment(),equipment.getName_equipment(),enviroment.getEnvironment_name(),equipment.getLocation().getEnvironment().getEnvironment_name(),responsibles);
     }
+
+    public TrackingHistoryWrongLocationDTO(TrackingHistoryWrongLocationDTO track) {
+        this(track.id_equipment, track.name_equipment(), track.localizacao_origem(), track.Localizaçao_atual(), track.responsibles());
+    }
 }
 

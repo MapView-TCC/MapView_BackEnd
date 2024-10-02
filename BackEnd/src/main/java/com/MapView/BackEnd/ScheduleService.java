@@ -13,7 +13,7 @@ import java.util.List;
 
 public class ScheduleService {
 
-    private EquipmentRepository equipmentRepository;
+    private final EquipmentRepository equipmentRepository;
     public ScheduleService(EquipmentRepository equipmentRepository) {
         this.equipmentRepository = equipmentRepository;
     }

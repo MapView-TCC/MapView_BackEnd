@@ -21,6 +21,4 @@ public record TrackingHistoryDetailsDTO(Long id_tracking,
                 trackingHistory.getEnvironment(), trackingHistory.getAction(),
                 trackingHistory.getWarning());
     }
-
-
 }
