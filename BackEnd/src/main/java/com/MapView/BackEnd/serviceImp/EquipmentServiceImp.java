@@ -29,6 +29,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -176,7 +177,7 @@ public class EquipmentServiceImp implements EquipmentService {
             if(data.validity().isBlank()){
                 throw new BlankErrorException("Equipment validity cannot be blank");
             }
-            equipment.setValidity(data.validity());
+            equipment.setValidity(stringToDate(data.validity()));
             userlog.setField(userlog.getField()+" ,"+"equipment validity to: " + data.validity());
         }
 
@@ -360,6 +361,28 @@ public class EquipmentServiceImp implements EquipmentService {
 
 
         equipmentRepository.saveAll(allEquipments);
+    }
+
+    public LocalDate stringToDate (String stringDate){
+        int ano = Integer.parseInt(stringDate.substring(0,4));
+        int trimestre = Integer.parseInt(stringDate.substring(6));
+        if(trimestre == 1){
+            LocalDate data = LocalDate.of(ano,3,1);
+            return data;
+        }
+        if(trimestre == 2){
+            LocalDate data = LocalDate.of(ano,6,1);
+            return data;
+        }
+        if(trimestre == 3){
+            LocalDate data = LocalDate.of(ano,9,1);
+            return data;
+        }
+        if(trimestre == 4){
+            LocalDate data = LocalDate.of(ano,12,1);
+            return data;
+        }
+        return null;
     }
 
 
