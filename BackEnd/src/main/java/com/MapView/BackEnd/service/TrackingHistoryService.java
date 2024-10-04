@@ -17,5 +17,6 @@ public interface TrackingHistoryService {
     List<TrackingHistoryDetailsDTO> FilterTracking(int page, int itens, EnumTrackingAction action,
                                                    Integer day, Integer month, Integer year, EnumColors colors,
                                                    String id_equipment);
+    void deleteTracking(Long id_tracking);
     List<TrackingHistoryWrongLocationDTO> findWrongLocationEquipments (Long id_enviroment);
 }

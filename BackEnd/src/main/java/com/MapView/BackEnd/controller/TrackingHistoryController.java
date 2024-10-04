@@ -104,6 +104,12 @@ public class TrackingHistoryController {
         return ResponseEntity.ok(list);
     }
 
+    @DeleteMapping("/{id_tracking}")
+    public ResponseEntity deleteTracking(@PathVariable("id_tracking") Long id_tracking){
+        trackingHistoryServiceImp.deleteTracking(id_tracking);
+        return ResponseEntity.ok().build();
+    }
+
     @GetMapping("/wronglocations")
     public ResponseEntity<List<TrackingHistoryWrongLocationDTO>> getWrongLocationEquipment(@RequestParam("id_enviromet") Long id_enviroment){
         List<TrackingHistoryWrongLocationDTO> equipment =  trackingHistoryServiceImp.findWrongLocationEquipments(id_enviroment);

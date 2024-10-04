@@ -144,6 +144,16 @@ public class TrackingHistoryServiceImp implements TrackingHistoryService {
                 .map(TrackingHistoryDetailsDTO::new)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public void deleteTracking(Long id_tracking) {
+        var tracking = trackingHistoryRepository.findById(id_tracking).orElseThrow(() ->
+                new NotFoundException("Id not found"));
+        if (tracking != null){
+            trackingHistoryRepository.deleteById(id_tracking);
+        }
+    }
+
     public List<TrackingHistoryWrongLocationDTO> findWrongLocationEquipments(Long id_environment) {
         // Verifica se o ambiente existe
         Enviroment enviroment = enviromentRepository.findById(id_environment)

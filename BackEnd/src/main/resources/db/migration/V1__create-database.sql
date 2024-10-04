@@ -117,7 +117,13 @@ CREATE TABLE IF NOT EXISTS equipment (
     FOREIGN KEY(id_owner) REFERENCES main_owner(id_owner)
 );
 
-
+-- Creating the Notification table
+CREATE TABLE IF NOT EXISTS notification (
+    id_notification INT AUTO_INCREMENT PRIMARY KEY,
+    id_equipment VARCHAR(255),
+    date_notification DATE,
+    FOREIGN KEY(id_equipment) REFERENCES equipment(id_equipment)
+);
 
 -- Creating the Tracking History table (historico de rastreio)
 CREATE TABLE IF NOT EXISTS tracking_history (
