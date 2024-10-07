@@ -1,11 +1,7 @@
 package com.MapView.BackEnd.controller;
 
-import com.MapView.BackEnd.dtos.Equipment.EquipmentCreateDTO;
-import com.MapView.BackEnd.dtos.EquipmentResponsible.EquipmentResponsibleCreateDTO;
-import com.MapView.BackEnd.dtos.Location.LocationCreateDTO;
 import com.MapView.BackEnd.dtos.Register.RegisterCreateDTO;
 import com.MapView.BackEnd.dtos.Register.RegisterDetailsDTO;
-import com.MapView.BackEnd.dtos.Register.TesteDTO;
 import com.MapView.BackEnd.serviceImp.RegisterServiceImp;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -20,12 +16,12 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("api/v1/register")
 @Tag(name = "Register", description = "Operations related to equipment, location, and responsible registration")
-public class RegisterController {
+public class FormsRegisterController {
 
 
     private final RegisterServiceImp registerServiceImp;
 
-    public RegisterController(RegisterServiceImp registerServiceImp) {
+    public FormsRegisterController(RegisterServiceImp registerServiceImp) {
         this.registerServiceImp = registerServiceImp;
     }
 
