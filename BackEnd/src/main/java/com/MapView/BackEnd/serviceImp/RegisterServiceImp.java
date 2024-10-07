@@ -17,13 +17,11 @@ import com.MapView.BackEnd.dtos.Post.PostDetailDTO;
 import com.MapView.BackEnd.dtos.Register.RegisterCreateDTO;
 import com.MapView.BackEnd.dtos.Register.RegisterDetailsDTO;
 import com.MapView.BackEnd.dtos.Register.ResponsibleResgisterDTO;
-import com.MapView.BackEnd.dtos.Register.TesteDTO;
 import com.MapView.BackEnd.dtos.Responsible.ResponsibleCrateDTO;
 import com.MapView.BackEnd.dtos.Responsible.ResponsibleDetailsDTO;
 import com.MapView.BackEnd.entities.*;
 import com.MapView.BackEnd.enums.EnumAction;
 import com.MapView.BackEnd.infra.NotFoundException;
-import com.MapView.BackEnd.infra.PostsErrorException;
 import com.MapView.BackEnd.repository.*;
 import com.MapView.BackEnd.service.RegisterService;
 import org.springframework.stereotype.Service;
@@ -37,11 +35,11 @@ import java.util.List;
 public class RegisterServiceImp implements RegisterService {
 
     private final PostRepository postRepository;
-    private final EnviromentRepository enviromentRepository;
+    private final EnvironmentRepository environmentRepository;
     private final EquipmentRepository equipmentRepository;
     private final LocationRepository locationRepository;
     private final UserLogRepository userLogRepository;
-    private  final UserRepository userRepository;
+    private final UserRepository userRepository;
     private final MainOwnerRepository mainOwnerRepository;
     private final ResponsibleRepository responsibleRepository;
     private final EquipmentResponsibleRepository equipmentResponsibleRepository;
@@ -49,7 +47,7 @@ public class RegisterServiceImp implements RegisterService {
     private final EquipmentServiceImp equipmentServiceImp;
     private final LocationServiceImp locationServiceImp;
     private final PostServiceImp postServiceImp;
-    private final EnviromentServiceImp enviromentServiceImp;
+    private final EnvironmentServiceImp environmentServiceImp;
     private final MainOwnerServiceImp mainOwnerServiceImp;
     private final CostCenterServiceImp costCenterServiceImp;
     private final ClassesServiceImp classesServiceImp;
@@ -58,7 +56,7 @@ public class RegisterServiceImp implements RegisterService {
 
 
     public RegisterServiceImp(PostRepository postRepository,
-                              EnviromentRepository enviromentRepository,
+                              EnvironmentRepository environmentRepository,
                               EquipmentRepository equipmentRepository,
                               LocationRepository locationRepository,
                               UserLogRepository userLogRepository,
@@ -69,14 +67,14 @@ public class RegisterServiceImp implements RegisterService {
                               ClassesRepository classesRepository, EquipmentServiceImp equipmentServiceImp,
                               LocationServiceImp locationServiceImp,
                               PostServiceImp postServiceImp,
-                              EnviromentServiceImp enviromentServiceImp,
+                              EnvironmentServiceImp environmentServiceImp,
                               MainOwnerServiceImp mainOwnerServiceImp,
                               CostCenterServiceImp costCenterServiceImp,
                               ClassesServiceImp classesServiceImp,
                               ResponsibleServiceImp responsibleServiceImp, EquipmentResponsibleServiceImp equipmentResponsibleServiceImp) {
 
         this.postRepository = postRepository;
-        this.enviromentRepository = enviromentRepository;
+        this.environmentRepository = environmentRepository;
         this.equipmentRepository = equipmentRepository;
         this.locationRepository = locationRepository;
         this.userLogRepository = userLogRepository;
@@ -88,7 +86,7 @@ public class RegisterServiceImp implements RegisterService {
         this.equipmentServiceImp = equipmentServiceImp;
         this.locationServiceImp = locationServiceImp;
         this.postServiceImp = postServiceImp;
-        this.enviromentServiceImp = enviromentServiceImp;
+        this.environmentServiceImp = environmentServiceImp;
         this.mainOwnerServiceImp = mainOwnerServiceImp;
         this.costCenterServiceImp = costCenterServiceImp;
         this.classesServiceImp = classesServiceImp;

@@ -1,7 +1,6 @@
 package com.MapView.BackEnd.serviceImp;
 
 import com.MapView.BackEnd.dtos.Equipment.EquipmentUpdateDTO;
-import com.MapView.BackEnd.dtos.ImageUpload.UploadCreateDTO;
 import com.MapView.BackEnd.entities.*;
 import com.MapView.BackEnd.enums.EnumAction;
 import com.MapView.BackEnd.enums.EnumColors;
@@ -116,10 +115,10 @@ public class EquipmentServiceImp implements EquipmentService {
         userLogRepository.save(userLog);
 
         // Salvar o tracking history
-        Enviroment enviroment = location.getEnvironment();
+        Environment environment = location.getEnvironment();
 
         TrackingHistory trackingHistory = new TrackingHistory(
-                equipment, enviroment, equipment.getRfid(), EnumTrackingAction.ENTER,
+                equipment, environment, equipment.getRfid(), EnumTrackingAction.ENTER,
                 EnumColors.GREEN
         );
 
@@ -272,7 +271,7 @@ public class EquipmentServiceImp implements EquipmentService {
         Join<Equipment, Location> locationJoin = equipmentRoot.join("location");
         Join<Equipment, Location> locationPostJoin = equipmentRoot.join("location");
         Join<Location, Post> PostJoin = locationPostJoin.join("post");
-        Join<Location, Enviroment> enviromentJoin = locationJoin.join("environment");
+        Join<Location, Environment> enviromentJoin = locationJoin.join("environment");
 
 
         List<Predicate> predicate = new ArrayList<>();

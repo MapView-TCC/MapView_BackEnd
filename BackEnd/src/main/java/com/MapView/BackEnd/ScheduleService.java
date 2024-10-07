@@ -63,18 +63,18 @@ public class ScheduleService {
     @Scheduled(cron = "0 0 0 1 1,4,7,10 *") // Executa à meia-noite no dia 1 dos meses 1, 4, 7 e 10, a cada 3 meses
     //@Scheduled(cron = "0/1 * * * * *") // cada segundo
     public void deleteNotification() {
-        System.out.println("to aqui");
+        System.out.println("Executando deleteNotification");
         List<Notification> notificationList = notificationRepository.findAll();
-        for (Notification notification: notificationList){
-            // pegar o mes do notification
-            int notificatioMonth = notification.getDate_notification().getMonthValue() + 3;
+        LocalDate currentDate = LocalDate.now();
 
-            // pegar o mes atual
-            int mesatual = LocalDate.now().getMonthValue();
+        for (Notification notification : notificationList) {
+            LocalDate notificationDate = notification.getDate_notification();
 
-            if (notificatioMonth == mesatual){
+            // Verifica se a notificação está há 3 meses
+            // if (!notificationDate.plusMonths(3).isAfter(currentDate)) {
+            if (notificationDate.plusMonths(3).isBefore(currentDate) || notificationDate.plusMonths(3).isEqual(currentDate)) {
                 notificationServiceImp.deleteNotificationById(notification.getId_notification());
-                System.out.println("Executou função");
+                System.out.println("Notificação deletada: " + notification.getId_notification());
             }
         }
     }
@@ -94,8 +94,6 @@ public class ScheduleService {
             if (mouth == mesatual){
                 trackingHistoryServiceImp.deleteTrackingById(trackingHistory.getId_tracking());
             }
-
-
         }
     }
 

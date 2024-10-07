@@ -1,15 +1,12 @@
 package com.MapView.BackEnd.entities;
 
-import com.MapView.BackEnd.enums.EnumAction;
 import com.MapView.BackEnd.enums.EnumColors;
 import com.MapView.BackEnd.enums.EnumTrackingAction;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.Instant;
-import java.time.LocalDateTime;
 
 @Table(name = "tracking_history")
 @Entity(name = "tracking_history")
@@ -27,13 +24,13 @@ public class TrackingHistory {
     //@Column(updatable = false) // Se você não quiser que a data de criação seja atualizada
     private Instant datetime;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne
     @JoinColumn(name ="id_equipment")
     private Equipment equipment;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne
     @JoinColumn(name ="id_environment")
-    private Enviroment environment;
+    private Environment environment;
 
     private Long rfid;
 
@@ -45,24 +42,24 @@ public class TrackingHistory {
 
 
 
-    public TrackingHistory(Long rfid, Enviroment enviroment, EnumColors warning) {
+    public TrackingHistory(Long rfid, Environment environment, EnumColors warning) {
         this.equipment = null;
         this.rfid = rfid;
-        this.environment = enviroment;
+        this.environment = environment;
         this.action = null;
         this.warning = warning;
     }
 
-    public TrackingHistory(Enviroment enviroment, Equipment equipment, Long rfid, EnumTrackingAction action, EnumColors warning) {
+    public TrackingHistory(Environment environment, Equipment equipment, Long rfid, EnumTrackingAction action, EnumColors warning) {
         this.equipment = equipment;
         this.rfid = rfid;
-        this.environment = enviroment;
+        this.environment = environment;
         this.action = action;
         this.warning = warning;
     }
 
     // para salvar um tracking history quando salvar um equipment
-    public TrackingHistory(Equipment equipment, Enviroment environment, Long rfid, EnumTrackingAction action, EnumColors warning) {
+    public TrackingHistory(Equipment equipment, Environment environment, Long rfid, EnumTrackingAction action, EnumColors warning) {
         this.datetime = Instant.now();
         this.equipment = equipment;
         this.environment = environment;

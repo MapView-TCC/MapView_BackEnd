@@ -1,6 +1,5 @@
 package com.MapView.BackEnd.serviceImp;
 
-import com.MapView.BackEnd.dtos.Equipment.EquipmentDetailsDTO;
 import com.MapView.BackEnd.dtos.TrackingHistory.TrackingHistoryWrongLocationDTO;
 import com.MapView.BackEnd.entities.*;
 import com.MapView.BackEnd.enums.EnumColors;
@@ -23,15 +22,15 @@ public class TrackingHistoryServiceImp implements TrackingHistoryService {
 
 
     private final TrackingHistoryRepository trackingHistoryRepository;
-    private final EnviromentRepository enviromentRepository;
+    private final EnvironmentRepository environmentRepository;
     private final EquipmentRepository equipmentRepository;
     private final LocationRepository locationRepository;
     private final EquipmentResponsibleRepository equipmentResponsibleRepository;
 
 
-    public TrackingHistoryServiceImp(TrackingHistoryRepository trackingHistoryRepository, EnviromentRepository enviromentRepository, EquipmentRepository equipmentRepository, LocationRepository locationRepository, EquipmentResponsibleRepository equipmentResponsibleRepository) {
+    public TrackingHistoryServiceImp(TrackingHistoryRepository trackingHistoryRepository, EnvironmentRepository environmentRepository, EquipmentRepository equipmentRepository, LocationRepository locationRepository, EquipmentResponsibleRepository equipmentResponsibleRepository) {
         this.trackingHistoryRepository = trackingHistoryRepository;
-        this.enviromentRepository = enviromentRepository;
+        this.environmentRepository = environmentRepository;
         this.equipmentRepository = equipmentRepository;
         this.locationRepository = locationRepository;
         this.equipmentResponsibleRepository = equipmentResponsibleRepository;
@@ -54,7 +53,7 @@ public class TrackingHistoryServiceImp implements TrackingHistoryService {
 
     @Override
     public TrackingHistoryDetailsDTO createTrackingHistory(TrackingHistoryCreateDTO dados) {
-        Enviroment local_tracking = enviromentRepository.findById(dados.id_environment())
+        Environment local_tracking = environmentRepository.findById(dados.id_environment())
                 .orElseThrow(() -> new NotFoundException("Id not found"));
 
         Optional<Equipment> equipment = equipmentRepository.findByRfid(dados.rfid());
@@ -72,7 +71,7 @@ public class TrackingHistoryServiceImp implements TrackingHistoryService {
             throw new NotFoundException("RFID tag is not linked to any equipment2");
         }
 
-        Enviroment last_track_local = last_track.getEnvironment();
+        Environment last_track_local = last_track.getEnvironment();
 
 
         if (last_track_local.equals(local_tracking)) {
@@ -156,10 +155,10 @@ public class TrackingHistoryServiceImp implements TrackingHistoryService {
 
     public List<TrackingHistoryWrongLocationDTO> findWrongLocationEquipments(Long id_environment) {
         // Verifica se o ambiente existe
-        Enviroment enviroment = enviromentRepository.findById(id_environment)
-                .orElseThrow(() -> new NotFoundException("Enviroment not found"));
+        Environment environment = environmentRepository.findById(id_environment)
+                .orElseThrow(() -> new NotFoundException("Environment not found"));
 
-        List<TrackingHistory> trackingHistory = trackingHistoryRepository.findByEnvironment(enviroment);
+        List<TrackingHistory> trackingHistory = trackingHistoryRepository.findByEnvironment(environment);
         List<TrackingHistoryWrongLocationDTO> wrongLocationDTOs = new ArrayList<>();
 
         Set<String> addedEquipmentIds = new HashSet<>();  // Usar um Set para evitar duplicações
@@ -180,7 +179,7 @@ public class TrackingHistoryServiceImp implements TrackingHistoryService {
                             responsibles.add(responsible.getId_responsible().getResponsible_name());
                         }
 
-                        wrongLocationDTOs.add(new TrackingHistoryWrongLocationDTO(equipment, enviroment,responsibles));
+                        wrongLocationDTOs.add(new TrackingHistoryWrongLocationDTO(equipment, environment,responsibles));
                     }
                 }
             }

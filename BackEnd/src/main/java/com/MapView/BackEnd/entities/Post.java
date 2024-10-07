@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.security.PublicKey;
 import java.util.Set;
 
 @Table(name = "post")
@@ -24,7 +23,7 @@ public class Post {
     private boolean operative;
     @ManyToMany(mappedBy = "environments")
     @JsonBackReference
-    private Set<Enviroment> posts;
+    private Set<Environment> posts;
 
     public Post(PostCreateDTO data){
         this.post = data.post();

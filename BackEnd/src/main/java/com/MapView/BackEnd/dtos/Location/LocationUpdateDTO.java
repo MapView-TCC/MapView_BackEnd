@@ -5,5 +5,5 @@ import jakarta.validation.constraints.Positive;
 
 public record LocationUpdateDTO(
                                 Long id_post,
-                                Long id_enviroment) {
+                                Long id_environment) {
 }

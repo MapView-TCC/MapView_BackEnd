@@ -2,7 +2,7 @@ package com.MapView.BackEnd.serviceImp;
 
 import com.MapView.BackEnd.infra.LocationAlreadyExistsException;
 import com.MapView.BackEnd.infra.OperativeFalseException;
-import com.MapView.BackEnd.repository.EnviromentRepository;
+import com.MapView.BackEnd.repository.EnvironmentRepository;
 import com.MapView.BackEnd.repository.LocationRepository;
 import com.MapView.BackEnd.repository.PostRepository;
 import com.MapView.BackEnd.service.LocationService;
@@ -14,7 +14,6 @@ import com.MapView.BackEnd.infra.NotFoundException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -23,12 +22,12 @@ public class LocationServiceImp implements LocationService {
 
     private final LocationRepository locationRepository;
     private final PostRepository postRepository;
-    private final EnviromentRepository enviromentRepository;
+    private final EnvironmentRepository environmentRepository;
 
-    public LocationServiceImp(LocationRepository locationRepository, PostRepository postRepository, EnviromentRepository enviromentRepository) {
+    public LocationServiceImp(LocationRepository locationRepository, PostRepository postRepository, EnvironmentRepository environmentRepository) {
         this.locationRepository = locationRepository;
         this.postRepository = postRepository;
-        this.enviromentRepository = enviromentRepository;
+        this.environmentRepository = environmentRepository;
     }
 
     @Override
@@ -50,12 +49,12 @@ public class LocationServiceImp implements LocationService {
                 throw new OperativeFalseException("The inactive post cannot be accessed.");
             }
 
-            var enviroment = enviromentRepository.findById(data.id_eviroment()).orElseThrow(() -> new NotFoundException("Enviroment Id Not Found"));
-            if (!enviroment.isOperative()) {
-                throw new OperativeFalseException("The inactive enviroment cannot be accessed.");
+            var environment = environmentRepository.findById(data.id_environment()).orElseThrow(() -> new NotFoundException("Environment Id Not Found"));
+            if (!environment.isOperative()) {
+                throw new OperativeFalseException("The inactive environment cannot be accessed.");
             }
 
-            var location = new Location(post, enviroment);
+            var location = new Location(post, environment);
             locationRepository.save(location);
             System.out.println("Post: Post ");
             return new LocationDetalsDTO(location);
@@ -75,13 +74,13 @@ public class LocationServiceImp implements LocationService {
         if(!post.isOperative()){
             throw new OperativeFalseException("The inactive post cannot be accessed.");
         }
-        var enviroment = enviromentRepository.findById(data.id_enviroment()).orElseThrow(() -> new NotFoundException("Enviroment Id Not Found"));
-        if(!enviroment.isOperative()){
-            throw new OperativeFalseException("The inactive enviroment cannot be accessed.");
+        var environment = environmentRepository.findById(data.id_environment()).orElseThrow(() -> new NotFoundException("Environment Id Not Found"));
+        if(!environment.isOperative()){
+            throw new OperativeFalseException("The inactive environment cannot be accessed.");
         }
 
-        if(data.id_enviroment() != null){
-            location.setEnvironment(enviroment);
+        if(data.id_environment() != null){
+            location.setEnvironment(environment);
         }
         if(data.id_post() != null){
             location.setPost(post);

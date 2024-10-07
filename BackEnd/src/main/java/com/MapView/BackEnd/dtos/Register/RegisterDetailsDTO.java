@@ -1,12 +1,10 @@
 package com.MapView.BackEnd.dtos.Register;
 
 import com.MapView.BackEnd.dtos.Equipment.EquipmentDetailsDTO;
-import com.MapView.BackEnd.dtos.EquipmentResponsible.EquipmentResponsibleDetailsDTO;
 import com.MapView.BackEnd.dtos.Location.LocationDetalsDTO;
 import com.MapView.BackEnd.dtos.Responsible.ResponsibleDetailsDTO;
 import com.MapView.BackEnd.entities.*;
 import com.MapView.BackEnd.enums.EnumModelEquipment;
-import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -23,7 +21,7 @@ public record RegisterDetailsDTO (String id_equipment,
                                   MainOwner owner,
                                   Long id_location,
                                   Post post,
-                                  Enviroment enviroment,
+                                  Environment environment,
 
                                   List<ResponsibleDetailsDTO> responsible) {
 
@@ -40,7 +38,7 @@ public record RegisterDetailsDTO (String id_equipment,
                 equipment.owner(),
                 location.id_location(),
                 location.post(),
-                location.enviroment(),
+                location.environment(),
                 equipmentResponsible);
 
     }

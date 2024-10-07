@@ -18,6 +18,6 @@ public interface TrackingHistoryService {
                                                    Integer day, Integer month, Integer year, EnumColors colors,
                                                    String id_equipment);
     void deleteTracking(Long id_tracking);
-    List<TrackingHistoryWrongLocationDTO> findWrongLocationEquipments (Long id_enviroment);
+    List<TrackingHistoryWrongLocationDTO> findWrongLocationEquipments (Long id_environment);
     void deleteTrackingById(Long id_tracking);
 }

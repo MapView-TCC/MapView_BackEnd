@@ -44,7 +44,7 @@ public class LocationController {
         //String email= jwt.getClaimAsString("email");
         var loc = locationServiceImp.createLocation(data);
         var uri  = uriBuilder.path("/ap1/v1/location/{id_location}").buildAndExpand(loc.id_location()).toUri();
-        return ResponseEntity.created(uri).body(new LocationDetalsDTO(loc.id_location(),loc.post(),loc.enviroment()));
+        return ResponseEntity.created(uri).body(new LocationDetalsDTO(loc.id_location(),loc.post(),loc.environment()));
     }
 
     @Operation(

@@ -1,6 +1,6 @@
 package com.MapView.BackEnd.dtos.Environment;
 
-public record EnviromentUpdateDTO(
-                                  String enviroment_name,
+public record EnvironmentUpdateDTO(
+                                  String environment_name,
                                   String id_raspberry) {
 }
