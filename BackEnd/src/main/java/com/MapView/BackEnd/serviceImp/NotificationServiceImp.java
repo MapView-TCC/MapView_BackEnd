@@ -37,8 +37,6 @@ public class NotificationServiceImp implements NotificationService {
         }
     }
 
-
-
     @Override
     public NotificationDetailsDTO getNotification(Long id_notification) {
         Notification notification = this.notificationRepository.findById(id_notification).orElseThrow(() -> new NotFoundException("Id notification not found!"));

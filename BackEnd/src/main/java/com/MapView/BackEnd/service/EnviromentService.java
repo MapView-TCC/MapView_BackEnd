@@ -1,8 +1,8 @@
 package com.MapView.BackEnd.service;
 
-import com.MapView.BackEnd.dtos.Enviroment.EnviromentCreateDTO;
-import com.MapView.BackEnd.dtos.Enviroment.EnviromentDetailsDTO;
-import com.MapView.BackEnd.dtos.Enviroment.EnviromentUpdateDTO;
+import com.MapView.BackEnd.dtos.Environment.EnviromentCreateDTO;
+import com.MapView.BackEnd.dtos.Environment.EnviromentDetailsDTO;
+import com.MapView.BackEnd.dtos.Environment.EnviromentUpdateDTO;
 
 import java.util.List;
 
@@ -15,4 +15,3 @@ public interface EnviromentService {
     void activateEnviroment(Long id_environment, Long userLog_id);
     void inactivateEnviroment(Long id_environment, Long userLog_id);
 }
- 

@@ -19,4 +19,5 @@ public interface TrackingHistoryService {
                                                    String id_equipment);
     void deleteTracking(Long id_tracking);
     List<TrackingHistoryWrongLocationDTO> findWrongLocationEquipments (Long id_enviroment);
+    void deleteTrackingById(Long id_tracking);
 }
