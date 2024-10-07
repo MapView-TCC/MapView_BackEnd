@@ -1,7 +1,7 @@
 package com.MapView.BackEnd.serviceImp;
 
-import com.MapView.BackEnd.infra.LocationAlreadyExistsException;
-import com.MapView.BackEnd.infra.OperativeFalseException;
+import com.MapView.BackEnd.infra.Exception.LocationAlreadyExistsException;
+import com.MapView.BackEnd.infra.Exception.OperativeFalseException;
 import com.MapView.BackEnd.repository.EnvironmentRepository;
 import com.MapView.BackEnd.repository.LocationRepository;
 import com.MapView.BackEnd.repository.PostRepository;
@@ -10,7 +10,7 @@ import com.MapView.BackEnd.dtos.Location.LocationCreateDTO;
 import com.MapView.BackEnd.dtos.Location.LocationDetalsDTO;
 import com.MapView.BackEnd.dtos.Location.LocationUpdateDTO;
 import com.MapView.BackEnd.entities.Location;
-import com.MapView.BackEnd.infra.NotFoundException;
+import com.MapView.BackEnd.infra.Exception.NotFoundException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;

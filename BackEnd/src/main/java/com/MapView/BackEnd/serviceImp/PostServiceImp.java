@@ -3,7 +3,7 @@ package com.MapView.BackEnd.serviceImp;
 import com.MapView.BackEnd.entities.UserLog;
 import com.MapView.BackEnd.entities.Users;
 import com.MapView.BackEnd.enums.EnumAction;
-import com.MapView.BackEnd.infra.OperativeFalseException;
+import com.MapView.BackEnd.infra.Exception.OperativeFalseException;
 import com.MapView.BackEnd.repository.PostRepository;
 import com.MapView.BackEnd.repository.UserLogRepository;
 import com.MapView.BackEnd.repository.UserRepository;
@@ -12,13 +12,11 @@ import com.MapView.BackEnd.dtos.Post.PostCreateDTO;
 import com.MapView.BackEnd.dtos.Post.PostDetailDTO;
 import com.MapView.BackEnd.dtos.Post.PostUpdateDTO;
 import com.MapView.BackEnd.entities.Post;
-import com.MapView.BackEnd.infra.NotFoundException;
-import org.slf4j.LoggerFactory;
+import com.MapView.BackEnd.infra.Exception.NotFoundException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.logging.Logger;
 
 @Service
 public class PostServiceImp implements PostService {

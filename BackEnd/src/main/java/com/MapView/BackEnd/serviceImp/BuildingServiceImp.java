@@ -3,9 +3,9 @@ package com.MapView.BackEnd.serviceImp;
 import com.MapView.BackEnd.entities.UserLog;
 import com.MapView.BackEnd.entities.Users;
 import com.MapView.BackEnd.enums.EnumAction;
-import com.MapView.BackEnd.infra.BlankErrorException;
-import com.MapView.BackEnd.infra.OperativeFalseException;
-import com.MapView.BackEnd.infra.OpetativeTrueException;
+import com.MapView.BackEnd.infra.Exception.BlankErrorException;
+import com.MapView.BackEnd.infra.Exception.OperativeFalseException;
+import com.MapView.BackEnd.infra.Exception.OpetativeTrueException;
 import com.MapView.BackEnd.repository.BuildingRepository;
 import com.MapView.BackEnd.repository.UserLogRepository;
 import com.MapView.BackEnd.repository.UserRepository;
@@ -14,10 +14,8 @@ import com.MapView.BackEnd.dtos.Building.BuildingCreateDTO;
 import com.MapView.BackEnd.dtos.Building.BuildingDetailsDTO;
 import com.MapView.BackEnd.dtos.Building.BuildingUpdateDTO;
 import com.MapView.BackEnd.entities.Building;
-import com.MapView.BackEnd.infra.NotFoundException;
-import org.springframework.data.domain.PageRequest;
+import com.MapView.BackEnd.infra.Exception.NotFoundException;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 

@@ -4,7 +4,7 @@ import com.MapView.BackEnd.dtos.Notification.NotificationCreateDTO;
 import com.MapView.BackEnd.dtos.Notification.NotificationDetailsDTO;
 import com.MapView.BackEnd.entities.Equipment;
 import com.MapView.BackEnd.entities.Notification;
-import com.MapView.BackEnd.infra.NotFoundException;
+import com.MapView.BackEnd.infra.Exception.NotFoundException;
 import com.MapView.BackEnd.repository.EquipmentRepository;
 import com.MapView.BackEnd.repository.NotificationRepository;
 import com.MapView.BackEnd.service.NotificationService;

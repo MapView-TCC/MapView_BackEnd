@@ -1,4 +1,4 @@
-package com.MapView.BackEnd;
+package com.MapView.BackEnd.serviceImp;
 
 import com.MapView.BackEnd.dtos.Notification.NotificationCreateDTO;
 import com.MapView.BackEnd.dtos.Notification.NotificationDetailsDTO;

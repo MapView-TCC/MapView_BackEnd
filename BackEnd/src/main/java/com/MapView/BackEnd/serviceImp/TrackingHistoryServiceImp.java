@@ -8,8 +8,10 @@ import com.MapView.BackEnd.repository.*;
 import com.MapView.BackEnd.service.TrackingHistoryService;
 import com.MapView.BackEnd.dtos.TrackingHistory.TrackingHistoryCreateDTO;
 import com.MapView.BackEnd.dtos.TrackingHistory.TrackingHistoryDetailsDTO;
-import com.MapView.BackEnd.infra.NotFoundException;
+import com.MapView.BackEnd.infra.Exception.NotFoundException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -26,14 +28,17 @@ public class TrackingHistoryServiceImp implements TrackingHistoryService {
     private final EquipmentRepository equipmentRepository;
     private final LocationRepository locationRepository;
     private final EquipmentResponsibleRepository equipmentResponsibleRepository;
+    @Autowired
+    private  SimpMessagingTemplate simpMessagingTemplate;
 
 
-    public TrackingHistoryServiceImp(TrackingHistoryRepository trackingHistoryRepository, EnvironmentRepository environmentRepository, EquipmentRepository equipmentRepository, LocationRepository locationRepository, EquipmentResponsibleRepository equipmentResponsibleRepository) {
+    public TrackingHistoryServiceImp(TrackingHistoryRepository trackingHistoryRepository, EnvironmentRepository environmentRepository, EquipmentRepository equipmentRepository, LocationRepository locationRepository, EquipmentResponsibleRepository equipmentResponsibleRepository, SimpMessagingTemplate simpMessagingTemplate) {
         this.trackingHistoryRepository = trackingHistoryRepository;
         this.environmentRepository = environmentRepository;
         this.equipmentRepository = equipmentRepository;
         this.locationRepository = locationRepository;
         this.equipmentResponsibleRepository = equipmentResponsibleRepository;
+        this.simpMessagingTemplate = simpMessagingTemplate;
     }
 
     @Override
@@ -63,6 +68,8 @@ public class TrackingHistoryServiceImp implements TrackingHistoryService {
             Equipment emptyEquipment = new Equipment(UUID.randomUUID().toString().substring(0,8), dados.rfid());
             equipmentRepository.save(emptyEquipment);
             trackingHistoryRepository.save(trackingHistory);
+
+            simpMessagingTemplate.getMessageConverter("/equip",trackingHistory);
             return new TrackingHistoryDetailsDTO(trackingHistory);
         }
 
@@ -105,6 +112,8 @@ public class TrackingHistoryServiceImp implements TrackingHistoryService {
 
         return new TrackingHistoryDetailsDTO(trackingHistory);
     }
+
+
 
 
     @Override

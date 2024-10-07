@@ -7,7 +7,7 @@ import com.MapView.BackEnd.dtos.AccessHistory.AccessHistoryCreateDTO;
 import com.MapView.BackEnd.dtos.AccessHistory.AccessHistoryDetailsDTO;
 import com.MapView.BackEnd.entities.AccessHistory;
 import com.MapView.BackEnd.entities.Users;
-import com.MapView.BackEnd.infra.NotFoundException;
+import com.MapView.BackEnd.infra.Exception.NotFoundException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 

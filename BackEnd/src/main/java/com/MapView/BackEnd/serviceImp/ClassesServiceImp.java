@@ -2,7 +2,10 @@ package com.MapView.BackEnd.serviceImp;
 
 import com.MapView.BackEnd.entities.UserLog;
 import com.MapView.BackEnd.enums.EnumAction;
-import com.MapView.BackEnd.infra.*;
+import com.MapView.BackEnd.infra.Exception.BlankErrorException;
+import com.MapView.BackEnd.infra.Exception.NotFoundException;
+import com.MapView.BackEnd.infra.Exception.OperativeFalseException;
+import com.MapView.BackEnd.infra.Exception.OpetativeTrueException;
 import com.MapView.BackEnd.repository.ClassesRepository;
 import com.MapView.BackEnd.repository.UserLogRepository;
 import com.MapView.BackEnd.repository.UserRepository;
@@ -11,11 +14,9 @@ import com.MapView.BackEnd.dtos.Classes.ClassesCreateDTO;
 import com.MapView.BackEnd.dtos.Classes.ClassesDetaiLDTO;
 import com.MapView.BackEnd.dtos.Classes.ClassesUpdateDTO;
 import com.MapView.BackEnd.entities.Classes;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import java.time.Clock;
 import java.util.List;
 @Service
 
