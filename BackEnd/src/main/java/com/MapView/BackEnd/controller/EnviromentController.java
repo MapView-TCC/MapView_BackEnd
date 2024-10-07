@@ -1,9 +1,10 @@
 package com.MapView.BackEnd.controller;
 
+
 import com.MapView.BackEnd.serviceImp.EnviromentServiceImp;
-import com.MapView.BackEnd.dtos.Enviroment.EnviromentCreateDTO;
-import com.MapView.BackEnd.dtos.Enviroment.EnviromentDetailsDTO;
-import com.MapView.BackEnd.dtos.Enviroment.EnviromentUpdateDTO;
+import com.MapView.BackEnd.dtos.Environment.EnviromentCreateDTO;
+import com.MapView.BackEnd.dtos.Environment.EnviromentDetailsDTO;
+import com.MapView.BackEnd.dtos.Environment.EnviromentUpdateDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -20,8 +21,8 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/enviroment")
-@Tag(name = "Enviroment", description = "Operations related to environment management")
+@RequestMapping("/api/v1/environment")
+@Tag(name = "Environment", description = "Operations related to environment management")
 public class EnviromentController {
 
     private final EnviromentServiceImp enviromentServiceImp;
@@ -42,15 +43,21 @@ public class EnviromentController {
     })
     @PostMapping
     @Transactional
-    public ResponseEntity<EnviromentDetailsDTO> createEnviroment(
+    public ResponseEntity<EnviromentDetailsDTO> createEnvironment(
             @Parameter(description = "Data transfer object for creating a new environment", required = true)
             @RequestBody @Valid EnviromentCreateDTO data,
             @Parameter(description = "User log ID for tracking changes", required = true)
             @RequestParam Long userLog_id,
             UriComponentsBuilder uriBuilder) {
+<<<<<<< HEAD
         var enviroment = enviromentServiceImp.createEnviroment(data, userLog_id);
         var uri = uriBuilder.path("/api/v1/enviroment/{id}").buildAndExpand(enviroment.id_environment()).toUri();
         return ResponseEntity.created(uri).body(new EnviromentDetailsDTO(enviroment.id_environment(), enviroment.environment_name(), enviroment.raspberry()));
+=======
+        var environment = enviromentServiceImp.createEnviroment(data, userLog_id);
+        var uri = uriBuilder.path("/api/v1/enviroment/{id}").buildAndExpand(environment.id_enviroment()).toUri();
+        return ResponseEntity.created(uri).body(new EnviromentDetailsDTO(environment.id_enviroment(), environment.environment_name(), environment.raspberry()));
+>>>>>>> d2b74954021e038e40ff3d2feab1077109d70601
     }
 
     @Operation(

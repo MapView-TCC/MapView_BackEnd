@@ -189,6 +189,15 @@ public class TrackingHistoryServiceImp implements TrackingHistoryService {
         return wrongLocationDTOs;
     }
 
+    @Override
+    public void deleteTrackingById(Long id_tracking) {
+        var tracking  = trackingHistoryRepository.findById(id_tracking).orElseThrow(() ->
+                new NotFoundException("Id not found"));
+        if (tracking != null){
+            trackingHistoryRepository.deleteById(id_tracking);
+        }
+    }
+
 }
 
 
