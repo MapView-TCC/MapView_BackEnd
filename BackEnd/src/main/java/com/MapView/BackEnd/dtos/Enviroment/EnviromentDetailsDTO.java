@@ -5,6 +5,6 @@ import com.MapView.BackEnd.entities.Raspberry;
 
 public record EnviromentDetailsDTO(Long id_environment,String environment_name, Raspberry raspberry) {
     public EnviromentDetailsDTO(Enviroment enviroment){
-        this(enviroment.getId_environment(),enviroment.getEnvironment_name(),enviroment.getRaspberry());
+        this(enviroment.getId_enviroment(),enviroment.getEnviroment_name(),enviroment.getRaspberry());
     }
 }

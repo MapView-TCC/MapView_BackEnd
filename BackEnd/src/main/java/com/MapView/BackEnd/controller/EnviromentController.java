@@ -49,15 +49,11 @@ public class EnviromentController {
             @Parameter(description = "User log ID for tracking changes", required = true)
             @RequestParam Long userLog_id,
             UriComponentsBuilder uriBuilder) {
-<<<<<<< HEAD
-        var enviroment = enviromentServiceImp.createEnviroment(data, userLog_id);
-        var uri = uriBuilder.path("/api/v1/enviroment/{id}").buildAndExpand(enviroment.id_environment()).toUri();
-        return ResponseEntity.created(uri).body(new EnviromentDetailsDTO(enviroment.id_environment(), enviroment.environment_name(), enviroment.raspberry()));
-=======
+
         var environment = enviromentServiceImp.createEnviroment(data, userLog_id);
         var uri = uriBuilder.path("/api/v1/enviroment/{id}").buildAndExpand(environment.id_enviroment()).toUri();
-        return ResponseEntity.created(uri).body(new EnviromentDetailsDTO(environment.id_enviroment(), environment.environment_name(), environment.raspberry()));
->>>>>>> d2b74954021e038e40ff3d2feab1077109d70601
+        return ResponseEntity.created(uri).body(new EnviromentDetailsDTO(environment.id_enviroment(), environment.enviroment_name(), environment.raspberry()));
+
     }
 
     @Operation(
