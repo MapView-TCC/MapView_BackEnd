@@ -21,7 +21,7 @@ import com.MapView.BackEnd.dtos.Responsible.ResponsibleCrateDTO;
 import com.MapView.BackEnd.dtos.Responsible.ResponsibleDetailsDTO;
 import com.MapView.BackEnd.entities.*;
 import com.MapView.BackEnd.enums.EnumAction;
-import com.MapView.BackEnd.infra.NotFoundException;
+import com.MapView.BackEnd.infra.Exception.NotFoundException;
 import com.MapView.BackEnd.repository.*;
 import com.MapView.BackEnd.service.RegisterService;
 import org.springframework.stereotype.Service;
