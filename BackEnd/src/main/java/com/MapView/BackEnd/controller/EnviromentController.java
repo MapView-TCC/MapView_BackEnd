@@ -49,8 +49,8 @@ public class EnviromentController {
             @RequestParam Long userLog_id,
             UriComponentsBuilder uriBuilder) {
         var enviroment = enviromentServiceImp.createEnviroment(data, userLog_id);
-        var uri = uriBuilder.path("/api/v1/enviroment/{id}").buildAndExpand(enviroment.id_enviroment()).toUri();
-        return ResponseEntity.created(uri).body(new EnviromentDetailsDTO(enviroment.id_enviroment(), enviroment.environment_name(), enviroment.raspberry()));
+        var uri = uriBuilder.path("/api/v1/enviroment/{id}").buildAndExpand(enviroment.id_environment()).toUri();
+        return ResponseEntity.created(uri).body(new EnviromentDetailsDTO(enviroment.id_environment(), enviroment.environment_name(), enviroment.raspberry()));
     }
 
     @Operation(

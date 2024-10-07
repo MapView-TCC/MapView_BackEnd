@@ -2,9 +2,7 @@ package com.MapView.BackEnd.serviceImp;
 
 import com.MapView.BackEnd.entities.UserLog;
 import com.MapView.BackEnd.enums.EnumAction;
-import com.MapView.BackEnd.infra.BlankErrorException;
-import com.MapView.BackEnd.infra.OperativeFalseException;
-import com.MapView.BackEnd.infra.OpetativeTrueException;
+import com.MapView.BackEnd.infra.*;
 import com.MapView.BackEnd.repository.ClassesRepository;
 import com.MapView.BackEnd.repository.UserLogRepository;
 import com.MapView.BackEnd.repository.UserRepository;
@@ -13,7 +11,7 @@ import com.MapView.BackEnd.dtos.Classes.ClassesCreateDTO;
 import com.MapView.BackEnd.dtos.Classes.ClassesDetaiLDTO;
 import com.MapView.BackEnd.dtos.Classes.ClassesUpdateDTO;
 import com.MapView.BackEnd.entities.Classes;
-import com.MapView.BackEnd.infra.NotFoundException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
@@ -35,20 +33,26 @@ public class ClassesServiceImp implements ClassesService {
     }
     @Override
     public ClassesDetaiLDTO createClasses(ClassesCreateDTO data, Long userLog_id) {
-        var user = userRepository.findById(data.user_id()).orElseThrow(() -> new NotFoundException("User Id Not Found"));
 
-        var usuario_log = userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("User Id Not Found"));
-        var classe = new Classes(data,user);
+            Classes classesvifi = classesRepository.findByClasses(data.classes()).orElse(null);
+            if (classesvifi != null){
+                return new ClassesDetaiLDTO(classesvifi);
+            }
 
-        Long id_classes = classesRepository.save(classe).getId_classes();
+            var user = userRepository.findById(data.user_id()).orElseThrow(() -> new NotFoundException("User Id Not Found"));
 
-        var userLog = new UserLog(usuario_log,"Classes", id_classes.toString(),"Create new classes", EnumAction.CREATE);
-        userLogRepository.save(userLog);
-        System.out.println("Post: classes ");
+            var usuario_log = userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("User Id Not Found"));
+            var classe = new Classes(data,user);
 
+            Long id_classes = classesRepository.save(classe).getId_classes();
 
-        return new ClassesDetaiLDTO(classe);
-    }
+            var userLog = new UserLog(usuario_log,"Classes", id_classes.toString(),"Create new classes", EnumAction.CREATE);
+            userLogRepository.save(userLog);
+            System.out.println("Post: classes ");
+            return new ClassesDetaiLDTO(classe);
+
+        }
+
 
     @Override
     public ClassesDetaiLDTO getClasseById(Long id, Long userLog_id) {

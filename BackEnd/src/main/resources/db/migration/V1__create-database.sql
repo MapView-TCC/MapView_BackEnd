@@ -19,7 +19,7 @@ CREATE TABLE IF NOT EXISTS access_history (
 CREATE TABLE IF NOT EXISTS classes (
     id_classes INT AUTO_INCREMENT PRIMARY KEY,
     course_name ENUM('ADMINISTRACAO', 'DIGITAL_SOLUTIONS', 'MANUFATURA_DIGITAL', 'MECATRONICA') NOT NULL,
-    classes VARCHAR(255) NOT NULL,
+    classes VARCHAR(255) unique NOT NULL,
     id_user INT NOT NULL,
     creation_date DATE NOT NULL,
     operative TINYINT NOT NULL,

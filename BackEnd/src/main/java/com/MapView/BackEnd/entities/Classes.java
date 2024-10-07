@@ -4,6 +4,7 @@ import com.MapView.BackEnd.dtos.Classes.ClassesCreateDTO;
 import com.MapView.BackEnd.enums.EnumCourse;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -28,6 +29,7 @@ public class Classes {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_user")
     private Users user;
+    @CreationTimestamp
     private LocalDate creation_date;
     private boolean operative;
 

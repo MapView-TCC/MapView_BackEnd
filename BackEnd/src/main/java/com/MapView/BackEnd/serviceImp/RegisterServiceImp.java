@@ -118,10 +118,11 @@ public class RegisterServiceImp implements RegisterService {
                     owner.id_owner()),
                     userLog_id);
 
-            ClassesDetaiLDTO newClasses = classesServiceImp.createClasses(new ClassesCreateDTO(data.enumCourse(), data.name_classes(), userLog_id,LocalDate.now()),userLog_id);
-            List<ResponsibleDetailsDTO> responsibleDetailsDTO = new ArrayList<>();
+                List<ResponsibleDetailsDTO> responsibleDetailsDTO = new ArrayList<>();
 
                 for (ResponsibleResgisterDTO listResponsible: data.dataResposible()) {
+                    ClassesDetaiLDTO newClasses = classesServiceImp.createClasses(new ClassesCreateDTO(listResponsible.enumCourse(), listResponsible.name_classes(), userLog_id,LocalDate.now()),userLog_id);
+
                     ResponsibleDetailsDTO responsible = responsibleServiceImp.createResposible(new ResponsibleCrateDTO(
                             listResponsible.responsible_name(),
                             listResponsible.edv(),

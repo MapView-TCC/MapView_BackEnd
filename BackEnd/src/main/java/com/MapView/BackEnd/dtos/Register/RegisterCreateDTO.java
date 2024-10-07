@@ -23,28 +23,15 @@ public record RegisterCreateDTO (
 
         String type,
         EnumModelEquipment model,
-
-
         String validity,
         String admin_rights,
         String observation,
         //location Equipment
-
-
         Long id_building,
-
-
         Long id_eviroment,
-
         String post,
-
-
         String id_owner,
-
         String costCenter_name,
-        EnumCourse enumCourse,
-        String name_classes,
-        LocalDate criation_date,
         List<ResponsibleResgisterDTO> dataResposible
 
 ) {
