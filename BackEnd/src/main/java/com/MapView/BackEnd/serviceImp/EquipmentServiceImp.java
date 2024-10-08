@@ -6,10 +6,10 @@ import com.MapView.BackEnd.enums.EnumAction;
 import com.MapView.BackEnd.enums.EnumColors;
 import com.MapView.BackEnd.enums.EnumModelEquipment;
 import com.MapView.BackEnd.enums.EnumTrackingAction;
-import com.MapView.BackEnd.infra.BlankErrorException;
-import com.MapView.BackEnd.infra.NotFoundException;
-import com.MapView.BackEnd.infra.OperativeFalseException;
-import com.MapView.BackEnd.infra.OpetativeTrueException;
+import com.MapView.BackEnd.infra.Exception.BlankErrorException;
+import com.MapView.BackEnd.infra.Exception.NotFoundException;
+import com.MapView.BackEnd.infra.Exception.OperativeFalseException;
+import com.MapView.BackEnd.infra.Exception.OpetativeTrueException;
 import com.MapView.BackEnd.repository.*;
 import com.MapView.BackEnd.service.EquipmentService;
 import com.MapView.BackEnd.dtos.Equipment.EquipmentCreateDTO;
@@ -76,7 +76,7 @@ public class EquipmentServiceImp implements EquipmentService {
     }
 
     @Override
-    public List<EquipmentDetailsDTO> getAllEquipment(int page, int itens, Long userLog_id) {
+    public List<EquipmentDetailsDTO>    getAllEquipment(int page, int itens, Long userLog_id) {
         Users user = this.userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("Id not found"));
         var userLog = new UserLog(user,"Equipment","Read All Equipment", EnumAction.READ);
         userLogRepository.save(userLog);
