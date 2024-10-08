@@ -12,6 +12,7 @@ import com.MapView.BackEnd.infra.Exception.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -28,17 +29,17 @@ public class TrackingHistoryServiceImp implements TrackingHistoryService {
     private final EquipmentRepository equipmentRepository;
     private final LocationRepository locationRepository;
     private final EquipmentResponsibleRepository equipmentResponsibleRepository;
-    @Autowired
-    private  SimpMessagingTemplate simpMessagingTemplate;
+
+    private  SimpMessagingTemplate template;
 
 
-    public TrackingHistoryServiceImp(TrackingHistoryRepository trackingHistoryRepository, EnvironmentRepository environmentRepository, EquipmentRepository equipmentRepository, LocationRepository locationRepository, EquipmentResponsibleRepository equipmentResponsibleRepository, SimpMessagingTemplate simpMessagingTemplate) {
+    public TrackingHistoryServiceImp(TrackingHistoryRepository trackingHistoryRepository, EnvironmentRepository environmentRepository, EquipmentRepository equipmentRepository, LocationRepository locationRepository, EquipmentResponsibleRepository equipmentResponsibleRepository, SimpMessagingTemplate template) {
         this.trackingHistoryRepository = trackingHistoryRepository;
         this.environmentRepository = environmentRepository;
         this.equipmentRepository = equipmentRepository;
         this.locationRepository = locationRepository;
         this.equipmentResponsibleRepository = equipmentResponsibleRepository;
-        this.simpMessagingTemplate = simpMessagingTemplate;
+        this.template = template;
     }
 
     @Override
@@ -55,7 +56,7 @@ public class TrackingHistoryServiceImp implements TrackingHistoryService {
 
 
     }
-
+    @Async
     @Override
     public TrackingHistoryDetailsDTO createTrackingHistory(TrackingHistoryCreateDTO dados) {
         Environment local_tracking = environmentRepository.findById(dados.id_environment())
@@ -69,7 +70,7 @@ public class TrackingHistoryServiceImp implements TrackingHistoryService {
             equipmentRepository.save(emptyEquipment);
             trackingHistoryRepository.save(trackingHistory);
 
-            simpMessagingTemplate.getMessageConverter("/equip",trackingHistory);
+            template.convertAndSend("/equip",trackingHistory);
             return new TrackingHistoryDetailsDTO(trackingHistory);
         }
 
