@@ -20,6 +20,6 @@ public interface EquipmentService {
     void inactivateEquipment(String id_equipment, Long userLog_id); // put
 
     // tentativa dos filtros
-    List<EquipmentDetailsDTO> getEquipmentValidation(int page, int itens, String validity,String eviroment, String id_owner, String id_equipment, String name_equipment, String post);
-
+    List<EquipmentDetailsDTO> getEquipmentInventory(int page, int itens, String validity,String environment, String id_owner, String id_equipment, String name_equipment, String post);
+    List<EquipmentDetailsDTO> getEquipmentSearchBar(int page, int itens, String searchTerm);
 }

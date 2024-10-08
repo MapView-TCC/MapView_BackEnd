@@ -96,7 +96,18 @@ public class EquipmentController {
             @RequestParam(required = false) String id_equipment,
             @RequestParam(required = false) String name_equipment,
             @RequestParam(required = false) String post) {
-        var list = equipmentServiceImp.getEquipmentValidation(page, itens, validity, enviroment, id_owner, id_equipment, name_equipment, post);
+        var list = equipmentServiceImp.getEquipmentInventory(page, itens, validity, enviroment, id_owner, id_equipment, name_equipment, post);
+        return ResponseEntity.ok(list);
+    }
+
+    // barra de pesquisa
+    @Operation(summary = "Filter equipment search bar", description = "Retrieve equipment with search bar")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Filtered equipment list successfully retrieved")
+    })
+    @GetMapping("/search")
+    public ResponseEntity<List<EquipmentDetailsDTO>> getEquipmentSearch(int page, int itens, String searchTerm){
+        var list = equipmentServiceImp.getEquipmentSearchBar(page, itens, searchTerm);
         return ResponseEntity.ok(list);
     }
 

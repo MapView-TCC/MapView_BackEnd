@@ -253,7 +253,7 @@ public class EquipmentServiceImp implements EquipmentService {
     }
 
     @Override
-    public List<EquipmentDetailsDTO> getEquipmentValidation(int page, int itens, String validity,
+    public List<EquipmentDetailsDTO> getEquipmentInventory(int page, int itens, String validity,
                                                             String environment, String id_owner, String id_equipment,
                                                             String name_equipment, String post) {
 
@@ -317,6 +317,51 @@ public class EquipmentServiceImp implements EquipmentService {
                 .map(EquipmentDetailsDTO::new)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public List<EquipmentDetailsDTO> getEquipmentSearchBar(int page, int itens,
+                                                            String searchTerm) {
+
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Equipment> criteriaQuery = criteriaBuilder.createQuery(Equipment.class);
+
+        Root<Equipment> equipmentRoot = criteriaQuery.from(Equipment.class);
+
+        Join<Equipment, MainOwner> mainOwnerJoin = equipmentRoot.join("owner");
+        Join<Equipment, Location> locationJoin = equipmentRoot.join("location");
+        Join<Location, Post> postJoin = locationJoin.join("post");
+        Join<Location, Environment> environmentJoin = locationJoin.join("environment");
+
+        List<Predicate> predicate = new ArrayList<>();
+
+
+        // Se houver um termo de pesquisa, aplique-o a múltiplos campos
+        if (searchTerm != null && !searchTerm.trim().isEmpty()) {
+            String searchLower = searchTerm.toLowerCase();
+            Predicate searchPredicate = criteriaBuilder.or(
+                    criteriaBuilder.like(criteriaBuilder.lower(equipmentRoot.get("name_equipment")), "%" + searchLower + "%"),
+                    criteriaBuilder.like(criteriaBuilder.lower(mainOwnerJoin.get("id_owner")), "%" + searchLower + "%"),
+                    criteriaBuilder.like(criteriaBuilder.lower(equipmentRoot.get("idEquipment")), "%" + searchLower + "%"),
+                    criteriaBuilder.like(criteriaBuilder.lower(postJoin.get("post")), "%" + searchLower + "%"),
+                    criteriaBuilder.like(criteriaBuilder.lower(environmentJoin.get("environment_name")), "%" + searchLower + "%")
+            );
+            predicate.add(searchPredicate);
+        }
+
+        // Adiciona filtro para equipamentos operacionais
+        predicate.add(criteriaBuilder.equal(equipmentRoot.get("operative"), true));
+
+        criteriaQuery.where(criteriaBuilder.and(predicate.toArray(new Predicate[0])));
+
+        TypedQuery<Equipment> query = entityManager.createQuery(criteriaQuery);
+        query.setFirstResult(page * itens); // Paginação
+        query.setMaxResults(itens);
+
+        return query.getResultList().stream()
+                .map(EquipmentDetailsDTO::new)
+                .collect(Collectors.toList());
+    }
+
 
     public ResponseEntity<String> uploadImageEquipament (MultipartFile file,EnumModelEquipment equipType){
         String fileName = StringUtils.cleanPath(file.getOriginalFilename());
