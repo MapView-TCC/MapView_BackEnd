@@ -11,7 +11,7 @@ import java.util.Optional;
 @Repository
 
 public interface ClassesRepository extends JpaRepository<Classes,Long> {
-    List<Classes> findClassesByOperativeTrue(Pageable pageable);
+    List<Classes> findClassesByOperativeTrue();
     Optional<Classes> findByClasses (String class_name);
 
 }

@@ -52,8 +52,8 @@ public class UserLogController {
             }
     )
     @GetMapping
-    public ResponseEntity<List<UserLogDetailDTO>> getAllUser(@RequestParam int page,@RequestParam int itens){
-        var user = userLogService.getAllUserLog(page,itens);
+    public ResponseEntity<List<UserLogDetailDTO>> getAllUser(){
+        var user = userLogService.getAllUserLog();
         return ResponseEntity.ok(user);
     }
 }

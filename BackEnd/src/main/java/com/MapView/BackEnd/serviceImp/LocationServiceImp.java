@@ -37,8 +37,8 @@ public class LocationServiceImp implements LocationService {
     }
 
     @Override
-    public List<LocationDetalsDTO> getAllLocation( int page, int itens) {
-        return this.locationRepository.findAll(PageRequest.of(page,itens)).stream().map(LocationDetalsDTO::new).toList();
+    public List<LocationDetalsDTO> getAllLocation() {
+        return this.locationRepository.findAll().stream().map(LocationDetalsDTO::new).toList();
     }
 
     @Override

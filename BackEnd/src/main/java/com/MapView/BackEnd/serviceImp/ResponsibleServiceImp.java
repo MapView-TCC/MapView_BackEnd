@@ -93,12 +93,12 @@ public class ResponsibleServiceImp implements ResponsibleService {
     }
 
     @Override
-    public List<ResponsibleDetailsDTO> getAllResposible(int page, int itens, Long userLog_id) {
+    public List<ResponsibleDetailsDTO> getAllResposible(Long userLog_id) {
         Users user = this.userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("Id not found"));
         var userLog = new UserLog(user,"Resposible","Read All Resposible", EnumAction.READ);
         userLogRepository.save(userLog);
 
-        return responsibleRepository.findByOperativeTrue(PageRequest.of(page, itens)).stream().map(ResponsibleDetailsDTO::new).toList();
+        return responsibleRepository.findByOperativeTrue().stream().map(ResponsibleDetailsDTO::new).toList();
     }
 
     @Override

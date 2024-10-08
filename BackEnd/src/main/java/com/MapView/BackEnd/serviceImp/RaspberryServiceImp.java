@@ -52,12 +52,12 @@ public class RaspberryServiceImp implements RaspberryService {
     }
 
     @Override
-    public List<RaspberryDetailsDTO> getAllRaspberry(int page, int itens, Long userLog_id) {
+    public List<RaspberryDetailsDTO> getAllRaspberry(Long userLog_id) {
         Users user = this.userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("Id not found"));
         var userLog = new UserLog(user,"Raspberry","Read All Raspberry", EnumAction.READ);
         userLogRepository.save(userLog);
 
-        return raspberryRepository.findAllByOperativeTrue(PageRequest.of(page, itens)).stream().map(RaspberryDetailsDTO::new).toList();
+        return raspberryRepository.findAllByOperativeTrue().stream().map(RaspberryDetailsDTO::new).toList();
     }
 
     @Override

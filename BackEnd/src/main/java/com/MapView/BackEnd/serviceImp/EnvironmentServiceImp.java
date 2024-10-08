@@ -54,12 +54,12 @@ public class EnvironmentServiceImp implements EnvironmentService {
     }
 
     @Override
-    public List<EnvironmentDetailsDTO> getAllEnvironment(int page, int itens, Long userLog_id) {
+    public List<EnvironmentDetailsDTO> getAllEnvironment(Long userLog_id) {
         var id_user = userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("User Id Not Found"));
         var userLog = new UserLog(id_user,"Environment","Read All Environment", EnumAction.READ);
         userLogRepository.save(userLog);
 
-        return this.environmentRepository.findEnvironmentByOperativeTrue(PageRequest.of(page, itens)).stream().map(EnvironmentDetailsDTO::new).toList();
+        return this.environmentRepository.findEnvironmentByOperativeTrue().stream().map(EnvironmentDetailsDTO::new).toList();
     }
 
     @Override

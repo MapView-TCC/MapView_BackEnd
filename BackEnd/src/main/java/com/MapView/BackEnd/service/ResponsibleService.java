@@ -10,7 +10,7 @@ import java.util.List;
 public interface ResponsibleService {
     ResponsibleDetailsDTO getResposibleById(Long id_Resposible, Long userLog_id);
     ResponsibleDetailsDTO getResposibleByEdv(String edv, Long userLog_id);
-    List<ResponsibleDetailsDTO> getAllResposible(int page, int itens, Long userLog_id);
+    List<ResponsibleDetailsDTO> getAllResposible(Long userLog_id);
     ResponsibleDetailsDTO createResposible(ResponsibleCrateDTO data, Long userLog_id);
     ResponsibleDetailsDTO updateResposible(Long id_responsible, ResponsibleUpdateDTO data, Long userLog_id);
 

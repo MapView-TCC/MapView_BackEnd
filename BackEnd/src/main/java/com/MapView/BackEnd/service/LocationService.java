@@ -10,7 +10,7 @@ import java.util.List;
 public interface LocationService {
 
     LocationDetalsDTO getLocation(Long id_location);
-    List<LocationDetalsDTO> getAllLocation( int page, int itens);
+    List<LocationDetalsDTO> getAllLocation();
     LocationDetalsDTO createLocation(LocationCreateDTO data);
     LocationDetalsDTO updateLocation(Long id_location, LocationUpdateDTO data);
 

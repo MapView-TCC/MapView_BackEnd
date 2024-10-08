@@ -49,12 +49,12 @@ public class AreaServiceImp implements AreaService {
     }
 
     @Override
-    public List<AreaDetailsDTO> getAllArea(int page, int itens,Long userLog_id) {
+    public List<AreaDetailsDTO> getAllArea(Long userLog_id) {
         Users user = this.userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("Id not found"));
         var userLog = new UserLog(user,"Area","Read All Area", EnumAction.READ);
         userLogRepository.save(userLog);
 
-        return areaRepository.findAllByOperativeTrue(PageRequest.of(page, itens)).stream().map(AreaDetailsDTO::new).toList();
+        return areaRepository.findAllByOperativeTrue().stream().map(AreaDetailsDTO::new).toList();
     }
 
     @Override

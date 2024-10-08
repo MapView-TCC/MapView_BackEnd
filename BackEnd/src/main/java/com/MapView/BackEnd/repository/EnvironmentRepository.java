@@ -9,5 +9,5 @@ import java.util.List;
 
 @Repository
 public interface EnvironmentRepository extends JpaRepository<Environment,Long> {
-    List<Environment> findEnvironmentByOperativeTrue(Pageable pageable);
+    List<Environment> findEnvironmentByOperativeTrue();
 }

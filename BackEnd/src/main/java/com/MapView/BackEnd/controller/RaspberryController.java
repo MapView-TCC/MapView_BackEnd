@@ -56,13 +56,9 @@ public class RaspberryController {
     })
     @GetMapping
     public ResponseEntity<List<RaspberryDetailsDTO>> getAllRaspberry(
-            @Parameter(description = "Page number for pagination", required = true)
-            @RequestParam int page,
-            @Parameter(description = "Number of items per page", required = true)
-            @RequestParam int itens,
             @Parameter(description = "User log ID for tracking changes", required = true)
             @RequestParam Long userLog_id) {
-        var list = raspberryServiceImp.getAllRaspberry(page, itens, userLog_id);
+        var list = raspberryServiceImp.getAllRaspberry(userLog_id);
         return ResponseEntity.ok(list);
     }
 

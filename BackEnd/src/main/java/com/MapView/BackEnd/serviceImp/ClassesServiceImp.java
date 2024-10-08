@@ -123,13 +123,13 @@ public class ClassesServiceImp implements ClassesService {
     }
 
     @Override
-    public List<ClassesDetaiLDTO> getAllClasses(int page, int itens, Long userLog_id) {
+    public List<ClassesDetaiLDTO> getAllClasses(Long userLog_id) {
         var usuario_log = userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("User Id Not Found"));
         if(usuario_log.isOperative()) {
             var userLog = new UserLog(usuario_log, "Classes", "Read All Classes", EnumAction.READ);
             userLogRepository.save( userLog);
         }
-        return this.classesRepository.findClassesByOperativeTrue(PageRequest.of(page, itens)).stream().map(ClassesDetaiLDTO::new).toList();
+        return this.classesRepository.findClassesByOperativeTrue().stream().map(ClassesDetaiLDTO::new).toList();
     }
 
     @Override

@@ -15,7 +15,6 @@ public record  EquipmentCreateDTO(
         EnumModelEquipment model,
         String validity,
         String admin_rights,
-
         String observation,
         @Positive
         @Min(1)

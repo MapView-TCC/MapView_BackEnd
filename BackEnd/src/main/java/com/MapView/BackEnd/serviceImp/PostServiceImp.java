@@ -47,12 +47,12 @@ public class PostServiceImp implements PostService {
     }
 
     @Override
-    public List<PostDetailDTO> getAllPost(int page, int itens,Long userLog_id) {
+    public List<PostDetailDTO> getAllPost(Long userLog_id) {
         Users user = this.userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("Id not found"));
         var userLog = new UserLog(user,"Post","Read All Post", EnumAction.READ);
         userLogRepository.save(userLog);
 
-        return this.postRepository.findByOperativeTrue(PageRequest.of(page, itens)).stream().map(PostDetailDTO::new).toList();
+        return this.postRepository.findByOperativeTrue().stream().map(PostDetailDTO::new).toList();
 
 
     }

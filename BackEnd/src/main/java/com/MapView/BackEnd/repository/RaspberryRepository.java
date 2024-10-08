@@ -10,6 +10,6 @@ import java.util.Optional;
 
 @Repository
 public interface RaspberryRepository extends JpaRepository<Raspberry,String> {
-    List<Raspberry> findAllByOperativeTrue(Pageable pageable);
+    List<Raspberry> findAllByOperativeTrue();
     Optional<Raspberry>findById(String name);
 }

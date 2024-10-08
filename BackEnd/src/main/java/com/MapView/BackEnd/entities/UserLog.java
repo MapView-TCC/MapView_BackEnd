@@ -29,7 +29,7 @@ public class UserLog {
     private String field;
     private String description;
     @CreationTimestamp
-    private Instant datetime;
+    private LocalDateTime datetime;
     @Enumerated(EnumType.STRING)
     private EnumAction action;
 
@@ -40,7 +40,7 @@ public class UserLog {
         this.id_altered = id_altered;
         this.field = field;
         this.description = description;
-        this.datetime = Instant.now();
+        this.datetime = LocalDateTime.now();
         this.action = action;
     }
     public UserLog (Users user, String altered_table, String id_altered, String description,EnumAction action){
@@ -49,7 +49,7 @@ public class UserLog {
         this.id_altered = id_altered;
         this.field = null;
         this.description = description;
-        this.datetime = Instant.now();
+        this.datetime = LocalDateTime.now();
         this.action = action;
     }
 
@@ -57,7 +57,7 @@ public class UserLog {
         this.user = user;
         this.altered_table=altered_table;
         this.description = description;
-        this.datetime = Instant.now();
+        this.datetime = LocalDateTime.now();
         this.action = action;
     }
 }
