@@ -11,5 +11,5 @@ import java.util.List;
 
 public interface AreaRepository extends JpaRepository<Area,Long> {
 
-    List<Area> findAllByOperativeTrue(Pageable pageable);
+    List<Area> findAllByOperativeTrue();
 }

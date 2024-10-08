@@ -12,7 +12,7 @@ import java.util.Optional;
 
 @Repository
 public interface ResponsibleRepository extends JpaRepository<Responsible,Long> {
-    List<Responsible> findByOperativeTrue(Pageable pageable);
+    List<Responsible> findByOperativeTrue();
     ResponsibleCrateDTO save (ResponsibleCrateDTO data);
 
     Optional<Responsible> findByEdv(String edv);

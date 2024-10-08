@@ -34,8 +34,8 @@ public class UserLogImp implements UserLogService {
     }
 
     @Override
-    public List<UserLogDetailDTO> getAllUserLog(int page, int itens) {
-        return this.userLogRepository.findAll(PageRequest.of(page,itens)).stream().map(UserLogDetailDTO::new).toList();
+    public List<UserLogDetailDTO> getAllUserLog() {
+        return this.userLogRepository.findAll().stream().map(UserLogDetailDTO::new).toList();
     }
 
 

@@ -64,13 +64,9 @@ public class CostCenterController {
     })
     @GetMapping
     public ResponseEntity<List<CostCenterDetailsDTO>> getAllCostCenter(
-            @Parameter(description = "Page number for pagination", required = true)
-            @RequestParam int page,
-            @Parameter(description = "Number of items per page", required = true)
-            @RequestParam int itens,
             @Parameter(description = "User log ID for tracking changes", required = true)
             @RequestParam Long userLog_id) {
-        var list = costCenterServiceImp.getAllCostCenter(page, itens, userLog_id);
+        var list = costCenterServiceImp.getAllCostCenter(userLog_id);
         return ResponseEntity.ok(list);
     }
 

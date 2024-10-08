@@ -81,13 +81,9 @@ public class ClassesController {
     })
     @GetMapping
     public ResponseEntity<List<ClassesDetaiLDTO>> getAllClasses(
-            @Parameter(description = "Page number for pagination", required = true)
-            @RequestParam int page,
-            @Parameter(description = "Number of items per page", required = true)
-            @RequestParam int itens,
             @Parameter(description = "User log ID for tracking changes", required = true)
             @RequestParam Long userLog_id) {
-        var classes = classesServiceImp.getAllClasses(page, itens, userLog_id);
+        var classes = classesServiceImp.getAllClasses(userLog_id);
         return ResponseEntity.ok(classes);
     }
 

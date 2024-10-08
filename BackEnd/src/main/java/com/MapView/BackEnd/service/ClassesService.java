@@ -13,7 +13,7 @@ public interface ClassesService {
     ClassesDetaiLDTO getClasseByName(String class_name, Long userLog_id);
     ClassesDetaiLDTO createClasses(ClassesCreateDTO data, Long userLog_id);
     ClassesDetaiLDTO updateClasses(Long classes_id, ClassesUpdateDTO data, Long userLog_id);
-    List<ClassesDetaiLDTO> getAllClasses(int page, int itens, Long userLog_id);
+    List<ClassesDetaiLDTO> getAllClasses(Long userLog_id);
     void activeClass(Long class_id, Long userLog_id);
     void inactiveClass(Long class_id, Long userLog_id);
 }

@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface UserService {
     UserDetailsDTO getUser(Long id_UserService);
-    List<UserDetailsDTO> getAllUser(int page, int itens);
+    List<UserDetailsDTO> getAllUser();
     UserDetailsDTO createUser(UserCreateDTO data);
     void setPrivilege (Long user_id, RoleUser roleUser);
     void activeUser(Long id_UserService);

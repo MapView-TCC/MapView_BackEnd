@@ -9,5 +9,5 @@ import java.util.List;
 
 @Repository
 public interface MainOwnerRepository extends JpaRepository<MainOwner,String> {
-    List<MainOwner> findAllByOperativeTrue(Pageable pageable);
+    List<MainOwner> findAllByOperativeTrue();
 }

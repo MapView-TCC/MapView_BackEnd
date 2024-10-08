@@ -55,13 +55,13 @@ public class MainOwnerServiceImp implements MainOwnerService {
     }
 
     @Override
-    public List<MainOwnerDetailsDTO> getAllMainOwner(int page, int itens,Long userLog_id) {
+    public List<MainOwnerDetailsDTO> getAllMainOwner(Long userLog_id) {
         Users user = this.userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("Id not found"));
         var userLog = new UserLog(user,"MainOwner","Read All MainOwner", EnumAction.READ);
         userLogRepository.save(userLog);
 
 
-        return mainOwnerRepository.findAllByOperativeTrue(PageRequest.of(page, itens)).stream().map(MainOwnerDetailsDTO::new).toList();
+        return mainOwnerRepository.findAllByOperativeTrue().stream().map(MainOwnerDetailsDTO::new).toList();
     }
 
     @Override

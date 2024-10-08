@@ -36,8 +36,8 @@ public class AccessHistoryServiceImp implements AccessHistoryService {
     }
 
     @Override
-    public List<AccessHistoryDetailsDTO> getAllAccessHistory(int page, int itens) {
-        return accessHistoryRepository.findAll(PageRequest.of(page, itens)).stream().map(AccessHistoryDetailsDTO::new).toList();
+    public List<AccessHistoryDetailsDTO> getAllAccessHistory() {
+        return accessHistoryRepository.findAll().stream().map(AccessHistoryDetailsDTO::new).toList();
     }
 
     @Override

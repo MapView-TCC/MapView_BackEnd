@@ -79,7 +79,8 @@ public class ScheduleService {
         }
     }
 
-    @Scheduled(cron = "0 0 0 1 1,7 *") // no inicio do minuto e hora, a meia noite, no dia 1 do mês, em janeiro(1) e julho(7), qualquer dia da semana
+    @Scheduled(cron = "0 0 0 1 1 *") // No início do minuto e hora, à meia-noite, no dia 1 de janeiro, qualquer dia da semana
+    //@Scheduled(cron = "0 0 0 1 1,7 *") // no inicio do minuto e hora, a meia noite, no dia 1 do mês, em janeiro(1) e julho(7), qualquer dia da semana
     public void deleteTrackingHistory(){
         List<TrackingHistory> trackingHistoriesList = trackingHistoryRepository.findAll();
         for (TrackingHistory trackingHistory : trackingHistoriesList){

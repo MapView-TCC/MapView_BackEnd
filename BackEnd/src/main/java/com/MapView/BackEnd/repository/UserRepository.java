@@ -10,7 +10,7 @@ import java.util.List;
 
 @Repository
 public interface UserRepository extends JpaRepository<Users,Long> {
-    List<Users>findByOperativeTrue(Pageable pageable);
+    List<Users>findByOperativeTrue();
     Users findByEmail(String email);
     void save(UserCreateDTO data);
 

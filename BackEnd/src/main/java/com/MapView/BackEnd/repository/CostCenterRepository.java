@@ -9,5 +9,5 @@ import java.util.List;
 
 @Repository
 public interface CostCenterRepository extends JpaRepository<CostCenter,Long> {
-    List<CostCenter> findAllByOperativeTrue(Pageable pageable);
+    List<CostCenter> findAllByOperativeTrue();
 }

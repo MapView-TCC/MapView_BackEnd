@@ -86,8 +86,8 @@ public class AccessHistoryController {
             @ApiResponse(responseCode = "200", description = "Access histories successfully retrieved.")
     })
     @GetMapping
-    public ResponseEntity<List<AccessHistoryDetailsDTO>> getAllAccessHistory(@RequestParam int page, @RequestParam int itens){
-        var list = accessHistoryServiceImp.getAllAccessHistory(page,itens);
+    public ResponseEntity<List<AccessHistoryDetailsDTO>> getAllAccessHistory(){
+        var list = accessHistoryServiceImp.getAllAccessHistory();
         return ResponseEntity.ok(list);
     }
 }

@@ -33,8 +33,8 @@ public class UserServiceIpm implements UserService {
     }
 
     @Override
-    public List<UserDetailsDTO> getAllUser(int page, int itens) {
-        return this.userRepository.findByOperativeTrue(PageRequest.of(page, itens)).stream().map(UserDetailsDTO::new).toList();
+    public List<UserDetailsDTO> getAllUser() {
+        return this.userRepository.findByOperativeTrue().stream().map(UserDetailsDTO::new).toList();
     }
 
 

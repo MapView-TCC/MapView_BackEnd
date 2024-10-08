@@ -47,12 +47,12 @@ public class CostCenterServiceImp implements CostCenterService {
     }
 
     @Override
-    public List<CostCenterDetailsDTO> getAllCostCenter(int page,int itens,Long userLog_id) {
+    public List<CostCenterDetailsDTO> getAllCostCenter(Long userLog_id) {
         Users user = this.userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("Id not found"));
         var userLog = new UserLog(user,"CostCenter","Read All CostCenter", EnumAction.READ);
         userLogRepository.save(userLog);
 
-        return costCenterRepository.findAllByOperativeTrue(PageRequest.of(page, itens)).stream().map(CostCenterDetailsDTO::new).toList();
+        return costCenterRepository.findAllByOperativeTrue().stream().map(CostCenterDetailsDTO::new).toList();
     }
 
     @Override

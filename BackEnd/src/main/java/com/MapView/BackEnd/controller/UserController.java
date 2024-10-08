@@ -80,12 +80,8 @@ public class UserController {
             @ApiResponse(responseCode = "200", description = "Users retrieved successfully")
     })
     @GetMapping
-    public ResponseEntity<List<UserDetailsDTO>> getAllUser(
-            @Parameter(description = "Page number for pagination", required = true)
-            @RequestParam int page,
-            @Parameter(description = "Number of items per page", required = true)
-            @RequestParam int itens) {
-        var users = userServiceIpm.getAllUser(page, itens);
+    public ResponseEntity<List<UserDetailsDTO>> getAllUser() {
+        var users = userServiceIpm.getAllUser();
         return ResponseEntity.ok(users);
     }
 
