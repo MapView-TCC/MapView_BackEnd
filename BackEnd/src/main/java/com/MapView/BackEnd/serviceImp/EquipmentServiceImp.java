@@ -258,7 +258,8 @@ public class EquipmentServiceImp implements EquipmentService {
                                                             String id_owner, String id_equipment,
                                                             String name_equipment, String post) {
 
-        LocalDate validDate = getStartDateFromQuarter(validity);
+
+
 
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Equipment> criteriaQuery = criteriaBuilder.createQuery(Equipment.class);
@@ -279,6 +280,7 @@ public class EquipmentServiceImp implements EquipmentService {
         //WHERE
 
         if(validity != null){
+            LocalDate validDate = getStartDateFromQuarter(validity);
             predicate.add(criteriaBuilder.like(equipmentRoot.get("validity"), "%"+validDate+"%"));
         }
         if (environment != null){
@@ -287,9 +289,7 @@ public class EquipmentServiceImp implements EquipmentService {
         if (mainOwner != null){
             predicate.add(criteriaBuilder.like(mainOwnerJoin.get("owner_name"), "%" + mainOwner + "%"));
         }
-        if(id_owner != null){
-            predicate.add(criteriaBuilder.like(equipmentRoot.get("id_owner"), "%" + id_owner + "%"));
-        }
+
         if (id_equipment != null){
             predicate.add(criteriaBuilder.like(equipmentRoot.get("id_equipment"), "%" + id_equipment + "%"));
         }
@@ -300,7 +300,7 @@ public class EquipmentServiceImp implements EquipmentService {
             predicate.add(criteriaBuilder.like(PostJoin.get("post"), "%" + post + "%"));
         }
 
-        if (validity != null && environment != null && mainOwner != null && id_owner != null && id_equipment != null && name_equipment != null && post != null){
+        if (validity != null && environment != null && mainOwner != null && id_equipment != null && name_equipment != null && post != null){
             return equipmentRepository.findAllByOperativeTrue(PageRequest.of(page, itens))
                     .stream()
                     .map(EquipmentDetailsDTO::new)
