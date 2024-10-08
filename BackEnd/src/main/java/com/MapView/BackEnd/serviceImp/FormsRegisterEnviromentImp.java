@@ -9,7 +9,7 @@ import com.MapView.BackEnd.dtos.FormsRegisterEnviroment.FormsRegisterEnviromentD
 import com.MapView.BackEnd.dtos.FormsRegisterEnviroment.FormsRegisterEnvironmentCreateDTO;
 import com.MapView.BackEnd.dtos.Raspberry.RaspberryCreateDTO;
 import com.MapView.BackEnd.dtos.Raspberry.RaspberryDetailsDTO;
-import com.MapView.BackEnd.entities.Environment;
+
 import org.springframework.stereotype.Service;
 
 @Service
@@ -29,13 +29,12 @@ public class FormsRegisterEnviromentImp {
 
 
     public FormsRegisterEnviromentDetailsDTO createFormsRegisterEnvironment(FormsRegisterEnvironmentCreateDTO data,Long userLog){
-
         BuildingDetailsDTO build =  buildingServiceImp.getBuilding(data.id_building(), userLog);
-        AreaDetailsDTO area = areaServiceImp.createArea(new AreaCreateDTO(data.name_area(),null), userLog);
+        AreaDetailsDTO area = areaServiceImp.getArea(userLog, data.id_area());
         RaspberryDetailsDTO raspberry = raspberryServiceImp.createRaspberry(new RaspberryCreateDTO(data.raspberry_name(), build.id_building(), area.id_area()),userLog);
         EnvironmentDetailsDTO environment = environmentServiceImp.createEnvironment(new EnvironmentCreateDTO(data.environment_name(), raspberry.id_raspberry()),userLog);
 
-        return  new FormsRegisterEnviromentDetailsDTO(build,environment);
+        return new FormsRegisterEnviromentDetailsDTO(build,environment);
 
     }
 }
