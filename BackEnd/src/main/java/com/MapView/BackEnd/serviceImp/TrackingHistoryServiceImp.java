@@ -14,6 +14,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -58,6 +59,7 @@ public class TrackingHistoryServiceImp implements TrackingHistoryService {
     }
     @Async
     @Override
+    @CrossOrigin("http://localhost:3001")
     public TrackingHistoryDetailsDTO createTrackingHistory(TrackingHistoryCreateDTO dados) {
         Environment local_tracking = environmentRepository.findById(dados.id_environment())
                 .orElseThrow(() -> new NotFoundException("Id not found"));
@@ -69,14 +71,14 @@ public class TrackingHistoryServiceImp implements TrackingHistoryService {
             Equipment emptyEquipment = new Equipment(UUID.randomUUID().toString().substring(0,8), dados.rfid());
             equipmentRepository.save(emptyEquipment);
             trackingHistoryRepository.save(trackingHistory);
-
             template.convertAndSend("/equip",trackingHistory);
+
             return new TrackingHistoryDetailsDTO(trackingHistory);
         }
 
         TrackingHistory last_track = trackingHistoryRepository.findTopByEquipmentOrderByDatetimeDesc(equipment.get());
         if (last_track == null){
-            throw new NotFoundException("RFID tag is not linked to any equipment2");
+            throw new NotFoundException("RFID tag is not linked to any equipment");
         }
 
         Environment last_track_local = last_track.getEnvironment();
@@ -89,24 +91,29 @@ public class TrackingHistoryServiceImp implements TrackingHistoryService {
 
                     System.out.println("_-----1--------");
                     TrackingHistory trackingHistory = trackingHistoryRepository.save(new TrackingHistory(local_tracking, equipment.get(), dados.rfid(),EnumTrackingAction.ENTER, EnumColors.GREEN));
+                    template.convertAndSend("/equip",trackingHistory);
                     return new TrackingHistoryDetailsDTO(trackingHistory);
                 }
                 System.out.println("_-----2--------");
                 TrackingHistory trackingHistory = trackingHistoryRepository.save(new TrackingHistory(local_tracking, equipment.get(), dados.rfid(),EnumTrackingAction.OUT, EnumColors.GREEN));
+                template.convertAndSend("/equip",trackingHistory);
                 return new TrackingHistoryDetailsDTO(trackingHistory);
             }
             if (local_tracking.getEnvironment_name().equals("BTC")){
                 System.out.println("_-----3--------");
                 TrackingHistory trackingHistory = trackingHistoryRepository.save(new TrackingHistory(local_tracking, equipment.get(), dados.rfid(),EnumTrackingAction.OUT, EnumColors.YELLOW));
+                template.convertAndSend("/equip",trackingHistory);
                 return new TrackingHistoryDetailsDTO(trackingHistory);
             }
             TrackingHistory trackingHistory = trackingHistoryRepository.save(new TrackingHistory(local_tracking, equipment.get(), dados.rfid(),EnumTrackingAction.OUT, EnumColors.GREEN));
+            template.convertAndSend("/equip",trackingHistory);
             System.out.println("_-----4--------");
             return new TrackingHistoryDetailsDTO(trackingHistory);
         }
         System.out.println("_-----5--------");
         trackingHistoryRepository.save(new TrackingHistory(last_track_local,equipment.get(), dados.rfid(), EnumTrackingAction.OUT,EnumColors.GREEN));
         TrackingHistory trackingHistory = trackingHistoryRepository.save(new TrackingHistory(local_tracking, equipment.get(), dados.rfid(), EnumTrackingAction.ENTER, EnumColors.GREEN));
+        template.convertAndSend("/equip",trackingHistory);
 
         System.out.println("Se o rfid ta salvando aqui " + dados.rfid());
         System.out.println(trackingHistory.getRfid());
