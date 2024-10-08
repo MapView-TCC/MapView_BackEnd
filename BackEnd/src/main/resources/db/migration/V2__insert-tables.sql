@@ -1,10 +1,10 @@
 -- Inserir novos usuários
 INSERT INTO users (email, role, operative) VALUES
-('john.doe@example.com', 'ADMIN', 1),
-('jane.smith@example.com', 'USER', 1),
-('alice.jones@example.com', 'SUPPORT', 1),
-('bob.brown@example.com', 'USER', 0),
-('carol.white@example.com', 'ADMIN', 1);
+('maria.eduarda@example.com', 'ADMIN', 1),
+('ana.maria@example.com', 'USER', 1),
+('thayna.quinteiro@example.com', 'SUPPORT', 1),
+('sarah.santos@example.com', 'USER', 0),
+('joao.borges@example.com', 'ADMIN', 1);
 
 -- Inserir novos registros de histórico de acesso
 INSERT INTO access_history (id_user, login_datetime, logout_datetime) VALUES
@@ -24,19 +24,53 @@ INSERT INTO classes (course_name, classes, id_user, creation_date, operative) VA
 
 -- Inserir novos prédios
 INSERT INTO building (building_code, operative) VALUES
-('B001', 1),
-('B002', 0),
-('B003', 1),
-('B004', 1),
-('B005', 0);
+('Ca100', 1),
+('Ca106', 1),
+('Ca126', 1),
+('Ca129', 1),
+('Ca140', 1),
+('Ca147', 1),
+('Ca148', 1),
+('Ca149', 1),
+('Ca150', 1),
+('Ca151', 1),
+('Ca160', 1),
+('Ca165', 1),
+('Ca169', 1),
+('Ca170', 1),
+('Ca180', 1),
+('Ca183', 1),
+('Ca200', 1),
+('Ca204', 1),
+('Ca205', 1),
+('Ca220', 1),
+('Ca300', 1),
+('Ca320', 1),
+('Ca325', 1),
+('Ca340', 1),
+('Ca341', 1),
+('Ca350', 1),
+('Ca360', 1),
+('Ca370', 1),
+('Ca390', 1),
+('Ca400', 1),
+('Ca401', 1),
+('Ca530', 1),
+('Ca536', 1),
+('Ca540', 1),
+('Ca550', 1),
+('Ca551', 1),
+('Ca560', 1),
+('Ca590', 1),
+('Ca600', 1);
 
 -- Inserir novas áreas
 INSERT INTO area (area_code, area_name, operative) VALUES
-('A001', 'Area 1', 1),
-('A002', 'Area 2', 0),
-('A003', 'Area 3', 1),
-('A004', 'Area 4', 1),
-('A005', 'Area 5', 0);
+('ETS', 'Engineering Techinical School', 1),
+('BTC', 'Bosch Training Center', 1),
+('BD', 'Bosch Digital', 1),
+('PT', 'Power Tools', 1),
+('BISB', 'Bosch Integrated Solutions Brazil', 1);
 
 -- Inserir novos Raspberry Pi
 INSERT INTO raspberry (id_raspberry, id_building, id_area, operative) VALUES
@@ -48,19 +82,19 @@ INSERT INTO raspberry (id_raspberry, id_building, id_area, operative) VALUES
 
 -- Inserir novos ambientes
 INSERT INTO environment (environment_name, id_raspberry, operative) VALUES
-('Environment 1', 'RP001', 1),
-('Environment 2', 'RP002', 0),
-('Environment 3', 'RP003', 1),
-('Environment 4', 'RP004', 1),
-('Environment 5', 'RP005', 0);
+('Lab. Soluções Digitais 01', 'RP001', 1),
+('Lab. Soluções Digitais 02', 'RP002', 0),
+('Lab. Soluções Digitais 03', 'RP003', 1),
+('Lab. Soluções Digitais 04', 'RP004', 1),
+('Lab. Soluções Digitais 05', 'RP005', 0);
 
 -- Inserir novos postos
 INSERT INTO post (post, operative) VALUES
-('Post 1', 1),
-('Post 2', 0),
-('Post 3', 1),
-('Post 4', 1),
-('Post 5', 0);
+('Mesa 1', 1),
+('Mesa 2', 0),
+('Mesa 3', 1),
+('Mesa 4', 1),
+('Mesa 5', 0);
 
 -- Inserir novas localizações
 INSERT INTO location (id_post, id_environment) VALUES
@@ -78,29 +112,22 @@ INSERT INTO cost_center (cost_center_name, operative) VALUES
 ('Cost Center 4', 1),
 ('Cost Center 5', 0);
 
--- Inserir novos centros de custo
-INSERT INTO cost_center (cost_center_name, operative) VALUES
-('Cost Center 1', 1),
-('Cost Center 2', 0),
-('Cost Center 3', 1),
-('Cost Center 4', 1),
-('Cost Center 5', 0);
 
 -- Inserir novos donos principais
 INSERT INTO main_owner (id_owner, id_cost_center, operative) VALUES
-('O001', 1, 1),
-('O002', 2, 0),
-('O003', 3, 1),
-('O004', 4, 1),
-('O005', 5, 0);
+('FRG7CA', 1, 1),
+('FRG7CB', 2, 0),
+('FRG7CC', 3, 1),
+('FRG7CD', 4, 1),
+('FRG7CE', 5, 0);
 
 -- Inserir novos equipamentos
 INSERT INTO equipment (id_equipment, name_equipment, rfid, type, model, validity, admin_rights, observation, id_location, id_owner, operative) VALUES
-('E001', 'Laptop A', 123456789012345, 'Laptop', 'NOTEBOOK_STANDARD', '2025-01-01', 'Admin', 'Good condition', 1, 'O001',  1),
-('E002', 'Desktop B', 234567890123456, 'Desktop', 'DESKTOP_TINK', '2024-12-31', 'User', 'Needs repair', 2, 'O002',  0),
-('E003', 'Tablet C', 345678901234567, 'Tablet', 'NOTEBOOK_ENHANCED', '2026-01-01', 'Admin', 'New', 3, 'O003',  1),
-('E004', 'Monitor D', 456789012345678, 'Monitor', 'DESKTOP_EXTERNO', '2024-11-30', 'User', 'Old', 4, 'O004',  1),
-('E005', 'Printer E', 567890123456789, 'Printer', 'DESKTOP_TINK', '2025-05-01', 'User', 'Average condition', 5, 'O005',  0);
+('E001', 'Laptop A', 123456789012345, 'Laptop', 'NOTEBOOK_STANDARD', '2025-01-01', 'Admin', 'Good condition', 1, 'FRG7CA',  1),
+('E002', 'Desktop B', 234567890123456, 'Desktop', 'DESKTOP_TINK', '2024-12-31', 'User', 'Needs repair', 2, 'FRG7CB',  0),
+('E003', 'Tablet C', 345678901234567, 'Tablet', 'NOTEBOOK_ENHANCED', '2026-01-01', 'Admin', 'New', 3, 'FRG7CC',  1),
+('E004', 'Monitor D', 456789012345678, 'Monitor', 'DESKTOP_EXTERNO', '2024-11-30', 'User', 'Old', 4, 'FRG7CD',  1),
+('E005', 'Printer E', 567890123456789, 'Printer', 'DESKTOP_TINK', '2025-05-01', 'User', 'Average condition', 5, 'FRG7CE',  0);
 
 -- Inserir novos registros de histórico de rastreio
 INSERT INTO tracking_history (id_equipment, id_environment, rfid, action, warning, dateTime) VALUES

@@ -254,8 +254,7 @@ public class EquipmentServiceImp implements EquipmentService {
 
     @Override
     public List<EquipmentDetailsDTO> getEquipmentValidation(int page, int itens, String validity,
-                                                            String environment, String mainOwner,
-                                                            String id_owner, String id_equipment,
+                                                            String environment, String id_owner, String id_equipment,
                                                             String name_equipment, String post) {
 
 
@@ -272,35 +271,35 @@ public class EquipmentServiceImp implements EquipmentService {
         Join<Equipment, Location> locationJoin = equipmentRoot.join("location");
         Join<Equipment, Location> locationPostJoin = equipmentRoot.join("location");
         Join<Location, Post> PostJoin = locationPostJoin.join("post");
-        Join<Location, Environment> enviromentJoin = locationJoin.join("environment");
+        Join<Location, Environment> environmentJoin = locationJoin.join("environment");
 
 
         List<Predicate> predicate = new ArrayList<>();
+        System.out.println(predicate);
 
         //WHERE
 
         if(validity != null){
             LocalDate validDate = getStartDateFromQuarter(validity);
-            predicate.add(criteriaBuilder.like(equipmentRoot.get("validity"), "%"+validDate+"%"));
+            predicate.add(criteriaBuilder.equal(equipmentRoot.get("validity"), validDate));
         }
         if (environment != null){
-            predicate.add(criteriaBuilder.like(enviromentJoin.get("environment_name"), "%"+environment+"%"));
+            predicate.add(criteriaBuilder.like(environmentJoin.get("environment_name"), "%"+environment.toLowerCase()+"%"));
         }
-        if (mainOwner != null){
-            predicate.add(criteriaBuilder.like(mainOwnerJoin.get("owner_name"), "%" + mainOwner + "%"));
+        if (id_owner != null){
+            predicate.add(criteriaBuilder.like(mainOwnerJoin.get("id_owner"), "%"+id_owner.toLowerCase()+"%"));
         }
-
         if (id_equipment != null){
-            predicate.add(criteriaBuilder.like(equipmentRoot.get("id_equipment"), "%" + id_equipment + "%"));
+            predicate.add(criteriaBuilder.like(equipmentRoot.get("idEquipment"), "%" + id_equipment.toLowerCase() + "%"));
         }
         if (name_equipment != null){
-            predicate.add(criteriaBuilder.like(equipmentRoot.get("name_equipment"), "%" + name_equipment + "%"));
+            predicate.add(criteriaBuilder.like(equipmentRoot.get("name_equipment"), "%" + name_equipment.toLowerCase() + "%"));
         }
         if (post != null){
-            predicate.add(criteriaBuilder.like(PostJoin.get("post"), "%" + post + "%"));
+            predicate.add(criteriaBuilder.like(PostJoin.get("post"), "%" + post.toLowerCase() + "%"));
         }
 
-        if (validity != null && environment != null && mainOwner != null && id_equipment != null && name_equipment != null && post != null){
+        if (validity != null && environment != null && id_equipment != null && name_equipment != null && post != null){
             return equipmentRepository.findAllByOperativeTrue(PageRequest.of(page, itens))
                     .stream()
                     .map(EquipmentDetailsDTO::new)

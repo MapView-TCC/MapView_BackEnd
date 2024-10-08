@@ -92,12 +92,11 @@ public class EquipmentController {
             @Parameter(description = "Number of items per page", required = true) @RequestParam int itens,
             @RequestParam(required = false) String validity,
             @RequestParam(required = false) String enviroment,
-            @RequestParam(required = false) String mainowner,
             @RequestParam(required = false) String id_owner,
             @RequestParam(required = false) String id_equipment,
             @RequestParam(required = false) String name_equipment,
             @RequestParam(required = false) String post) {
-        var list = equipmentServiceImp.getEquipmentValidation(page, itens, validity, enviroment, mainowner, id_owner, id_equipment, name_equipment, post);
+        var list = equipmentServiceImp.getEquipmentValidation(page, itens, validity, enviroment, id_owner, id_equipment, name_equipment, post);
         return ResponseEntity.ok(list);
     }
 
