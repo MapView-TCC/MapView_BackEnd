@@ -55,6 +55,7 @@ public class MainOwnerServiceImp implements MainOwnerService {
         return new MainOwnerDetailsDTO(mainOwner);
     }
 
+
     @Override
     public List<MainOwnerDetailsDTO> getAllMainOwner(Long userLog_id) {
         Users user = this.userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("Id not found"));

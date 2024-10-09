@@ -170,10 +170,8 @@ public class EquipmentController {
     public ResponseEntity<EquipmentDetailsDTO> updateEquipment(
             @Parameter(description = "The ID of the equipment to update", required = true)
             @PathVariable String id_equipment,
-
             @Parameter(description = "Data transfer object for updating the equipment", required = true)
             @RequestBody @Valid EquipmentUpdateDTO dados,
-
             @Parameter(description = "User log ID for tracking changes", required = true)
             @RequestParam Long userLog_id)
     {

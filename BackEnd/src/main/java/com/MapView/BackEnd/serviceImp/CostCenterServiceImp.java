@@ -48,6 +48,20 @@ public class CostCenterServiceImp implements CostCenterService {
         return new CostCenterDetailsDTO(costCenter);
     }
 
+    public CostCenterDetailsDTO getCostCentername(String costCenterName,Long userLog_id) {
+        CostCenter costCenter = this.costCenterRepository.findById(id_cost_center).orElseThrow(() -> new NotFoundException("Id not found"));
+        Users user = this.userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("Id not found"));
+
+        if (!costCenter.status_check()){
+            throw new OperativeFalseException("The inactive CostCenter cannot be read..");
+        }
+        var userLog = new UserLog(user,"CostCenter",id_cost_center.toString(),"Read CostCenter", EnumAction.READ);
+        userLogRepository.save(userLog);
+        return new CostCenterDetailsDTO(costCenter);
+    }
+
+
+
     @Override
     public List<CostCenterDetailsDTO> getAllCostCenter(Long userLog_id) {
         Users user = this.userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("Id not found"));

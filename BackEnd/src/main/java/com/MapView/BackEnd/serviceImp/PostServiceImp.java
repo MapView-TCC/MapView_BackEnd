@@ -46,6 +46,23 @@ public class PostServiceImp implements PostService {
         return new PostDetailDTO(post);
     }
 
+
+    public PostDetailDTO getPostByPost(String postname,Long userLog_id) {
+        Post post = this.postRepository.findByPost(postname).orElseThrow(() -> new NotFoundException("Post id Not Found"));
+
+        if(!post.isOperative()){
+            throw new OperativeFalseException("The inactive post cannot be accessed.");
+        }
+        Users user = this.userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("Id not found"));
+        var userLog = new UserLog(user,"Post",post.getId_post().toString(),"Read Post", EnumAction.READ);
+        userLogRepository.save(userLog);
+
+        return new PostDetailDTO(post);
+    }
+
+
+
+
     @Override
     public List<PostDetailDTO> getAllPost(Long userLog_id) {
         Users user = this.userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("Id not found"));
@@ -53,12 +70,12 @@ public class PostServiceImp implements PostService {
         userLogRepository.save(userLog);
 
         return this.postRepository.findByOperativeTrue().stream().map(PostDetailDTO::new).toList();
-
-
     }
 
     @Override
     public PostDetailDTO createPost(PostCreateDTO data,Long userLog_id) {
+
+
         try {
 
             Users user = this.userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("Id not found"));
