@@ -4,6 +4,7 @@ import com.MapView.BackEnd.entities.UserLog;
 import com.MapView.BackEnd.entities.Users;
 import com.MapView.BackEnd.enums.EnumAction;
 import com.MapView.BackEnd.infra.Exception.BlankErrorException;
+import com.MapView.BackEnd.infra.Exception.ExistingEntityException;
 import com.MapView.BackEnd.infra.Exception.OperativeFalseException;
 import com.MapView.BackEnd.repository.AreaRepository;
 import com.MapView.BackEnd.repository.UserLogRepository;
@@ -15,6 +16,7 @@ import com.MapView.BackEnd.dtos.Area.AreaUpdateDTO;
 import com.MapView.BackEnd.entities.Area;
 import com.MapView.BackEnd.infra.Exception.NotFoundException;
 import com.MapView.BackEnd.service.UserLogService;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
@@ -59,15 +61,20 @@ public class AreaServiceImp implements AreaService {
 
     @Override
     public AreaDetailsDTO createArea(AreaCreateDTO data, Long userLog_id) {
-        Users user = this.userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("Id not found"));
+        try {
+            Users user = this.userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("Id not found"));
 
-        var area = new Area(data);
-        Long id_area = areaRepository.save(area).getId_area();
+            var area = new Area(data);
+            Long id_area = areaRepository.save(area).getId_area();
 
-        var userLog = new UserLog(user,"Area",id_area.toString(),"Create new Area", EnumAction.CREATE);
-        userLogRepository.save(userLog);
+            var userLog = new UserLog(user, "Area", id_area.toString(), "Create new Area", EnumAction.CREATE);
+            userLogRepository.save(userLog);
 
-        return new AreaDetailsDTO(area);
+            return new AreaDetailsDTO(area);
+
+        }catch (DataIntegrityViolationException e){
+            throw new ExistingEntityException("Area already exists with that name: "+data.area_name()+" or "+data.area_code());
+        }
     }
 
     @Override

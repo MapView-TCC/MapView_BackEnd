@@ -2,15 +2,13 @@ package com.MapView.BackEnd.serviceImp;
 
 import com.MapView.BackEnd.entities.*;
 import com.MapView.BackEnd.enums.EnumAction;
-import com.MapView.BackEnd.infra.Exception.BlankErrorException;
-import com.MapView.BackEnd.infra.Exception.OperativeFalseException;
-import com.MapView.BackEnd.infra.Exception.OpetativeTrueException;
+import com.MapView.BackEnd.infra.Exception.*;
 import com.MapView.BackEnd.repository.*;
 import com.MapView.BackEnd.service.RaspberryService;
 import com.MapView.BackEnd.dtos.Raspberry.RaspberryCreateDTO;
 import com.MapView.BackEnd.dtos.Raspberry.RaspberryDetailsDTO;
 import com.MapView.BackEnd.dtos.Raspberry.RaspberryUpdateDTO;
-import com.MapView.BackEnd.infra.Exception.NotFoundException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
@@ -64,25 +62,30 @@ public class RaspberryServiceImp implements RaspberryService {
     public RaspberryDetailsDTO createRaspberry(RaspberryCreateDTO data, Long userLog_id) {
         Users user = this.userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("Id not found"));
 
-        Building building = buildingRepository.findById(data.id_building())
-                .orElseThrow(() -> new NotFoundException("Building id not found."));
-        if (!building.isOperative()){
-            throw new OperativeFalseException("The inactive building cannot be accessed.");
+        Raspberry existsVerifyRaspberry = raspberryRepository.findById(data.id_raspberry()).orElse(null);
+        if(existsVerifyRaspberry != null){
+
+                Building building = buildingRepository.findById(data.id_building())
+                        .orElseThrow(() -> new NotFoundException("Building id not found."));
+                if (!building.isOperative()) {
+                    throw new OperativeFalseException("The inactive building cannot be accessed.");
+                }
+
+                Area area = areaRepository.findById(data.id_area())
+                        .orElseThrow(() -> new NotFoundException("Area id not found"));
+                if (!area.isOperative()) {
+                    throw new OperativeFalseException("The inactive area cannot be accessed.");
+                }
+
+                Raspberry raspberry = new Raspberry(data, building, area);
+                String id_raspberry = raspberryRepository.save(raspberry).getId_raspberry();
+
+                var userLog = new UserLog(user, "Raspberry", id_raspberry, "Create new Raspberry", EnumAction.CREATE);
+                userLogRepository.save(userLog);
+
+                return new RaspberryDetailsDTO(raspberry);
         }
-
-        Area area = areaRepository.findById(data.id_area())
-                .orElseThrow(() -> new NotFoundException("Area id not found"));
-        if (!area.isOperative()){
-            throw new OperativeFalseException("The inactive area cannot be accessed.");
-        }
-
-        Raspberry raspberry = new Raspberry(data, building, area);
-        String id_raspberry = raspberryRepository.save(raspberry).getId_raspberry();
-
-        var userLog = new UserLog(user,"Raspberry", id_raspberry,"Create new Raspberry", EnumAction.CREATE);
-        userLogRepository.save(userLog);
-
-        return new RaspberryDetailsDTO(raspberry);
+        throw new ExistingEntityException("Raspberry ("+data.id_raspberry()+") already exists.");
 
     }
 

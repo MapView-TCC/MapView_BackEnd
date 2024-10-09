@@ -54,7 +54,7 @@ CREATE TABLE IF NOT EXISTS raspberry (
 -- Creating the Environment table (Tabela de ambiente)
 CREATE TABLE IF NOT EXISTS environment (
     id_environment INT AUTO_INCREMENT PRIMARY KEY,
-    environment_name VARCHAR(255) NOT NULL,
+    environment_name VARCHAR(255) unique NOT NULL,
     id_raspberry VARCHAR(255) NOT NULL,
     operative TINYINT NOT NULL,
     FOREIGN KEY(id_raspberry) REFERENCES raspberry(id_raspberry)
@@ -63,7 +63,7 @@ CREATE TABLE IF NOT EXISTS environment (
 -- Creating the Post table (Tabela de posto)
 CREATE TABLE IF NOT EXISTS post (
     id_post INT AUTO_INCREMENT PRIMARY KEY,
-    post VARCHAR(255) NOT NULL,
+    post VARCHAR(255) UNIQUE NOT NULL,
     operative TINYINT NOT NULL
 );
 
@@ -79,13 +79,13 @@ CREATE TABLE IF NOT EXISTS location (
 -- Creating the Cost Center table (centro de custo)
 CREATE TABLE IF NOT EXISTS cost_center (
     id_cost_center INT AUTO_INCREMENT PRIMARY KEY,
-    cost_center_name VARCHAR(255) NOT NULL,
+    cost_center_name VARCHAR(255) unique NOT NULL,
     operative TINYINT NOT NULL
 );
 
 -- Creating the Main Owner table (dono principal)
 CREATE TABLE IF NOT EXISTS main_owner (
-    id_owner VARCHAR(255) PRIMARY KEY,
+    id_owner VARCHAR(255) unique PRIMARY KEY,
     id_cost_center INT NOT NULL,
     operative TINYINT NOT NULL,
     FOREIGN KEY(id_cost_center) REFERENCES cost_center(id_cost_center)
@@ -99,9 +99,9 @@ CREATE TABLE IF NOT EXISTS image (
 
 -- Creating the Equipment table, para teste eu tirei o unique do rfid
 CREATE TABLE IF NOT EXISTS equipment (
-    id_equipment VARCHAR(255) PRIMARY KEY,
+    id_equipment VARCHAR(255) unique PRIMARY KEY,
     name_equipment VARCHAR(255),
-    rfid BIGINT,
+    rfid BIGINT unique,
     type VARCHAR(255),
     model ENUM('DESKTOP_TINK','NOTEBOOK_STANDARD','DESKTOP_EXTERNO', 'NOTEBOOK_ENHANCED'),
     validity DATE,

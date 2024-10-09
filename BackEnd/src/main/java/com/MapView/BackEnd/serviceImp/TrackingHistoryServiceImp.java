@@ -57,7 +57,7 @@ public class TrackingHistoryServiceImp implements TrackingHistoryService {
 
 
     }
-    @Async
+
     @Override
     @CrossOrigin("http://localhost:3001")
     public TrackingHistoryDetailsDTO createTrackingHistory(TrackingHistoryCreateDTO dados) {

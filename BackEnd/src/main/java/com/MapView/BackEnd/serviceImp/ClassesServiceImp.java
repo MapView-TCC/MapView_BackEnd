@@ -2,10 +2,7 @@ package com.MapView.BackEnd.serviceImp;
 
 import com.MapView.BackEnd.entities.UserLog;
 import com.MapView.BackEnd.enums.EnumAction;
-import com.MapView.BackEnd.infra.Exception.BlankErrorException;
-import com.MapView.BackEnd.infra.Exception.NotFoundException;
-import com.MapView.BackEnd.infra.Exception.OperativeFalseException;
-import com.MapView.BackEnd.infra.Exception.OpetativeTrueException;
+import com.MapView.BackEnd.infra.Exception.*;
 import com.MapView.BackEnd.repository.ClassesRepository;
 import com.MapView.BackEnd.repository.UserLogRepository;
 import com.MapView.BackEnd.repository.UserRepository;
@@ -14,9 +11,11 @@ import com.MapView.BackEnd.dtos.Classes.ClassesCreateDTO;
 import com.MapView.BackEnd.dtos.Classes.ClassesDetaiLDTO;
 import com.MapView.BackEnd.dtos.Classes.ClassesUpdateDTO;
 import com.MapView.BackEnd.entities.Classes;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import javax.xml.crypto.Data;
 import java.util.List;
 @Service
 
@@ -35,24 +34,22 @@ public class ClassesServiceImp implements ClassesService {
     @Override
     public ClassesDetaiLDTO createClasses(ClassesCreateDTO data, Long userLog_id) {
 
-            Classes classesvifi = classesRepository.findByClasses(data.classes()).orElse(null);
-            if (classesvifi != null){
-                return new ClassesDetaiLDTO(classesvifi);
-            }
-
+        var usuario_log = userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("User Id Not Found"));
+        try{
             var user = userRepository.findById(data.user_id()).orElseThrow(() -> new NotFoundException("User Id Not Found"));
-
-            var usuario_log = userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("User Id Not Found"));
             var classe = new Classes(data,user);
+            Classes classes = classesRepository.save(classe);
 
-            Long id_classes = classesRepository.save(classe).getId_classes();
-
-            var userLog = new UserLog(usuario_log,"Classes", id_classes.toString(),"Create new classes", EnumAction.CREATE);
+            var userLog = new UserLog(usuario_log,"Classes", classes.getId_classes().toString(),"Create new classes", EnumAction.CREATE);
             userLogRepository.save(userLog);
             System.out.println("Post: classes ");
             return new ClassesDetaiLDTO(classe);
 
+        }catch (DataIntegrityViolationException e ){
+            throw new ExistingEntityException("It"+ data.classes() + "classes already exists");
         }
+
+    }
 
 
     @Override

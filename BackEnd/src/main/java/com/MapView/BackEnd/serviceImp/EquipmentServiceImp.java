@@ -6,10 +6,7 @@ import com.MapView.BackEnd.enums.EnumAction;
 import com.MapView.BackEnd.enums.EnumColors;
 import com.MapView.BackEnd.enums.EnumModelEquipment;
 import com.MapView.BackEnd.enums.EnumTrackingAction;
-import com.MapView.BackEnd.infra.Exception.BlankErrorException;
-import com.MapView.BackEnd.infra.Exception.NotFoundException;
-import com.MapView.BackEnd.infra.Exception.OperativeFalseException;
-import com.MapView.BackEnd.infra.Exception.OpetativeTrueException;
+import com.MapView.BackEnd.infra.Exception.*;
 import com.MapView.BackEnd.repository.*;
 import com.MapView.BackEnd.service.EquipmentService;
 import com.MapView.BackEnd.dtos.Equipment.EquipmentCreateDTO;
@@ -18,6 +15,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.*;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -87,46 +85,56 @@ public class EquipmentServiceImp implements EquipmentService {
 
     @Override
     public EquipmentDetailsDTO createEquipment(EquipmentCreateDTO data, Long userLog_id) {
-        Users users = this.userRepository.findById(userLog_id)
-                .orElseThrow(() -> new NotFoundException("Id not found!"));
+        Equipment verify = equipmentRepository.findById(data.id_equipment()).orElse(null);
 
-        // Localização
-        Location location = locationRepository.findById(Long.valueOf(data.id_location()))
-                .orElseThrow(() -> new RuntimeException("Id location Não encontrado!"));
+        if (verify != null){
+            try{
 
-        // Proprietário principal
-        MainOwner mainOwner = mainOwnerRepository.findById(String.valueOf(data.id_owner()))
-                .orElseThrow(() -> new RuntimeException("Id main owner Não encontrado"));
+                Users users = this.userRepository.findById(userLog_id)
+                        .orElseThrow(()  -> new NotFoundException("Id user_log ("+userLog_id+") not found!"));
 
-        if (!mainOwner.isOperative()) {
-            throw new OperativeFalseException("The inactive mainowner cannot be accessed.");
+                // Localização
+                Location location = locationRepository.findById(Long.valueOf(data.id_location()))
+                        .orElseThrow(() -> new RuntimeException("Id location ("+data.id_location()+ ") not found!"));
+
+                // Proprietário principal
+                MainOwner mainOwner = mainOwnerRepository.findById(String.valueOf(data.id_owner()))
+                        .orElseThrow(() -> new RuntimeException("Id main owner " + data.id_owner() + ") not found!"));
+
+                if (!mainOwner.isOperative()) {
+                    throw new OperativeFalseException("The inactive mainOwner cannot be accessed.");
+                }
+
+                System.out.println(data.name_equipment());
+
+
+                // Cria o equipamento
+
+
+                Equipment equipment  = equipmentRepository.save(new Equipment(data,getStartDateFromQuarter(data.validity()), location, mainOwner));
+
+                var userLog = new UserLog(users, "Equipment", data.id_equipment(), "Create new Equipment", EnumAction.CREATE);
+                userLogRepository.save(userLog);
+
+                // Salvar o tracking history
+                Environment environment = location.getEnvironment();
+
+                TrackingHistory trackingHistory = new TrackingHistory(
+                        equipment, environment, equipment.getRfid(), EnumTrackingAction.ENTER,
+                        EnumColors.GREEN
+                );
+
+                trackingHistoryRepository.save(trackingHistory);
+
+                System.out.println(new EquipmentDetailsDTO(equipment));
+                System.out.println("Post: Equipment ");
+                return new EquipmentDetailsDTO(equipment);
+
+            }catch (DataIntegrityViolationException e ){
+                throw new ExistingEntityException("rfid: ("+ data.rfid()+") Already exists");
+            }
         }
-
-        System.out.println(data.name_equipment());
-
-
-        // Cria o equipamento
-
-
-        Equipment equipment  = equipmentRepository.save(new Equipment(data,getStartDateFromQuarter(data.validity()), location, mainOwner));
-
-
-        var userLog = new UserLog(users, "Equipment", data.id_equipment(), "Create new Equipment", EnumAction.CREATE);
-        userLogRepository.save(userLog);
-
-        // Salvar o tracking history
-        Environment environment = location.getEnvironment();
-
-        TrackingHistory trackingHistory = new TrackingHistory(
-                equipment, environment, equipment.getRfid(), EnumTrackingAction.ENTER,
-                EnumColors.GREEN
-        );
-
-        trackingHistoryRepository.save(trackingHistory);
-
-        System.out.println(new EquipmentDetailsDTO(equipment));
-        System.out.println("Post: Equipment ");
-        return new EquipmentDetailsDTO(equipment);
+        throw new ExistingEntityException("Equipament: "+data.id_equipment()+ " Already exists");
     }
 
 
