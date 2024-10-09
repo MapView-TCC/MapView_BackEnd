@@ -13,6 +13,6 @@ import java.util.List;
 @Repository
 public interface TrackingHistoryRepository extends JpaRepository<TrackingHistory,Long> {
     Page<TrackingHistory> findAll(Pageable pageable);
-    TrackingHistory findTopByEquipmentOrderByDatetimeDesc(Equipment id_equipment);
+    TrackingHistory findTopByEquipmentOrderByDatetimeDesc(Equipment id_equipment); // Método para buscar o último histórico de rastreamento por equipamento.
     List<TrackingHistory> findByEnvironment(Environment environment);
 }

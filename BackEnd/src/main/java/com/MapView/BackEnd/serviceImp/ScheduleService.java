@@ -1,23 +1,20 @@
 package com.MapView.BackEnd.serviceImp;
 
 import com.MapView.BackEnd.dtos.Notification.NotificationCreateDTO;
-import com.MapView.BackEnd.dtos.Notification.NotificationDetailsDTO;
 import com.MapView.BackEnd.entities.Equipment;
-import com.MapView.BackEnd.entities.Location;
 import com.MapView.BackEnd.entities.Notification;
 import com.MapView.BackEnd.entities.TrackingHistory;
 import com.MapView.BackEnd.repository.EquipmentRepository;
 import com.MapView.BackEnd.repository.NotificationRepository;
 import com.MapView.BackEnd.repository.TrackingHistoryRepository;
-import com.MapView.BackEnd.serviceImp.NotificationServiceImp;
-import com.MapView.BackEnd.serviceImp.TrackingHistoryServiceImp;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
-import java.util.Optional;
 
 @Component
 
@@ -59,11 +56,10 @@ public class ScheduleService {
     }
 
     // Função para excluir as notificações depois de um certo periodo
+    // @Scheduled(cron = "0/1 * * * * *") // executa cada segundo, usar para teste
 
     @Scheduled(cron = "0 0 0 1 1,4,7,10 *") // Executa à meia-noite no dia 1 dos meses 1, 4, 7 e 10, a cada 3 meses
-    //@Scheduled(cron = "0/1 * * * * *") // cada segundo
     public void deleteNotification() {
-        System.out.println("Executando deleteNotification");
         List<Notification> notificationList = notificationRepository.findAll();
         LocalDate currentDate = LocalDate.now();
 
@@ -73,8 +69,8 @@ public class ScheduleService {
             // Verifica se a notificação está há 3 meses
             // if (!notificationDate.plusMonths(3).isAfter(currentDate)) {
             if (notificationDate.plusMonths(3).isBefore(currentDate) || notificationDate.plusMonths(3).isEqual(currentDate)) {
+                //System.out.println("Notificação deletada: " + notification.getId_notification());
                 notificationServiceImp.deleteNotificationById(notification.getId_notification());
-                System.out.println("Notificação deletada: " + notification.getId_notification());
             }
         }
     }
@@ -83,17 +79,14 @@ public class ScheduleService {
     //@Scheduled(cron = "0 0 0 1 1,7 *") // no inicio do minuto e hora, a meia noite, no dia 1 do mês, em janeiro(1) e julho(7), qualquer dia da semana
     public void deleteTrackingHistory(){
         List<TrackingHistory> trackingHistoriesList = trackingHistoryRepository.findAll();
-        for (TrackingHistory trackingHistory : trackingHistoriesList){
-            LocalDateTime trackingDateTime = LocalDateTime.from(trackingHistory.getDatetime());
+        Instant oneYearAgo = Instant.now().minus(365, ChronoUnit.DAYS); // Calcula a data de um ano atrás
 
-            // pegar o mes
-            int mouth = trackingDateTime.getMonthValue();
+        for (TrackingHistory trackingHistory : trackingHistoriesList) {
+            Instant trackingDateTime = trackingHistory.getDatetime(); // Obtem o Instant
 
-            // pegar o mes atual
-            int mesatual = LocalDate.now().getMonthValue();
-
-            if (mouth == mesatual){
-                trackingHistoryServiceImp.deleteTrackingById(trackingHistory.getId_tracking());
+            if (trackingDateTime.isBefore(oneYearAgo)) { // Verifica se a data é anterior a um ano
+                //System.out.println("Deletando tracking history com o ID: " + trackingHistory.getId_tracking());
+                trackingHistoryServiceImp.deleteTrackingById(trackingHistory.getId_tracking()); // Deleta
             }
         }
     }
