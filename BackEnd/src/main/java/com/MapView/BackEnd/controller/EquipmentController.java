@@ -2,6 +2,7 @@ package com.MapView.BackEnd.controller;
 
 import com.MapView.BackEnd.dtos.Equipment.*;
 import com.MapView.BackEnd.dtos.ImageUpload.UploadCreateDTO;
+import com.MapView.BackEnd.enums.EnumModelEquipment;
 import com.MapView.BackEnd.serviceImp.EquipmentServiceImp;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -64,8 +65,8 @@ public class EquipmentController {
     @Transactional
     public ResponseEntity<String> uploadImage(
             @Parameter(description = "Image upload data", required = true)
-            @RequestParam("file") MultipartFile file) {
-        return equipmentServiceImp.uploadImageEquipament(file);
+            @RequestParam("file") MultipartFile file, @RequestParam EnumModelEquipment type) {
+        return equipmentServiceImp.uploadImageEquipament(file,type);
     }
 
     @Operation(summary = "Retrieve all equipment", description = "Get a paginated list of all equipment in the system.")
@@ -91,12 +92,22 @@ public class EquipmentController {
             @Parameter(description = "Number of items per page", required = true) @RequestParam int itens,
             @RequestParam(required = false) String validity,
             @RequestParam(required = false) String enviroment,
-            @RequestParam(required = false) String mainowner,
             @RequestParam(required = false) String id_owner,
             @RequestParam(required = false) String id_equipment,
             @RequestParam(required = false) String name_equipment,
             @RequestParam(required = false) String post) {
-        var list = equipmentServiceImp.getEquipmentValidation(page, itens, validity, enviroment, mainowner, id_owner, id_equipment, name_equipment, post);
+        var list = equipmentServiceImp.getEquipmentInventory(page, itens, validity, enviroment, id_owner, id_equipment, name_equipment, post);
+        return ResponseEntity.ok(list);
+    }
+
+    // barra de pesquisa
+    @Operation(summary = "Filter equipment search bar", description = "Retrieve equipment with search bar")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Filtered equipment list successfully retrieved")
+    })
+    @GetMapping("/search")
+    public ResponseEntity<List<EquipmentDetailsDTO>> getEquipmentSearch(int page, int itens, String searchTerm){
+        var list = equipmentServiceImp.getEquipmentSearchBar(page, itens, searchTerm);
         return ResponseEntity.ok(list);
     }
 

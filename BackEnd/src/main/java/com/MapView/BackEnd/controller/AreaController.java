@@ -1,7 +1,7 @@
 package com.MapView.BackEnd.controller;
 
 import com.MapView.BackEnd.entities.Area;
-import com.MapView.BackEnd.infra.ValidationExceptionHandler;
+import com.MapView.BackEnd.infra.Exception.ValidationExceptionHandler;
 import com.MapView.BackEnd.serviceImp.AreaServiceImp;
 import com.MapView.BackEnd.dtos.Area.AreaCreateDTO;
 import com.MapView.BackEnd.dtos.Area.AreaDetailsDTO;
@@ -87,13 +87,9 @@ public class AreaController {
     })
     @GetMapping
     public ResponseEntity<List<AreaDetailsDTO>> getAllArea(
-            @Parameter(description = "Page number for pagination", required = true)
-            @RequestParam int page,
-            @Parameter(description = "Number of items per page", required = true)
-            @RequestParam int items,
             @Parameter(description = "User log ID for tracking changes", required = true)
             @RequestParam Long userLog_id) {
-        var areas = areaServiceImp.getAllArea(page, items, userLog_id);
+        var areas = areaServiceImp.getAllArea(userLog_id);
         return ResponseEntity.ok(areas);
     }
 

@@ -1,6 +1,6 @@
 package com.MapView.BackEnd.repository;
 
-import com.MapView.BackEnd.entities.Enviroment;
+import com.MapView.BackEnd.entities.Environment;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -8,6 +8,6 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface EnviromentRepository extends JpaRepository<Enviroment,Long> {
-    List<Enviroment> findEnviromentByOperativeTrue(Pageable pageable);
+public interface EnvironmentRepository extends JpaRepository<Environment,Long> {
+    List<Environment> findEnvironmentByOperativeTrue();
 }

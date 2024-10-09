@@ -3,7 +3,7 @@ package com.MapView.BackEnd.serviceImp;
 import com.MapView.BackEnd.entities.UserLog;
 import com.MapView.BackEnd.entities.Users;
 import com.MapView.BackEnd.enums.EnumAction;
-import com.MapView.BackEnd.infra.OperativeFalseException;
+import com.MapView.BackEnd.infra.Exception.OperativeFalseException;
 import com.MapView.BackEnd.repository.PostRepository;
 import com.MapView.BackEnd.repository.UserLogRepository;
 import com.MapView.BackEnd.repository.UserRepository;
@@ -12,7 +12,7 @@ import com.MapView.BackEnd.dtos.Post.PostCreateDTO;
 import com.MapView.BackEnd.dtos.Post.PostDetailDTO;
 import com.MapView.BackEnd.dtos.Post.PostUpdateDTO;
 import com.MapView.BackEnd.entities.Post;
-import com.MapView.BackEnd.infra.NotFoundException;
+import com.MapView.BackEnd.infra.Exception.NotFoundException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +23,7 @@ public class PostServiceImp implements PostService {
     private final PostRepository postRepository;
     private final UserLogRepository userLogRepository;
     private final UserRepository userRepository;
+
 
     public PostServiceImp(PostRepository postRepository, UserLogRepository userLogRepository, UserRepository userRepository) {
         this.postRepository = postRepository;
@@ -44,12 +45,12 @@ public class PostServiceImp implements PostService {
     }
 
     @Override
-    public List<PostDetailDTO> getAllPost(int page, int itens,Long userLog_id) {
+    public List<PostDetailDTO> getAllPost(Long userLog_id) {
         Users user = this.userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("Id not found"));
         var userLog = new UserLog(user,"Post","Read All Post", EnumAction.READ);
         userLogRepository.save(userLog);
 
-        return this.postRepository.findByOperativeTrue(PageRequest.of(page, itens)).stream().map(PostDetailDTO::new).toList();
+        return this.postRepository.findByOperativeTrue().stream().map(PostDetailDTO::new).toList();
 
 
     }
@@ -59,12 +60,15 @@ public class PostServiceImp implements PostService {
         Users user = this.userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("Id not found"));
 
         var post = new Post(data);
-        Long post_id = postRepository.save(post).getId_post();
+        Post returnPost = postRepository.save(post);
+        Long post_id = post.getId_post();
 
         var userLog = new UserLog(user,"Area",post_id.toString(),"Create new Area", EnumAction.CREATE);
         userLogRepository.save(userLog);
 
-        return new PostDetailDTO(post);
+        System.out.println("Post: Post ");
+
+        return new PostDetailDTO(returnPost);
     }
 
     @Override

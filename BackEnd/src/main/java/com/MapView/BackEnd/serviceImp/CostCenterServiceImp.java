@@ -4,8 +4,8 @@ import com.MapView.BackEnd.dtos.CostCenter.CostCenterCreateDTO;
 import com.MapView.BackEnd.entities.UserLog;
 import com.MapView.BackEnd.entities.Users;
 import com.MapView.BackEnd.enums.EnumAction;
-import com.MapView.BackEnd.infra.OperativeFalseException;
-import com.MapView.BackEnd.infra.OpetativeTrueException;
+import com.MapView.BackEnd.infra.Exception.OperativeFalseException;
+import com.MapView.BackEnd.infra.Exception.OpetativeTrueException;
 import com.MapView.BackEnd.repository.CostCenterRepository;
 import com.MapView.BackEnd.repository.UserLogRepository;
 import com.MapView.BackEnd.repository.UserRepository;
@@ -13,7 +13,7 @@ import com.MapView.BackEnd.service.CostCenterService;
 import com.MapView.BackEnd.dtos.CostCenter.CostCenterDetailsDTO;
 import com.MapView.BackEnd.dtos.CostCenter.CostCenterUpdateDTO;
 import com.MapView.BackEnd.entities.CostCenter;
-import com.MapView.BackEnd.infra.NotFoundException;
+import com.MapView.BackEnd.infra.Exception.NotFoundException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
@@ -47,12 +47,12 @@ public class CostCenterServiceImp implements CostCenterService {
     }
 
     @Override
-    public List<CostCenterDetailsDTO> getAllCostCenter(int page,int itens,Long userLog_id) {
+    public List<CostCenterDetailsDTO> getAllCostCenter(Long userLog_id) {
         Users user = this.userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("Id not found"));
         var userLog = new UserLog(user,"CostCenter","Read All CostCenter", EnumAction.READ);
         userLogRepository.save(userLog);
 
-        return costCenterRepository.findAllByOperativeTrue(PageRequest.of(page, itens)).stream().map(CostCenterDetailsDTO::new).toList();
+        return costCenterRepository.findAllByOperativeTrue().stream().map(CostCenterDetailsDTO::new).toList();
     }
 
     @Override
@@ -64,6 +64,7 @@ public class CostCenterServiceImp implements CostCenterService {
 
         var userLog = new UserLog(user,"CostCenter",cost_id.toString(),"Create new CostCenter", EnumAction.CREATE);
         userLogRepository.save(userLog);
+        System.out.println("Post: createCostCenter ");
 
         return new CostCenterDetailsDTO(costcenter);
     }

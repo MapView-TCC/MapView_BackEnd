@@ -3,8 +3,8 @@ package com.MapView.BackEnd.serviceImp;
 import com.MapView.BackEnd.entities.UserLog;
 import com.MapView.BackEnd.entities.Users;
 import com.MapView.BackEnd.enums.EnumAction;
-import com.MapView.BackEnd.infra.BlankErrorException;
-import com.MapView.BackEnd.infra.OperativeFalseException;
+import com.MapView.BackEnd.infra.Exception.BlankErrorException;
+import com.MapView.BackEnd.infra.Exception.OperativeFalseException;
 import com.MapView.BackEnd.repository.AreaRepository;
 import com.MapView.BackEnd.repository.UserLogRepository;
 import com.MapView.BackEnd.repository.UserRepository;
@@ -13,7 +13,7 @@ import com.MapView.BackEnd.dtos.Area.AreaCreateDTO;
 import com.MapView.BackEnd.dtos.Area.AreaDetailsDTO;
 import com.MapView.BackEnd.dtos.Area.AreaUpdateDTO;
 import com.MapView.BackEnd.entities.Area;
-import com.MapView.BackEnd.infra.NotFoundException;
+import com.MapView.BackEnd.infra.Exception.NotFoundException;
 import com.MapView.BackEnd.service.UserLogService;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -49,12 +49,12 @@ public class AreaServiceImp implements AreaService {
     }
 
     @Override
-    public List<AreaDetailsDTO> getAllArea(int page, int itens,Long userLog_id) {
+    public List<AreaDetailsDTO> getAllArea(Long userLog_id) {
         Users user = this.userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("Id not found"));
         var userLog = new UserLog(user,"Area","Read All Area", EnumAction.READ);
         userLogRepository.save(userLog);
 
-        return areaRepository.findAllByOperativeTrue(PageRequest.of(page, itens)).stream().map(AreaDetailsDTO::new).toList();
+        return areaRepository.findAllByOperativeTrue().stream().map(AreaDetailsDTO::new).toList();
     }
 
     @Override

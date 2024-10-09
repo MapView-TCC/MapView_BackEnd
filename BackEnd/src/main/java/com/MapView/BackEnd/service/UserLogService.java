@@ -12,7 +12,7 @@ import java.util.List;
 
 public interface UserLogService {
     UserLogDetailDTO getUserLog(Long userLog_id);
-    List<UserLogDetailDTO> getAllUserLog(int page, int itens);
+    List<UserLogDetailDTO> getAllUserLog();
     Void createUserLog(Long user_id, UserLog userLog);
 
 }

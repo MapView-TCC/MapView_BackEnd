@@ -5,9 +5,8 @@ import com.MapView.BackEnd.dtos.MainOwner.MainOwnerDetailsDTO;
 import com.MapView.BackEnd.entities.UserLog;
 import com.MapView.BackEnd.entities.Users;
 import com.MapView.BackEnd.enums.EnumAction;
-import com.MapView.BackEnd.infra.BlankErrorException;
-import com.MapView.BackEnd.infra.OperativeFalseException;
-import com.MapView.BackEnd.infra.OpetativeTrueException;
+import com.MapView.BackEnd.infra.Exception.OperativeFalseException;
+import com.MapView.BackEnd.infra.Exception.OpetativeTrueException;
 import com.MapView.BackEnd.repository.CostCenterRepository;
 import com.MapView.BackEnd.repository.MainOwnerRepository;
 import com.MapView.BackEnd.repository.UserLogRepository;
@@ -16,7 +15,7 @@ import com.MapView.BackEnd.service.MainOwnerService;
 import com.MapView.BackEnd.dtos.MainOwner.MainOwnerUpdateDTO;
 import com.MapView.BackEnd.entities.CostCenter;
 import com.MapView.BackEnd.entities.MainOwner;
-import com.MapView.BackEnd.infra.NotFoundException;
+import com.MapView.BackEnd.infra.Exception.NotFoundException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
@@ -55,13 +54,13 @@ public class MainOwnerServiceImp implements MainOwnerService {
     }
 
     @Override
-    public List<MainOwnerDetailsDTO> getAllMainOwner(int page, int itens,Long userLog_id) {
+    public List<MainOwnerDetailsDTO> getAllMainOwner(Long userLog_id) {
         Users user = this.userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("Id not found"));
         var userLog = new UserLog(user,"MainOwner","Read All MainOwner", EnumAction.READ);
         userLogRepository.save(userLog);
 
 
-        return mainOwnerRepository.findAllByOperativeTrue(PageRequest.of(page, itens)).stream().map(MainOwnerDetailsDTO::new).toList();
+        return mainOwnerRepository.findAllByOperativeTrue().stream().map(MainOwnerDetailsDTO::new).toList();
     }
 
     @Override
@@ -77,6 +76,8 @@ public class MainOwnerServiceImp implements MainOwnerService {
 
         var userLog = new UserLog(user,"MainOwner",mainowner_id.toString(),"Create new MainOwner", EnumAction.CREATE);
         userLogRepository.save(userLog);
+        System.out.println("Post: MainOwner ");
+
 
         return new MainOwnerDetailsDTO(mainOwner);
 
@@ -97,15 +98,6 @@ public class MainOwnerServiceImp implements MainOwnerService {
         if (!mainowner.isOperative()){
             return null;
         }
-
-        if (dados.owner_name() != null){
-            if (dados.owner_name().isBlank()){
-                throw new BlankErrorException("Owner name cannot be blank");
-            }
-            mainowner.setOwner_name(dados.owner_name());
-            userlog.setField("Main Owner name to: "+dados.owner_name());
-        }
-
         if (dados.id_cost_center() != null){
             var costcenter = costCenterRepository.findById(dados.id_cost_center()).orElseThrow(() -> new NotFoundException("Cost Center id not found"));
             mainowner.setCostCenter(costcenter);

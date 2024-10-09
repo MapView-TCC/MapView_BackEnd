@@ -6,10 +6,9 @@ import com.MapView.BackEnd.repository.UserRepository;
 import com.MapView.BackEnd.service.UserService;
 import com.MapView.BackEnd.entities.Users;
 import com.MapView.BackEnd.enums.RoleUser;
-import com.MapView.BackEnd.infra.NotFoundException;
+import com.MapView.BackEnd.infra.Exception.NotFoundException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 @Service
@@ -33,8 +32,8 @@ public class UserServiceIpm implements UserService {
     }
 
     @Override
-    public List<UserDetailsDTO> getAllUser(int page, int itens) {
-        return this.userRepository.findByOperativeTrue(PageRequest.of(page, itens)).stream().map(UserDetailsDTO::new).toList();
+    public List<UserDetailsDTO> getAllUser() {
+        return this.userRepository.findByOperativeTrue().stream().map(UserDetailsDTO::new).toList();
     }
 
 

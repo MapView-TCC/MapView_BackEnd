@@ -48,7 +48,7 @@ public class MainOwnerController {
         var mainOwner = mainOwnerServiceImp.createMainOwner(mainOwnerDTO, userLog_id);
         var uri = uriBuilder.path("/api/v1/mainowner/{id}").buildAndExpand(mainOwner.id_owner()).toUri();
         return ResponseEntity.created(uri).body(new MainOwnerDetailsDTO(
-                mainOwner.id_owner(), mainOwner.owner_name(), mainOwner.costCenter()
+                mainOwner.id_owner(), mainOwner.costCenter()
         ));
     }
 
@@ -59,12 +59,8 @@ public class MainOwnerController {
     @GetMapping
     public ResponseEntity<List<MainOwnerDetailsDTO>> getAllMainOwner(
             @Parameter(description = "User log ID for tracking changes", required = true)
-            @RequestParam Long userLog_id,
-            @Parameter(description = "Page number for pagination", required = true)
-            @RequestParam int page,
-            @Parameter(description = "Number of items per page", required = true)
-            @RequestParam int itens) {
-        var list = mainOwnerServiceImp.getAllMainOwner(page, itens, userLog_id);
+            @RequestParam Long userLog_id) {
+        var list = mainOwnerServiceImp.getAllMainOwner(userLog_id);
         return ResponseEntity.ok(list);
     }
 

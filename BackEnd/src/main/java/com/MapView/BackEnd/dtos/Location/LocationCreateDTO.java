@@ -8,5 +8,5 @@ public record LocationCreateDTO(@Positive
                                 Long id_post,
                                 @Positive
                                 @Min(1)
-                                Long id_eviroment) {
+                                Long id_environment) {
 }

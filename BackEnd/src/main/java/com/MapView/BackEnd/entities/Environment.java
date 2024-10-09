@@ -1,7 +1,6 @@
 package com.MapView.BackEnd.entities;
 
-import com.MapView.BackEnd.dtos.Enviroment.EnviromentCreateDTO;
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.MapView.BackEnd.dtos.Environment.EnvironmentCreateDTO;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
@@ -16,7 +15,7 @@ import java.util.Set;
 @NoArgsConstructor
 @EqualsAndHashCode(of = "id_environment")
 
-public class Enviroment {
+public class Environment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id_environment;
@@ -34,7 +33,7 @@ public class Enviroment {
     private Set<Post> environments;
 
 
-    public Enviroment(EnviromentCreateDTO data,Raspberry raspberry){
+    public Environment(EnvironmentCreateDTO data, Raspberry raspberry){
         this.environment_name = data.environment_name();
         this.raspberry = raspberry;
         this.operative = true;

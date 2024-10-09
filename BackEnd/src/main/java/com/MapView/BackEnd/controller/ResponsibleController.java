@@ -84,7 +84,7 @@ public class ResponsibleController {
             @PathVariable("responsible_id") Long responsible_id,
             @Parameter(description = "User log ID for tracking changes", required = true)
             @RequestParam Long userLog_id) {
-        var responsible = responsibleServiceImp.getResposible(responsible_id, userLog_id);
+        var responsible = responsibleServiceImp.getResposibleById(responsible_id, userLog_id);
         return ResponseEntity.ok(responsible);
     }
 
@@ -94,13 +94,9 @@ public class ResponsibleController {
     })
     @GetMapping
     public ResponseEntity<List<ResponsibleDetailsDTO>> getAllReponsible(
-            @Parameter(description = "Page number for pagination", required = true)
-            @RequestParam int page,
-            @Parameter(description = "Number of items per page", required = true)
-            @RequestParam int itens,
             @Parameter(description = "User log ID for tracking changes", required = true)
             @RequestParam Long userLog_id) {
-        var responsibles = responsibleServiceImp.getAllResposible(page, itens, userLog_id);
+        var responsibles = responsibleServiceImp.getAllResposible(userLog_id);
         return ResponseEntity.ok(responsibles);
     }
 

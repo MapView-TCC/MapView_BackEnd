@@ -1,9 +1,8 @@
 package com.MapView.BackEnd.dtos.TrackingHistory;
 
-import com.MapView.BackEnd.entities.Enviroment;
+import com.MapView.BackEnd.entities.Environment;
 import com.MapView.BackEnd.entities.Equipment;
 import com.MapView.BackEnd.entities.TrackingHistory;
-import com.MapView.BackEnd.enums.EnumAction;
 import com.MapView.BackEnd.enums.EnumColors;
 import com.MapView.BackEnd.enums.EnumTrackingAction;
 
@@ -12,7 +11,7 @@ import java.time.Instant;
 public record TrackingHistoryDetailsDTO(Long id_tracking,
                                         Instant datetime,
                                         Equipment equipment,
-                                        Enviroment environment,
+                                        Environment environment,
                                         EnumTrackingAction action,
                                         EnumColors warning) {
 

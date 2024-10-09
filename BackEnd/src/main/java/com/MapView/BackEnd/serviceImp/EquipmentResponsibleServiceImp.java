@@ -1,7 +1,7 @@
 package com.MapView.BackEnd.serviceImp;
 
-import com.MapView.BackEnd.infra.OperativeFalseException;
-import com.MapView.BackEnd.infra.OpetativeTrueException;
+import com.MapView.BackEnd.infra.Exception.OperativeFalseException;
+import com.MapView.BackEnd.infra.Exception.OpetativeTrueException;
 import com.MapView.BackEnd.repository.EquipmentRepository;
 import com.MapView.BackEnd.repository.EquipmentResponsibleRepository;
 import com.MapView.BackEnd.repository.ResponsibleRepository;
@@ -12,7 +12,7 @@ import com.MapView.BackEnd.dtos.EquipmentResponsible.EquipmentResponsibleUpdateD
 import com.MapView.BackEnd.entities.Equipment;
 import com.MapView.BackEnd.entities.EquipmentResponsible;
 import com.MapView.BackEnd.entities.Responsible;
-import com.MapView.BackEnd.infra.NotFoundException;
+import com.MapView.BackEnd.infra.Exception.NotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -59,6 +59,7 @@ public class EquipmentResponsibleServiceImp implements EquipmentResponsibleServi
         EquipmentResponsible equipmentResponsible = new EquipmentResponsible(data, equipment, responsible);
 
         equipmentResponsibleRepository.save(equipmentResponsible);
+        System.out.println("Post: Equipmentresponsible ");
 
         return new EquipmentResponsibleDetailsDTO(equipmentResponsible);
 

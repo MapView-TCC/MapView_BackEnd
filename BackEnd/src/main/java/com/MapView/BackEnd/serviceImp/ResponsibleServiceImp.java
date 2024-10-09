@@ -3,9 +3,9 @@ package com.MapView.BackEnd.serviceImp;
 import com.MapView.BackEnd.entities.UserLog;
 import com.MapView.BackEnd.entities.Users;
 import com.MapView.BackEnd.enums.EnumAction;
-import com.MapView.BackEnd.infra.BlankErrorException;
-import com.MapView.BackEnd.infra.OperativeFalseException;
-import com.MapView.BackEnd.infra.OpetativeTrueException;
+import com.MapView.BackEnd.infra.Exception.BlankErrorException;
+import com.MapView.BackEnd.infra.Exception.OperativeFalseException;
+import com.MapView.BackEnd.infra.Exception.OpetativeTrueException;
 import com.MapView.BackEnd.repository.ClassesRepository;
 import com.MapView.BackEnd.repository.ResponsibleRepository;
 import com.MapView.BackEnd.repository.UserLogRepository;
@@ -15,10 +15,9 @@ import com.MapView.BackEnd.dtos.Responsible.ResponsibleCrateDTO;
 import com.MapView.BackEnd.dtos.Responsible.ResponsibleDetailsDTO;
 import com.MapView.BackEnd.dtos.Responsible.ResponsibleUpdateDTO;
 import com.MapView.BackEnd.entities.Responsible;
-import com.MapView.BackEnd.infra.NotFoundException;
+import com.MapView.BackEnd.infra.Exception.NotFoundException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -61,7 +60,7 @@ public class ResponsibleServiceImp implements ResponsibleService {
     }
 
     @Override
-    public ResponsibleDetailsDTO getResposible(Long id_Resposible, Long userLog_id) {
+    public ResponsibleDetailsDTO getResposibleById(Long id_Resposible, Long userLog_id) {
 
 
         var responsible = responsibleRepository.findById(id_Resposible).orElseThrow(() -> new NotFoundException("Responsible Id Not Found"));
@@ -78,12 +77,27 @@ public class ResponsibleServiceImp implements ResponsibleService {
     }
 
     @Override
-    public List<ResponsibleDetailsDTO> getAllResposible(int page, int itens, Long userLog_id) {
+    public ResponsibleDetailsDTO getResposibleByEdv(String edv, Long userLog_id) {
+        var responsible = responsibleRepository.findByEdv(edv).orElseThrow(() -> new NotFoundException("Responsible Id Not Found"));
+        if (!responsible.isOperative()){
+            throw new OperativeFalseException("The inactive responsible cannot be accessed.");
+        }
+
+        Users user = this.userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("Id not found"));
+        var userLog = new UserLog(user, "Resposible", edv, "Read Resposible", EnumAction.READ);
+        userLogRepository.save(userLog);
+
+        return new ResponsibleDetailsDTO(responsible);
+
+    }
+
+    @Override
+    public List<ResponsibleDetailsDTO> getAllResposible(Long userLog_id) {
         Users user = this.userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("Id not found"));
         var userLog = new UserLog(user,"Resposible","Read All Resposible", EnumAction.READ);
         userLogRepository.save(userLog);
 
-        return responsibleRepository.findByOperativeTrue(PageRequest.of(page, itens)).stream().map(ResponsibleDetailsDTO::new).toList();
+        return responsibleRepository.findByOperativeTrue().stream().map(ResponsibleDetailsDTO::new).toList();
     }
 
     @Override

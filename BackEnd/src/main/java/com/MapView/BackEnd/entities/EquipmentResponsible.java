@@ -1,12 +1,14 @@
 package com.MapView.BackEnd.entities;
 
 import com.MapView.BackEnd.dtos.EquipmentResponsible.EquipmentResponsibleCreateDTO;
+import com.MapView.BackEnd.dtos.Responsible.ResponsibleCrateDTO;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.cglib.core.Local;
 
 import java.time.LocalDate;
+import java.util.List;
 
 
 @Table(name = "equipment_responsible", uniqueConstraints = {@UniqueConstraint(columnNames = {"id_equipment", "id_responsible"})})
@@ -45,4 +47,14 @@ public class EquipmentResponsible {
         this.end_usage = null;
         this.operative = true;
     }
+
+    public EquipmentResponsible(  Responsible responsible, Equipment equipment) {
+        this.idEquipment = equipment;
+        this.id_responsible = responsible;
+        this.start_usage = LocalDate.now();
+        this.end_usage = null;
+        this.operative = true;
+    }
+
+
 }

@@ -2,15 +2,15 @@ package com.MapView.BackEnd.serviceImp;
 
 import com.MapView.BackEnd.entities.*;
 import com.MapView.BackEnd.enums.EnumAction;
-import com.MapView.BackEnd.infra.BlankErrorException;
-import com.MapView.BackEnd.infra.OperativeFalseException;
-import com.MapView.BackEnd.infra.OpetativeTrueException;
+import com.MapView.BackEnd.infra.Exception.BlankErrorException;
+import com.MapView.BackEnd.infra.Exception.OperativeFalseException;
+import com.MapView.BackEnd.infra.Exception.OpetativeTrueException;
 import com.MapView.BackEnd.repository.*;
 import com.MapView.BackEnd.service.RaspberryService;
 import com.MapView.BackEnd.dtos.Raspberry.RaspberryCreateDTO;
 import com.MapView.BackEnd.dtos.Raspberry.RaspberryDetailsDTO;
 import com.MapView.BackEnd.dtos.Raspberry.RaspberryUpdateDTO;
-import com.MapView.BackEnd.infra.NotFoundException;
+import com.MapView.BackEnd.infra.Exception.NotFoundException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
@@ -52,12 +52,12 @@ public class RaspberryServiceImp implements RaspberryService {
     }
 
     @Override
-    public List<RaspberryDetailsDTO> getAllRaspberry(int page, int itens, Long userLog_id) {
+    public List<RaspberryDetailsDTO> getAllRaspberry(Long userLog_id) {
         Users user = this.userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("Id not found"));
         var userLog = new UserLog(user,"Raspberry","Read All Raspberry", EnumAction.READ);
         userLogRepository.save(userLog);
 
-        return raspberryRepository.findAllByOperativeTrue(PageRequest.of(page, itens)).stream().map(RaspberryDetailsDTO::new).toList();
+        return raspberryRepository.findAllByOperativeTrue().stream().map(RaspberryDetailsDTO::new).toList();
     }
 
     @Override
