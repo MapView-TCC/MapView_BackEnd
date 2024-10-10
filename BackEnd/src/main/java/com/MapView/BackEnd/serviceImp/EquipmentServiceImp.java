@@ -84,10 +84,10 @@ public class EquipmentServiceImp implements EquipmentService {
 
 
     @Override
-    public EquipmentDetailsDTO createEquipment(EquipmentCreateDTO data, Long userLog_id) {
+    public EquipmentDetailsDTO  createEquipment(EquipmentCreateDTO data, Long userLog_id) {
         Equipment verify = equipmentRepository.findById(data.id_equipment()).orElse(null);
 
-        if (verify != null){
+        if (verify == null){
             try{
 
                 Users users = this.userRepository.findById(userLog_id)

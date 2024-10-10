@@ -6,6 +6,6 @@ import com.MapView.BackEnd.entities.Users;
 
 public record ResponsibleDetailsDTO(Long responsible_id, String responsible_name, String edv, Classes classes, Users users) {
     public ResponsibleDetailsDTO(Responsible responsible) {
-        this(responsible.getId_responsible(), responsible.getResponsible_name(), responsible.getEdv(), responsible.getClasses(), responsible.getUser());
+        this(responsible.getId_responsible(), responsible.getResponsible(), responsible.getEdv(), responsible.getClasses(), responsible.getUser());
     }
 }

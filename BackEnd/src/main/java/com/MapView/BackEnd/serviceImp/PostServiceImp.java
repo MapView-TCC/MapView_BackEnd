@@ -74,26 +74,27 @@ public class PostServiceImp implements PostService {
 
     @Override
     public PostDetailDTO createPost(PostCreateDTO data,Long userLog_id) {
+        Users user = this.userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("Id not found"));
+        Post verifyPost = postRepository.findByPost(data.post()).orElse(null);
+        if (verifyPost == null){
+            try {
+                var post = new Post(data);
+                Post returnPost = postRepository.save(post);
+                Long post_id = post.getId_post();
 
+                var userLog = new UserLog(user,"Area",post_id.toString(),"Create new Area", EnumAction.CREATE);
+                userLogRepository.save(userLog);
 
-        try {
+                System.out.println("Post: Post ");
 
-            Users user = this.userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("Id not found"));
+                return new PostDetailDTO(returnPost);
 
-            var post = new Post(data);
-            Post returnPost = postRepository.save(post);
-            Long post_id = post.getId_post();
-
-            var userLog = new UserLog(user,"Area",post_id.toString(),"Create new Area", EnumAction.CREATE);
-            userLogRepository.save(userLog);
-
-            System.out.println("Post: Post ");
-
-            return new PostDetailDTO(returnPost);
-
-        }catch (DataIntegrityViolationException e ){
-            throw new ExistingEntityException("Post ("+data.post()+") already exists.");
+            }catch (DataIntegrityViolationException e ){
+                throw new ExistingEntityException("Post ("+data.post()+") already exists.");
+            }
         }
+        return new PostDetailDTO(verifyPost);
+
     }
 
     @Override

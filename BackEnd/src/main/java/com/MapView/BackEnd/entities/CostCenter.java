@@ -12,18 +12,18 @@ import lombok.*;
 @NoArgsConstructor
 @EqualsAndHashCode(of = "id_cost_center")
 
-public class CostCenter {
+public class    CostCenter {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id_cost_center;
-
-    private String cost_center_name;
+    @Column(name = "cost_center_name")
+    private String constcenter;
 
     private boolean operative;
 
     public CostCenter(CostCenterCreateDTO dados) {
-        this.cost_center_name = dados.costCenter_name();
+        this.constcenter = dados.costCenter_name();
         this.operative = true;
     }
 

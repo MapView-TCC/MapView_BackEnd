@@ -48,17 +48,6 @@ public class CostCenterServiceImp implements CostCenterService {
         return new CostCenterDetailsDTO(costCenter);
     }
 
-    public CostCenterDetailsDTO getCostCentername(String costCenterName,Long userLog_id) {
-        CostCenter costCenter = this.costCenterRepository.findById(id_cost_center).orElseThrow(() -> new NotFoundException("Id not found"));
-        Users user = this.userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("Id not found"));
-
-        if (!costCenter.status_check()){
-            throw new OperativeFalseException("The inactive CostCenter cannot be read..");
-        }
-        var userLog = new UserLog(user,"CostCenter",id_cost_center.toString(),"Read CostCenter", EnumAction.READ);
-        userLogRepository.save(userLog);
-        return new CostCenterDetailsDTO(costCenter);
-    }
 
 
 
@@ -74,21 +63,26 @@ public class CostCenterServiceImp implements CostCenterService {
     @Override
     public CostCenterDetailsDTO createCostCenter(CostCenterCreateDTO dados,Long userLog_id) {
         Users user = this.userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("Id not found"));
-        try {
+        CostCenter verifyCostCenter = null;
+        if (verifyCostCenter == null){
+            try {
 
+                var costcenter = new CostCenter(dados);
+                Long cost_id = costCenterRepository.save(costcenter).getId_cost_center();
 
-            var costcenter = new CostCenter(dados);
-            Long cost_id = costCenterRepository.save(costcenter).getId_cost_center();
+                var userLog = new UserLog(user,"CostCenter",cost_id.toString(),"Create new CostCenter", EnumAction.CREATE);
+                userLogRepository.save(userLog);
+                System.out.println("Post: createCostCenter ");
 
-            var userLog = new UserLog(user,"CostCenter",cost_id.toString(),"Create new CostCenter", EnumAction.CREATE);
-            userLogRepository.save(userLog);
-            System.out.println("Post: createCostCenter ");
+                return new CostCenterDetailsDTO(costcenter);
 
-            return new CostCenterDetailsDTO(costcenter);
+            }catch (DataIntegrityViolationException e ){
+                throw new ExistingEntityException("It"+ dados.costCenter_name() + "CostCenter already exists");
+            }
 
-        }catch (DataIntegrityViolationException e ){
-            throw new ExistingEntityException("It"+ dados.costCenter_name() + "CostCenter already exists");
         }
+        return new CostCenterDetailsDTO(verifyCostCenter);
+
     }
 
     @Override
@@ -103,7 +97,7 @@ public class CostCenterServiceImp implements CostCenterService {
         var userlog = new UserLog(user,"Area", id.toString(),null,"Infos update",EnumAction.UPDATE);
 
         if (dados.costCenter_name() != null){
-            costCenter.setCost_center_name(dados.costCenter_name());
+            costCenter.setConstcenter(dados.costCenter_name());
             userlog.setField("const_center_name to: "+ dados.costCenter_name());
         }
 

@@ -34,20 +34,26 @@ public class ClassesServiceImp implements ClassesService {
     @Override
     public ClassesDetaiLDTO createClasses(ClassesCreateDTO data, Long userLog_id) {
 
+
         var usuario_log = userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("User Id Not Found"));
-        try{
-            var user = userRepository.findById(data.user_id()).orElseThrow(() -> new NotFoundException("User Id Not Found"));
-            var classe = new Classes(data,user);
-            Classes classes = classesRepository.save(classe);
 
-            var userLog = new UserLog(usuario_log,"Classes", classes.getId_classes().toString(),"Create new classes", EnumAction.CREATE);
-            userLogRepository.save(userLog);
-            System.out.println("Post: classes ");
-            return new ClassesDetaiLDTO(classe);
+        Classes verifyClasses = classesRepository.findByClasses(data.classes()).orElse(null);
+        if(verifyClasses ==null) {
+            try {
+                var user = userRepository.findById(data.user_id()).orElseThrow(() -> new NotFoundException("User Id Not Found"));
+                var classe = new Classes(data, user);
+                Classes classes = classesRepository.save(classe);
 
-        }catch (DataIntegrityViolationException e ){
-            throw new ExistingEntityException("It"+ data.classes() + "classes already exists");
+                var userLog = new UserLog(usuario_log, "Classes", classes.getId_classes().toString(), "Create new classes", EnumAction.CREATE);
+                userLogRepository.save(userLog);
+                System.out.println("Post: classes ");
+                return new ClassesDetaiLDTO(classe);
+
+            } catch (DataIntegrityViolationException e) {
+                throw new ExistingEntityException("It" + data.classes() + "classes already exists");
+            }
         }
+        return  new ClassesDetaiLDTO(verifyClasses);
 
     }
 

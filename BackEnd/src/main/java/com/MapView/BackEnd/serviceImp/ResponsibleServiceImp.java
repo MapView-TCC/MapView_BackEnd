@@ -38,25 +38,29 @@ public class ResponsibleServiceImp implements ResponsibleService {
     @Override
     public ResponsibleDetailsDTO createResposible(ResponsibleCrateDTO data, Long userLog_id) {
         Users users = this.userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("Id not found"));
+        Responsible verifyByName = responsibleRepository.findByResponsible(data.responsible_name()).orElse(null);
 
-        var user = userRepository.findById(data.id_user()).orElseThrow(() -> new NotFoundException("User Id Not Found"));
-        if(!user.isOperative()){
-            throw new OperativeFalseException("The inactive User cannot be accessed.");
+        if(verifyByName ==null){
+
+            var user = userRepository.findById(data.id_user()).orElseThrow(() -> new NotFoundException("User Id Not Found"));
+            if(!user.isOperative()){
+                throw new OperativeFalseException("The inactive User cannot be accessed.");
+            }
+
+            var classe = classesRepository.findById(data.id_classes()).orElseThrow(() -> new NotFoundException("Class Id Not Found"));
+            if(!classe.isOperative()){
+                throw new OperativeFalseException("The inactive Class cannot be accessed.");
+            }
+
+            var responsible = new Responsible(data.responsible_name(), data.edv(), classe,user);
+            Long id_responsible = responsibleRepository.save(responsible).getId_responsible();
+
+            var userLog = new UserLog(users, "Responsible", id_responsible.toString(), "Create new Responsible", EnumAction.CREATE);
+            userLogRepository.save(userLog);
+
+            return new ResponsibleDetailsDTO(responsible);
         }
-
-        var classe = classesRepository.findById(data.id_classes()).orElseThrow(() -> new NotFoundException("Class Id Not Found"));
-        if(!classe.isOperative()){
-            throw new OperativeFalseException("The inactive Class cannot be accessed.");
-        }
-
-        var responsible = new Responsible(data.responsible_name(), data.edv(), classe,user);
-        Long id_responsible = responsibleRepository.save(responsible).getId_responsible();
-
-        var userLog = new UserLog(users, "Responsible", id_responsible.toString(), "Create new Responsible", EnumAction.CREATE);
-        userLogRepository.save(userLog);
-
-        return new ResponsibleDetailsDTO(responsible);
-
+        return new ResponsibleDetailsDTO(verifyByName);
     }
 
     @Override
@@ -119,7 +123,7 @@ public class ResponsibleServiceImp implements ResponsibleService {
             if(data.edv().isBlank()){
                 throw new BlankErrorException("Responsible name cannot be blank");
             }
-            responsible.setResponsible_name(data.responsible_name());
+            responsible.setResponsible(data.responsible_name());
             userlog.setField("Responsible name updated to: " + data.responsible_name());
         }
 

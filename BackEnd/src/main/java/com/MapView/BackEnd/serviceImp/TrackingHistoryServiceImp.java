@@ -193,7 +193,7 @@ public class TrackingHistoryServiceImp implements TrackingHistoryService {
                         List<String> responsibles = new ArrayList<>();
 
                         for (EquipmentResponsible responsible : equipmentResponsibles) {
-                            responsibles.add(responsible.getId_responsible().getResponsible_name());
+                            responsibles.add(responsible.getId_responsible().getResponsible());
                         }
 
                         wrongLocationDTOs.add(new TrackingHistoryWrongLocationDTO(equipment, environment,responsibles));

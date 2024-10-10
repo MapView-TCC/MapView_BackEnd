@@ -16,4 +16,6 @@ public interface ResponsibleRepository extends JpaRepository<Responsible,Long> {
     ResponsibleCrateDTO save (ResponsibleCrateDTO data);
 
     Optional<Responsible> findByEdv(String edv);
+
+    Optional<Responsible> findByResponsible (String name);
 }

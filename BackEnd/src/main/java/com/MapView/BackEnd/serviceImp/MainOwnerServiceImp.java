@@ -70,7 +70,7 @@ public class MainOwnerServiceImp implements MainOwnerService {
     public MainOwnerDetailsDTO createMainOwner(MainOwnerCreateDTO data,Long userLog_id) {
         Users user = this.userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("Id not found"));
         MainOwner existVerifyMainOwner = mainOwnerRepository.findById(data.id_owner()).orElse(null);
-        if (existVerifyMainOwner != null){
+        if (existVerifyMainOwner == null){
                 CostCenter costCenter = costCenterRepository.findById(data.id_cost_center())
                         .orElseThrow(() -> new RuntimeException("Não encontrado!"));
 

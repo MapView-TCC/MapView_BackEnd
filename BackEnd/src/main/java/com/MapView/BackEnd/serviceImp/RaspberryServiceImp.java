@@ -63,7 +63,7 @@ public class RaspberryServiceImp implements RaspberryService {
         Users user = this.userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("Id not found"));
 
         Raspberry existsVerifyRaspberry = raspberryRepository.findById(data.id_raspberry()).orElse(null);
-        if(existsVerifyRaspberry != null){
+        if(existsVerifyRaspberry == null){
 
                 Building building = buildingRepository.findById(data.id_building())
                         .orElseThrow(() -> new NotFoundException("Building id not found."));
@@ -85,7 +85,7 @@ public class RaspberryServiceImp implements RaspberryService {
 
                 return new RaspberryDetailsDTO(raspberry);
         }
-        throw new ExistingEntityException("Raspberry ("+data.id_raspberry()+") already exists.");
+        return new RaspberryDetailsDTO(existsVerifyRaspberry);
 
     }
 

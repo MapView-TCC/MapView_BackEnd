@@ -100,11 +100,11 @@ public class RegisterServiceImp implements RegisterService {
         Users userlog = userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("This uses is incorrect"));
 
 
-            PostDetailDTO post = postServiceImp.getPostByPost(data.post(), userLog_id);
+            PostDetailDTO post = postServiceImp.createPost(new PostCreateDTO(data.post()), userLog_id);
             LocationDetalsDTO location = locationServiceImp.createLocation(new LocationCreateDTO(post.id_post(),data.id_eviroment()));
             CostCenterDetailsDTO costcenter = costCenterServiceImp.createCostCenter(new CostCenterCreateDTO(data.costCenter_name()),userLog_id);
 
-            MainOwnerDetailsDTO owner = mainOwnerServiceImp.getMainOwner(data.id_owner(),userLog_id);
+            MainOwnerDetailsDTO owner = mainOwnerServiceImp.createMainOwner(new MainOwnerCreateDTO(data.id_owner(),costcenter.id_cost_center()),userLog_id);
             EquipmentDetailsDTO equipment = equipmentServiceImp.createEquipment(new EquipmentCreateDTO(
                     data.id_equipment(),
                     data.name_equipment(),

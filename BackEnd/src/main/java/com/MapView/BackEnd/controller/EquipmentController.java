@@ -75,8 +75,8 @@ public class EquipmentController {
     })
     @GetMapping
     public ResponseEntity<List<EquipmentDetailsDTO>> getAllEquipment(
-            @Parameter(description = "Page number for pagination", required = true) @RequestParam int page,
-            @Parameter(description = "Number of items per page", required = true) @RequestParam int itens,
+            @Parameter(description = "Page number for pagination", required = false) @RequestParam(defaultValue = "0") int page,
+            @Parameter(description = "Number of items per page", required = false) @RequestParam(defaultValue = "200") int itens,
             @Parameter(description = "User log ID for tracking changes", required = true) @RequestParam Long userLog_id) {
         var list = equipmentServiceImp.getAllEquipment(page, itens, userLog_id);
         return ResponseEntity.ok(list);
@@ -88,8 +88,8 @@ public class EquipmentController {
     })
     @GetMapping("/filter")
     public ResponseEntity<List<EquipmentDetailsDTO>> getAllEquipmentFilter(
-            @Parameter(description = "Page number for pagination", required = true) @RequestParam int page,
-            @Parameter(description = "Number of items per page", required = true) @RequestParam int itens,
+            @Parameter(description = "Page number for pagination", required = false) @RequestParam(defaultValue = "0") int page,
+            @Parameter(description = "Number of items per page", required = false) @RequestParam(defaultValue = "200") int itens,
             @RequestParam(required = false) String validity,
             @RequestParam(required = false) String enviroment,
             @RequestParam(required = false) String id_owner,
