@@ -104,14 +104,22 @@ public class TrackingHistoryController {
         return ResponseEntity.ok(list);
     }
 
+    @Operation(summary = "Permanently delete tracking history", description = "Deleting tracking history records.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Tracking history successfully deleted")
+    })
     @DeleteMapping("/{id_tracking}")
     public ResponseEntity<Void> deleteTracking(@PathVariable("id_tracking") Long id_tracking){
         trackingHistoryServiceImp.deleteTracking(id_tracking);
         return ResponseEntity.ok().build();
     }
 
+    @Operation(summary = "Equipment in the wrong place", description = "Returning equipment that is not in the original laboratory.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Equipment located in the wrong place")
+    })
     @GetMapping("/wronglocations")
-    public ResponseEntity<List<TrackingHistoryWrongLocationDTO>> getWrongLocationEquipment(@RequestParam("id_enviromet") Long id_environment){
+    public ResponseEntity<List<TrackingHistoryWrongLocationDTO>> getWrongLocationEquipment(@RequestParam("id_environment") Long id_environment){
         List<TrackingHistoryWrongLocationDTO> equipment =  trackingHistoryServiceImp.findWrongLocationEquipments(id_environment);
         return ResponseEntity.ok(equipment);
 

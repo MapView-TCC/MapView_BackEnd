@@ -58,66 +58,95 @@ public class TrackingHistoryServiceImp implements TrackingHistoryService {
 
     }
 
+    @Async // Indica que o método pode ser executado de forma assíncrona.
     @Override
-    @CrossOrigin("http://localhost:3001")
+    @CrossOrigin("http://localhost:3001") // Permite que requisições de um domínio específico (localhost:3001) acessem este endpoint.
     public TrackingHistoryDetailsDTO createTrackingHistory(TrackingHistoryCreateDTO dados) {
+        // Busca um ambiente pelo ID fornecido nos dados. Se não for encontrado, lança uma exceção NotFoundException.
         Environment local_tracking = environmentRepository.findById(dados.id_environment())
                 .orElseThrow(() -> new NotFoundException("Id not found"));
 
+        // Tenta encontrar um equipamento pelo RFID fornecido nos dados.
         Optional<Equipment> equipment = equipmentRepository.findByRfid(dados.rfid());
 
+        TrackingHistory history = new TrackingHistory();
+
+        // isEmpty -> Retorna um valor booliano que indica se um variável foi inicializado.
         if (equipment.isEmpty()) {
+            // Salva um novo histórico de rastreamento com o RFID e ambiente encontrado, marcando como 'RED'.
             TrackingHistory trackingHistory = trackingHistoryRepository.save(new TrackingHistory(dados.rfid(), local_tracking, EnumColors.RED));
-            Equipment emptyEquipment = new Equipment(UUID.randomUUID().toString().substring(0,8), dados.rfid());
-            equipmentRepository.save(emptyEquipment);
-            trackingHistoryRepository.save(trackingHistory);
+
+//            // Cria um novo equipamento com um UUID aleatório e o RFID fornecido.
+//            Equipment emptyEquipment = new Equipment(UUID.randomUUID().toString().substring(0,8), dados.rfid());
+//            equipmentRepository.save(emptyEquipment);  // Salva o novo equipamento no repositório.
+
+            trackingHistoryRepository.save(trackingHistory);  // Salva o histórico de rastreamento.
+
+            // Envia a atualização para o tópico "/equip". - AQUI É O WEB SOCKET?
             template.convertAndSend("/equip",trackingHistory);
 
             return new TrackingHistoryDetailsDTO(trackingHistory);
         }
 
+        // Busca o último histórico de rastreamento para o equipamento encontrado, ordenando por data e hora em ordem decrescente.
         TrackingHistory last_track = trackingHistoryRepository.findTopByEquipmentOrderByDatetimeDesc(equipment.get());
+
+        // Se não houver histórico anterior, lança uma exceção.
         if (last_track == null){
-            throw new NotFoundException("RFID tag is not linked to any equipment");
+            throw new NotFoundException("RFID tag " + dados.rfid() + " is not linked to any equipment ");
         }
 
+        // Obtém o ambiente do último rastreamento.
         Environment last_track_local = last_track.getEnvironment();
 
-
+        // Verifica se o ambiente do último rastreamento é igual ao ambiente atual.
         if (last_track_local.equals(local_tracking)) {
+
+            // Verifica se a última ação foi 'OUT'.
             if (last_track.getAction().equals(EnumTrackingAction.OUT)){
 
+                // Se o ambiente atual é "BTC".
                 if (local_tracking.getEnvironment_name().equals("BTC")){
 
                     System.out.println("_-----1--------");
+                    // Salva novo histórico de rastreamento marcando a ação como 'ENTER' e cor como 'GREEN'.
                     TrackingHistory trackingHistory = trackingHistoryRepository.save(new TrackingHistory(local_tracking, equipment.get(), dados.rfid(),EnumTrackingAction.ENTER, EnumColors.GREEN));
                     template.convertAndSend("/equip",trackingHistory);
                     return new TrackingHistoryDetailsDTO(trackingHistory);
                 }
                 System.out.println("_-----2--------");
-                TrackingHistory trackingHistory = trackingHistoryRepository.save(new TrackingHistory(local_tracking, equipment.get(), dados.rfid(),EnumTrackingAction.OUT, EnumColors.GREEN));
+                // Salva novo histórico de rastreamento marcando a ação como 'OUT' e cor como 'GREEN'.
+                TrackingHistory trackingHistory = trackingHistoryRepository.save(new TrackingHistory(local_tracking, equipment.get(), dados.rfid(),EnumTrackingAction.ENTER, EnumColors.GREEN));
                 template.convertAndSend("/equip",trackingHistory);
                 return new TrackingHistoryDetailsDTO(trackingHistory);
             }
+
+            // Se o ambiente atual é "BTC".
             if (local_tracking.getEnvironment_name().equals("BTC")){
                 System.out.println("_-----3--------");
+                // Salva novo histórico de rastreamento marcando a ação como 'OUT' e cor como 'YELLOW'.
                 TrackingHistory trackingHistory = trackingHistoryRepository.save(new TrackingHistory(local_tracking, equipment.get(), dados.rfid(),EnumTrackingAction.OUT, EnumColors.YELLOW));
                 template.convertAndSend("/equip",trackingHistory);
                 return new TrackingHistoryDetailsDTO(trackingHistory);
             }
+            // Salva novo histórico de rastreamento marcando a ação como 'OUT' e cor como 'GREEN'.
             TrackingHistory trackingHistory = trackingHistoryRepository.save(new TrackingHistory(local_tracking, equipment.get(), dados.rfid(),EnumTrackingAction.OUT, EnumColors.GREEN));
             template.convertAndSend("/equip",trackingHistory);
             System.out.println("_-----4--------");
             return new TrackingHistoryDetailsDTO(trackingHistory);
         }
         System.out.println("_-----5--------");
+        // Salva histórico de rastreamento com o ambiente do último rastreamento e ação 'OUT'.
         trackingHistoryRepository.save(new TrackingHistory(last_track_local,equipment.get(), dados.rfid(), EnumTrackingAction.OUT,EnumColors.GREEN));
+
+        // Salva novo histórico de rastreamento com o ambiente atual e ação 'ENTER'.
         TrackingHistory trackingHistory = trackingHistoryRepository.save(new TrackingHistory(local_tracking, equipment.get(), dados.rfid(), EnumTrackingAction.ENTER, EnumColors.GREEN));
         template.convertAndSend("/equip",trackingHistory);
 
         System.out.println("Se o rfid ta salvando aqui " + dados.rfid());
         System.out.println(trackingHistory.getRfid());
 
+        // Retorna os detalhes do histórico de rastreamento.
         return new TrackingHistoryDetailsDTO(trackingHistory);
     }
 
