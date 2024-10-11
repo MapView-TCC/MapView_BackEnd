@@ -17,7 +17,6 @@ import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 @Component
-
 public class ScheduleService {
 
     private final EquipmentRepository equipmentRepository;
@@ -36,7 +35,7 @@ public class ScheduleService {
 
     // toda a segunda feira ele vai fazer essa função
     @Scheduled(cron = "0 0 0 * * MON")
-    public void executed() {
+    public void createNotification() {
         List<Equipment> equipmentList = equipmentRepository.findAllByOperativeTrue();
 
         for (Equipment e : equipmentList) {

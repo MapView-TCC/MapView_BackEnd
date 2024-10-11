@@ -3,7 +3,7 @@ INSERT INTO users (email, role, operative) VALUES
 ('maria.eduarda@example.com', 'ADMIN', 1),
 ('ana.maria@example.com', 'USER', 1),
 ('thayna.quinteiro@example.com', 'SUPPORT', 1),
-('sarah.santos@example.com', 'USER', 0),
+('sarah.santos@example.com', 'USER', 1),
 ('joao.borges@example.com', 'ADMIN', 1);
 
 -- Inserir novos registros de histórico de acesso
@@ -66,7 +66,7 @@ INSERT INTO building (building_code, operative) VALUES
 
 -- Inserir novas áreas
 INSERT INTO area (area_code, area_name, operative) VALUES
-('ETS', 'Engineering Techinical School', 1),
+('ETS', 'Engineering Technical School', 1),
 ('BTC', 'Bosch Training Center', 1),
 ('BD', 'Bosch Digital', 1),
 ('PT', 'Power Tools', 1),
@@ -83,51 +83,103 @@ INSERT INTO raspberry (id_raspberry, id_building, id_area, operative) VALUES
 -- Inserir novos ambientes
 INSERT INTO environment (environment_name, id_raspberry, operative) VALUES
 ('Lab. Soluções Digitais 01', 'RP001', 1),
-('Lab. Soluções Digitais 02', 'RP002', 0),
+('Lab. Soluções Digitais 02', 'RP002', 1),
 ('Lab. Soluções Digitais 03', 'RP003', 1),
 ('Lab. Soluções Digitais 04', 'RP004', 1),
-('Lab. Soluções Digitais 05', 'RP005', 0);
+('Lab. Soluções Digitais 05', 'RP005', 1);
 
 -- Inserir novos postos
 INSERT INTO post (post, operative) VALUES
 ('Mesa 1', 1),
-('Mesa 2', 0),
+('Mesa 2', 1),
 ('Mesa 3', 1),
 ('Mesa 4', 1),
-('Mesa 5', 0);
+('Mesa 5', 1),
+('Mesa 6', 1),
+('Mesa 7', 1),
+('Mesa 8', 1),
+('Mesa 9', 1),
+('Mesa 10', 1),
+('Mesa 11', 1),
+('Mesa.12', 1),
+('Mesa 13', 1),
+('Mesa 14', 1),
+('Mesa 15', 1),
+('Mesa 16', 1),
+('Mesa 17', 1),
+('Mesa 18', 1),
+('Mesa 19', 1),
+('Mesa 20', 1);
+
+-- Inserir novos postos
+INSERT INTO post (post, operative) VALUES
+('Mesa 21', 1),
+('Mesa 22', 1),
+('Mesa 23', 1),
+('Mesa 24', 1),
+('Mesa 25', 1),
+('Mesa 26', 1),
+('Mesa 27', 1),
+('Mesa 28', 1),
+('Mesa 29', 1),
+('Mesa 30', 1),
+('Mesa 31', 1),
+('Mesa 32', 1),
+('Mesa 33', 1),
+('Mesa 34', 1),
+('Mesa 35', 1),
+('Mesa 36', 1),
+('Mesa 37', 1),
+('Mesa 38', 1),
+('Mesa 39', 1);
+
+-- Inserir novos postos
+INSERT INTO post (post, operative) VALUES
+('Mesa 40', 1),
+('Mesa 41', 1),
+('Mesa 42', 1),
+('Mesa 43', 1),
+('Mesa 44', 1),
+('Mesa 45', 1),
+('Mesa 46', 1),
+('Mesa 47', 1),
+('Mesa 48', 1),
+('Mesa 49', 1),
+('Mesa 50', 1),
+('Mesa do Instrutor', 1);
 
 -- Inserir novas localizações
 INSERT INTO location (id_post, id_environment) VALUES
 (1, 1),
-(2, 2),
-(3, 3),
-(4, 4),
-(5, 5);
+(2, 1),
+(3, 1),
+(4, 1),
+(5, 1);
 
 -- Inserir novos centros de custo
 INSERT INTO cost_center (cost_center_name, operative) VALUES
 ('Cost Center 1', 1),
-('Cost Center 2', 0),
+('Cost Center 2', 1),
 ('Cost Center 3', 1),
 ('Cost Center 4', 1),
-('Cost Center 5', 0);
+('Cost Center 5', 1);
 
 
 -- Inserir novos donos principais
 INSERT INTO main_owner (id_owner, id_cost_center, operative) VALUES
 ('FRG7CA', 1, 1),
-('FRG7CB', 2, 0),
+('FRG7CB', 2, 1),
 ('FRG7CC', 3, 1),
 ('FRG7CD', 4, 1),
-('FRG7CE', 5, 0);
+('FRG7CE', 5, 1);
 
 -- Inserir novos equipamentos
 INSERT INTO equipment (id_equipment, name_equipment, rfid, type, model, validity, admin_rights, observation, id_location, id_owner, operative) VALUES
 ('E001', 'Laptop A', 123456789012345, 'Laptop', 'NOTEBOOK_STANDARD', '2025-01-01', 'Admin', 'Good condition', 1, 'FRG7CA',  1),
-('E002', 'Desktop B', 234567890123456, 'Desktop', 'DESKTOP_TINK', '2024-12-31', 'User', 'Needs repair', 2, 'FRG7CB',  0),
+('E002', 'Desktop B', 234567890123456, 'Desktop', 'DESKTOP_TINK', '2024-12-31', 'User', 'Needs repair', 2, 'FRG7CB',  1),
 ('E003', 'Tablet C', 345678901234567, 'Tablet', 'NOTEBOOK_ENHANCED', '2026-01-01', 'Admin', 'New', 3, 'FRG7CC',  1),
 ('E004', 'Monitor D', 456789012345678, 'Monitor', 'DESKTOP_EXTERNO', '2024-11-30', 'User', 'Old', 4, 'FRG7CD',  1),
-('E005', 'Printer E', 567890123456789, 'Printer', 'DESKTOP_TINK', '2025-05-01', 'User', 'Average condition', 5, 'FRG7CE',  0);
+('E005', 'Printer E', 567890123456789, 'Printer', 'DESKTOP_TINK', '2025-05-01', 'User', 'Average condition', 5, 'FRG7CE',  1);
 
 -- Inserir novos registros de histórico de rastreio
 INSERT INTO tracking_history (id_equipment, id_environment, rfid, action, warning, dateTime) VALUES
@@ -148,15 +200,7 @@ INSERT INTO responsible (responsible_name, edv, id_classes, id_user, operative) 
 -- Inserir novas associações entre equipamentos e responsáveis
 INSERT INTO equipment_responsible (id_equipment, id_responsible, start_usage, end_usage, operative) VALUES
 ('E001', 1, '2024-09-01', NULL, 1),
-('E002', 2, '2024-09-02', '2024-09-10', 0),
+('E002', 2, '2024-09-02', '2024-09-10', 1),
 ('E003', 3, '2024-09-03', NULL, 1),
 ('E004', 4, '2024-09-04', '2024-09-15', 1),
-('E005', 5, '2024-09-05', NULL, 0);
-
--- Inserir novos registros de log de usuário
-INSERT INTO user_log (id_user, altered_table, id_altered, field, description, datetime, action) VALUES
-(1, 'Users', '1', 'role', 'Changed role to SUPPORT', '2024-09-10 09:00:00', 'UPDATE'),
-(2, 'equipment', 'E002', 'operative', 'Set operative to 0', '2024-09-10 09:30:00', 'UPDATE'),
-(3, 'access_history', '3', 'logout_datetime', 'Updated logout time', '2024-09-10 10:00:00', 'UPDATE'),
-(4, 'classes', '4', 'operative', 'Set operative to 1', '2024-09-10 10:30:00', 'UPDATE'),
-(5, 'responsible', '5', 'end_usage', 'Updated end usage date', '2024-09-10 11:00:00', 'UPDATE');
+('E005', 5, '2024-09-05', NULL, 1);
