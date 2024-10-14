@@ -26,7 +26,7 @@ public class ReportServiceImp implements ReportService {
 
     @Override
     public void generateExcel(HttpServletResponse response) throws IOException {
-        List<Equipment> equipments = equipmentRepository.findAll();
+        List<Equipment> equipments = equipmentRepository.findAllByOperativeTrue();
 
         HSSFWorkbook workbook = new HSSFWorkbook();
         HSSFSheet sheet = workbook.createSheet("Equipment Info");

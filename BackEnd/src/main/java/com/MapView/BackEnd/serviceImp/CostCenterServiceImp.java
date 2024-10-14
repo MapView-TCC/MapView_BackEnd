@@ -63,7 +63,7 @@ public class CostCenterServiceImp implements CostCenterService {
     @Override
     public CostCenterDetailsDTO createCostCenter(CostCenterCreateDTO dados,Long userLog_id) {
         Users user = this.userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("Id not found"));
-        CostCenter verifyCostCenter = null;
+        CostCenter verifyCostCenter = costCenterRepository.findByConstcenter(dados.costCenter_name()).orElse(null);
         if (verifyCostCenter == null){
             try {
 

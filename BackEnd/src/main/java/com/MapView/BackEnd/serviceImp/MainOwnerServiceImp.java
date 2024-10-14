@@ -85,7 +85,7 @@ public class MainOwnerServiceImp implements MainOwnerService {
 
                 return new MainOwnerDetailsDTO(mainOwner);
         }
-        throw new ExistingEntityException("MainOwner ("+data.id_owner()+") already exist.");
+        return new MainOwnerDetailsDTO(existVerifyMainOwner);
 
     }
 
