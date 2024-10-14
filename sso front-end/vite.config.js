@@ -43,7 +43,7 @@ export default defineConfig({
       // Proxy para a rota de callback
 
       '/callback': {
-        target: 'http://localhost:8000/login/oauth2/code/azure',
+        target: 'http://localhost:8001/login/oauth2/code/azure',
         changeOrigin: true,
         secure: false,
         rewrite: (path) => path.replace(/^\/callback/, ''),
