@@ -2,8 +2,20 @@
 CREATE TABLE IF NOT EXISTS users (
     id_user INT AUTO_INCREMENT  PRIMARY KEY,
     email VARCHAR(255) NOT NULL,
-    role ENUM('ADMIN', 'SUPPORT', 'USER'),
     operative TINYINT NOT NULL
+);
+
+CREATE TABLE roles (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(50) UNIQUE NOT NULL
+);
+
+CREATE TABLE user_roles (
+    id_user INT,
+    role_id INT,
+    PRIMARY KEY (id_user, role_id),
+    FOREIGN KEY (id_user) REFERENCES users(id_user),
+    FOREIGN KEY (role_id) REFERENCES roles(id)
 );
 
 -- Creating the Access History table
