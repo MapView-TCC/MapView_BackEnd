@@ -2,7 +2,11 @@ package com.MapView.BackEnd.serviceImp;
 
 import com.MapView.BackEnd.dtos.User.UserCreateDTO;
 import com.MapView.BackEnd.dtos.User.UserDetailsDTO;
+import com.MapView.BackEnd.entities.Role;
+import com.MapView.BackEnd.entities.UserRole;
+import com.MapView.BackEnd.repository.RoleRespository;
 import com.MapView.BackEnd.repository.UserRepository;
+import com.MapView.BackEnd.repository.UserRoleRepository;
 import com.MapView.BackEnd.service.UserService;
 import com.MapView.BackEnd.entities.Users;
 import com.MapView.BackEnd.enums.RoleUser;
@@ -12,12 +16,16 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 @Service
 
-public class UserServiceImp implements UserService {
+public class UserServiceIpm implements UserService {
 
     private final UserRepository userRepository;
+    private final RoleRespository roleRespository;
+    private final UserRoleRepository userRoleRepository;
 
-    public UserServiceImp(UserRepository userRepository) {
+    public UserServiceIpm(UserRepository userRepository, RoleRespository roleRespository, UserRoleRepository userRoleRepository) {
         this.userRepository = userRepository;
+        this.roleRespository = roleRespository;
+        this.userRoleRepository = userRoleRepository;
     }
 
     @Override
@@ -38,8 +46,11 @@ public class UserServiceImp implements UserService {
 
     @Override
     public UserDetailsDTO createUser(UserCreateDTO data) {
-        var user = new Users(data.email());
+        Users user = new Users(data.email());
+        Role role = roleRespository.findById(data.role_id()).orElseThrow(()-> new NotFoundException("Role not found"));
+        UserRole userRole = userRoleRepository.save(new UserRole(user,role));
         userRepository.save(user);
+
         return new UserDetailsDTO(user);
     }
 
