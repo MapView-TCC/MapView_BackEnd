@@ -6,7 +6,7 @@ import org.hibernate.validator.constraints.NotBlank;
 public record UserCreateDTO(@Email
                             @NotBlank
                             String email,
-                            String role) {
+                            Long role_id) {
 
 
 }
