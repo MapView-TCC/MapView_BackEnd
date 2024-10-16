@@ -1,3 +1,6 @@
+package com.MapView.BackEnd.infra;
+
+import com.MapView.BackEnd.dtos.User.UserDetailsDTO;
 import com.MapView.BackEnd.entities.UserRole;
 import com.MapView.BackEnd.entities.Users;
 import com.MapView.BackEnd.infra.Exception.NotFoundException;
@@ -20,7 +23,7 @@ import java.util.stream.Collectors;
 
 @Configuration
 @EnableWebSecurity
-@EnableMethodSecurity // Substituto para @EnableGlobalMethodSecurity
+@EnableMethodSecurity
 public class SecurityConfig {
 
     private final UserRepository userRepository;
@@ -34,7 +37,7 @@ public class SecurityConfig {
     @Bean
     public JwtDecoder jwtDecoder() {
         // URL do JWKs fornecida pelo Azure para validação do token
-        String jwkSetUri = "https://login.microsoftonline.com/{tenantid}/discovery/v2.0/keys";
+        String jwkSetUri = "https://login.microsoftonline.com/0ae51e19-07c8-4e4b-bb6d-648ee58410f4/discovery/v2.0/keys";
         return NimbusJwtDecoder.withJwkSetUri(jwkSetUri).build();
     }
 
@@ -44,7 +47,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/resource/**").hasRole("APRENDIZ")  // Verifica a role APRENDIZ
                         .requestMatchers("/ap1/v1/user/**").authenticated()   // Protege a rota /user
-                        .anyRequest().permitAll())  // Permite outras requisições
+                        .anyRequest().authenticated())// Permite outras requisições
                 .oauth2ResourceServer(oauth2 -> oauth2
                         .jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter())));  // Configura JWT
 
@@ -66,7 +69,7 @@ public class SecurityConfig {
     private Collection<GrantedAuthority> getRolesFromDatabase(String email) {
         // Busca o usuário pelo email
         Users user = userRepository.findByEmail(email).orElse(null);
-        System.out.println("Usuário encontrado: " + user);  // Apenas para depuração
+        System.out.println("Usuário encontrado: " +new UserDetailsDTO(user));  // Apenas para depuração
 
         // Verifica se o usuário foi encontrado
         if (user != null) {
@@ -74,9 +77,8 @@ public class SecurityConfig {
             UserRole userRoles = userRoleRepository.findByUser(user).orElseThrow(() -> new NotFoundException("User not found"));
 
             // Cria a lista de authorities com base nas roles
-            return userRoles.stream()
-                    .map(userRole -> new SimpleGrantedAuthority("ROLE_" + userRole.getRole().getName()))  // Prefixa a role com "ROLE_"
-                    .collect(Collectors.toList());
+            System.out.println(userRoles.getRole().getName());
+            return List.of(new SimpleGrantedAuthority(userRoles.getRole().getName()));
         }
 
         // Retorna uma lista vazia se o usuário não tiver roles ou não for encontrado
