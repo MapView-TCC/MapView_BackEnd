@@ -15,7 +15,6 @@ public class ResourceController {
 
     @GetMapping("/resource")
     @CrossOrigin(origins = "http://localhost:5173")
-    @PreAuthorize("hasRole('ADMIN')")
     public String getResourceString(@AuthenticationPrincipal Jwt jwt) {
         String userName = jwt.getClaimAsString("name");
 

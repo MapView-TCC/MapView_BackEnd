@@ -15,7 +15,7 @@ INSERT INTO users (email, operative) VALUES
 -- Inserir novas roles
 INSERT INTO roles (name) VALUES
 ('INSTRUTOR'),
-('APRENDIZ'),
+('ROLE_APRENDIZ'),
 ('GESTOR');
 
 -- Associar usuários às suas roles
