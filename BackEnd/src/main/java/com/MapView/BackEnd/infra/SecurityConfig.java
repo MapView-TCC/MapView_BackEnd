@@ -1,10 +1,8 @@
-package com.MapView.BackEnd.infra;
-
 import com.MapView.BackEnd.entities.UserRole;
 import com.MapView.BackEnd.entities.Users;
+import com.MapView.BackEnd.infra.Exception.NotFoundException;
 import com.MapView.BackEnd.repository.UserRepository;
 import com.MapView.BackEnd.repository.UserRoleRepository;
-import org.apache.catalina.User;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -35,8 +33,8 @@ public class SecurityConfig {
 
     @Bean
     public JwtDecoder jwtDecoder() {
-        // Substitua "your-jwks-uri" pela URL do seu JWKs, que geralmente é fornecida pelo provedor de identidade (Azure)
-        String jwkSetUri = "https://login.microsoftonline.com/0ae51e19-07c8-4e4b-bb6d-648ee58410f4/discovery/v2.0/keys";
+        // URL do JWKs fornecida pelo Azure para validação do token
+        String jwkSetUri = "https://login.microsoftonline.com/{tenantid}/discovery/v2.0/keys";
         return NimbusJwtDecoder.withJwkSetUri(jwkSetUri).build();
     }
 
@@ -44,11 +42,11 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/resource/**").hasRole("APRENDIZ")
-                        .requestMatchers("/ap1/v1/user/**").authenticated()  // Protege a rota
+                        .requestMatchers("/resource/**").hasRole("APRENDIZ")  // Verifica a role APRENDIZ
+                        .requestMatchers("/ap1/v1/user/**").authenticated()   // Protege a rota /user
                         .anyRequest().permitAll())  // Permite outras requisições
                 .oauth2ResourceServer(oauth2 -> oauth2
-                        .jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter())));  // Configuração JWT
+                        .jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter())));  // Configura JWT
 
         return http.build();
     }
@@ -57,30 +55,27 @@ public class SecurityConfig {
     public JwtAuthenticationConverter jwtAuthenticationConverter() {
         JwtAuthenticationConverter converter = new JwtAuthenticationConverter();
         converter.setJwtGrantedAuthoritiesConverter(jwt -> {
-            String email = jwt.getClaimAsString("email");  // Extraindo o email do token
-            Collection<GrantedAuthority> authorities = getRolesFromDatabase(email);  // Buscando roles
-            return authorities;
+            String email = jwt.getClaimAsString("email");  // Extrai o email do token
+            System.out.println("Email extraído do token: " + email);  // Apenas para depuração
+            return getRolesFromDatabase(email);  // Busca as roles do banco de dados
         });
         return converter;
     }
 
-    // Alteração aqui: retorna Collection<GrantedAuthority>
+    // Busca as roles do banco de dados e as converte em GrantedAuthority
     private Collection<GrantedAuthority> getRolesFromDatabase(String email) {
         // Busca o usuário pelo email
-        Users user = userRepository.findByEmail(email);
+        Users user = userRepository.findByEmail(email).orElse(null);
+        System.out.println("Usuário encontrado: " + user);  // Apenas para depuração
 
         // Verifica se o usuário foi encontrado
         if (user != null) {
             // Busca as roles do usuário usando o UserRoleRepository
-            List<UserRole> userRoles = userRoleRepository.findByUser(user).orElse(Collections.emptyList());
-            for (UserRole r: userRoles){
-                r.getRole()
+            UserRole userRoles = userRoleRepository.findByUser(user).orElseThrow(() -> new NotFoundException("User not found"));
 
-            }
-
-            // Converte a lista de UserRole em GrantedAuthority
+            // Cria a lista de authorities com base nas roles
             return userRoles.stream()
-                    .map(userRole -> new SimpleGrantedAuthority(userRole.getRole().getClass().g)  // Converte Role para GrantedAuthority
+                    .map(userRole -> new SimpleGrantedAuthority("ROLE_" + userRole.getRole().getName()))  // Prefixa a role com "ROLE_"
                     .collect(Collectors.toList());
         }
 
