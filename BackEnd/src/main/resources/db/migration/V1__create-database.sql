@@ -1,22 +1,23 @@
 -- Creating the User table
 CREATE TABLE IF NOT EXISTS users (
-    id_user INT AUTO_INCREMENT  PRIMARY KEY,
-    email VARCHAR(255) NOT NULL,
+    user_id INT AUTO_INCREMENT PRIMARY KEY AUTO_INCREMENT,
+    email VARCHAR(255) NOT NULL UNIQUE,
     operative TINYINT NOT NULL
 );
 
 CREATE TABLE roles (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    id INT AUTO_INCREMENT PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(50) UNIQUE NOT NULL
 );
 
 CREATE TABLE user_roles (
-    id_user INT,
+    user_roles_id INT PRIMARY KEY AUTO_INCREMENT,
+    user_id INT,
     role_id INT,
-    PRIMARY KEY (id_user, role_id),
-    FOREIGN KEY (id_user) REFERENCES users(id_user),
+    FOREIGN KEY (user_id) REFERENCES users(user_id),
     FOREIGN KEY (role_id) REFERENCES roles(id)
 );
+
 
 -- Creating the Access History table
 CREATE TABLE IF NOT EXISTS access_history (
@@ -24,7 +25,7 @@ CREATE TABLE IF NOT EXISTS access_history (
     id_user INT NOT NULL,
     login_datetime TIMESTAMP,
     logout_datetime DATETIME,
-    FOREIGN KEY(id_user) REFERENCES users(id_user)
+    FOREIGN KEY(id_user) REFERENCES users(user_id)
 );
 
 -- Creating the Classes table
@@ -35,7 +36,7 @@ CREATE TABLE IF NOT EXISTS classes (
     id_user INT NOT NULL,
     creation_date DATE NOT NULL,
     operative TINYINT NOT NULL,
-    FOREIGN KEY(id_user) REFERENCES users(id_user)
+    FOREIGN KEY(id_user) REFERENCES users(user_id)
 );
 
 -- Creating the Building table (é a tabela Predio)
@@ -160,7 +161,7 @@ CREATE TABLE IF NOT EXISTS responsible (
     id_user INT NOT NULL,
     operative TINYINT NOT NULL,
     FOREIGN KEY(id_classes) REFERENCES classes(id_classes),
-    FOREIGN KEY(id_user) REFERENCES users(id_user)
+    FOREIGN KEY(id_user) REFERENCES users(user_id)
 );
 
 -- Creating the auxiliary Equipment_Responsible table
@@ -186,6 +187,6 @@ CREATE TABLE IF NOT EXISTS user_log (
     description TEXT,
     datetime TIMESTAMP,
     action ENUM('CREATE', 'UPDATE', 'READ', 'DELETE'),
-    FOREIGN KEY(id_user) REFERENCES users(id_user)
+    FOREIGN KEY(id_user) REFERENCES users(user_id)
 );
 

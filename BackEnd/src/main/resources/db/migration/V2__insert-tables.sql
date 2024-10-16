@@ -1,10 +1,28 @@
 -- Inserir novos usuários
-INSERT INTO users (email, role, operative) VALUES
-('maria.eduarda@example.com', 'ADMIN', 1),
-('ana.maria@example.com', 'USER', 1),
-('thayna.quinteiro@example.com', 'SUPPORT', 1),
-('sarah.santos@example.com', 'USER', 1),
-('joao.borges@example.com', 'ADMIN', 1);
+INSERT INTO users (email, operative) VALUES
+('maria.eduarda@example.com', 1),
+('ana.maria@example.com', 1),
+('thayna.quinteiro@example.com', 1),
+('sarah.santos@example.com', 1),
+('joao.borges@example.com', 1),
+('Campinas.ETS@br.bosch.com', 1);
+
+
+
+-- Inserir novas roles
+INSERT INTO roles (name) VALUES
+('INSTRUTOR'),
+('APRENDIZ'),
+('GESTOR');
+
+-- Associar usuários às suas roles
+INSERT INTO user_roles (user_id, role_id) VALUES
+(1, 1),  -- maria.eduarda@example.com é INSTRUTOR
+(2, 2),  -- ana.maria@example.com é APRENDIZ
+(3, 3),  -- thayna.quinteiro@example.com é GESTOR
+(4, 2),  -- sarah.santos@example.com é APRENDIZ
+(5, 1),  -- joao.borges@example.com é INSTRUTOR
+(6, 2);
 
 -- Inserir novos registros de histórico de acesso
 INSERT INTO access_history (id_user, login_datetime, logout_datetime) VALUES

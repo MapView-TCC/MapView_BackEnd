@@ -11,7 +11,6 @@ public interface UserService {
     UserDetailsDTO getUser(Long id_UserService);
     List<UserDetailsDTO> getAllUser();
     UserDetailsDTO createUser(UserCreateDTO data);
-    void setPrivilege (Long user_id, RoleUser roleUser);
     void activeUser(Long id_UserService);
     void inactivateUser(Long id_UserService);
 }
