@@ -41,6 +41,7 @@ public class ScheduleServiceImp {
         for (Equipment e : equipmentList) {
             LocalDate validity = e.getValidity();
 
+
             if (validity != null && LocalDate.now().getYear() == validity.getYear()) {
 
                 if (getTrimestre(validity.getMonthValue()) == getTrimestre(LocalDate.now().getMonthValue())) {
