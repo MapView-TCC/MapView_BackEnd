@@ -19,11 +19,9 @@ public class Users {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "user_id")
     private Long id_user;
     private String email;
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private RoleUser role;
 
     @Column(nullable = false)
     @JsonIgnore
@@ -33,7 +31,6 @@ public class Users {
 
     public Users(String email){
         this.email = email;
-        this.role = RoleUser.USER;
         this.operative = true;
     }
 
