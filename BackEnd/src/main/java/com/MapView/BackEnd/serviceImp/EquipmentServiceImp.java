@@ -85,7 +85,7 @@ public class EquipmentServiceImp implements EquipmentService {
 
     @Override
     public EquipmentDetailsDTO  createEquipment(EquipmentCreateDTO data, Long userLog_id) {
-        Equipment verify = equipmentRepository.findById(data.id_equipment()).orElse(null);
+        Equipment verify = equipmentRepository.findByIdEquipmentAndOperativeTrue(data.id_equipment()).orElse(null);
 
         if (verify == null){
             try{

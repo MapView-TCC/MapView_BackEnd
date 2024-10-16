@@ -101,7 +101,7 @@ public class RegisterServiceImp implements RegisterService {
 
 
             PostDetailDTO post = postServiceImp.createPost(new PostCreateDTO(data.post()), userLog_id);
-            LocationDetalsDTO location = locationServiceImp.createLocation(new LocationCreateDTO(post.id_post(),data.id_eviroment()));
+            LocationDetalsDTO location = locationServiceImp.createLocation(new LocationCreateDTO(post.id_post(),data.id_environment()));
             CostCenterDetailsDTO costcenter = costCenterServiceImp.createCostCenter(new CostCenterCreateDTO(data.costCenter_name()),userLog_id);
 
             MainOwnerDetailsDTO owner = mainOwnerServiceImp.createMainOwner(new MainOwnerCreateDTO(data.id_owner(),costcenter.id_cost_center()),userLog_id);
@@ -118,7 +118,7 @@ public class RegisterServiceImp implements RegisterService {
 
                 List<ResponsibleDetailsDTO> responsibleDetailsDTO = new ArrayList<>();
 
-                for (ResponsibleResgisterDTO listResponsible: data.dataResposible()) {
+                for (ResponsibleResgisterDTO listResponsible: data.dataResponsible()) {
                     ClassesDetaiLDTO newClasses = classesServiceImp.createClasses(new ClassesCreateDTO(listResponsible.enumCourse(), listResponsible.name_classes(), userLog_id,LocalDate.now()),userLog_id);
 
                     ResponsibleDetailsDTO responsible = responsibleServiceImp.createResposible(new ResponsibleCrateDTO(

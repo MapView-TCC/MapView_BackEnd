@@ -30,7 +30,7 @@ public class Environment {
             joinColumns = @JoinColumn(name = "id_post"),
             inverseJoinColumns =  @JoinColumn(name = "id_environment"))
     @JsonManagedReference
-    private Set<Post> environments;
+    private Set<Post> posts;
 
 
     public Environment(EnvironmentCreateDTO data, Raspberry raspberry){

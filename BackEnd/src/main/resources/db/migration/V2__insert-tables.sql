@@ -75,10 +75,10 @@ INSERT INTO area (area_code, area_name, operative) VALUES
 -- Inserir novos Raspberry Pi
 INSERT INTO raspberry (id_raspberry, id_building, id_area, operative) VALUES
 ('RP001', 1, 1, 1),
-('RP002', 2, 2, 0),
+('RP002', 2, 2, 1),
 ('RP003', 3, 3, 1),
 ('RP004', 4, 4, 1),
-('RP005', 5, 5, 0);
+('RP005', 5, 5, 1);
 
 -- Inserir novos ambientes
 INSERT INTO environment (environment_name, id_raspberry, operative) VALUES
@@ -94,59 +94,7 @@ INSERT INTO post (post, operative) VALUES
 ('Mesa 2', 1),
 ('Mesa 3', 1),
 ('Mesa 4', 1),
-('Mesa 5', 1),
-('Mesa 6', 1),
-('Mesa 7', 1),
-('Mesa 8', 1),
-('Mesa 9', 1),
-('Mesa 10', 1),
-('Mesa 11', 1),
-('Mesa.12', 1),
-('Mesa 13', 1),
-('Mesa 14', 1),
-('Mesa 15', 1),
-('Mesa 16', 1),
-('Mesa 17', 1),
-('Mesa 18', 1),
-('Mesa 19', 1),
-('Mesa 20', 1);
-
--- Inserir novos postos
-INSERT INTO post (post, operative) VALUES
-('Mesa 21', 1),
-('Mesa 22', 1),
-('Mesa 23', 1),
-('Mesa 24', 1),
-('Mesa 25', 1),
-('Mesa 26', 1),
-('Mesa 27', 1),
-('Mesa 28', 1),
-('Mesa 29', 1),
-('Mesa 30', 1),
-('Mesa 31', 1),
-('Mesa 32', 1),
-('Mesa 33', 1),
-('Mesa 34', 1),
-('Mesa 35', 1),
-('Mesa 36', 1),
-('Mesa 37', 1),
-('Mesa 38', 1),
-('Mesa 39', 1);
-
--- Inserir novos postos
-INSERT INTO post (post, operative) VALUES
-('Mesa 40', 1),
-('Mesa 41', 1),
-('Mesa 42', 1),
-('Mesa 43', 1),
-('Mesa 44', 1),
-('Mesa 45', 1),
-('Mesa 46', 1),
-('Mesa 47', 1),
-('Mesa 48', 1),
-('Mesa 49', 1),
-('Mesa 50', 1),
-('Mesa do Instrutor', 1);
+('Mesa 5', 1);
 
 -- Inserir novas localizações
 INSERT INTO location (id_post, id_environment) VALUES

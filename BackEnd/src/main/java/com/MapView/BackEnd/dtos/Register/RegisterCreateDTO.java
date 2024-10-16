@@ -1,16 +1,7 @@
 package com.MapView.BackEnd.dtos.Register;
 
-import com.MapView.BackEnd.dtos.Equipment.EquipmentCreateDTO;
-import com.MapView.BackEnd.dtos.EquipmentResponsible.EquipmentResponsibleCreateDTO;
-import com.MapView.BackEnd.dtos.Location.LocationCreateDTO;
-import com.MapView.BackEnd.dtos.Responsible.ResponsibleCrateDTO;
-import com.MapView.BackEnd.enums.EnumCourse;
 import com.MapView.BackEnd.enums.EnumModelEquipment;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.*;
 
-import java.time.LocalDate;
 import java.util.List;
 
 public record RegisterCreateDTO (
@@ -28,11 +19,11 @@ public record RegisterCreateDTO (
         String observation,
         //location Equipment
         Long id_building,
-        Long id_eviroment,
+        Long id_environment,
         String post,
         String id_owner,
         String costCenter_name,
-        List<ResponsibleResgisterDTO> dataResposible
+        List<ResponsibleResgisterDTO> dataResponsible
 
 ) {
 }
