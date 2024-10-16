@@ -3,7 +3,7 @@ package com.MapView.BackEnd.serviceImp;
 import com.MapView.BackEnd.entities.Equipment;
 import com.MapView.BackEnd.entities.Location;
 import com.MapView.BackEnd.repository.EquipmentRepository;
-import com.MapView.BackEnd.service.ReportService;
+import com.MapView.BackEnd.service.ExcelService;
 import jakarta.servlet.ServletOutputStream;
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.poi.hssf.usermodel.*;
@@ -12,15 +12,17 @@ import org.apache.poi.ss.util.CellRangeAddress;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 @Service
-public class ReportServiceImp implements ReportService {
+public class ExcelServiceImp implements ExcelService {
 
     private final EquipmentRepository equipmentRepository;
 
-    public ReportServiceImp(EquipmentRepository equipmentRepository) {
+    public ExcelServiceImp(EquipmentRepository equipmentRepository) {
         this.equipmentRepository = equipmentRepository;
     }
 
@@ -51,7 +53,9 @@ public class ReportServiceImp implements ReportService {
 
         // Criar a linha do cabeçalho
         HSSFRow rowDate = sheet.createRow(0);
-        rowDate.createCell(0).setCellValue(String.format("Data do último download: %s", new java.util.Date())); // data atual
+        SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy");
+        String formattedDate = sdf.format(new Date());
+        rowDate.createCell(0).setCellValue(String.format("Data do último download: %s", formattedDate));
 
         // Criar a linha do cabeçalho
         HSSFRow row = sheet.createRow(2);
@@ -100,10 +104,10 @@ public class ReportServiceImp implements ReportService {
         // Definir largura fixa para cada coluna
         sheet.setColumnWidth(0, 6000);
         sheet.setColumnWidth(1, 4000);
-        sheet.setColumnWidth(2, 4000);
+        sheet.setColumnWidth(2, 6000);
         sheet.setColumnWidth(3, 4000);
         sheet.setColumnWidth(4, 6000);
-        sheet.setColumnWidth(5, 5000);
+        sheet.setColumnWidth(5, 6000);
         sheet.setColumnWidth(6, 5000);
         sheet.setColumnWidth(7, 9000);
 
