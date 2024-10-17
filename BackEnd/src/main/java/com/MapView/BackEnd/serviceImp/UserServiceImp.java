@@ -11,6 +11,7 @@ import com.MapView.BackEnd.service.UserService;
 import com.MapView.BackEnd.entities.Users;
 import com.MapView.BackEnd.enums.RoleUser;
 import com.MapView.BackEnd.infra.Exception.NotFoundException;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -42,6 +43,12 @@ public class UserServiceIpm implements UserService {
     @Override
     public List<UserDetailsDTO> getAllUser() {
         return this.userRepository.findByOperativeTrue().stream().map(UserDetailsDTO::new).toList();
+    }
+
+    public UserDetailsDTO loggedUser(Jwt jwt){
+        String userName = jwt.getClaimAsString("email");
+        user
+
     }
 
 
