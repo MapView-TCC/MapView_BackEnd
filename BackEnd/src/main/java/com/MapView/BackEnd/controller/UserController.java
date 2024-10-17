@@ -1,6 +1,7 @@
 package com.MapView.BackEnd.controller;
 
 import com.MapView.BackEnd.dtos.User.UserCreateDTO;
+import com.MapView.BackEnd.dtos.UserRole.UserRoleDetailsDTO;
 import com.MapView.BackEnd.serviceImp.UserServiceIpm;
 import com.MapView.BackEnd.dtos.User.UserDetailsDTO;
 import com.MapView.BackEnd.dtos.User.UserUpdateDTO;
@@ -72,8 +73,8 @@ public class UserController {
         return ResponseEntity.ok(users);
     }
     @GetMapping("/loggedUser")
-    public ResponseEntity<UserDetailsDTO> loggedUser(@AuthenticationPrincipal Jwt jwt){
-        UserDetailsDTO loggedUser = userServiceIpm.loggedUser(jwt);
+    public ResponseEntity<UserRoleDetailsDTO> loggedUser(@AuthenticationPrincipal Jwt jwt){
+        UserRoleDetailsDTO loggedUser = userServiceIpm.loggedUserRole(jwt);
         return ResponseEntity.ok(loggedUser);
 
     }

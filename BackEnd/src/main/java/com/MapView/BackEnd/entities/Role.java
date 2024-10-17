@@ -1,6 +1,6 @@
 package com.MapView.BackEnd.entities;
 
-import com.MapView.BackEnd.dtos.RoleCreateDTO;
+import com.MapView.BackEnd.dtos.Role.RoleCreateDTO;
 import jakarta.persistence.*;
 import lombok.*;
 

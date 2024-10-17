@@ -1,4 +1,4 @@
-package com.MapView.BackEnd.dtos;
+package com.MapView.BackEnd.dtos.Role;
 
 import com.MapView.BackEnd.entities.Role;
 

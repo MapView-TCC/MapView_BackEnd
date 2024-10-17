@@ -1,7 +1,7 @@
 package com.MapView.BackEnd.serviceImp;
 
-import com.MapView.BackEnd.dtos.RoleCreateDTO;
-import com.MapView.BackEnd.dtos.RoleDetailsDTO;
+import com.MapView.BackEnd.dtos.Role.RoleCreateDTO;
+import com.MapView.BackEnd.dtos.Role.RoleDetailsDTO;
 import com.MapView.BackEnd.entities.Role;
 import com.MapView.BackEnd.infra.Exception.NotFoundException;
 import com.MapView.BackEnd.repository.RoleRespository;
@@ -27,4 +27,13 @@ public class RoleServiceImp implements RoleService {
     public RoleDetailsDTO getRole(Long role_id) {
         return new RoleDetailsDTO(this.roleRespository.findById(role_id).orElseThrow(() -> new NotFoundException("Role note found")));
     }
+
+    @Override
+    public Role getRolebyName(String name){
+        Role role =roleRespository.findByName(name).orElseThrow(() -> new NotFoundException("Role not found"));
+
+        return role;
+    }
+
+
 }
