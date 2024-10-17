@@ -11,11 +11,12 @@ public record EquipmentSearchBarDTO(String id_equipment,
                                      String location,
                                      String owner,
                                      String environment,
+                                     String currentEnvironment,
                                      List<String> responsibles ) {
 
-    public EquipmentSearchBarDTO(Equipment equipment, Location location, MainOwner mainOwner, Environment environment, List<String> responsibles){
+    public EquipmentSearchBarDTO(Equipment equipment, Location location, MainOwner mainOwner, Environment environment, String currentEnvironment, List<String> responsibles){
         this(equipment.getIdEquipment(), equipment.getName_equipment(), location.getPost().getPost(),
-                mainOwner.getId_owner(), environment.getEnvironment_name(), responsibles);
+                mainOwner.getId_owner(), environment.getEnvironment_name(), currentEnvironment, responsibles);
     }
 
 }
