@@ -106,8 +106,8 @@ public class EquipmentController {
             @ApiResponse(responseCode = "200", description = "Filtered equipment list successfully retrieved")
     })
     @GetMapping("/search")
-    public ResponseEntity<List<EquipmentDetailsDTO>> getEquipmentSearch(int page, int itens, String searchTerm){
-        var list = equipmentServiceImp.getEquipmentSearchBar(page, itens, searchTerm);
+    public ResponseEntity<List<EquipmentSearchBarDTO>> getEquipmentSearch(String searchTerm){
+        var list = equipmentServiceImp.getEquipmentSearchBar(searchTerm);
         return ResponseEntity.ok(list);
     }
 
