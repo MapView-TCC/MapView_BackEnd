@@ -52,8 +52,8 @@ public class TrackingHistoryServiceImp implements TrackingHistoryService {
     }
 
     @Override
-    public List<TrackingHistoryDetailsDTO> getAllTrackingHistory(int page, int itens) {
-        return trackingHistoryRepository.findAll(PageRequest.of(page, itens)).stream().map(TrackingHistoryDetailsDTO::new).toList();
+    public List<TrackingHistoryDetailsDTO> getAllTrackingHistory() {
+        return trackingHistoryRepository.findAll().stream().map(TrackingHistoryDetailsDTO::new).toList();
 
 
     }

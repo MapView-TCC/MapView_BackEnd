@@ -69,12 +69,8 @@ public class TrackingHistoryController {
             @ApiResponse(responseCode = "200", description = "Tracking history records retrieved successfully")
     })
     @GetMapping
-    public ResponseEntity<List<TrackingHistoryDetailsDTO>> getAllTracking(
-            @Parameter(description = "Page number for pagination", required = true)
-            @RequestParam int page,
-            @Parameter(description = "Number of items per page", required = true)
-            @RequestParam int itens) {
-        var list = trackingHistoryServiceImp.getAllTrackingHistory(page, itens);
+    public ResponseEntity<List<TrackingHistoryDetailsDTO>> getAllTracking() {
+        var list = trackingHistoryServiceImp.getAllTrackingHistory();
         return ResponseEntity.ok(list);
     }
 
