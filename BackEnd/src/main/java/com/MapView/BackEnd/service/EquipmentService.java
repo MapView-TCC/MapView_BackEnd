@@ -2,6 +2,7 @@ package com.MapView.BackEnd.service;
 
 import com.MapView.BackEnd.dtos.Equipment.EquipmentCreateDTO;
 import com.MapView.BackEnd.dtos.Equipment.EquipmentDetailsDTO;
+import com.MapView.BackEnd.dtos.Equipment.EquipmentSearchBarDTO;
 import com.MapView.BackEnd.dtos.Equipment.EquipmentUpdateDTO;
 import com.MapView.BackEnd.entities.Location;
 import com.MapView.BackEnd.entities.MainOwner;
@@ -21,5 +22,5 @@ public interface EquipmentService {
 
     // tentativa dos filtros
     List<EquipmentDetailsDTO> getEquipmentInventory(int page, int itens, String validity,String environment, String id_owner, String id_equipment, String name_equipment, String post);
-    List<EquipmentDetailsDTO> getEquipmentSearchBar(int page, int itens, String searchTerm);
+    List<EquipmentSearchBarDTO> getEquipmentSearchBar(String searchTerm);
 }

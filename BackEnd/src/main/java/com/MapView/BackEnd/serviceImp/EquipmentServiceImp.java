@@ -1,6 +1,8 @@
 package com.MapView.BackEnd.serviceImp;
 
+import com.MapView.BackEnd.dtos.Equipment.EquipmentSearchBarDTO;
 import com.MapView.BackEnd.dtos.Equipment.EquipmentUpdateDTO;
+import com.MapView.BackEnd.dtos.EquipmentResponsible.EquipmentResponsibleDetailsDTO;
 import com.MapView.BackEnd.entities.*;
 import com.MapView.BackEnd.enums.EnumAction;
 import com.MapView.BackEnd.enums.EnumColors;
@@ -327,8 +329,9 @@ public class EquipmentServiceImp implements EquipmentService {
     }
 
     @Override
-    public List<EquipmentDetailsDTO> getEquipmentSearchBar(int page, int itens,
-                                                            String searchTerm) {
+    public List<EquipmentSearchBarDTO> getEquipmentSearchBar(String searchTerm) {
+
+        EquipmentResponsible equipmentResponsible = new EquipmentResponsible();
 
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Equipment> criteriaQuery = criteriaBuilder.createQuery(Equipment.class);
@@ -362,11 +365,23 @@ public class EquipmentServiceImp implements EquipmentService {
         criteriaQuery.where(criteriaBuilder.and(predicate.toArray(new Predicate[0])));
 
         TypedQuery<Equipment> query = entityManager.createQuery(criteriaQuery);
-        query.setFirstResult(page * itens); // Paginação
-        query.setMaxResults(itens);
 
         return query.getResultList().stream()
-                .map(EquipmentDetailsDTO::new)
+                .map(equipment -> {
+                    // Obtém a localização e o proprietário
+                    Location location = equipment.getLocation();
+                    MainOwner mainOwner = equipment.getOwner();
+                    Environment environment = equipment.getLocation().getEnvironment();
+
+                    // Cria a lista de responsáveis
+                    List<String> responsibles = equipment.getEquipmentResponsibles()
+                            .stream()
+                            .map(responsible -> responsible.getId_responsible().getResponsible()) // Altere para o campo desejado do responsável
+                            .collect(Collectors.toList());
+
+                    // Cria o DTO do equipamento
+                    return new EquipmentSearchBarDTO(equipment, location, mainOwner,environment, responsibles);
+                })
                 .collect(Collectors.toList());
     }
 
