@@ -348,7 +348,7 @@ public class EquipmentServiceImp implements EquipmentService {
 
         // Se houver um termo de pesquisa, aplique-o a múltiplos campos
         if (searchTerm != null && !searchTerm.trim().isEmpty()) {
-            String searchLower = searchTerm.toLowerCase();
+            String searchLower = searchTerm.toLowerCase(); // para que ele aceite letras maiuscula e minusculas
             Predicate searchPredicate = criteriaBuilder.or(
                     criteriaBuilder.like(criteriaBuilder.lower(equipmentRoot.get("name_equipment")), "%" + searchLower + "%"),
                     criteriaBuilder.like(criteriaBuilder.lower(mainOwnerJoin.get("id_owner")), "%" + searchLower + "%"),
@@ -371,18 +371,63 @@ public class EquipmentServiceImp implements EquipmentService {
                     // Obtém a localização e o proprietário
                     Location location = equipment.getLocation();
                     MainOwner mainOwner = equipment.getOwner();
-                    Environment environment = equipment.getLocation().getEnvironment();
+                    Environment environment = location.getEnvironment();
+
+                    // Busca o ambiente errado
+                    String wrongEnvironment = getLastWrongEnvironment(equipment);
 
                     // Cria a lista de responsáveis
                     List<String> responsibles = equipment.getEquipmentResponsibles()
                             .stream()
-                            .map(responsible -> responsible.getId_responsible().getResponsible()) // Altere para o campo desejado do responsável
+                            .map(responsible -> responsible.getId_responsible().getResponsible())
                             .collect(Collectors.toList());
 
                     // Cria o DTO do equipamento
-                    return new EquipmentSearchBarDTO(equipment, location, mainOwner,environment, responsibles);
+                    return new EquipmentSearchBarDTO(equipment, location, mainOwner, environment, wrongEnvironment, responsibles);
                 })
                 .collect(Collectors.toList());
+    }
+
+    // Método auxiliar para buscar o último ambiente errado
+    private String getLastWrongEnvironment(Equipment equipment) {
+        // Obtém o CriteriaBuilder para construir a consulta.
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        // Cria uma nova consulta para a entidade TrackingHistory.
+        CriteriaQuery<TrackingHistory> historyQuery = cb.createQuery(TrackingHistory.class);
+        // Define a raiz da consulta como a entidade TrackingHistory.
+        Root<TrackingHistory> historyRoot = historyQuery.from(TrackingHistory.class);
+
+        // Constrói a consulta:
+        // Seleciona a raiz da consulta.
+        historyQuery.select(historyRoot)
+                // Filtra os resultados para incluir apenas os históricos do equipamento específico.
+                .where(cb.equal(historyRoot.get("equipment"), equipment))
+                // Ordena os resultados pela data em ordem decrescente.
+                .orderBy(cb.desc(historyRoot.get("datetime")));
+
+        return entityManager.createQuery(historyQuery)
+                .setMaxResults(1) // Limita os resultados a apenas um.
+                .getResultStream()
+                // Tenta encontrar o primeiro resultado da consulta.
+                .findFirst()
+                // Se encontrado, verifica se o ambiente associado não é nulo e retorna seu nome.
+                .map(history -> history.getEnvironment() != null ? history.getEnvironment().getEnvironment_name() : null)
+                .orElse(null); // Se nenhum resultado for encontrado, retorna null.
+    }
+
+    private TrackingHistory getLatestTrackingHistoryForEquipment(String equipmentId) {
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<TrackingHistory> criteriaQuery = criteriaBuilder.createQuery(TrackingHistory.class);
+        Root<TrackingHistory> trackingRoot = criteriaQuery.from(TrackingHistory.class);
+
+        criteriaQuery.select(trackingRoot)
+                .where(criteriaBuilder.equal(trackingRoot.get("id_equipment"), equipmentId))
+                .orderBy(criteriaBuilder.desc(trackingRoot.get("dateTime"))); // Ordena pelo timestamp
+
+        TypedQuery<TrackingHistory> query = entityManager.createQuery(criteriaQuery);
+        query.setMaxResults(1); // Limita a um único resultado
+
+        return query.getResultList().isEmpty() ? null : query.getSingleResult();
     }
 
 
