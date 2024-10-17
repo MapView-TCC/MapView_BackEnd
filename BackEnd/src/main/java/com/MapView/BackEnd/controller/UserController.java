@@ -12,6 +12,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -68,6 +70,11 @@ public class UserController {
     public ResponseEntity<List<UserDetailsDTO>> getAllUser() {
         var users = userServiceIpm.getAllUser();
         return ResponseEntity.ok(users);
+    }
+
+    public ResponseEntity<UserDetailsDTO> loggedUser(@AuthenticationPrincipal Jwt jwt){
+        UserDetailsDTO loggedUser = userServiceIpm.loggedUser(jwt);
+
     }
 
     @Operation(summary = "Activate a user", description = "Activate a user by their ID.")
