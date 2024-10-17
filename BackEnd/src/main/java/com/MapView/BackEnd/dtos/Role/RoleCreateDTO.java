@@ -1,4 +1,4 @@
-package com.MapView.BackEnd.dtos;
+package com.MapView.BackEnd.dtos.Role;
 
 public record RoleCreateDTO(String role_name) {
 }

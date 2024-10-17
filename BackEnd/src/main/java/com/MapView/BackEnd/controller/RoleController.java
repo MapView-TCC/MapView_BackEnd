@@ -1,8 +1,7 @@
 package com.MapView.BackEnd.controller;
 
-import com.MapView.BackEnd.dtos.Area.AreaDetailsDTO;
-import com.MapView.BackEnd.dtos.RoleCreateDTO;
-import com.MapView.BackEnd.dtos.RoleDetailsDTO;
+import com.MapView.BackEnd.dtos.Role.RoleCreateDTO;
+import com.MapView.BackEnd.dtos.Role.RoleDetailsDTO;
 import com.MapView.BackEnd.serviceImp.RoleServiceImp;
 import jakarta.transaction.Transactional;
 import org.springframework.http.ResponseEntity;

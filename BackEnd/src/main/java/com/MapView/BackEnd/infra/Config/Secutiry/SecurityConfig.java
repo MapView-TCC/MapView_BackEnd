@@ -1,11 +1,10 @@
-package com.MapView.BackEnd.infra;
+package com.MapView.BackEnd.infra.Config.Secutiry;
 
 import com.MapView.BackEnd.dtos.User.UserDetailsDTO;
 import com.MapView.BackEnd.entities.UserRole;
 import com.MapView.BackEnd.entities.Users;
-import com.MapView.BackEnd.infra.Exception.NotFoundException;
 import com.MapView.BackEnd.repository.UserRepository;
-import com.MapView.BackEnd.repository.UserRoleRepository;
+import com.MapView.BackEnd.serviceImp.UserRoleServiceImp;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -19,7 +18,6 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 import org.springframework.security.web.SecurityFilterChain;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Configuration
 @EnableWebSecurity
@@ -27,11 +25,11 @@ import java.util.stream.Collectors;
 public class SecurityConfig {
 
     private final UserRepository userRepository;
-    private final UserRoleRepository userRoleRepository;
+    private final UserRoleServiceImp userRoleServiceImp;
 
-    public SecurityConfig(UserRepository userRepository, UserRoleRepository userRoleRepository) {
+    public SecurityConfig(UserRepository userRepository, UserRoleServiceImp userRoleServiceImp) {
         this.userRepository = userRepository;
-        this.userRoleRepository = userRoleRepository;
+        this.userRoleServiceImp = userRoleServiceImp;
     }
 
     @Bean
@@ -67,21 +65,21 @@ public class SecurityConfig {
 
     // Busca as roles do banco de dados e as converte em GrantedAuthority
     private Collection<GrantedAuthority> getRolesFromDatabase(String email) {
-        // Busca o usuário pelo email
+
         Users user = userRepository.findByEmail(email).orElse(null);
-        System.out.println("Usuário encontrado: " +new UserDetailsDTO(user));  // Apenas para depuração
+        System.out.println("Usuário encontrado: " +new UserDetailsDTO(user));
 
-        // Verifica se o usuário foi encontrado
+
         if (user != null) {
-            // Busca as roles do usuário usando o UserRoleRepository
-            UserRole userRoles = userRoleRepository.findByUser(user).orElseThrow(() -> new NotFoundException("User not found"));
 
-            // Cria a lista de authorities com base nas roles
+            UserRole userRoles = userRoleServiceImp.getUserRoleByUser(user);
+
+
             System.out.println(userRoles.getRole().getName());
             return List.of(new SimpleGrantedAuthority(userRoles.getRole().getName()));
         }
 
-        // Retorna uma lista vazia se o usuário não tiver roles ou não for encontrado
+
         return List.of();
     }
 }
