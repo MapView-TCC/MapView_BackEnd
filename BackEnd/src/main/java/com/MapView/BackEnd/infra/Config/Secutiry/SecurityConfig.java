@@ -5,8 +5,10 @@ import com.MapView.BackEnd.entities.UserRole;
 import com.MapView.BackEnd.entities.Users;
 import com.MapView.BackEnd.repository.UserRepository;
 import com.MapView.BackEnd.serviceImp.UserRoleServiceImp;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -26,6 +28,8 @@ public class SecurityConfig {
 
     private final UserRepository userRepository;
     private final UserRoleServiceImp userRoleServiceImp;
+    @Value("${myapp.jwtUri}")
+    private String jwkSetUri;
 
     public SecurityConfig(UserRepository userRepository, UserRoleServiceImp userRoleServiceImp) {
         this.userRepository = userRepository;
@@ -35,7 +39,6 @@ public class SecurityConfig {
     @Bean
     public JwtDecoder jwtDecoder() {
         // URL do JWKs fornecida pelo Azure para validação do token
-        String jwkSetUri = "https://login.microsoftonline.com/0ae51e19-07c8-4e4b-bb6d-648ee58410f4/discovery/v2.0/keys";
         return NimbusJwtDecoder.withJwkSetUri(jwkSetUri).build();
     }
 
@@ -43,7 +46,19 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/resource/**").hasRole("APRENDIZ")  // Verifica a role APRENDIZ
+                        .requestMatchers("/resource/**").authenticated()  // Verifica a role APRENDIZ
+                        .requestMatchers(HttpMethod.POST,"/api/v1/equipment/**").hasAnyRole("MEIO_OFICIAL","INSTRUTOR","GESTOR")
+                        .requestMatchers(HttpMethod.PUT, "/api/v1/equipment/**").hasAnyRole("MEIO_OFICIAL","INSTRUTOR","GESTOR")
+                        .requestMatchers("/api/v1/notifications").authenticated()
+                        .requestMatchers(HttpMethod.GET,"/api/v1/trackingHistory/**").authenticated()
+                        .requestMatchers(HttpMethod.POST,"/api/v1/trackingHistory").hasAnyRole("MEIO_OFICIAL","INSTRUTOR","GESTOR")
+                        .requestMatchers(HttpMethod.GET,"/api/v1/environment/**").authenticated()
+                        .requestMatchers(HttpMethod.PUT,"/api/v1/environment").hasAnyRole("MEIO_OFICIAL","INSTRUTOR","GESTOR")
+                        .requestMatchers(HttpMethod.POST,"/api/v1/environment").hasAnyRole("MEIO_OFICIAL","INSTRUTOR","GESTOR")
+                        .requestMatchers(HttpMethod.GET,"/api/v1/excel").hasAnyRole("MEIO_OFICIAL","INSTRUTOR","GESTOR")
+                        .requestMatchers(HttpMethod.POST,"/api/v1/register").hasAnyRole("MEIO_OFICIAL","INSTRUTOR","GESTOR")
+                        .requestMatchers(HttpMethod.POST,"/api/v1/registerEnvironment").hasAnyRole("MEIO_OFICIAL","INSTRUTOR","GESTOR")
+                        .requestMatchers(HttpMethod.GET, "/api/v1/equipment/search").authenticated()
                         .requestMatchers("/ap1/v1/user/**").authenticated()   // Protege a rota /user
                         .anyRequest().authenticated())// Permite outras requisições
                 .oauth2ResourceServer(oauth2 -> oauth2
@@ -73,7 +88,6 @@ public class SecurityConfig {
         if (user != null) {
 
             UserRole userRoles = userRoleServiceImp.getUserRoleByUser(user);
-
 
             System.out.println(userRoles.getRole().getName());
             return List.of(new SimpleGrantedAuthority(userRoles.getRole().getName()));
