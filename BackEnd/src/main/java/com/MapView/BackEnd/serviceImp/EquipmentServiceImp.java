@@ -45,6 +45,7 @@ public class EquipmentServiceImp implements EquipmentService {
     private final EquipmentResponsibleRepository equipmentResponsibleRepository;
 
 
+
     public EquipmentServiceImp(EntityManager entityManager, EquipmentRepository equipmentRepository, LocationRepository locationRepository, MainOwnerRepository mainOwnerRepository,
                                UserLogRepository userLogRepository, UserRepository userRepository, FileStorageProperties fileStorageProperties, TrackingHistoryRepository trackingHistoryRepository, ImageRepository imageRepository, EquipmentResponsibleRepository equipmentResponsibleRepository) {
         this.entityManager = entityManager;
