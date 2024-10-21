@@ -1,15 +1,15 @@
 package com.MapView.BackEnd.serviceImp;
 
-import com.MapView.BackEnd.dtos.Equipment.EquipmentSearchBarDTO;
-import com.MapView.BackEnd.dtos.Equipment.EquipmentUpdateDTO;
+import com.MapView.BackEnd.dtos.Equipment.*;
+import com.MapView.BackEnd.dtos.EquipmentResponsible.EquipmentResponsibleDetailsDTO;
 import com.MapView.BackEnd.entities.*;
 import com.MapView.BackEnd.enums.EnumAction;
+import com.MapView.BackEnd.enums.EnumColors;
 import com.MapView.BackEnd.enums.EnumModelEquipment;
+import com.MapView.BackEnd.enums.EnumTrackingAction;
 import com.MapView.BackEnd.infra.Exception.*;
 import com.MapView.BackEnd.repository.*;
 import com.MapView.BackEnd.service.EquipmentService;
-import com.MapView.BackEnd.dtos.Equipment.EquipmentCreateDTO;
-import com.MapView.BackEnd.dtos.Equipment.EquipmentDetailsDTO;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
@@ -42,12 +42,11 @@ public class EquipmentServiceImp implements EquipmentService {
     private final Path fileStorageLocation;
     private final TrackingHistoryRepository trackingHistoryRepository;
     private final ImageRepository imageRepository;
-    private final EquipmentResponsibleRepository equipmentResponsibleRepository;
 
 
 
     public EquipmentServiceImp(EntityManager entityManager, EquipmentRepository equipmentRepository, LocationRepository locationRepository, MainOwnerRepository mainOwnerRepository,
-                               UserLogRepository userLogRepository, UserRepository userRepository, FileStorageProperties fileStorageProperties, TrackingHistoryRepository trackingHistoryRepository, ImageRepository imageRepository, EquipmentResponsibleRepository equipmentResponsibleRepository) {
+                               UserLogRepository userLogRepository, UserRepository userRepository, FileStorageProperties fileStorageProperties, TrackingHistoryRepository trackingHistoryRepository, ImageRepository imageRepository) {
         this.entityManager = entityManager;
         this.equipmentRepository = equipmentRepository;
         this.locationRepository = locationRepository;
@@ -57,7 +56,6 @@ public class EquipmentServiceImp implements EquipmentService {
         this.fileStorageLocation = Paths.get(fileStorageProperties.getUploadDir()).toAbsolutePath().normalize();
         this.trackingHistoryRepository = trackingHistoryRepository;
         this.imageRepository = imageRepository;
-        this.equipmentResponsibleRepository = equipmentResponsibleRepository;
     }
 
 
@@ -118,7 +116,15 @@ public class EquipmentServiceImp implements EquipmentService {
                 var userLog = new UserLog(users, "Equipment", data.id_equipment(), "Create new Equipment", EnumAction.CREATE);
                 userLogRepository.save(userLog);
 
+                // Salvar o tracking history
+                Environment environment = location.getEnvironment();
 
+                TrackingHistory trackingHistory = new TrackingHistory(
+                        equipment, environment, equipment.getRfid(), EnumTrackingAction.ENTER,
+                        EnumColors.GREEN
+                );
+
+                trackingHistoryRepository.save(trackingHistory);
 
                 System.out.println(new EquipmentDetailsDTO(equipment));
                 System.out.println("Post: Equipment ");
@@ -134,7 +140,7 @@ public class EquipmentServiceImp implements EquipmentService {
 
     @Override
     public EquipmentDetailsDTO updateEquipment(String id_equipment, EquipmentUpdateDTO data, Long userLog_id) {
-        Equipment equipment = equipmentRepository.findById(id_equipment)
+        var equipment = equipmentRepository.findById(id_equipment)
                 .orElseThrow(() -> new NotFoundException("Id not found"));
 
         if(!equipment.isOperative()){
@@ -158,7 +164,7 @@ public class EquipmentServiceImp implements EquipmentService {
             equipment.setName_equipment(data.name_equipment());
             userlog.setField(userlog.getField()+" ,"+"equipment name to: " + data.name_equipment());
         }
-        if (data.rfid() != null) {
+        if (data.rfid() != 0) {
             equipment.setRfid(data.rfid());
             userlog.setField(userlog.getField()+" ,"+"equipment rfid to: " + data.rfid());
         }
@@ -219,7 +225,6 @@ public class EquipmentServiceImp implements EquipmentService {
 
         userLogRepository.save(userlog);
 
-
         // Salva a entidade atualizada no repositório
         equipmentRepository.save(equipment);
         return new EquipmentDetailsDTO(equipment);
@@ -253,74 +258,6 @@ public class EquipmentServiceImp implements EquipmentService {
         var userLog = new UserLog(users, "Equipment", id_equipment, "Operative", "Inactivated area", EnumAction.UPDATE);
         equipmentRepository.save(equipment);
         userLogRepository.save(userLog);
-    }
-
-    @Override
-    public List<EquipmentDetailsDTO> getEquipmentInventory(int page, int itens, String validity,
-                                                            String environment, String id_owner, String id_equipment,
-                                                            String name_equipment, String post) {
-
-
-
-
-        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<Equipment> criteriaQuery = criteriaBuilder.createQuery(Equipment.class);
-
-        //Select From Equipment
-        Root<Equipment> equipmentRoot = criteriaQuery.from(Equipment.class);
-
-        //Inner Join
-        Join<Equipment,MainOwner> mainOwnerJoin = equipmentRoot.join("owner");
-        Join<Equipment, Location> locationJoin = equipmentRoot.join("location");
-        Join<Equipment, Location> locationPostJoin = equipmentRoot.join("location");
-        Join<Location, Post> PostJoin = locationPostJoin.join("post");
-        Join<Location, Environment> environmentJoin = locationJoin.join("environment");
-
-
-        List<Predicate> predicate = new ArrayList<>();
-        System.out.println(predicate);
-
-        //WHERE
-
-        if(validity != null){
-            LocalDate validDate = getStartDateFromQuarter(validity);
-            predicate.add(criteriaBuilder.equal(equipmentRoot.get("validity"), validDate));
-        }
-        if (environment != null){
-            predicate.add(criteriaBuilder.like(environmentJoin.get("environment_name"), "%"+environment.toLowerCase()+"%"));
-        }
-        if (id_owner != null){
-            predicate.add(criteriaBuilder.like(mainOwnerJoin.get("id_owner"), "%"+id_owner.toLowerCase()+"%"));
-        }
-        if (id_equipment != null){
-            predicate.add(criteriaBuilder.like(equipmentRoot.get("idEquipment"), "%" + id_equipment.toLowerCase() + "%"));
-        }
-        if (name_equipment != null){
-            predicate.add(criteriaBuilder.like(equipmentRoot.get("name_equipment"), "%" + name_equipment.toLowerCase() + "%"));
-        }
-        if (post != null){
-            predicate.add(criteriaBuilder.like(PostJoin.get("post"), "%" + post.toLowerCase() + "%"));
-        }
-
-        if (validity != null && environment != null && id_equipment != null && name_equipment != null && post != null){
-            return equipmentRepository.findAllByOperativeTrue(PageRequest.of(page, itens))
-                    .stream()
-                    .map(EquipmentDetailsDTO::new)
-                    .collect(Collectors.toList());
-        }
-
-        predicate.add(criteriaBuilder.equal(equipmentRoot.get("operative"), true));
-
-        criteriaQuery.where(criteriaBuilder.and(predicate.toArray(new Predicate[0])));
-        
-        TypedQuery<Equipment> query = entityManager.createQuery((criteriaQuery));
-
-
-
-
-        return query.getResultList().stream()
-                .map(EquipmentDetailsDTO::new)
-                .collect(Collectors.toList());
     }
 
     @Override
@@ -361,66 +298,27 @@ public class EquipmentServiceImp implements EquipmentService {
 
         TypedQuery<Equipment> query = entityManager.createQuery(criteriaQuery);
 
-        List<String> eq = query.getResultList().stream().map(Equipment::getIdEquipment).toList();
-        List<EquipmentSearchBarDTO> locationEquips = new ArrayList<>();
-        List<String> responsible = new ArrayList<>();
+        return query.getResultList().stream()
+                .map(equipment -> {
+                    // Obtém a localização e o proprietário
+                    Location location = equipment.getLocation();
+                    MainOwner mainOwner = equipment.getOwner();
+                    Environment environment = location.getEnvironment();
 
-        for (String equip: eq){
-            Equipment equipment = equipmentRepository.findById(equip).orElse(null);
-            TrackingHistory realLocation  = trackingHistoryRepository.findTop1ByEquipmentOrderByIdDesc(equipment);
-            System.out.println("============="+realLocation.getId()+"=====================");
+                    // Busca o último histórico de rastreamento
+                    TrackingHistory trackingHistory = trackingHistoryRepository.findTop1ByEquipmentOrderByIdDesc(equipment);
+                    String wrong = trackingHistory != null ? trackingHistory.getEnvironment().getEnvironment_name() : null;
 
-            List<EquipmentResponsible> nomes = equipmentResponsibleRepository.findByIdEquipment(equipment);
-            for (EquipmentResponsible n: nomes){
-                responsible.add(n.getId_responsible().getResponsible());
-            }
-            locationEquips.add(new EquipmentSearchBarDTO(equipment,realLocation,responsible));
+                    // Cria a lista de responsáveis
+                    List<String> responsibles = equipment.getEquipmentResponsibles()
+                            .stream()
+                            .map(responsible -> responsible.getId_responsible().getResponsible())
+                            .collect(Collectors.toList());
 
-        }
-
-        return locationEquips;
-    }
-
-    // Método auxiliar para buscar o último ambiente errado
-    private String getLastWrongEnvironment(Equipment equipment) {
-        // Obtém o CriteriaBuilder para construir a consulta.
-        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-        // Cria uma nova consulta para a entidade TrackingHistory.
-        CriteriaQuery<TrackingHistory> historyQuery = cb.createQuery(TrackingHistory.class);
-        // Define a raiz da consulta como a entidade TrackingHistory.
-        Root<TrackingHistory> historyRoot = historyQuery.from(TrackingHistory.class);
-
-        // Constrói a consulta:
-        // Seleciona a raiz da consulta.
-        historyQuery.select(historyRoot)
-                // Filtra os resultados para incluir apenas os históricos do equipamento específico.
-                .where(cb.equal(historyRoot.get("equipment"), equipment))
-                // Ordena os resultados pela data em ordem decrescente.
-                .orderBy(cb.desc(historyRoot.get("datetime")));
-
-        return entityManager.createQuery(historyQuery)
-                .setMaxResults(1) // Limita os resultados a apenas um.
-                .getResultStream()
-                // Tenta encontrar o primeiro resultado da consulta.
-                .findFirst()
-                // Se encontrado, verifica se o ambiente associado não é nulo e retorna seu nome.
-                .map(history -> history.getEnvironment() != null ? history.getEnvironment().getEnvironment_name() : null)
-                .orElse(null); // Se nenhum resultado for encontrado, retorna null.
-    }
-
-    private TrackingHistory getLatestTrackingHistoryForEquipment(String equipmentId) {
-        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<TrackingHistory> criteriaQuery = criteriaBuilder.createQuery(TrackingHistory.class);
-        Root<TrackingHistory> trackingRoot = criteriaQuery.from(TrackingHistory.class);
-
-        criteriaQuery.select(trackingRoot)
-                .where(criteriaBuilder.equal(trackingRoot.get("id_equipment"), equipmentId))
-                .orderBy(criteriaBuilder.desc(trackingRoot.get("dateTime"))); // Ordena pelo timestamp
-
-        TypedQuery<TrackingHistory> query = entityManager.createQuery(criteriaQuery);
-        query.setMaxResults(1); // Limita a um único resultado
-
-        return query.getResultList().isEmpty() ? null : query.getSingleResult();
+                    // Cria o DTO do equipamento
+                    return new EquipmentSearchBarDTO(equipment, location, mainOwner, environment, wrong, responsibles);
+                })
+                .collect(Collectors.toList());
     }
 
 

@@ -15,4 +15,5 @@ public interface EquipmentResponsibleService {
     void activateEquipmentResponsible(Long id_equip_resp); // put
     void inactivateEquipmentResponsible(Long id_equip_resp); // put
 
+    List<EquipmentResponsibleDetailsDTO> getEquipmentInventory(int page, int itens, String validity, String environment, String id_owner, String id_equipment, String name_equipment, String post);
 }

@@ -7,6 +7,7 @@ import com.MapView.BackEnd.dtos.EquipmentResponsible.EquipmentResponsibleDetails
 import com.MapView.BackEnd.dtos.EquipmentResponsible.EquipmentResponsibleUpdateDTO;
 import io.swagger.v3.oas.annotations.ExternalDocumentation;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -114,6 +115,25 @@ public class EquipmentResponsibleController {
     public ResponseEntity<Void> active(@PathVariable Long id_equip_resp){
         equipmentResponsibleServiceImp.activateEquipmentResponsible(id_equip_resp);
         return ResponseEntity.ok().build();
+    }
+
+
+    @Operation(summary = "Filter equipment", description = "Retrieve equipment with optional filters for validity, environment, owner, etc.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Filtered equipment list successfully retrieved")
+    })
+    @GetMapping("/filter")
+    public ResponseEntity<List<EquipmentResponsibleDetailsDTO>> getAllEquipmentFilter(
+            @Parameter(description = "Page number for pagination", required = false) @RequestParam(defaultValue = "0") int page,
+            @Parameter(description = "Number of items per page", required = false) @RequestParam(defaultValue = "200") int itens,
+            @RequestParam(required = false) String validity,
+            @RequestParam(required = false) String enviroment,
+            @RequestParam(required = false) String id_owner,
+            @RequestParam(required = false) String id_equipment,
+            @RequestParam(required = false) String name_equipment,
+            @RequestParam(required = false) String post) {
+        var list = equipmentResponsibleServiceImp.getEquipmentInventory(page, itens, validity, enviroment, id_owner, id_equipment, name_equipment, post);
+        return ResponseEntity.ok(list);
     }
 }
 
