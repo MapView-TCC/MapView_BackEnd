@@ -47,6 +47,7 @@ public class EquipmentServiceImp implements EquipmentService {
     private final ImageRepository imageRepository;
 
 
+
     public EquipmentServiceImp(EntityManager entityManager, EquipmentRepository equipmentRepository, LocationRepository locationRepository, MainOwnerRepository mainOwnerRepository,
                                UserLogRepository userLogRepository, UserRepository userRepository, FileStorageProperties fileStorageProperties, TrackingHistoryRepository trackingHistoryRepository, ImageRepository imageRepository) {
         this.entityManager = entityManager;
@@ -414,22 +415,6 @@ public class EquipmentServiceImp implements EquipmentService {
                 .map(history -> history.getEnvironment() != null ? history.getEnvironment().getEnvironment_name() : null)
                 .orElse(null); // Se nenhum resultado for encontrado, retorna null.
     }
-
-    private TrackingHistory getLatestTrackingHistoryForEquipment(String equipmentId) {
-        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<TrackingHistory> criteriaQuery = criteriaBuilder.createQuery(TrackingHistory.class);
-        Root<TrackingHistory> trackingRoot = criteriaQuery.from(TrackingHistory.class);
-
-        criteriaQuery.select(trackingRoot)
-                .where(criteriaBuilder.equal(trackingRoot.get("id_equipment"), equipmentId))
-                .orderBy(criteriaBuilder.desc(trackingRoot.get("dateTime"))); // Ordena pelo timestamp
-
-        TypedQuery<TrackingHistory> query = entityManager.createQuery(criteriaQuery);
-        query.setMaxResults(1); // Limita a um único resultado
-
-        return query.getResultList().isEmpty() ? null : query.getSingleResult();
-    }
-
 
     public ResponseEntity<String> uploadImageEquipament (MultipartFile file,EnumModelEquipment equipType){
         String fileName = StringUtils.cleanPath(file.getOriginalFilename());

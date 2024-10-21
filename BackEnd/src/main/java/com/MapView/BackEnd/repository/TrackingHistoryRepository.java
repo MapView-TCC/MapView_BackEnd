@@ -15,4 +15,5 @@ public interface TrackingHistoryRepository extends JpaRepository<TrackingHistory
     Page<TrackingHistory> findAll(Pageable pageable);
     TrackingHistory findTopByEquipmentOrderByDatetimeDesc(Equipment id_equipment); // Método para buscar o último histórico de rastreamento por equipamento.
     List<TrackingHistory> findByEnvironment(Environment environment);
+
 }
