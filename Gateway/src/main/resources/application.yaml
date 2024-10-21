@@ -38,6 +38,164 @@ spring:
             - AddResponseHeader=Access-Control-Allow-Methods, GET, POST, PUT, DELETE, OPTIONS
             - AddResponseHeader=Access-Control-Allow-Headers, Authorization, Content-Type
 
+        - id: register
+          uri: http://localhost:9000
+          predicates:
+            - Path=/api/v1/register
+          filters:
+            - name: TokenRelay
+
+            - AddResponseHeader=Access-Control-Allow-Origin, http://localhost:5173
+            - AddResponseHeader=Access-Control-Allow-Methods, GET, POST, PUT, DELETE, OPTIONS
+            - AddResponseHeader=Access-Control-Allow-Headers, Authorization, Content-Type
+
+        - id: register_environment
+          uri: http://localhost:9000
+          predicates:
+            - Path=/api/v1/register/environment
+          filters:
+            - name: TokenRelay
+
+            - AddResponseHeader=Access-Control-Allow-Origin, http://localhost:5173
+            - AddResponseHeader=Access-Control-Allow-Methods, GET, POST, PUT, DELETE, OPTIONS
+            - AddResponseHeader=Access-Control-Allow-Headers, Authorization, Content-Type
+
+        - id: trackingHistory
+          uri: http://localhost:9000/api/v1/trackingHistory
+          predicates:
+            - Path=/api/v1/trackingHistory
+
+          filters:
+            - name: TokenRelay
+            - AddResponseHeader=Access-Control-Allow-Origin, http://localhost:5173
+            - AddResponseHeader=Access-Control-Allow-Methods, GET, POST, DELETE
+            - AddResponseHeader=Access-Control-Allow-Headers, Authorization, Content-Type
+
+        - id: getAllTrackingFilter
+          uri: http://localhost:9000/api/v1/trackingHistory/filter
+          predicates:
+            - Path=/api/v1/trackingHistory/filter
+          filters:
+            - name: TokenRelay
+            - AddResponseHeader=Access-Control-Allow-Origin, http://localhost:5173
+            - AddResponseHeader=Access-Control-Allow-Methods, GET
+            - AddResponseHeader=Access-Control-Allow-Headers, Authorization, Content-Type
+
+        - id: getWrongLocationEquipment
+          uri: http://localhost:9000/api/v1/trackingHistory/wronglocations
+          predicates:
+            - Path=/api/v1/trackingHistory/wronglocations
+          filters:
+            - name: TokenRelay
+            - AddResponseHeader=Access-Control-Allow-Origin, http://localhost:5173
+            - AddResponseHeader=Access-Control-Allow-Methods, GET
+            - AddResponseHeader=Access-Control-Allow-Headers, Authorization, Content-Type
+
+        - id: notification
+          uri: http://localhost:9000
+          predicates:
+            - Path=/api/v1/notification/**
+          filters:
+            - name: TokenRelay
+
+            - AddResponseHeader=Access-Control-Allow-Origin, http://localhost:5173
+            - AddResponseHeader=Access-Control-Allow-Methods, GET
+            - AddResponseHeader=Access-Control-Allow-Headers, Authorization, Content-Type
+
+        - id: excel
+          uri: http://localhost:9000
+          predicates:
+            - Path=/api/v1/excel/**
+          filters:
+            - name: TokenRelay
+
+            - AddResponseHeader=Access-Control-Allow-Origin, http://localhost:5173
+            - AddResponseHeader=Access-Control-Allow-Methods, GET, OPTIONS
+            - AddResponseHeader=Access-Control-Allow-Headers, Authorization, Content-Type
+
+        - id: excel-report
+          uri: http://localhost:9000
+          predicates:
+            - Path=/api/v1/excel/**
+          filters:
+            - name: TokenRelay
+
+            - AddResponseHeader=Access-Control-Allow-Origin, http://localhost:5173
+            - AddResponseHeader=Access-Control-Allow-Methods, GET, POST, DELETE, OPTIONS
+            - AddResponseHeader=Access-Control-Allow-Headers, Authorization, Content-Type
+
+        - id: create-equipment
+          uri: http://localhost:9000
+          predicates:
+            - Path=/api/v1/equipment
+          filters:
+            - name: TokenRelay
+            - AddResponseHeader=Access-Control-Allow-Origin, http://localhost:5173
+            - AddResponseHeader=Access-Control-Allow-Methods, GET, POST, DELETE, OPTIONS
+            - AddResponseHeader=Access-Control-Allow-Headers, Authorization, Content-Type
+
+        - id: upload-image
+          uri: http://localhost:9000
+          predicates:
+            - Path=/api/v1/equipment/image
+          filters:
+            - name: TokenRelay
+            - AddResponseHeader=Access-Control-Allow-Origin, http://localhost:5173
+            - AddResponseHeader=Access-Control-Allow-Methods, POST
+            - AddResponseHeader=Access-Control-Allow-Headers, Authorization, Content-Type
+
+        - id: get-equipment-filter
+          uri: http://localhost:9000
+          predicates:
+            - Path=/api/v1/equipment/filter
+          filters:
+            - name: TokenRelay
+            - AddResponseHeader=Access-Control-Allow-Origin, http://localhost:5173
+            - AddResponseHeader=Access-Control-Allow-Methods, GET, POST, DELETE, OPTIONS
+            - AddResponseHeader=Access-Control-Allow-Headers, Authorization, Content-Type
+
+        - id: get-equipment-search
+          uri: http://localhost:9000
+          predicates:
+            - Path=/api/v1/equipment/search
+          filters:
+            - name: TokenRelay
+            - AddResponseHeader=Access-Control-Allow-Origin, http://localhost:5173
+            - AddResponseHeader=Access-Control-Allow-Methods, GET, POST, DELETE, OPTIONS
+            - AddResponseHeader=Access-Control-Allow-Headers, Authorization, Content-Type
+
+        - id: get-equipment-by-id
+          uri: http://localhost:9000
+          predicates:
+            - Path=/api/v1/equipment/{id_equipment}
+          filters:
+            - name: TokenRelay
+            - AddResponseHeader=Access-Control-Allow-Origin, http://localhost:5173
+            - AddResponseHeader=Access-Control-Allow-Methods, GET, POST, DELETE, OPTIONS
+            - AddResponseHeader=Access-Control-Allow-Headers, Authorization, Content-Type
+
+        - id: inactivate-equipment
+          uri: http://localhost:9000
+          predicates:
+            - Path=/api/v1/equipment/inactivate/{id_equipment}
+          filters:
+            - name: TokenRelay
+            - AddResponseHeader=Access-Control-Allow-Origin, http://localhost:5173
+            - AddResponseHeader=Access-Control-Allow-Methods, GET, POST, DELETE, OPTIONS
+            - AddResponseHeader=Access-Control-Allow-Headers, Authorization, Content-Type
+
+        - id: activate-equipment
+          uri: http://localhost:9000
+          predicates:
+            - Path=/api/v1/equipment/active/{id_equipment}
+          filters:
+            - name: TokenRelay
+            - AddResponseHeader=Access-Control-Allow-Origin, http://localhost:5173
+            - AddResponseHeader=Access-Control-Allow-Methods, GET, POST, DELETE, OPTIONS
+            - AddResponseHeader=Access-Control-Allow-Headers, Authorization, Content-Type
+
+
+
 logging:
   level:
     org.springframework.security: DEBUG

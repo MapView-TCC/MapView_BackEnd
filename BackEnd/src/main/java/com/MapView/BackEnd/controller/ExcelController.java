@@ -37,7 +37,12 @@ public class ExcelController {
         String headerValue = "attachment;filename=equipment.xls";
 
         response.setHeader(headerKey, headerValue);
+        try{
+            excelServiceImp.generateExcel(response);
+        }catch (Exception e){
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            throw new IOException("Error generating Excel report: " + e.getMessage());
 
-        excelServiceImp.generateExcel(response);
+        }
     }
 }
