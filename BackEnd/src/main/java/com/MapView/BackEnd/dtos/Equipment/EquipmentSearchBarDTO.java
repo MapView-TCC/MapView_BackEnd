@@ -8,15 +8,26 @@ import java.util.List;
 
 public record EquipmentSearchBarDTO(String id_equipment,
                                      String name_equipment,
-                                     String location,
-                                     String owner,
-                                     String environment,
-                                     String currentEnvironment,
-                                     List<String> responsibles ) {
+                                    String location,
+                                    String owner,
+                                    String environment,
+                                    String currentEnvironment,
+                                    List<String> responsible
 
-    public EquipmentSearchBarDTO(Equipment equipment, Location location, MainOwner mainOwner, Environment environment, String currentEnvironment, List<String> responsibles){
-        this(equipment.getIdEquipment(), equipment.getName_equipment(), location.getPost().getPost(),
-                mainOwner.getId_owner(), environment.getEnvironment_name(), currentEnvironment, responsibles);
+
+
+                                    ) {
+
+    public EquipmentSearchBarDTO(Equipment equipment,TrackingHistory location,List<String> responsibles){
+        this(equipment.getIdEquipment(),
+                equipment.getName_equipment(),
+                equipment.getLocation().getPost().getPost(),
+                equipment.getOwner().getId_owner(),
+                equipment.getLocation().getEnvironment().getEnvironment_name(),
+                location.getEnvironment().getEnvironment_name()
+
+                ,responsibles);
     }
+
 
 }

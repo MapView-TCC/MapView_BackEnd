@@ -129,7 +129,6 @@ CREATE TABLE IF NOT EXISTS tracking_history (
     id_tracking INT AUTO_INCREMENT PRIMARY KEY,
     id_equipment VARCHAR(255),
     id_environment INT,
-    rfid BIGINT,
     action ENUM ('ENTER','OUT'),
     warning ENUM ('RED', 'YELLOW', 'GREEN'),
     dateTime TIMESTAMP,

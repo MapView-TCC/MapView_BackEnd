@@ -2,12 +2,9 @@ package com.MapView.BackEnd.serviceImp;
 
 import com.MapView.BackEnd.dtos.Equipment.EquipmentSearchBarDTO;
 import com.MapView.BackEnd.dtos.Equipment.EquipmentUpdateDTO;
-import com.MapView.BackEnd.dtos.EquipmentResponsible.EquipmentResponsibleDetailsDTO;
 import com.MapView.BackEnd.entities.*;
 import com.MapView.BackEnd.enums.EnumAction;
-import com.MapView.BackEnd.enums.EnumColors;
 import com.MapView.BackEnd.enums.EnumModelEquipment;
-import com.MapView.BackEnd.enums.EnumTrackingAction;
 import com.MapView.BackEnd.infra.Exception.*;
 import com.MapView.BackEnd.repository.*;
 import com.MapView.BackEnd.service.EquipmentService;
@@ -45,10 +42,11 @@ public class EquipmentServiceImp implements EquipmentService {
     private final Path fileStorageLocation;
     private final TrackingHistoryRepository trackingHistoryRepository;
     private final ImageRepository imageRepository;
+    private final EquipmentResponsibleRepository equipmentResponsibleRepository;
 
 
     public EquipmentServiceImp(EntityManager entityManager, EquipmentRepository equipmentRepository, LocationRepository locationRepository, MainOwnerRepository mainOwnerRepository,
-                               UserLogRepository userLogRepository, UserRepository userRepository, FileStorageProperties fileStorageProperties, TrackingHistoryRepository trackingHistoryRepository, ImageRepository imageRepository) {
+                               UserLogRepository userLogRepository, UserRepository userRepository, FileStorageProperties fileStorageProperties, TrackingHistoryRepository trackingHistoryRepository, ImageRepository imageRepository, EquipmentResponsibleRepository equipmentResponsibleRepository) {
         this.entityManager = entityManager;
         this.equipmentRepository = equipmentRepository;
         this.locationRepository = locationRepository;
@@ -58,6 +56,7 @@ public class EquipmentServiceImp implements EquipmentService {
         this.fileStorageLocation = Paths.get(fileStorageProperties.getUploadDir()).toAbsolutePath().normalize();
         this.trackingHistoryRepository = trackingHistoryRepository;
         this.imageRepository = imageRepository;
+        this.equipmentResponsibleRepository = equipmentResponsibleRepository;
     }
 
 
@@ -118,15 +117,7 @@ public class EquipmentServiceImp implements EquipmentService {
                 var userLog = new UserLog(users, "Equipment", data.id_equipment(), "Create new Equipment", EnumAction.CREATE);
                 userLogRepository.save(userLog);
 
-                // Salvar o tracking history
-                Environment environment = location.getEnvironment();
 
-                TrackingHistory trackingHistory = new TrackingHistory(
-                        equipment, environment, equipment.getRfid(), EnumTrackingAction.ENTER,
-                        EnumColors.GREEN
-                );
-
-                trackingHistoryRepository.save(trackingHistory);
 
                 System.out.println(new EquipmentDetailsDTO(equipment));
                 System.out.println("Post: Equipment ");
@@ -323,6 +314,8 @@ public class EquipmentServiceImp implements EquipmentService {
         TypedQuery<Equipment> query = entityManager.createQuery((criteriaQuery));
 
 
+
+
         return query.getResultList().stream()
                 .map(EquipmentDetailsDTO::new)
                 .collect(Collectors.toList());
@@ -366,26 +359,24 @@ public class EquipmentServiceImp implements EquipmentService {
 
         TypedQuery<Equipment> query = entityManager.createQuery(criteriaQuery);
 
-        return query.getResultList().stream()
-                .map(equipment -> {
-                    // Obtém a localização e o proprietário
-                    Location location = equipment.getLocation();
-                    MainOwner mainOwner = equipment.getOwner();
-                    Environment environment = location.getEnvironment();
+        List<String> eq = query.getResultList().stream().map(Equipment::getIdEquipment).toList();
+        List<EquipmentSearchBarDTO> locationEquips = new ArrayList<>();
+        List<String> responsible = new ArrayList<>();
 
-                    // Busca o ambiente errado
-                    String wrongEnvironment = getLastWrongEnvironment(equipment);
+        for (String equip: eq){
+            Equipment equipment = equipmentRepository.findById(equip).orElse(null);
+            TrackingHistory realLocation  = trackingHistoryRepository.findTop1ByEquipmentOrderByIdDesc(equipment);
+            System.out.println("============="+realLocation.getId()+"=====================");
 
-                    // Cria a lista de responsáveis
-                    List<String> responsibles = equipment.getEquipmentResponsibles()
-                            .stream()
-                            .map(responsible -> responsible.getId_responsible().getResponsible())
-                            .collect(Collectors.toList());
+            List<EquipmentResponsible> nomes = equipmentResponsibleRepository.findByIdEquipment(equipment);
+            for (EquipmentResponsible n: nomes){
+                responsible.add(n.getId_responsible().getResponsible());
+            }
+            locationEquips.add(new EquipmentSearchBarDTO(equipment,realLocation,responsible));
 
-                    // Cria o DTO do equipamento
-                    return new EquipmentSearchBarDTO(equipment, location, mainOwner, environment, wrongEnvironment, responsibles);
-                })
-                .collect(Collectors.toList());
+        }
+
+        return locationEquips;
     }
 
     // Método auxiliar para buscar o último ambiente errado

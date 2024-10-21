@@ -158,12 +158,12 @@ INSERT INTO equipment (id_equipment, name_equipment, rfid, type, model, validity
 ('E046', 'Laptop 2', 123456789012378, 'Laptop', 'NOTEBOOK_STANDARD', '2024-12-31', 'Admin', 'Needs repair', 1, 'FRG7CC',  0);
 
 -- Inserir novos registros de histórico de rastreio
-INSERT INTO tracking_history (id_equipment, id_environment, rfid, action, warning, dateTime) VALUES
-('E001', 1, 123456789012345, 'ENTER', 'GREEN', '2024-09-10 08:00:00'),
-('E002', 2, 234567890123456, 'OUT', 'YELLOW', '2024-09-10 09:00:00'),
-('E003', 3, 345678901234567, 'ENTER', 'RED', '2024-09-10 10:00:00'),
-('E004', 4, 456789012345678, 'OUT', 'GREEN', '2024-09-10 11:00:00'),
-('E005', 5, 567890123456789, 'ENTER', 'YELLOW', '2024-09-10 12:00:00');
+INSERT INTO tracking_history (id_equipment, id_environment,  action, warning, dateTime) VALUES
+('E001', 1,  'ENTER', 'GREEN', '2024-09-10 08:00:00'),
+('E002', 2,  'OUT', 'YELLOW', '2024-09-10 09:00:00'),
+('E003', 3,  'ENTER', 'RED', '2024-09-10 10:00:00'),
+('E004', 4,  'OUT', 'GREEN', '2024-09-10 11:00:00'),
+('E005', 5, 'ENTER', 'YELLOW', '2024-09-10 12:00:00');
 
 -- Inserir novos responsáveis
 INSERT INTO responsible (responsible_name, edv, id_classes, id_user, operative) VALUES
