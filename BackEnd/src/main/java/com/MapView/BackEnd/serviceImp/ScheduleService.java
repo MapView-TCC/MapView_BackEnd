@@ -85,7 +85,7 @@ public class ScheduleService {
 
             if (trackingDateTime.isBefore(oneYearAgo)) { // Verifica se a data é anterior a um ano
                 //System.out.println("Deletando tracking history com o ID: " + trackingHistory.getId_tracking());
-                trackingHistoryServiceImp.deleteTrackingById(trackingHistory.getId_tracking()); // Deleta
+                trackingHistoryServiceImp.deleteTrackingById(trackingHistory.getId()); // Deleta
             }
         }
     }

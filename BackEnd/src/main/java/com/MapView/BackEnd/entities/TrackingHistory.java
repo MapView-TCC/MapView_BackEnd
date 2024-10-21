@@ -17,7 +17,8 @@ import java.time.Instant;
 public class TrackingHistory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id_tracking;
+    @Column(name = "id_tracking")
+    private Long id;
 
     @CreationTimestamp
     // Use aspas invertidas para forçar o nome exato

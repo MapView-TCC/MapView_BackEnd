@@ -374,8 +374,9 @@ public class EquipmentServiceImp implements EquipmentService {
                     MainOwner mainOwner = equipment.getOwner();
                     Environment environment = location.getEnvironment();
 
-                    // Busca o ambiente errado
-                    String wrongEnvironment = getLastWrongEnvironment(equipment);
+                    // Busca o último histórico de rastreamento
+                    TrackingHistory trackingHistory = trackingHistoryRepository.findTop1ByEquipmentOrderByIdDesc(equipment);
+                    String wrong = trackingHistory != null ? trackingHistory.getEnvironment().getEnvironment_name() : null;
 
                     // Cria a lista de responsáveis
                     List<String> responsibles = equipment.getEquipmentResponsibles()
@@ -384,37 +385,11 @@ public class EquipmentServiceImp implements EquipmentService {
                             .collect(Collectors.toList());
 
                     // Cria o DTO do equipamento
-                    return new EquipmentSearchBarDTO(equipment, location, mainOwner, environment, wrongEnvironment, responsibles);
+                    return new EquipmentSearchBarDTO(equipment, location, mainOwner, environment, wrong, responsibles);
                 })
                 .collect(Collectors.toList());
     }
 
-    // Método auxiliar para buscar o último ambiente errado
-    private String getLastWrongEnvironment(Equipment equipment) {
-        // Obtém o CriteriaBuilder para construir a consulta.
-        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-        // Cria uma nova consulta para a entidade TrackingHistory.
-        CriteriaQuery<TrackingHistory> historyQuery = cb.createQuery(TrackingHistory.class);
-        // Define a raiz da consulta como a entidade TrackingHistory.
-        Root<TrackingHistory> historyRoot = historyQuery.from(TrackingHistory.class);
-
-        // Constrói a consulta:
-        // Seleciona a raiz da consulta.
-        historyQuery.select(historyRoot)
-                // Filtra os resultados para incluir apenas os históricos do equipamento específico.
-                .where(cb.equal(historyRoot.get("equipment"), equipment))
-                // Ordena os resultados pela data em ordem decrescente.
-                .orderBy(cb.desc(historyRoot.get("datetime")));
-
-        return entityManager.createQuery(historyQuery)
-                .setMaxResults(1) // Limita os resultados a apenas um.
-                .getResultStream()
-                // Tenta encontrar o primeiro resultado da consulta.
-                .findFirst()
-                // Se encontrado, verifica se o ambiente associado não é nulo e retorna seu nome.
-                .map(history -> history.getEnvironment() != null ? history.getEnvironment().getEnvironment_name() : null)
-                .orElse(null); // Se nenhum resultado for encontrado, retorna null.
-    }
 
     public ResponseEntity<String> uploadImageEquipament (MultipartFile file,EnumModelEquipment equipType){
         String fileName = StringUtils.cleanPath(file.getOriginalFilename());

@@ -16,7 +16,7 @@ public record TrackingHistoryDetailsDTO(Long id_tracking,
                                         EnumColors warning) {
 
     public TrackingHistoryDetailsDTO(TrackingHistory trackingHistory) {
-        this(trackingHistory.getId_tracking(), trackingHistory.getDatetime(), trackingHistory.getEquipment(),
+        this(trackingHistory.getId(), trackingHistory.getDatetime(), trackingHistory.getEquipment(),
                 trackingHistory.getEnvironment(), trackingHistory.getAction(),
                 trackingHistory.getWarning());
     }
