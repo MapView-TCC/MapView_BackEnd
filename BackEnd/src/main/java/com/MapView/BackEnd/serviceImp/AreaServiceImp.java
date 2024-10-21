@@ -78,35 +78,29 @@ public class AreaServiceImp implements AreaService {
     }
 
     @Override
-    public AreaDetailsDTO updateArea(Long id_area, AreaUpdateDTO data,Long userLog_id) {
+    public AreaDetailsDTO updateArea(Long id_area, AreaUpdateDTO data, Long userLog_id) {
         var area = areaRepository.findById(id_area).orElseThrow(() -> new NotFoundException("Id not found"));
-        if(!area.isOperative()){
+        if (!area.isOperative()) {
             throw new OperativeFalseException("The inactive area cannot be updated.");
         }
 
         Users user = this.userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("Id not found"));
-        var userlog = new UserLog(user,"Area", id_area.toString(),null,"Infos update",EnumAction.UPDATE);
+        var userlog = new UserLog(user, "Area", id_area.toString(), null, "Infos update", EnumAction.UPDATE);
 
-
-        if (data.area_name() != null){
-            if(data.area_code().isBlank()){
-                throw new BlankErrorException("Area name cannot not be blank");
-            }
+        if (data.area_name() != null && !data.area_name().isBlank()) {
             area.setArea_name(data.area_name());
-            userlog.setField("area_name to: "+ data.area_name());
+            userlog.setField("area_name to: " + data.area_name());
         }
-        if (data.area_code() != null){
-            if(data.area_code().isBlank()){
-                throw new BlankErrorException("Area code cannot not be blank");
-            }
+        if (data.area_code() != null && !data.area_code().isBlank()) {
             area.setArea_code(data.area_code());
-            userlog.setField(userlog.getField()+" ,"+"area_code to: "+data.area_code());
+            userlog.setField(userlog.getField() + ", area_code to: " + data.area_code());
         }
-        areaRepository.save(area);
 
+        areaRepository.save(area);
         userLogRepository.save(userlog);
         return new AreaDetailsDTO(area);
     }
+
 
     @Override
     public void activateArea(Long id_area,Long userLog_id) {
