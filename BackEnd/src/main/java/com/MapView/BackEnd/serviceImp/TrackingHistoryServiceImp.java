@@ -74,12 +74,10 @@ public class TrackingHistoryServiceImp implements TrackingHistoryService {
         // isEmpty -> Retorna um valor booliano que indica se um variável foi inicializado.
         if (equipment.isEmpty()) {
             // Salva um novo histórico de rastreamento com o RFID e ambiente encontrado, marcando como 'RED'.
-            Equipment emptyequip = new Equipment(dados.rfid());
-            TrackingHistory trackingHistory = trackingHistoryRepository.save(new TrackingHistory(emptyequip, local_tracking,EnumTrackingAction.ENTER, EnumColors.RED));
 
-//            // Cria um novo equipamento com um UUID aleatório e o RFID fornecido.
-//            Equipment emptyEquipment = new Equipment(UUID.randomUUID().toString().substring(0,8), dados.rfid());
-//            equipmentRepository.save(emptyEquipment);  // Salva o novo equipamento no repositório.
+            // Cria um novo equipamento com um UUID aleatório e o RFID fornecido.
+            Equipment emptyEquipment = equipmentRepository.save(new Equipment(UUID.randomUUID().toString().substring(0,8), dados.rfid()));
+            TrackingHistory trackingHistory = trackingHistoryRepository.save(new TrackingHistory(emptyEquipment, local_tracking,EnumTrackingAction.ENTER, EnumColors.RED));
 
             trackingHistoryRepository.save(trackingHistory);  // Salva o histórico de rastreamento.
 

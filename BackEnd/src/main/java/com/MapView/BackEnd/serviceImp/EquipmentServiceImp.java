@@ -134,7 +134,7 @@ public class EquipmentServiceImp implements EquipmentService {
 
     @Override
     public EquipmentDetailsDTO updateEquipment(String id_equipment, EquipmentUpdateDTO data, Long userLog_id) {
-        var equipment = equipmentRepository.findById(id_equipment)
+        Equipment equipment = equipmentRepository.findById(id_equipment)
                 .orElseThrow(() -> new NotFoundException("Id not found"));
 
         if(!equipment.isOperative()){
@@ -158,7 +158,7 @@ public class EquipmentServiceImp implements EquipmentService {
             equipment.setName_equipment(data.name_equipment());
             userlog.setField(userlog.getField()+" ,"+"equipment name to: " + data.name_equipment());
         }
-        if (data.rfid() != 0) {
+        if (data.rfid() != null) {
             equipment.setRfid(data.rfid());
             userlog.setField(userlog.getField()+" ,"+"equipment rfid to: " + data.rfid());
         }
@@ -218,6 +218,7 @@ public class EquipmentServiceImp implements EquipmentService {
         }
 
         userLogRepository.save(userlog);
+
 
         // Salva a entidade atualizada no repositório
         equipmentRepository.save(equipment);
