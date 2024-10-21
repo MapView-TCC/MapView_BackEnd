@@ -120,7 +120,7 @@ public class EquipmentServiceImp implements EquipmentService {
                 Environment environment = location.getEnvironment();
 
                 TrackingHistory trackingHistory = new TrackingHistory(
-                        equipment, environment, equipment.getRfid(), EnumTrackingAction.ENTER,
+                        equipment, environment, EnumTrackingAction.ENTER,
                         EnumColors.GREEN
                 );
 
