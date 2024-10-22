@@ -7,17 +7,16 @@ import com.MapView.BackEnd.service.UserService;
 import com.MapView.BackEnd.entities.Users;
 import com.MapView.BackEnd.enums.RoleUser;
 import com.MapView.BackEnd.infra.Exception.NotFoundException;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 @Service
 
-public class UserServiceIpm implements UserService {
+public class UserServiceImp implements UserService {
 
     private final UserRepository userRepository;
 
-    public UserServiceIpm(UserRepository userRepository) {
+    public UserServiceImp(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 

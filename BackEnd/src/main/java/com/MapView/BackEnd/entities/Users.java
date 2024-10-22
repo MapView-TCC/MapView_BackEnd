@@ -31,7 +31,7 @@ public class Users {
 
     public Users(String email){
         this.email = email;
-        this.role = RoleUser.ADMIN;
+        this.role = RoleUser.USER;
         this.operative = true;
     }
 

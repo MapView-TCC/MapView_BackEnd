@@ -1,7 +1,7 @@
 package com.MapView.BackEnd.controller;
 
 import com.MapView.BackEnd.dtos.User.UserCreateDTO;
-import com.MapView.BackEnd.serviceImp.UserServiceIpm;
+import com.MapView.BackEnd.serviceImp.UserServiceImp;
 import com.MapView.BackEnd.dtos.User.UserDetailsDTO;
 import com.MapView.BackEnd.dtos.User.UserUpdateDTO;
 import io.swagger.v3.oas.annotations.Operation;
@@ -22,10 +22,10 @@ import java.util.List;
 @Tag(name = "User", description = "Operations related to user management")
 public class UserController {
 
-    private final UserServiceIpm userServiceIpm;
+    private final UserServiceImp userServiceImp;
 
-    public UserController(UserServiceIpm userServiceIpm) {
-        this.userServiceIpm = userServiceIpm;
+    public UserController(UserServiceImp userServiceImp) {
+        this.userServiceImp = userServiceImp;
     }
 
     @Operation(summary = "Create a new user", description = "Endpoint to create a new user in the system.")
@@ -41,7 +41,7 @@ public class UserController {
             @Parameter(description = "Data transfer object for creating a new user", required = true)
             @RequestBody @Valid UserCreateDTO data,
             UriComponentsBuilder uriBuilder) {
-        UserDetailsDTO user = userServiceIpm.createUser(data);
+        UserDetailsDTO user = userServiceImp.createUser(data);
         var uri = uriBuilder.path("/user/{id}").buildAndExpand(user.id()).toUri();
         return ResponseEntity.created(uri).body(new UserDetailsDTO(user.id(), user.email(), user.roleUser()));
     }
@@ -58,7 +58,7 @@ public class UserController {
             @RequestBody @Valid UserUpdateDTO data,
             @Parameter(description = "User ID to update", required = true)
             @PathVariable("user_id") Long user_id) {
-        userServiceIpm.setPrivilege(user_id, data.roleUser());
+        userServiceImp.setPrivilege(user_id, data.roleUser());
         return ResponseEntity.ok().build();
     }
 
@@ -71,7 +71,7 @@ public class UserController {
     public ResponseEntity<UserDetailsDTO> getUser(
             @Parameter(description = "User ID to retrieve", required = true)
             @PathVariable("user_id") Long user_id) {
-        var user = userServiceIpm.getUser(user_id);
+        var user = userServiceImp.getUser(user_id);
         return ResponseEntity.ok(user);
     }
 
@@ -81,7 +81,7 @@ public class UserController {
     })
     @GetMapping
     public ResponseEntity<List<UserDetailsDTO>> getAllUser() {
-        var users = userServiceIpm.getAllUser();
+        var users = userServiceImp.getAllUser();
         return ResponseEntity.ok(users);
     }
 
@@ -95,7 +95,7 @@ public class UserController {
     public ResponseEntity<Void> activeUser(
             @Parameter(description = "User ID to activate", required = true)
             @PathVariable("user_id") Long user_id) {
-        userServiceIpm.activeUser(user_id);
+        userServiceImp.activeUser(user_id);
         return ResponseEntity.ok().build();
     }
 
@@ -109,7 +109,7 @@ public class UserController {
     public ResponseEntity<Void> inactiveUser(
             @Parameter(description = "User ID to inactivate", required = true)
             @PathVariable("user_id") Long user_id) {
-        userServiceIpm.inactivateUser(user_id);
+        userServiceImp.inactivateUser(user_id);
         return ResponseEntity.ok().build();
     }
 }
