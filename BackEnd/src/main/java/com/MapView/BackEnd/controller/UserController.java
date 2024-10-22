@@ -2,7 +2,7 @@ package com.MapView.BackEnd.controller;
 
 import com.MapView.BackEnd.dtos.User.UserCreateDTO;
 import com.MapView.BackEnd.dtos.UserRole.UserRoleDetailsDTO;
-import com.MapView.BackEnd.serviceImp.UserServiceIpm;
+import com.MapView.BackEnd.serviceImp.UserServiceImp;
 import com.MapView.BackEnd.dtos.User.UserDetailsDTO;
 import com.MapView.BackEnd.dtos.User.UserUpdateDTO;
 import io.swagger.v3.oas.annotations.Operation;
@@ -25,9 +25,9 @@ import java.util.List;
 @Tag(name = "User", description = "Operations related to user management")
 public class UserController {
 
-    private final UserServiceIpm userServiceIpm;
+    private final UserServiceImp userServiceIpm;
 
-    public UserController(UserServiceIpm userServiceIpm) {
+    public UserController(UserServiceImp userServiceIpm) {
         this.userServiceIpm = userServiceIpm;
     }
 

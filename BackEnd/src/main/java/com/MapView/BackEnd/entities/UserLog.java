@@ -43,6 +43,15 @@ public class UserLog {
         this.datetime = LocalDateTime.now();
         this.action = action;
     }
+    public UserLog (Users user, String altered_table, String id_altered, String field, String description){
+        this.user = user;
+        this.altered_table = altered_table;
+        this.id_altered = id_altered;
+        this.field = field;
+        this.description = description;
+        this.datetime = LocalDateTime.now();
+        this.action = null;
+    }
     public UserLog (Users user, String altered_table, String id_altered, String description,EnumAction action){
         this.user = user;
         this.altered_table = altered_table;
@@ -60,4 +69,5 @@ public class UserLog {
         this.datetime = LocalDateTime.now();
         this.action = action;
     }
+
 }

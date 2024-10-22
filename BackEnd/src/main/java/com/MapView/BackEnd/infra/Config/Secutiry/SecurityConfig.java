@@ -4,6 +4,7 @@ import com.MapView.BackEnd.dtos.User.UserDetailsDTO;
 import com.MapView.BackEnd.entities.UserRole;
 import com.MapView.BackEnd.entities.Users;
 import com.MapView.BackEnd.repository.UserRepository;
+import com.MapView.BackEnd.serviceImp.UserLogServiceImp;
 import com.MapView.BackEnd.serviceImp.UserRoleServiceImp;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -17,6 +18,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
+import org.springframework.security.oauth2.server.resource.web.authentication.BearerTokenAuthenticationFilter;
 import org.springframework.security.web.SecurityFilterChain;
 
 import java.util.*;
@@ -28,12 +30,14 @@ public class SecurityConfig {
 
     private final UserRepository userRepository;
     private final UserRoleServiceImp userRoleServiceImp;
+    private  final UserLogServiceImp userLogImp;
     @Value("${myapp.jwtUri}")
     private String jwkSetUri;
 
-    public SecurityConfig(UserRepository userRepository, UserRoleServiceImp userRoleServiceImp) {
+    public SecurityConfig(UserRepository userRepository, UserRoleServiceImp userRoleServiceImp, UserLogServiceImp userLogImp) {
         this.userRepository = userRepository;
         this.userRoleServiceImp = userRoleServiceImp;
+        this.userLogImp = userLogImp;
     }
 
     @Bean
@@ -61,10 +65,16 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/v1/equipment/search").authenticated()
                         .requestMatchers("/ap1/v1/user/**").authenticated()   // Protege a rota /user
                         .anyRequest().authenticated())// Permite outras requisições
+
                 .oauth2ResourceServer(oauth2 -> oauth2
-                        .jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter())));  // Configura JWT
+                        .jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter())))
+                .addFilterAfter(new LoggingFilter(userLogImp), BearerTokenAuthenticationFilter.class);  // Configura JWT
 
         return http.build();
+    }
+    @Bean
+    public LoggingFilter loggingFilter() {
+        return new LoggingFilter(userLogImp); // userLogImp deve ser injetado corretamente
     }
 
     @Bean
