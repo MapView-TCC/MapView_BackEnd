@@ -32,6 +32,7 @@ export default defineConfig({
         secure: false,
         rewrite: (path) => path.replace(/^\/gateway/, ''),
       },
+ 
 
       '/user': {
         target: 'http://localhost:8000',

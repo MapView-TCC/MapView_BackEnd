@@ -6,7 +6,9 @@ import com.MapView.BackEnd.entities.UserRole;
 import com.MapView.BackEnd.entities.Users;
 import com.MapView.BackEnd.repository.UserRoleRepository;
 import com.MapView.BackEnd.service.UserRoleService;
+import org.springframework.stereotype.Service;
 
+@Service
 public class UserRoleServiceImp implements UserRoleService {
     private final UserRoleRepository userRoleRepository;
     private final RoleServiceImp roleServiceImp;

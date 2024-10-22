@@ -4,28 +4,24 @@ import com.MapView.BackEnd.dtos.User.UserCreateDTO;
 import com.MapView.BackEnd.dtos.User.UserDetailsDTO;
 import com.MapView.BackEnd.dtos.UserRole.UserRoleDetailsDTO;
 import com.MapView.BackEnd.entities.Role;
+import com.MapView.BackEnd.entities.UserLog;
 import com.MapView.BackEnd.entities.UserRole;
+import com.MapView.BackEnd.entities.Users;
+import com.MapView.BackEnd.infra.Exception.NotFoundException;
 import com.MapView.BackEnd.repository.RoleRespository;
 import com.MapView.BackEnd.repository.UserRepository;
 import com.MapView.BackEnd.repository.UserRoleRepository;
 import com.MapView.BackEnd.service.UserService;
-import com.MapView.BackEnd.entities.Users;
-import com.MapView.BackEnd.enums.RoleUser;
-import com.MapView.BackEnd.infra.Exception.NotFoundException;
-import org.apache.catalina.User;
 import org.springframework.security.oauth2.jwt.Jwt;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
-@Service
 
-public class UserServiceIpm implements UserService {
-
+public class UserServiceImp implements UserService {
     private final UserRepository userRepository;
     private final RoleRespository roleRespository;
     private final UserRoleRepository userRoleRepository;
 
-    public UserServiceIpm(UserRepository userRepository, RoleRespository roleRespository, UserRoleRepository userRoleRepository) {
+    public UserServiceImp(UserRepository userRepository, RoleRespository roleRespository, UserRoleRepository userRoleRepository) {
         this.userRepository = userRepository;
         this.roleRespository = roleRespository;
         this.userRoleRepository = userRoleRepository;
@@ -74,13 +70,14 @@ public class UserServiceIpm implements UserService {
 
 
 
+
     @Override
     public void activeUser(Long id_user) {
-       var userClass = this.userRepository.findById(id_user);
-       if (userClass.isPresent()){
-           var user = userClass.get();
-           user.setOperative(true);
-       }
+        var userClass = this.userRepository.findById(id_user);
+        if (userClass.isPresent()){
+            var user = userClass.get();
+            user.setOperative(true);
+        }
     }
     @Override
     public void inactivateUser(Long id_user) {
