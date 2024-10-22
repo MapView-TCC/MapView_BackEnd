@@ -8,7 +8,7 @@ import java.util.List;
 public record RegisterCreateDTO (
         //Equipment
 
-        @Min(value = 8, message = "Id_equipment must be under than 8")
+
         String id_equipment,
 
         String name_equipment,

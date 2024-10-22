@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 import static com.MapView.BackEnd.serviceImp.EquipmentServiceImp.getStartDateFromQuarter;
 
 @Service
-public class EquipmentResponsibleServiceImp implements EquipmentResponsibleService {
+public class  EquipmentResponsibleServiceImp implements EquipmentResponsibleService {
 
     private final EntityManager entityManager;
 

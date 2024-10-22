@@ -73,7 +73,8 @@ CREATE TABLE IF NOT EXISTS location (
     id_post INT NOT NULL,
     id_environment INT NOT NULL,
     FOREIGN KEY(id_post) REFERENCES post(id_post),
-    FOREIGN KEY(id_environment) REFERENCES environment(id_environment)
+    FOREIGN KEY(id_environment) REFERENCES environment(id_environment),
+    UNIQUE (id_post, id_environment)
 );
 
 -- Creating the Cost Center table (centro de custo)
@@ -157,7 +158,8 @@ CREATE TABLE IF NOT EXISTS equipment_responsible (
     end_usage DATE,
     operative TINYINT NOT NULL,
     FOREIGN KEY(id_equipment) REFERENCES equipment(id_equipment),
-    FOREIGN KEY(id_responsible) REFERENCES responsible(id_responsible)
+    FOREIGN KEY(id_responsible) REFERENCES responsible(id_responsible),
+    UNIQUE (id_equipment,id_responsible)
 );
 
 -- Creating the User Log table (related to CRUD operations)
