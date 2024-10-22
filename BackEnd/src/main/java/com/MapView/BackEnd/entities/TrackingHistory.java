@@ -64,7 +64,4 @@ public class TrackingHistory {
         this.action = action;
         this.warning = warning;
     }
-
-
-
 }

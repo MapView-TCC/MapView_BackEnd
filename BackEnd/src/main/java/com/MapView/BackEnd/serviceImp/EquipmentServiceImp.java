@@ -120,7 +120,7 @@ public class EquipmentServiceImp implements EquipmentService {
                 Environment environment = location.getEnvironment();
 
                 TrackingHistory trackingHistory = new TrackingHistory(
-                        equipment, environment, equipment.getRfid(), EnumTrackingAction.ENTER,
+                        equipment, environment, EnumTrackingAction.ENTER,
                         EnumColors.GREEN
                 );
 
@@ -134,7 +134,7 @@ public class EquipmentServiceImp implements EquipmentService {
                 throw new ExistingEntityException("rfid: ("+ data.rfid()+") Already exists");
             }
         }
-        throw new ExistingEntityException("Equipament: "+data.id_equipment()+ " Already exists");
+        throw new ExistingEntityException("Equipment: " + data.id_equipment() + " Already exists");
     }
 
 
