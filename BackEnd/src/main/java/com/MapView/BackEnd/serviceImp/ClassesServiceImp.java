@@ -31,6 +31,7 @@ public class ClassesServiceImp implements ClassesService {
         this.userRepository = userRepository;
         this.userLogRepository = userLogRepository;
     }
+
     @Override
     public ClassesDetaiLDTO createClasses(ClassesCreateDTO data, Long userLog_id) {
 
@@ -61,7 +62,7 @@ public class ClassesServiceImp implements ClassesService {
     @Override
     public ClassesDetaiLDTO getClasseById(Long id, Long userLog_id) {
         var usuario_log = userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("User Id Not Found"));
-        var classe = classesRepository.findById(id).orElseThrow(() -> new NotFoundException("Classe id Not Found"));
+        var classe = classesRepository.findById(id).orElseThrow(() -> new NotFoundException("Classes id Not Found"));
         if (!classe.isOperative()){
             throw new OperativeFalseException("The classe area cannot be read..");
         }
@@ -139,9 +140,12 @@ public class ClassesServiceImp implements ClassesService {
     @Override
     public void activeClass(Long class_id, Long userLog_id) {
         var usuario_log = userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("User Id Not Found"));
-        if(usuario_log.isOperative()) {
+
+        // Verifica se o usuário está operativo
+        if(!usuario_log.isOperative()) {
             throw new OpetativeTrueException("It is already activate");
         }
+
         var classes = classesRepository.findById(class_id).orElseThrow(() -> new NotFoundException("User Id Not Found"));
         classes.setOperative(true);
         classesRepository.save(classes);
@@ -152,7 +156,7 @@ public class ClassesServiceImp implements ClassesService {
     @Override
     public void inactiveClass(Long class_id, Long userLog_id) {
         var classes = classesRepository.findById(class_id).orElseThrow(() -> new NotFoundException("User Id Not Found"));
-        if(classes.isOperative()) {
+        if(!classes.isOperative()) {
             throw new OperativeFalseException("It is already inactivate");
         }
         var usuario_log = userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("User Id Not Found"));
@@ -162,6 +166,5 @@ public class ClassesServiceImp implements ClassesService {
         userLogRepository.save(userLog);
 
     }
-
 
 }

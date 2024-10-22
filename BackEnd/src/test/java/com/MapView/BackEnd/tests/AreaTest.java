@@ -1,4 +1,4 @@
-package com.MapView.BackEnd;
+package com.MapView.BackEnd.tests;
 
 import com.MapView.BackEnd.dtos.Area.AreaCreateDTO;
 import com.MapView.BackEnd.dtos.Area.AreaDetailsDTO;
