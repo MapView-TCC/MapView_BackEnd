@@ -1,6 +1,7 @@
 package com.MapView.BackEnd.controller;
 
 import com.MapView.BackEnd.dtos.CostCenter.CostCenterDetailsDTO;
+import com.MapView.BackEnd.dtos.EquipmentResponsible.EquipmentResponsibleSearchDetailsDTO;
 import com.MapView.BackEnd.serviceImp.EquipmentResponsibleServiceImp;
 import com.MapView.BackEnd.dtos.EquipmentResponsible.EquipmentResponsibleCreateDTO;
 import com.MapView.BackEnd.dtos.EquipmentResponsible.EquipmentResponsibleDetailsDTO;
@@ -123,16 +124,11 @@ public class EquipmentResponsibleController {
             @ApiResponse(responseCode = "200", description = "Filtered equipment list successfully retrieved")
     })
     @GetMapping("/filter")
-    public ResponseEntity<List<EquipmentResponsibleDetailsDTO>> getAllEquipmentFilter(
-            @Parameter(description = "Page number for pagination", required = false) @RequestParam(defaultValue = "0") int page,
-            @Parameter(description = "Number of items per page", required = false) @RequestParam(defaultValue = "200") int itens,
-            @RequestParam(required = false) String validity,
-            @RequestParam(required = false) String enviroment,
-            @RequestParam(required = false) String id_owner,
-            @RequestParam(required = false) String id_equipment,
-            @RequestParam(required = false) String name_equipment,
-            @RequestParam(required = false) String post) {
-        var list = equipmentResponsibleServiceImp.getEquipmentInventory(page, itens, validity, enviroment, id_owner, id_equipment, name_equipment, post);
+    public ResponseEntity<EquipmentResponsibleSearchDetailsDTO> getAllEquipmentFilter(
+
+            @RequestParam(required = false) String id_equipment
+   ) {
+        var list = equipmentResponsibleServiceImp.getEquipmentInventory( id_equipment );
         return ResponseEntity.ok(list);
     }
 }

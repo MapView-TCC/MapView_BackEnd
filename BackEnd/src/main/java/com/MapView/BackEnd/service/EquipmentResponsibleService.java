@@ -2,6 +2,7 @@ package com.MapView.BackEnd.service;
 
 import com.MapView.BackEnd.dtos.EquipmentResponsible.EquipmentResponsibleCreateDTO;
 import com.MapView.BackEnd.dtos.EquipmentResponsible.EquipmentResponsibleDetailsDTO;
+import com.MapView.BackEnd.dtos.EquipmentResponsible.EquipmentResponsibleSearchDetailsDTO;
 import com.MapView.BackEnd.dtos.EquipmentResponsible.EquipmentResponsibleUpdateDTO;
 
 import java.util.List;
@@ -15,5 +16,5 @@ public interface EquipmentResponsibleService {
     void activateEquipmentResponsible(Long id_equip_resp); // put
     void inactivateEquipmentResponsible(Long id_equip_resp); // put
 
-    List<EquipmentResponsibleDetailsDTO> getEquipmentInventory(int page, int itens, String validity, String environment, String id_owner, String id_equipment, String name_equipment, String post);
+    EquipmentResponsibleSearchDetailsDTO getEquipmentInventory(String id_equipment);
 }

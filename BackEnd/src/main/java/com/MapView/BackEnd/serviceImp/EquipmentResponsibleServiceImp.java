@@ -1,5 +1,8 @@
 package com.MapView.BackEnd.serviceImp;
 
+import com.MapView.BackEnd.dtos.Equipment.EquipmentDetailsDTO;
+import com.MapView.BackEnd.dtos.EquipmentResponsible.EquipmentResponsibleSearchDetailsDTO;
+import com.MapView.BackEnd.dtos.Responsible.ResponsibleDetailsDTO;
 import com.MapView.BackEnd.entities.*;
 import com.MapView.BackEnd.infra.Exception.OperativeFalseException;
 import com.MapView.BackEnd.infra.Exception.OpetativeTrueException;
@@ -20,12 +23,8 @@ import jakarta.persistence.criteria.Root;
 import org.springframework.stereotype.Service;
 import jakarta.persistence.criteria.*;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
-
-import static com.MapView.BackEnd.serviceImp.EquipmentServiceImp.getStartDateFromQuarter;
 
 @Service
 public class  EquipmentResponsibleServiceImp implements EquipmentResponsibleService {
@@ -144,9 +143,7 @@ public class  EquipmentResponsibleServiceImp implements EquipmentResponsibleServ
     }
 
     @Override
-    public List<EquipmentResponsibleDetailsDTO> getEquipmentInventory(int page, int itens, String validity,
-                                                                      String environment, String id_owner, String id_equipment,
-                                                                      String name_equipment, String post) {
+    public EquipmentResponsibleSearchDetailsDTO getEquipmentInventory( String id_equipment) {
 
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<EquipmentResponsible> criteriaQuery = criteriaBuilder.createQuery(EquipmentResponsible.class);
@@ -166,24 +163,9 @@ public class  EquipmentResponsibleServiceImp implements EquipmentResponsibleServ
 
         // WHERE
 
-        if (validity != null) {
-            LocalDate validDate = getStartDateFromQuarter(validity);
-            predicates.add(criteriaBuilder.equal(equipmentJoin.get("validity"), validDate));
-        }
-        if (environment != null) {
-            predicates.add(criteriaBuilder.like(environmentJoin.get("environment_name"), "%" + environment.toLowerCase() + "%"));
-        }
-        if (id_owner != null) {
-            predicates.add(criteriaBuilder.like(mainOwnerJoin.get("id_owner"), "%" + id_owner.toLowerCase() + "%"));
-        }
+
         if (id_equipment != null) {
             predicates.add(criteriaBuilder.like(equipmentJoin.get("idEquipment"), "%" + id_equipment.toLowerCase() + "%"));
-        }
-        if (name_equipment != null) {
-            predicates.add(criteriaBuilder.like(equipmentJoin.get("name_equipment"), "%" + name_equipment.toLowerCase() + "%"));
-        }
-        if (post != null) {
-            predicates.add(criteriaBuilder.like(postJoin.get("post"), "%" + post.toLowerCase() + "%"));
         }
 
         // Filtra apenas responsáveis operacionais
@@ -194,11 +176,19 @@ public class  EquipmentResponsibleServiceImp implements EquipmentResponsibleServ
         // Executa a consulta
         TypedQuery<EquipmentResponsible> query = entityManager.createQuery(criteriaQuery);
         List<EquipmentResponsible> equipmentResponsibleList = query.getResultList();
+        List<ResponsibleDetailsDTO> responsibles = new ArrayList<>();
+        EquipmentDetailsDTO equipmentDetailsDTO = null;
+        for (EquipmentResponsible er: equipmentResponsibleList){
+
+            equipmentDetailsDTO = new EquipmentDetailsDTO(er.getIdEquipment());
+            responsibles.add(new ResponsibleDetailsDTO(er.getId_responsible()));
+
+
+
+        }
 
         // Mapeia a lista de EquipmentResponsible para EquipmentResponsibleDetailsDTO
-        return equipmentResponsibleList.stream()
-                .map(EquipmentResponsibleDetailsDTO::new)
-                .collect(Collectors.toList());
+        return new EquipmentResponsibleSearchDetailsDTO(equipmentDetailsDTO,responsibles);
     }
 
 }
