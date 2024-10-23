@@ -63,6 +63,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST,"/api/v1/register").hasAnyRole("MEIO_OFICIAL","INSTRUTOR","GESTOR")
                         .requestMatchers(HttpMethod.POST,"/api/v1/registerEnvironment").hasAnyRole("MEIO_OFICIAL","INSTRUTOR","GESTOR")
                         .requestMatchers(HttpMethod.GET, "/api/v1/equipment/search").authenticated()
+                        .requestMatchers("/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/**").permitAll()
                         .requestMatchers("/ap1/v1/user/**").authenticated()   // Protege a rota /user
                         .anyRequest().authenticated())// Permite outras requisições
 

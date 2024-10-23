@@ -5,6 +5,7 @@ const API_BASE_URL = "http://localhost:5173"; // Base URL para as requisições
 
 const ResourceFetcher = () => {
   const [data, setData] = useState(null);
+  const [env, setEnv] = useState(null);
 
   useEffect(() => {
     const fetchResource = async () => {
@@ -17,8 +18,28 @@ const ResourceFetcher = () => {
               Authorization: `Bearer ${token}`,
             },
           });
-
           setData(response.data);
+  
+          
+        } catch (error) {
+          console.error(
+            "Erro ao acessar recurso protegido:",
+            error.response ? error.response.data : error.message
+          );
+        }
+      } else {
+        console.error("Token não encontrado no localStorage.");
+      }
+
+      if (token) {
+        try {
+          const responseenv = await axios.get(`${API_BASE_URL}/equip`, { // Fazer a requisição passando o token no header
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+          
+          setEnv(responseenv.data)
           
         } catch (error) {
           console.error(
@@ -43,6 +64,7 @@ const ResourceFetcher = () => {
         <ul>
           <li>
             <span> {data} </span>
+            <span> {env} </span>
           </li>
         </ul>
       </div>
