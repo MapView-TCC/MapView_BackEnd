@@ -17,7 +17,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 @Component
-public class ScheduleService {
+public class ScheduleServiceImp {
 
     private final EquipmentRepository equipmentRepository;
     private final NotificationRepository notificationRepository;
@@ -25,7 +25,7 @@ public class ScheduleService {
     private final TrackingHistoryServiceImp trackingHistoryServiceImp;
     private final TrackingHistoryRepository trackingHistoryRepository;
 
-    public ScheduleService(EquipmentRepository equipmentRepository, NotificationRepository notificationRepository, NotificationServiceImp notificationServiceImp, TrackingHistoryServiceImp trackingHistoryServiceImp, TrackingHistoryRepository trackingHistoryRepository) {
+    public ScheduleServiceImp(EquipmentRepository equipmentRepository, NotificationRepository notificationRepository, NotificationServiceImp notificationServiceImp, TrackingHistoryServiceImp trackingHistoryServiceImp, TrackingHistoryRepository trackingHistoryRepository) {
         this.equipmentRepository = equipmentRepository;
         this.notificationRepository = notificationRepository;
         this.notificationServiceImp = notificationServiceImp;
@@ -78,13 +78,14 @@ public class ScheduleService {
     //@Scheduled(cron = "0 0 0 1 1,7 *") // no inicio do minuto e hora, a meia noite, no dia 1 do mês, em janeiro(1) e julho(7), qualquer dia da semana
     public void deleteTrackingHistory(){
         List<TrackingHistory> trackingHistoriesList = trackingHistoryRepository.findAll();
-        Instant oneYearAgo = Instant.now().minus(365, ChronoUnit.DAYS); // Calcula a data de um ano atrás
+
+        LocalDateTime oneYearAgo = LocalDateTime.now().minusYears(1); // Calcula a data de um ano atrás
 
         for (TrackingHistory trackingHistory : trackingHistoriesList) {
-            Instant trackingDateTime = trackingHistory.getDatetime(); // Obtem o Instant
+            LocalDateTime trackingDateTime = trackingHistory.getDatetime(); // Obtem o Instant
 
             if (trackingDateTime.isBefore(oneYearAgo)) { // Verifica se a data é anterior a um ano
-                //System.out.println("Deletando tracking history com o ID: " + trackingHistory.getId_tracking());
+                System.out.println("Checking tracking history ID: " + trackingHistory.getId() + ", DateTime: " + trackingDateTime);
                 trackingHistoryServiceImp.deleteTrackingById(trackingHistory.getId()); // Deleta
             }
         }

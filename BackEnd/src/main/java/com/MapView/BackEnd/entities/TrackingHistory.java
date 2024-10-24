@@ -7,6 +7,7 @@ import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 
 @Table(name = "tracking_history")
 @Entity(name = "tracking_history")
@@ -23,7 +24,7 @@ public class TrackingHistory {
     @CreationTimestamp
     // Use aspas invertidas para forçar o nome exato
     //@Column(updatable = false) // Se você não quiser que a data de criação seja atualizada
-    private Instant datetime;
+    private LocalDateTime datetime;
 
     @OneToOne
     @JoinColumn(name ="id_equipment")
@@ -58,7 +59,7 @@ public class TrackingHistory {
 
     // para salvar um tracking history quando salvar um equipment
     public TrackingHistory(Equipment equipment, Environment environment,  EnumTrackingAction action, EnumColors warning) {
-        this.datetime = Instant.now();
+        this.datetime = LocalDateTime.now();
         this.equipment = equipment;
         this.environment = environment;
         this.action = action;

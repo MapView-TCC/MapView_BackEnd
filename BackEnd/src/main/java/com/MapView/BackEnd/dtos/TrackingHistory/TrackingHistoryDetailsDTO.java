@@ -7,9 +7,10 @@ import com.MapView.BackEnd.enums.EnumColors;
 import com.MapView.BackEnd.enums.EnumTrackingAction;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 
 public record TrackingHistoryDetailsDTO(Long id_tracking,
-                                        Instant datetime,
+                                        LocalDateTime datetime,
                                         Equipment equipment,
                                         Environment environment,
                                         EnumTrackingAction action,

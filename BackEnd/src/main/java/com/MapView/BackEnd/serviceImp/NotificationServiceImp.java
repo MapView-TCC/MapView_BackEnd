@@ -10,6 +10,7 @@ import com.MapView.BackEnd.repository.NotificationRepository;
 import com.MapView.BackEnd.service.NotificationService;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -46,13 +47,20 @@ public class NotificationServiceImp implements NotificationService {
     }
 
     @Override
-    public NotificationDetailsDTO createNotification(NotificationCreateDTO data) {
-        Equipment equipment = equipmentRepository.findById(data.id_equipment())
-                .orElseThrow(() -> new RuntimeException("Id equipment não encontrado!"));
+    public NotificationDetailsDTO createNotification(NotificationCreateDTO notificationCreateDTO) {
+        // Buscar o equipamento usando o ID fornecido no DTO
+        Equipment equipment = equipmentRepository.findById(notificationCreateDTO.id_equipment())
+                .orElseThrow(() -> new NotFoundException("Equipment not found"));
 
-        Notification notification = notificationRepository.save(new Notification(equipment));
+        // Criar a nova notificação
+        Notification notification = new Notification(equipment);
+        notification.setDate_notification(LocalDate.now());
 
-        return new NotificationDetailsDTO(notification);
+        // Salvar a notificação no repositório
+        Notification savedNotification = notificationRepository.save(notification);
+
+        // Retornar o DTO com os detalhes da notificação criada
+        return new NotificationDetailsDTO(savedNotification);
     }
 
 }
