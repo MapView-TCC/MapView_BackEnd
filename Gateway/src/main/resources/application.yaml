@@ -38,10 +38,10 @@ spring:
             - AddResponseHeader=Access-Control-Allow-Methods, GET, POST, PUT, DELETE, OPTIONS
             - AddResponseHeader=Access-Control-Allow-Headers, Authorization, Content-Type
 
-        - id: equip
+        - id: resourceequip
           uri: http://localhost:9000
           predicates:
-            - Path=/ap1/v1/location
+            - Path=/resource/equip
           filters:
             - name: TokenRelay
 
@@ -67,7 +67,7 @@ spring:
           filters:
             - name: TokenRelay
 
-            - AddResponseHeader=Access-Control-Allow-Origin, http://localhost:5173
+            - AddResponseHeader=Access-Control-Allow-Origin, http://localhost:5173, http://localhost:8000
             - AddResponseHeader=Access-Control-Allow-Methods, GET, POST, PUT, DELETE, OPTIONS
             - AddResponseHeader=Access-Control-Allow-Headers, Authorization, Content-Type
 

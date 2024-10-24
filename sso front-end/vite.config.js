@@ -24,7 +24,7 @@ export default defineConfig({
         rewrite: (path) => path.replace(/^\/gateway/, ''),
       },
 
-      '/equip': {
+      '/resource/equip': {
         target: 'http://localhost:8000', 
         changeOrigin: true, 
         secure: false,

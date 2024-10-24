@@ -33,17 +33,18 @@ const ResourceFetcher = () => {
 
       if (token) {
         try {
-          const responseenv = await axios.get(`${API_BASE_URL}/equip`, { // Fazer a requisição passando o token no header
+          const responseenv = await axios.get(`${API_BASE_URL}/resource/equip`, { // Fazer a requisição passando o token no header
             headers: {
               Authorization: `Bearer ${token}`,
             },
           });
           
           setEnv(responseenv.data)
+          console.log(responseenv.data)
           
         } catch (error) {
           console.error(
-            "Erro ao acessar recurso protegido:",
+            "Erro ao acessar recurso protegido location:",
             error.response ? error.response.data : error.message
           );
         }
