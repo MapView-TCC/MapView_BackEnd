@@ -59,7 +59,7 @@ public class UserLogServiceImp implements UserLogService {
             throw new RuntimeException("Error saving the user log", e);
         }
     }
-    
+
     public void logger(String email,String Action,String id){
         Users user = userRepository.findByEmail(email).orElseThrow(()-> new NotFoundException("User by email not found"));
         UserLog userLog = new UserLog(user,Action,id,Action,Action);

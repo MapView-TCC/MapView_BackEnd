@@ -11,16 +11,26 @@ import com.MapView.BackEnd.infra.Exception.NotFoundException;
 import com.MapView.BackEnd.repository.RoleRespository;
 import com.MapView.BackEnd.repository.UserRepository;
 import com.MapView.BackEnd.repository.UserRoleRepository;
+import com.MapView.BackEnd.service.UserRoleService;
 import com.MapView.BackEnd.service.UserService;
 import org.springframework.security.oauth2.jwt.Jwt;
 
 import java.util.List;
+<<<<<<< HEAD
 
+=======
+@Service
+>>>>>>> 39ccf86 (mapeando enpoints)
 public class UserServiceImp implements UserService {
     private final UserRepository userRepository;
     private final RoleRespository roleRespository;
     private final UserRoleRepository userRoleRepository;
 
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> 39ccf86 (mapeando enpoints)
     public UserServiceImp(UserRepository userRepository, RoleRespository roleRespository, UserRoleRepository userRoleRepository) {
         this.userRepository = userRepository;
         this.roleRespository = roleRespository;

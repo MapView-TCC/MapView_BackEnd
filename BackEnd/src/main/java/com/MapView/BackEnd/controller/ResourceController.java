@@ -20,4 +20,11 @@ public class ResourceController {
 
         return "Recurso Protegido Acessado por: " + userName;
     }
+    @GetMapping("/resource/equip")
+    @CrossOrigin(origins = "http://localhost:5173")
+    public String gettest(@AuthenticationPrincipal Jwt jwt) {
+        String userName = jwt.getClaimAsString("name");
+
+        return "Segurança autenticada";
+    }
 }

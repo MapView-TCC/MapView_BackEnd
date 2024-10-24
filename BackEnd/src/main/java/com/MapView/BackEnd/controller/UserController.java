@@ -4,7 +4,7 @@ import com.MapView.BackEnd.dtos.User.UserCreateDTO;
 import com.MapView.BackEnd.dtos.UserRole.UserRoleDetailsDTO;
 import com.MapView.BackEnd.serviceImp.UserServiceImp;
 import com.MapView.BackEnd.dtos.User.UserDetailsDTO;
-import com.MapView.BackEnd.dtos.User.UserUpdateDTO;
+import com.MapView.BackEnd.serviceImp.UserServiceImp;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -30,6 +30,7 @@ public class UserController {
     public UserController(UserServiceImp userServiceIpm) {
         this.userServiceIpm = userServiceIpm;
     }
+
 
     @Operation(summary = "Create a new user", description = "Endpoint to create a new user in the system.")
     @ApiResponses(value = {

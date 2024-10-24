@@ -56,7 +56,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/v1/notifications").authenticated()
                         .requestMatchers(HttpMethod.GET,"/api/v1/trackingHistory/**").authenticated()
                         .requestMatchers(HttpMethod.POST,"/api/v1/trackingHistory").hasAnyRole("MEIO_OFICIAL","INSTRUTOR","GESTOR")
-                        .requestMatchers(HttpMethod.GET,"/api/v1/environment/**").authenticated()
+                        .requestMatchers(HttpMethod.GET,"/api/v1/environment").authenticated()
                         .requestMatchers(HttpMethod.PUT,"/api/v1/environment").hasAnyRole("MEIO_OFICIAL","INSTRUTOR","GESTOR")
                         .requestMatchers(HttpMethod.POST,"/api/v1/environment").hasAnyRole("MEIO_OFICIAL","INSTRUTOR","GESTOR")
                         .requestMatchers(HttpMethod.GET,"/api/v1/excel").hasAnyRole("MEIO_OFICIAL","INSTRUTOR","GESTOR")
