@@ -16,7 +16,7 @@ public record RegisterUpdateDTO(
         String admin_rights,
         String observation,
         //location Equipment
-        Long id_building,
+
         Long id_environment,
         String post,
         String id_owner,

@@ -2,24 +2,18 @@ package com.MapView.BackEnd.serviceImp;
 
 import com.MapView.BackEnd.dtos.Classes.ClassesCreateDTO;
 import com.MapView.BackEnd.dtos.Classes.ClassesDetaiLDTO;
-import com.MapView.BackEnd.dtos.Classes.ClassesUpdateDTO;
 import com.MapView.BackEnd.dtos.CostCenter.CostCenterCreateDTO;
 import com.MapView.BackEnd.dtos.CostCenter.CostCenterDetailsDTO;
-import com.MapView.BackEnd.dtos.CostCenter.CostCenterUpdateDTO;
 import com.MapView.BackEnd.dtos.Equipment.EquipmentCreateDTO;
 import com.MapView.BackEnd.dtos.Equipment.EquipmentDetailsDTO;
-import com.MapView.BackEnd.dtos.Equipment.EquipmentUpdateDTO;
 import com.MapView.BackEnd.dtos.EquipmentResponsible.EquipmentResponsibleCreateDTO;
 import com.MapView.BackEnd.dtos.EquipmentResponsible.EquipmentResponsibleDetailsDTO;
 import com.MapView.BackEnd.dtos.Location.LocationCreateDTO;
 import com.MapView.BackEnd.dtos.Location.LocationDetalsDTO;
-import com.MapView.BackEnd.dtos.Location.LocationUpdateDTO;
 import com.MapView.BackEnd.dtos.MainOwner.MainOwnerCreateDTO;
 import com.MapView.BackEnd.dtos.MainOwner.MainOwnerDetailsDTO;
-import com.MapView.BackEnd.dtos.MainOwner.MainOwnerUpdateDTO;
 import com.MapView.BackEnd.dtos.Post.PostCreateDTO;
 import com.MapView.BackEnd.dtos.Post.PostDetailDTO;
-import com.MapView.BackEnd.dtos.Post.PostUpdateDTO;
 import com.MapView.BackEnd.dtos.Register.RegisterCreateDTO;
 import com.MapView.BackEnd.dtos.Register.RegisterDetailsDTO;
 import com.MapView.BackEnd.dtos.Register.RegisterUpdateDTO;
@@ -28,9 +22,11 @@ import com.MapView.BackEnd.dtos.Responsible.ResponsibleCrateDTO;
 import com.MapView.BackEnd.dtos.Responsible.ResponsibleDetailsDTO;
 import com.MapView.BackEnd.entities.*;
 import com.MapView.BackEnd.enums.EnumAction;
+import com.MapView.BackEnd.infra.Exception.ExistingEntityException;
 import com.MapView.BackEnd.infra.Exception.NotFoundException;
 import com.MapView.BackEnd.repository.*;
 import com.MapView.BackEnd.service.RegisterService;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -60,6 +56,7 @@ public class RegisterServiceImp implements RegisterService {
     private final ClassesServiceImp classesServiceImp;
     private final ResponsibleServiceImp responsibleServiceImp;
     private  final EquipmentResponsibleServiceImp equipmentResponsibleServiceImp;
+    private  final CostCenterRepository costCenterRepository;
 
 
     public RegisterServiceImp(PostRepository postRepository,
@@ -78,7 +75,7 @@ public class RegisterServiceImp implements RegisterService {
                               MainOwnerServiceImp mainOwnerServiceImp,
                               CostCenterServiceImp costCenterServiceImp,
                               ClassesServiceImp classesServiceImp,
-                              ResponsibleServiceImp responsibleServiceImp, EquipmentResponsibleServiceImp equipmentResponsibleServiceImp) {
+                              ResponsibleServiceImp responsibleServiceImp, EquipmentResponsibleServiceImp equipmentResponsibleServiceImp, CostCenterRepository costCenterRepository) {
 
         this.postRepository = postRepository;
         this.environmentRepository = environmentRepository;
@@ -99,6 +96,7 @@ public class RegisterServiceImp implements RegisterService {
         this.classesServiceImp = classesServiceImp;
         this.responsibleServiceImp = responsibleServiceImp;
         this.equipmentResponsibleServiceImp = equipmentResponsibleServiceImp;
+        this.costCenterRepository = costCenterRepository;
     }
 
 
@@ -145,13 +143,13 @@ public class RegisterServiceImp implements RegisterService {
 
     // metodo para fazer a atualização
     @Override
-    public RegisterDetailsDTO updateRegister( RegisterUpdateDTO data, Long userLog_id) {
+    public RegisterDetailsDTO updateRegister( RegisterUpdateDTO data,String id_equipment, Long userLog_id) {
         // Encontrar e verificar o registro do usuário
         Users userLog = userRepository.findById(userLog_id)
                 .orElseThrow(() -> new NotFoundException("User not found"));
 
         // Obter o equipamento a ser atualizado
-        Equipment equipment = equipmentRepository.findById(data.id_equipment())
+        Equipment equipment = equipmentRepository.findById(id_equipment)
                 .orElseThrow(() -> new NotFoundException("Equipment not found"));
 
         // Atualizar dados básicos do Equipment
@@ -162,22 +160,59 @@ public class RegisterServiceImp implements RegisterService {
         equipment.setValidity(getStartDateFromQuarter(data.validity()));
         equipment.setAdmin_rights(data.admin_rights());
         equipment.setObservation(data.observation());
+        Location location = equipment.getLocation();
 
-        // Atualizar ou criar Post associado em Location
-        PostCreateDTO postDTO = new PostCreateDTO(data.post()); // Criar o DTO para Post
-        PostDetailDTO post = postServiceImp.createPost(postDTO, userLog_id); // Chamar o método correto
-        Location location = locationRepository.findById(data.id_environment())
-                .orElseThrow(() -> new NotFoundException("Location not found"));
-        location.setPost(postRepository.findById(post.id_post()).orElseThrow()); // Associar o post criado
-        equipment.setLocation(location);
 
-        // Atualizar o `MainOwner` associado
-        MainOwner owner = mainOwnerServiceImp.createMainOwner(data.id_owner())
-                .orElseThrow(() -> new NotFoundException("Owner not found"));
-        equipment.setOwner(owner);
+        if(data.post() != null){
+            try {
+                if (location.getPost().getPost() != data.post()) {
+                    Post post = postRepository.findByPost(data.post()).orElse(null);
+                    if (post == null) {
+                        Post newPost = postRepository.save(new Post(new PostCreateDTO(data.post())));
+                        equipment.getLocation().setPost(newPost);
+                        equipmentRepository.save(equipment);
+                    }
+                }
+                } catch(DataIntegrityViolationException e){
+                    throw new ExistingEntityException("put it already linked to other equipment");
+            }
+        }
 
-        // Salvar as mudanças em Equipment
-        equipmentRepository.save(equipment);
+       if (data.id_environment() != null){
+           try {
+
+               if (data.id_environment() != location.getEnvironment().getId_environment()) {
+                   Environment environment = environmentRepository.findById(data.id_environment()).orElseThrow(() -> new NotFoundException("Environment not found"));
+                   equipment.getLocation().setEnvironment(environment);
+                   equipmentRepository.save(equipment);
+               }
+
+           }catch(DataIntegrityViolationException e){
+               throw new ExistingEntityException("put it already linked to other equipment");
+           }
+       }
+
+       if(data.costCenter_name() != null){
+           if (data.costCenter_name() != equipment.getOwner().getCostCenter().getConstcenter()){
+               CostCenter costCenter = costCenterRepository.findByConstcenter(data.costCenter_name()).orElse(null);
+               if (costCenter == null) {
+                   CostCenter newCostCenter = new CostCenter(new CostCenterCreateDTO(data.costCenter_name()));
+                   equipment.getOwner().setCostCenter(costCenterRepository.save(newCostCenter));
+               }
+
+           }
+       }
+
+       if (data.id_owner() != null){
+           if(data.id_owner() != equipment.getOwner().getId_owner()){
+              MainOwner mainOwner =  mainOwnerRepository.findById(data.id_owner()).orElse(null);
+              if (mainOwner == null){
+                  mainOwnerRepository.save(new MainOwner())
+              }
+           }
+       }
+
+
 
         // Log da atualização
         UserlogCreate(userLog, "Equipment", equipment.getIdEquipment(), "Updated Equipment");
@@ -201,6 +236,12 @@ public class RegisterServiceImp implements RegisterService {
                 responsibleDetailsDTO
         );
     }
+
+    public Location updateRegisterLocation(Location location,Long id_environmen,String post){
+
+        return  null;
+    }
+
 
 
 

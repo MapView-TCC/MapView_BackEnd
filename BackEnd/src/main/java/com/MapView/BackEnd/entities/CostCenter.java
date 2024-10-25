@@ -12,7 +12,7 @@ import lombok.*;
 @NoArgsConstructor
 @EqualsAndHashCode(of = "id_cost_center")
 
-public class    CostCenter {
+public class CostCenter {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
