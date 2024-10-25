@@ -35,6 +35,7 @@ public class ResponsibleServiceImp implements ResponsibleService {
         this.userRepository = userRepository;
         this.userLogRepository = userLogRepository;
     }
+
     @Override
     public ResponsibleDetailsDTO createResposible(ResponsibleCrateDTO data, Long userLog_id) {
         Users users = this.userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("Id not found"));
@@ -43,7 +44,9 @@ public class ResponsibleServiceImp implements ResponsibleService {
         if(verifyByName ==null){
 
             var user = userRepository.findById(data.id_user()).orElseThrow(() -> new NotFoundException("User Id Not Found"));
+
             if(!user.isOperative()){
+                System.out.println("User ID: " + user.getId_user() + ", Is Operative: " + user.isOperative());
                 throw new OperativeFalseException("The inactive User cannot be accessed.");
             }
 

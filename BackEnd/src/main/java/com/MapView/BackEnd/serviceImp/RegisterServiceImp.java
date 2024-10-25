@@ -2,20 +2,27 @@ package com.MapView.BackEnd.serviceImp;
 
 import com.MapView.BackEnd.dtos.Classes.ClassesCreateDTO;
 import com.MapView.BackEnd.dtos.Classes.ClassesDetaiLDTO;
+import com.MapView.BackEnd.dtos.Classes.ClassesUpdateDTO;
 import com.MapView.BackEnd.dtos.CostCenter.CostCenterCreateDTO;
 import com.MapView.BackEnd.dtos.CostCenter.CostCenterDetailsDTO;
+import com.MapView.BackEnd.dtos.CostCenter.CostCenterUpdateDTO;
 import com.MapView.BackEnd.dtos.Equipment.EquipmentCreateDTO;
 import com.MapView.BackEnd.dtos.Equipment.EquipmentDetailsDTO;
+import com.MapView.BackEnd.dtos.Equipment.EquipmentUpdateDTO;
 import com.MapView.BackEnd.dtos.EquipmentResponsible.EquipmentResponsibleCreateDTO;
 import com.MapView.BackEnd.dtos.EquipmentResponsible.EquipmentResponsibleDetailsDTO;
 import com.MapView.BackEnd.dtos.Location.LocationCreateDTO;
 import com.MapView.BackEnd.dtos.Location.LocationDetalsDTO;
+import com.MapView.BackEnd.dtos.Location.LocationUpdateDTO;
 import com.MapView.BackEnd.dtos.MainOwner.MainOwnerCreateDTO;
 import com.MapView.BackEnd.dtos.MainOwner.MainOwnerDetailsDTO;
+import com.MapView.BackEnd.dtos.MainOwner.MainOwnerUpdateDTO;
 import com.MapView.BackEnd.dtos.Post.PostCreateDTO;
 import com.MapView.BackEnd.dtos.Post.PostDetailDTO;
+import com.MapView.BackEnd.dtos.Post.PostUpdateDTO;
 import com.MapView.BackEnd.dtos.Register.RegisterCreateDTO;
 import com.MapView.BackEnd.dtos.Register.RegisterDetailsDTO;
+import com.MapView.BackEnd.dtos.Register.RegisterUpdateDTO;
 import com.MapView.BackEnd.dtos.Register.ResponsibleResgisterDTO;
 import com.MapView.BackEnd.dtos.Responsible.ResponsibleCrateDTO;
 import com.MapView.BackEnd.dtos.Responsible.ResponsibleDetailsDTO;
@@ -136,6 +143,66 @@ public class RegisterServiceImp implements RegisterService {
             return new RegisterDetailsDTO(equipment,location,responsibleDetailsDTO);
     }
 
+    // metodo para fazer a atualização
+    @Override
+    public RegisterDetailsDTO updateRegister( RegisterUpdateDTO data, Long userLog_id) {
+        // Encontrar e verificar o registro do usuário
+        Users userLog = userRepository.findById(userLog_id)
+                .orElseThrow(() -> new NotFoundException("User not found"));
+
+        // Obter o equipamento a ser atualizado
+        Equipment equipment = equipmentRepository.findById(data.id_equipment())
+                .orElseThrow(() -> new NotFoundException("Equipment not found"));
+
+        // Atualizar dados básicos do Equipment
+        equipment.setName_equipment(data.name_equipment());
+        equipment.setRfid(data.rfid());
+        equipment.setType(data.type());
+        equipment.setModel(data.model());
+        equipment.setValidity(getStartDateFromQuarter(data.validity()));
+        equipment.setAdmin_rights(data.admin_rights());
+        equipment.setObservation(data.observation());
+
+        // Atualizar ou criar Post associado em Location
+        PostCreateDTO postDTO = new PostCreateDTO(data.post()); // Criar o DTO para Post
+        PostDetailDTO post = postServiceImp.createPost(postDTO, userLog_id); // Chamar o método correto
+        Location location = locationRepository.findById(data.id_environment())
+                .orElseThrow(() -> new NotFoundException("Location not found"));
+        location.setPost(postRepository.findById(post.id_post()).orElseThrow()); // Associar o post criado
+        equipment.setLocation(location);
+
+        // Atualizar o `MainOwner` associado
+        MainOwner owner = mainOwnerServiceImp.createMainOwner(data.id_owner())
+                .orElseThrow(() -> new NotFoundException("Owner not found"));
+        equipment.setOwner(owner);
+
+        // Salvar as mudanças em Equipment
+        equipmentRepository.save(equipment);
+
+        // Log da atualização
+        UserlogCreate(userLog, "Equipment", equipment.getIdEquipment(), "Updated Equipment");
+
+        // Atualizar e salvar cada `Responsible`
+        List<ResponsibleDetailsDTO> responsibleDetailsDTO = new ArrayList<>();
+        for (ResponsibleResgisterDTO responsibleDTO : data.dataResponsible()) {
+            Responsible responsible = responsibleRepository.findByEdv(responsibleDTO.edv())
+                    .orElseThrow(() -> new NotFoundException("Responsible not found"));
+            responsible.setResponsible(responsibleDTO.responsible_name());
+            responsible.setEdv(responsibleDTO.edv());
+            responsibleRepository.save(responsible);
+
+            responsibleDetailsDTO.add(new ResponsibleDetailsDTO(responsible));
+        }
+
+        // Retornar detalhes atualizados
+        return new RegisterDetailsDTO(
+                new EquipmentDetailsDTO(equipment),
+                new LocationDetalsDTO(location),
+                responsibleDetailsDTO
+        );
+    }
+
+
 
     public static LocalDate getStartDateFromQuarter(String quarterStr) {
         // Dividir a string em ano e trimestre
@@ -157,5 +224,3 @@ public class RegisterServiceImp implements RegisterService {
 
     }
 }
-
-

@@ -2,6 +2,7 @@ package com.MapView.BackEnd.controller;
 
 import com.MapView.BackEnd.dtos.Register.RegisterCreateDTO;
 import com.MapView.BackEnd.dtos.Register.RegisterDetailsDTO;
+import com.MapView.BackEnd.dtos.Register.RegisterUpdateDTO;
 import com.MapView.BackEnd.serviceImp.RegisterServiceImp;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -42,6 +43,14 @@ public class FormsRegisterController {
         RegisterDetailsDTO  register = registerServiceImp.register(dataRegister,userLog_id);
         return ResponseEntity.ok(register);
 
+    }
+
+    @PutMapping
+    @Transactional
+    public  ResponseEntity<RegisterDetailsDTO> updateregister(@RequestBody @Valid RegisterUpdateDTO data,@RequestParam Long userlog_id){
+        RegisterDetailsDTO register = registerServiceImp.updateRegister(data, userlog_id);
+
+        return  ResponseEntity.ok(register);
     }
 
 }

@@ -38,7 +38,7 @@ public class ClassesTest {
     private ClassesServiceImp classesServiceImp;
 
     @Mock
-    protected ClassesRepository classesRepository;
+    private ClassesRepository classesRepository;
 
     @Mock
     private UserRepository userRepository;
