@@ -1,20 +1,18 @@
 package com.MapView.BackEnd.serviceImp;
 
-import com.MapView.BackEnd.entities.UserLog;
-import com.MapView.BackEnd.entities.Users;
-import com.MapView.BackEnd.enums.EnumAction;
-import com.MapView.BackEnd.infra.Exception.BlankErrorException;
-import com.MapView.BackEnd.infra.Exception.OperativeFalseException;
-import com.MapView.BackEnd.infra.Exception.OpetativeTrueException;
-import com.MapView.BackEnd.repository.BuildingRepository;
-import com.MapView.BackEnd.repository.UserLogRepository;
-import com.MapView.BackEnd.repository.UserRepository;
-import com.MapView.BackEnd.service.BuildingService;
 import com.MapView.BackEnd.dtos.Building.BuildingCreateDTO;
 import com.MapView.BackEnd.dtos.Building.BuildingDetailsDTO;
 import com.MapView.BackEnd.dtos.Building.BuildingUpdateDTO;
 import com.MapView.BackEnd.entities.Building;
-import com.MapView.BackEnd.infra.Exception.NotFoundException;
+import com.MapView.BackEnd.entities.UserLog;
+import com.MapView.BackEnd.entities.Users;
+import com.MapView.BackEnd.enums.EnumAction;
+import com.MapView.BackEnd.infra.Exception.*;
+import com.MapView.BackEnd.repository.BuildingRepository;
+import com.MapView.BackEnd.repository.UserLogRepository;
+import com.MapView.BackEnd.repository.UserRepository;
+import com.MapView.BackEnd.service.BuildingService;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -55,14 +53,24 @@ public class BuildingServiceImp implements BuildingService {
 
     @Override
     public BuildingDetailsDTO createBuilding(BuildingCreateDTO dados,Long userLog_id) {
-        var building = new Building(dados);
-        Long id_build = buildingRepository.save(building).getId_building();
         Users user = this.userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("Id not found"));
+        try {
+            // Cria o building a partir do DTO
+            var building = new Building(dados);
 
-        var userLog = new UserLog(user,"Building",id_build.toString(),"Create new Building", EnumAction.CREATE);
-        userLogRepository.save(userLog);
+            // Salva o building e obtém o objeto salvo com o ID gerado
+            Building savedBuilding = buildingRepository.save(building);
 
-        return new BuildingDetailsDTO(building);
+            // Cria um log do usuário
+            var userLog = new UserLog(user, "Building", savedBuilding.getId_building().toString(), "Create new Building", EnumAction.CREATE);
+            userLogRepository.save(userLog);
+
+            // Retorna o DTO usando o objeto salvo, que contém o ID correto
+            return new BuildingDetailsDTO(savedBuilding);
+
+        } catch (DataIntegrityViolationException e) {
+            throw new ExistingEntityException("The Building " + dados.building_code() + " already exists");
+        }
     }
 
     @Override

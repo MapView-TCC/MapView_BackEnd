@@ -4,6 +4,6 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
-public interface ReportService {
+public interface ExcelService {
     void generateExcel(HttpServletResponse response) throws IOException;
 }

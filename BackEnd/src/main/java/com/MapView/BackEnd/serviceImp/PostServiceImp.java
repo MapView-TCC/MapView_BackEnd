@@ -3,6 +3,7 @@ package com.MapView.BackEnd.serviceImp;
 import com.MapView.BackEnd.entities.UserLog;
 import com.MapView.BackEnd.entities.Users;
 import com.MapView.BackEnd.enums.EnumAction;
+import com.MapView.BackEnd.infra.Exception.ExistingEntityException;
 import com.MapView.BackEnd.infra.Exception.OperativeFalseException;
 import com.MapView.BackEnd.repository.PostRepository;
 import com.MapView.BackEnd.repository.UserLogRepository;
@@ -13,6 +14,7 @@ import com.MapView.BackEnd.dtos.Post.PostDetailDTO;
 import com.MapView.BackEnd.dtos.Post.PostUpdateDTO;
 import com.MapView.BackEnd.entities.Post;
 import com.MapView.BackEnd.infra.Exception.NotFoundException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
@@ -44,6 +46,23 @@ public class PostServiceImp implements PostService {
         return new PostDetailDTO(post);
     }
 
+
+    public PostDetailDTO getPostByPost(String postname,Long userLog_id) {
+        Post post = this.postRepository.findByPost(postname).orElseThrow(() -> new NotFoundException("Post id Not Found"));
+
+        if(!post.isOperative()){
+            throw new OperativeFalseException("The inactive post cannot be accessed.");
+        }
+        Users user = this.userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("Id not found"));
+        var userLog = new UserLog(user,"Post",post.getId_post().toString(),"Read Post", EnumAction.READ);
+        userLogRepository.save(userLog);
+
+        return new PostDetailDTO(post);
+    }
+
+
+
+
     @Override
     public List<PostDetailDTO> getAllPost(Long userLog_id) {
         Users user = this.userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("Id not found"));
@@ -51,24 +70,31 @@ public class PostServiceImp implements PostService {
         userLogRepository.save(userLog);
 
         return this.postRepository.findByOperativeTrue().stream().map(PostDetailDTO::new).toList();
-
-
     }
 
     @Override
     public PostDetailDTO createPost(PostCreateDTO data,Long userLog_id) {
         Users user = this.userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("Id not found"));
+        Post verifyPost = postRepository.findByPost(data.post()).orElse(null);
+        if (verifyPost == null){
+            try {
+                var post = new Post(data);
+                Post returnPost = postRepository.save(post);
+                Long post_id = post.getId_post();
 
-        var post = new Post(data);
-        Post returnPost = postRepository.save(post);
-        Long post_id = post.getId_post();
+                var userLog = new UserLog(user,"Area",post_id.toString(),"Create new Area", EnumAction.CREATE);
+                userLogRepository.save(userLog);
 
-        var userLog = new UserLog(user,"Area",post_id.toString(),"Create new Area", EnumAction.CREATE);
-        userLogRepository.save(userLog);
+                System.out.println("Post: Post ");
 
-        System.out.println("Post: Post ");
+                return new PostDetailDTO(returnPost);
 
-        return new PostDetailDTO(returnPost);
+            }catch (DataIntegrityViolationException e ){
+                throw new ExistingEntityException("Post ("+data.post()+") already exists.");
+            }
+        }
+        return new PostDetailDTO(verifyPost);
+
     }
 
     @Override

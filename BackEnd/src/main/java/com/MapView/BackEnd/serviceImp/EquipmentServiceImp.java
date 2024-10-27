@@ -1,23 +1,20 @@
 package com.MapView.BackEnd.serviceImp;
 
-import com.MapView.BackEnd.dtos.Equipment.EquipmentUpdateDTO;
+import com.MapView.BackEnd.dtos.Equipment.*;
+import com.MapView.BackEnd.dtos.EquipmentResponsible.EquipmentResponsibleDetailsDTO;
 import com.MapView.BackEnd.entities.*;
 import com.MapView.BackEnd.enums.EnumAction;
 import com.MapView.BackEnd.enums.EnumColors;
 import com.MapView.BackEnd.enums.EnumModelEquipment;
 import com.MapView.BackEnd.enums.EnumTrackingAction;
-import com.MapView.BackEnd.infra.Exception.BlankErrorException;
-import com.MapView.BackEnd.infra.Exception.NotFoundException;
-import com.MapView.BackEnd.infra.Exception.OperativeFalseException;
-import com.MapView.BackEnd.infra.Exception.OpetativeTrueException;
+import com.MapView.BackEnd.infra.Exception.*;
 import com.MapView.BackEnd.repository.*;
 import com.MapView.BackEnd.service.EquipmentService;
-import com.MapView.BackEnd.dtos.Equipment.EquipmentCreateDTO;
-import com.MapView.BackEnd.dtos.Equipment.EquipmentDetailsDTO;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.*;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -45,6 +42,7 @@ public class EquipmentServiceImp implements EquipmentService {
     private final Path fileStorageLocation;
     private final TrackingHistoryRepository trackingHistoryRepository;
     private final ImageRepository imageRepository;
+
 
 
     public EquipmentServiceImp(EntityManager entityManager, EquipmentRepository equipmentRepository, LocationRepository locationRepository, MainOwnerRepository mainOwnerRepository,
@@ -86,47 +84,57 @@ public class EquipmentServiceImp implements EquipmentService {
 
 
     @Override
-    public EquipmentDetailsDTO createEquipment(EquipmentCreateDTO data, Long userLog_id) {
-        Users users = this.userRepository.findById(userLog_id)
-                .orElseThrow(() -> new NotFoundException("Id not found!"));
+    public EquipmentDetailsDTO  createEquipment(EquipmentCreateDTO data, Long userLog_id) {
+        Equipment verify = equipmentRepository.findByIdEquipmentAndOperativeTrue(data.id_equipment()).orElse(null);
 
-        // Localização
-        Location location = locationRepository.findById(Long.valueOf(data.id_location()))
-                .orElseThrow(() -> new RuntimeException("Id location Não encontrado!"));
+        if (verify == null){
+            try{
 
-        // Proprietário principal
-        MainOwner mainOwner = mainOwnerRepository.findById(String.valueOf(data.id_owner()))
-                .orElseThrow(() -> new RuntimeException("Id main owner Não encontrado"));
+                Users users = this.userRepository.findById(userLog_id)
+                        .orElseThrow(()  -> new NotFoundException("Id user_log ("+userLog_id+") not found!"));
 
-        if (!mainOwner.isOperative()) {
-            throw new OperativeFalseException("The inactive mainowner cannot be accessed.");
+                // Localização
+                Location location = locationRepository.findById(Long.valueOf(data.id_location()))
+                        .orElseThrow(() -> new RuntimeException("Id location ("+data.id_location()+ ") not found!"));
+
+                // Proprietário principal
+                MainOwner mainOwner = mainOwnerRepository.findById(String.valueOf(data.id_owner()))
+                        .orElseThrow(() -> new RuntimeException("Id main owner " + data.id_owner() + ") not found!"));
+
+                if (!mainOwner.isOperative()) {
+                    throw new OperativeFalseException("The inactive mainOwner cannot be accessed.");
+                }
+
+                System.out.println(data.name_equipment());
+
+
+                // Cria o equipamento
+
+
+                Equipment equipment  = equipmentRepository.save(new Equipment(data,getStartDateFromQuarter(data.validity()), location, mainOwner));
+
+                var userLog = new UserLog(users, "Equipment", data.id_equipment(), "Create new Equipment", EnumAction.CREATE);
+                userLogRepository.save(userLog);
+
+                // Salvar o tracking history
+                Environment environment = location.getEnvironment();
+
+                TrackingHistory trackingHistory = new TrackingHistory(
+                        equipment, environment, EnumTrackingAction.ENTER,
+                        EnumColors.GREEN
+                );
+
+                trackingHistoryRepository.save(trackingHistory);
+
+                System.out.println(new EquipmentDetailsDTO(equipment));
+                System.out.println("Post: Equipment ");
+                return new EquipmentDetailsDTO(equipment);
+
+            }catch (DataIntegrityViolationException e ){
+                throw new ExistingEntityException("rfid: ("+ data.rfid()+") Already exists");
+            }
         }
-
-        System.out.println(data.name_equipment());
-
-
-        // Cria o equipamento
-
-
-        Equipment equipment  = equipmentRepository.save(new Equipment(data,getStartDateFromQuarter(data.validity()), location, mainOwner));
-
-
-        var userLog = new UserLog(users, "Equipment", data.id_equipment(), "Create new Equipment", EnumAction.CREATE);
-        userLogRepository.save(userLog);
-
-        // Salvar o tracking history
-        Environment environment = location.getEnvironment();
-
-        TrackingHistory trackingHistory = new TrackingHistory(
-                equipment, environment, equipment.getRfid(), EnumTrackingAction.ENTER,
-                EnumColors.GREEN
-        );
-
-        trackingHistoryRepository.save(trackingHistory);
-
-        System.out.println(new EquipmentDetailsDTO(equipment));
-        System.out.println("Post: Equipment ");
-        return new EquipmentDetailsDTO(equipment);
+        throw new ExistingEntityException("Equipment: " + data.id_equipment() + " Already exists");
     }
 
 
@@ -253,74 +261,9 @@ public class EquipmentServiceImp implements EquipmentService {
     }
 
     @Override
-    public List<EquipmentDetailsDTO> getEquipmentInventory(int page, int itens, String validity,
-                                                            String environment, String id_owner, String id_equipment,
-                                                            String name_equipment, String post) {
+    public List<EquipmentSearchBarDTO> getEquipmentSearchBar(String searchTerm) {
 
-
-
-
-        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<Equipment> criteriaQuery = criteriaBuilder.createQuery(Equipment.class);
-
-        //Select From Equipment
-        Root<Equipment> equipmentRoot = criteriaQuery.from(Equipment.class);
-
-        //Inner Join
-        Join<Equipment,MainOwner> mainOwnerJoin = equipmentRoot.join("owner");
-        Join<Equipment, Location> locationJoin = equipmentRoot.join("location");
-        Join<Equipment, Location> locationPostJoin = equipmentRoot.join("location");
-        Join<Location, Post> PostJoin = locationPostJoin.join("post");
-        Join<Location, Environment> environmentJoin = locationJoin.join("environment");
-
-
-        List<Predicate> predicate = new ArrayList<>();
-        System.out.println(predicate);
-
-        //WHERE
-
-        if(validity != null){
-            LocalDate validDate = getStartDateFromQuarter(validity);
-            predicate.add(criteriaBuilder.equal(equipmentRoot.get("validity"), validDate));
-        }
-        if (environment != null){
-            predicate.add(criteriaBuilder.like(environmentJoin.get("environment_name"), "%"+environment.toLowerCase()+"%"));
-        }
-        if (id_owner != null){
-            predicate.add(criteriaBuilder.like(mainOwnerJoin.get("id_owner"), "%"+id_owner.toLowerCase()+"%"));
-        }
-        if (id_equipment != null){
-            predicate.add(criteriaBuilder.like(equipmentRoot.get("idEquipment"), "%" + id_equipment.toLowerCase() + "%"));
-        }
-        if (name_equipment != null){
-            predicate.add(criteriaBuilder.like(equipmentRoot.get("name_equipment"), "%" + name_equipment.toLowerCase() + "%"));
-        }
-        if (post != null){
-            predicate.add(criteriaBuilder.like(PostJoin.get("post"), "%" + post.toLowerCase() + "%"));
-        }
-
-        if (validity != null && environment != null && id_equipment != null && name_equipment != null && post != null){
-            return equipmentRepository.findAllByOperativeTrue(PageRequest.of(page, itens))
-                    .stream()
-                    .map(EquipmentDetailsDTO::new)
-                    .collect(Collectors.toList());
-        }
-
-        predicate.add(criteriaBuilder.equal(equipmentRoot.get("operative"), true));
-
-        criteriaQuery.where(criteriaBuilder.and(predicate.toArray(new Predicate[0])));
-        
-        TypedQuery<Equipment> query = entityManager.createQuery((criteriaQuery));
-
-
-        return query.getResultList().stream()
-                .map(EquipmentDetailsDTO::new)
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public List<EquipmentDetailsDTO> getEquipmentSearchBar(int page, int itens,
-                                                            String searchTerm) {
+        EquipmentResponsible equipmentResponsible = new EquipmentResponsible();
 
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Equipment> criteriaQuery = criteriaBuilder.createQuery(Equipment.class);
@@ -337,7 +280,7 @@ public class EquipmentServiceImp implements EquipmentService {
 
         // Se houver um termo de pesquisa, aplique-o a múltiplos campos
         if (searchTerm != null && !searchTerm.trim().isEmpty()) {
-            String searchLower = searchTerm.toLowerCase();
+            String searchLower = searchTerm.toLowerCase(); // para que ele aceite letras maiuscula e minusculas
             Predicate searchPredicate = criteriaBuilder.or(
                     criteriaBuilder.like(criteriaBuilder.lower(equipmentRoot.get("name_equipment")), "%" + searchLower + "%"),
                     criteriaBuilder.like(criteriaBuilder.lower(mainOwnerJoin.get("id_owner")), "%" + searchLower + "%"),
@@ -354,11 +297,27 @@ public class EquipmentServiceImp implements EquipmentService {
         criteriaQuery.where(criteriaBuilder.and(predicate.toArray(new Predicate[0])));
 
         TypedQuery<Equipment> query = entityManager.createQuery(criteriaQuery);
-        query.setFirstResult(page * itens); // Paginação
-        query.setMaxResults(itens);
 
         return query.getResultList().stream()
-                .map(EquipmentDetailsDTO::new)
+                .map(equipment -> {
+                    // Obtém a localização e o proprietário
+                    Location location = equipment.getLocation();
+                    MainOwner mainOwner = equipment.getOwner();
+                    Environment environment = location.getEnvironment();
+
+                    // Busca o último histórico de rastreamento
+                    TrackingHistory trackingHistory = trackingHistoryRepository.findTop1ByEquipmentOrderByIdDesc(equipment);
+                    String wrong = trackingHistory != null ? trackingHistory.getEnvironment().getEnvironment_name() : null;
+
+                    // Cria a lista de responsáveis
+                    List<String> responsibles = equipment.getEquipmentResponsibles()
+                            .stream()
+                            .map(responsible -> responsible.getId_responsible().getResponsible())
+                            .collect(Collectors.toList());
+
+                    // Cria o DTO do equipamento
+                    return new EquipmentSearchBarDTO(equipment, location, mainOwner, environment, wrong, responsibles);
+                })
                 .collect(Collectors.toList());
     }
 

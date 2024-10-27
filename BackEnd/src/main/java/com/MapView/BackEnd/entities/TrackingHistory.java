@@ -7,6 +7,7 @@ import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 
 @Table(name = "tracking_history")
 @Entity(name = "tracking_history")
@@ -17,12 +18,13 @@ import java.time.Instant;
 public class TrackingHistory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id_tracking;
+    @Column(name = "id_tracking")
+    private Long id;
 
     @CreationTimestamp
     // Use aspas invertidas para forçar o nome exato
     //@Column(updatable = false) // Se você não quiser que a data de criação seja atualizada
-    private Instant datetime;
+    private LocalDateTime datetime;
 
     @OneToOne
     @JoinColumn(name ="id_equipment")
@@ -32,7 +34,6 @@ public class TrackingHistory {
     @JoinColumn(name ="id_environment")
     private Environment environment;
 
-    private Long rfid;
 
     @Enumerated(value = EnumType.STRING)
     private EnumTrackingAction action;
@@ -42,30 +43,26 @@ public class TrackingHistory {
 
 
 
-    public TrackingHistory(Long rfid, Environment environment, EnumColors warning) {
+    public TrackingHistory( Environment environment, EnumColors warning) {
         this.equipment = null;
-        this.rfid = rfid;
         this.environment = environment;
         this.action = null;
         this.warning = warning;
     }
 
-    public TrackingHistory(Environment environment, Equipment equipment, Long rfid, EnumTrackingAction action, EnumColors warning) {
+    public TrackingHistory(Environment environment, Equipment equipment, EnumTrackingAction action, EnumColors warning) {
         this.equipment = equipment;
-        this.rfid = rfid;
         this.environment = environment;
         this.action = action;
         this.warning = warning;
     }
 
     // para salvar um tracking history quando salvar um equipment
-    public TrackingHistory(Equipment equipment, Environment environment, Long rfid, EnumTrackingAction action, EnumColors warning) {
-        this.datetime = Instant.now();
+    public TrackingHistory(Equipment equipment, Environment environment,  EnumTrackingAction action, EnumColors warning) {
+        this.datetime = LocalDateTime.now();
         this.equipment = equipment;
         this.environment = environment;
-        this.rfid = rfid;
         this.action = action;
         this.warning = warning;
     }
-
 }

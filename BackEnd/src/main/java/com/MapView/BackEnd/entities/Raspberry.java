@@ -24,7 +24,7 @@ public class Raspberry {
 
 
     public Raspberry(RaspberryCreateDTO dados, Building id_building, Area id_area) {
-        this.id_raspberry = dados.raspberry_name();
+        this.id_raspberry = dados.id_raspberry();
         this.building = id_building;
         this.area = id_area;
         this.operative = true;

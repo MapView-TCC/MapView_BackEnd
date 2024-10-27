@@ -4,6 +4,7 @@ import com.MapView.BackEnd.entities.UserLog;
 import com.MapView.BackEnd.entities.Users;
 import com.MapView.BackEnd.enums.EnumAction;
 import com.MapView.BackEnd.infra.Exception.BlankErrorException;
+import com.MapView.BackEnd.infra.Exception.ExistingEntityException;
 import com.MapView.BackEnd.infra.Exception.OperativeFalseException;
 import com.MapView.BackEnd.repository.AreaRepository;
 import com.MapView.BackEnd.repository.UserLogRepository;
@@ -15,6 +16,7 @@ import com.MapView.BackEnd.dtos.Area.AreaUpdateDTO;
 import com.MapView.BackEnd.entities.Area;
 import com.MapView.BackEnd.infra.Exception.NotFoundException;
 import com.MapView.BackEnd.service.UserLogService;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
@@ -59,47 +61,46 @@ public class AreaServiceImp implements AreaService {
 
     @Override
     public AreaDetailsDTO createArea(AreaCreateDTO data, Long userLog_id) {
-        Users user = this.userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("Id not found"));
+        try {
+            Users user = this.userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("Id not found"));
 
-        var area = new Area(data);
-        Long id_area = areaRepository.save(area).getId_area();
+            var area = new Area(data);
+            Long id_area = areaRepository.save(area).getId_area();
 
-        var userLog = new UserLog(user,"Area",id_area.toString(),"Create new Area", EnumAction.CREATE);
-        userLogRepository.save(userLog);
+            var userLog = new UserLog(user, "Area", id_area.toString(), "Create new Area", EnumAction.CREATE);
+            userLogRepository.save(userLog);
 
-        return new AreaDetailsDTO(area);
+            return new AreaDetailsDTO(area);
+
+        }catch (DataIntegrityViolationException e){
+            throw new ExistingEntityException("Area already exists with that name: "+data.area_name()+" or "+data.area_code());
+        }
     }
 
     @Override
-    public AreaDetailsDTO updateArea(Long id_area, AreaUpdateDTO data,Long userLog_id) {
+    public AreaDetailsDTO updateArea(Long id_area, AreaUpdateDTO data, Long userLog_id) {
         var area = areaRepository.findById(id_area).orElseThrow(() -> new NotFoundException("Id not found"));
-        if(!area.isOperative()){
+        if (!area.isOperative()) {
             throw new OperativeFalseException("The inactive area cannot be updated.");
         }
 
         Users user = this.userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("Id not found"));
-        var userlog = new UserLog(user,"Area", id_area.toString(),null,"Infos update",EnumAction.UPDATE);
+        var userlog = new UserLog(user, "Area", id_area.toString(), null, "Infos update", EnumAction.UPDATE);
 
-
-        if (data.area_name() != null){
-            if(data.area_code().isBlank()){
-                throw new BlankErrorException("Area name cannot not be blank");
-            }
+        if (data.area_name() != null && !data.area_name().isBlank()) {
             area.setArea_name(data.area_name());
-            userlog.setField("area_name to: "+ data.area_name());
+            userlog.setField("area_name to: " + data.area_name());
         }
-        if (data.area_code() != null){
-            if(data.area_code().isBlank()){
-                throw new BlankErrorException("Area code cannot not be blank");
-            }
+        if (data.area_code() != null && !data.area_code().isBlank()) {
             area.setArea_code(data.area_code());
-            userlog.setField(userlog.getField()+" ,"+"area_code to: "+data.area_code());
+            userlog.setField(userlog.getField() + ", area_code to: " + data.area_code());
         }
-        areaRepository.save(area);
 
+        areaRepository.save(area);
         userLogRepository.save(userlog);
         return new AreaDetailsDTO(area);
     }
+
 
     @Override
     public void activateArea(Long id_area,Long userLog_id) {

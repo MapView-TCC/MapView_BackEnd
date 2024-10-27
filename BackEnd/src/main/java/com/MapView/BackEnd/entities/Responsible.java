@@ -4,7 +4,6 @@ import com.MapView.BackEnd.dtos.Responsible.ResponsibleCrateDTO;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
-import org.apache.catalina.User;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,8 +22,8 @@ public class Responsible {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id_responsible;
-
-    private String responsible_name;
+    @Column(name = "responsible_name")
+    private String responsible;
     private String edv;
     @OneToOne
     @JoinColumn(name = "id_classes")
@@ -39,7 +38,7 @@ public class Responsible {
     private List<EquipmentResponsible> equipmentResponsibles = new ArrayList<>();
 
     public  Responsible(String responsible_name, String edv,Classes classes,Users users){
-        this.responsible_name = responsible_name;
+        this.responsible = responsible_name;
         this.edv = edv;
         this.classes = classes;
         this.user = users;
@@ -48,7 +47,7 @@ public class Responsible {
     }
 
     public  Responsible(ResponsibleCrateDTO data, Classes classes, Users users){
-        this.responsible_name = data.responsible_name();
+        this.responsible = data.responsible_name();
         this.edv = data.edv();
         this.classes = classes;
         this.user = users;

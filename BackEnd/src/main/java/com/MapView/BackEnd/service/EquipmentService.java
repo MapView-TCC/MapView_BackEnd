@@ -1,8 +1,6 @@
 package com.MapView.BackEnd.service;
 
-import com.MapView.BackEnd.dtos.Equipment.EquipmentCreateDTO;
-import com.MapView.BackEnd.dtos.Equipment.EquipmentDetailsDTO;
-import com.MapView.BackEnd.dtos.Equipment.EquipmentUpdateDTO;
+import com.MapView.BackEnd.dtos.Equipment.*;
 import com.MapView.BackEnd.entities.Location;
 import com.MapView.BackEnd.entities.MainOwner;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -20,6 +18,6 @@ public interface EquipmentService {
     void inactivateEquipment(String id_equipment, Long userLog_id); // put
 
     // tentativa dos filtros
-    List<EquipmentDetailsDTO> getEquipmentInventory(int page, int itens, String validity,String environment, String id_owner, String id_equipment, String name_equipment, String post);
-    List<EquipmentDetailsDTO> getEquipmentSearchBar(int page, int itens, String searchTerm);
+    //List<EquipmentFilterDTO> getEquipmentInventory(int page, int itens, String validity, String environment, String id_owner, String id_equipment, String name_equipment, String post);
+    List<EquipmentSearchBarDTO> getEquipmentSearchBar(String searchTerm);
 }

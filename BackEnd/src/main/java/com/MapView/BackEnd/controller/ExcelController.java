@@ -1,7 +1,6 @@
 package com.MapView.BackEnd.controller;
 
-import com.MapView.BackEnd.repository.EquipmentRepository;
-import com.MapView.BackEnd.serviceImp.ReportServiceImp;
+import com.MapView.BackEnd.serviceImp.ExcelServiceImp;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -15,12 +14,12 @@ import java.io.IOException;
 @RestController
 @RequestMapping("/api/v1/excel")
 @Tag(name = "Excel Report", description = "Operations related to Excel report generation")
-public class ReportRestController {
+public class ExcelController {
 
-    private final ReportServiceImp reportServiceImp ;
+    private final ExcelServiceImp excelServiceImp;
 
-    public ReportRestController(ReportServiceImp reportServiceImp) {
-        this.reportServiceImp = reportServiceImp;
+    public ExcelController(ExcelServiceImp excelServiceImp) {
+        this.excelServiceImp = excelServiceImp;
     }
 
     @Operation(
@@ -39,6 +38,6 @@ public class ReportRestController {
 
         response.setHeader(headerKey, headerValue);
 
-        reportServiceImp.generateExcel(response);
+        excelServiceImp.generateExcel(response);
     }
 }

@@ -4,6 +4,7 @@ import com.MapView.BackEnd.dtos.CostCenter.CostCenterCreateDTO;
 import com.MapView.BackEnd.entities.UserLog;
 import com.MapView.BackEnd.entities.Users;
 import com.MapView.BackEnd.enums.EnumAction;
+import com.MapView.BackEnd.infra.Exception.ExistingEntityException;
 import com.MapView.BackEnd.infra.Exception.OperativeFalseException;
 import com.MapView.BackEnd.infra.Exception.OpetativeTrueException;
 import com.MapView.BackEnd.repository.CostCenterRepository;
@@ -14,6 +15,7 @@ import com.MapView.BackEnd.dtos.CostCenter.CostCenterDetailsDTO;
 import com.MapView.BackEnd.dtos.CostCenter.CostCenterUpdateDTO;
 import com.MapView.BackEnd.entities.CostCenter;
 import com.MapView.BackEnd.infra.Exception.NotFoundException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
@@ -46,6 +48,9 @@ public class CostCenterServiceImp implements CostCenterService {
         return new CostCenterDetailsDTO(costCenter);
     }
 
+
+
+
     @Override
     public List<CostCenterDetailsDTO> getAllCostCenter(Long userLog_id) {
         Users user = this.userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("Id not found"));
@@ -58,15 +63,26 @@ public class CostCenterServiceImp implements CostCenterService {
     @Override
     public CostCenterDetailsDTO createCostCenter(CostCenterCreateDTO dados,Long userLog_id) {
         Users user = this.userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("Id not found"));
+        CostCenter verifyCostCenter = costCenterRepository.findByConstcenter(dados.costCenter_name()).orElse(null);
+        if (verifyCostCenter == null){
+            try {
 
-        var costcenter = new CostCenter(dados);
-        Long cost_id = costCenterRepository.save(costcenter).getId_cost_center();
+                var costcenter = new CostCenter(dados);
+                Long cost_id = costCenterRepository.save(costcenter).getId_cost_center();
 
-        var userLog = new UserLog(user,"CostCenter",cost_id.toString(),"Create new CostCenter", EnumAction.CREATE);
-        userLogRepository.save(userLog);
-        System.out.println("Post: createCostCenter ");
+                var userLog = new UserLog(user,"CostCenter",cost_id.toString(),"Create new CostCenter", EnumAction.CREATE);
+                userLogRepository.save(userLog);
+                System.out.println("Post: createCostCenter ");
 
-        return new CostCenterDetailsDTO(costcenter);
+                return new CostCenterDetailsDTO(costcenter);
+
+            }catch (DataIntegrityViolationException e ){
+                throw new ExistingEntityException("It"+ dados.costCenter_name() + "CostCenter already exists");
+            }
+
+        }
+        return new CostCenterDetailsDTO(verifyCostCenter);
+
     }
 
     @Override
@@ -81,7 +97,7 @@ public class CostCenterServiceImp implements CostCenterService {
         var userlog = new UserLog(user,"Area", id.toString(),null,"Infos update",EnumAction.UPDATE);
 
         if (dados.costCenter_name() != null){
-            costCenter.setCost_center_name(dados.costCenter_name());
+            costCenter.setConstcenter(dados.costCenter_name());
             userlog.setField("const_center_name to: "+ dados.costCenter_name());
         }
 

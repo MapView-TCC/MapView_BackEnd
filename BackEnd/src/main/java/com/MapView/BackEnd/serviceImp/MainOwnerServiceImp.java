@@ -5,6 +5,7 @@ import com.MapView.BackEnd.dtos.MainOwner.MainOwnerDetailsDTO;
 import com.MapView.BackEnd.entities.UserLog;
 import com.MapView.BackEnd.entities.Users;
 import com.MapView.BackEnd.enums.EnumAction;
+import com.MapView.BackEnd.infra.Exception.ExistingEntityException;
 import com.MapView.BackEnd.infra.Exception.OperativeFalseException;
 import com.MapView.BackEnd.infra.Exception.OpetativeTrueException;
 import com.MapView.BackEnd.repository.CostCenterRepository;
@@ -16,6 +17,7 @@ import com.MapView.BackEnd.dtos.MainOwner.MainOwnerUpdateDTO;
 import com.MapView.BackEnd.entities.CostCenter;
 import com.MapView.BackEnd.entities.MainOwner;
 import com.MapView.BackEnd.infra.Exception.NotFoundException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
@@ -53,6 +55,7 @@ public class MainOwnerServiceImp implements MainOwnerService {
         return new MainOwnerDetailsDTO(mainOwner);
     }
 
+
     @Override
     public List<MainOwnerDetailsDTO> getAllMainOwner(Long userLog_id) {
         Users user = this.userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("Id not found"));
@@ -66,20 +69,23 @@ public class MainOwnerServiceImp implements MainOwnerService {
     @Override
     public MainOwnerDetailsDTO createMainOwner(MainOwnerCreateDTO data,Long userLog_id) {
         Users user = this.userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("Id not found"));
-
-        CostCenter costCenter = costCenterRepository.findById(data.id_cost_center())
-                .orElseThrow(() -> new RuntimeException("Não encontrado!"));
-
-
-        MainOwner mainOwner = new MainOwner(data, costCenter);
-        String mainowner_id = mainOwnerRepository.save(mainOwner).getId_owner();
-
-        var userLog = new UserLog(user,"MainOwner",mainowner_id.toString(),"Create new MainOwner", EnumAction.CREATE);
-        userLogRepository.save(userLog);
-        System.out.println("Post: MainOwner ");
+        MainOwner existVerifyMainOwner = mainOwnerRepository.findById(data.id_owner()).orElse(null);
+        if (existVerifyMainOwner == null){
+                CostCenter costCenter = costCenterRepository.findById(data.id_cost_center())
+                        .orElseThrow(() -> new RuntimeException("Não encontrado!"));
 
 
-        return new MainOwnerDetailsDTO(mainOwner);
+                MainOwner mainOwner = new MainOwner(data, costCenter);
+                String mainowner_id = mainOwnerRepository.save(mainOwner).getId_owner();
+
+                var userLog = new UserLog(user,"MainOwner",mainowner_id.toString(),"Create new MainOwner", EnumAction.CREATE);
+                userLogRepository.save(userLog);
+                System.out.println("Post: MainOwner ");
+
+
+                return new MainOwnerDetailsDTO(mainOwner);
+        }
+        return new MainOwnerDetailsDTO(existVerifyMainOwner);
 
     }
 

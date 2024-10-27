@@ -1,11 +1,13 @@
 package com.MapView.BackEnd.dtos.EquipmentResponsible;
 
-import com.MapView.BackEnd.entities.Equipment;
-import com.MapView.BackEnd.entities.EquipmentResponsible;
-import com.MapView.BackEnd.entities.Responsible;
+import com.MapView.BackEnd.dtos.Equipment.EquipmentDetailsDTO;
+import com.MapView.BackEnd.dtos.Responsible.ResponsibleDetailsDTO;
+import com.MapView.BackEnd.entities.*;
+import com.MapView.BackEnd.enums.EnumModelEquipment;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public record EquipmentResponsibleDetailsDTO(
         Long id_equip_resp,

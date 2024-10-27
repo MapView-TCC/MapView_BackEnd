@@ -75,28 +75,10 @@ public class EquipmentController {
     })
     @GetMapping
     public ResponseEntity<List<EquipmentDetailsDTO>> getAllEquipment(
-            @Parameter(description = "Page number for pagination", required = true) @RequestParam int page,
-            @Parameter(description = "Number of items per page", required = true) @RequestParam int itens,
+            @Parameter(description = "Page number for pagination", required = false) @RequestParam(defaultValue = "0") int page,
+            @Parameter(description = "Number of items per page", required = false) @RequestParam(defaultValue = "200") int itens,
             @Parameter(description = "User log ID for tracking changes", required = true) @RequestParam Long userLog_id) {
         var list = equipmentServiceImp.getAllEquipment(page, itens, userLog_id);
-        return ResponseEntity.ok(list);
-    }
-
-    @Operation(summary = "Filter equipment", description = "Retrieve equipment with optional filters for validity, environment, owner, etc.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Filtered equipment list successfully retrieved")
-    })
-    @GetMapping("/filter")
-    public ResponseEntity<List<EquipmentDetailsDTO>> getAllEquipmentFilter(
-            @Parameter(description = "Page number for pagination", required = true) @RequestParam int page,
-            @Parameter(description = "Number of items per page", required = true) @RequestParam int itens,
-            @RequestParam(required = false) String validity,
-            @RequestParam(required = false) String enviroment,
-            @RequestParam(required = false) String id_owner,
-            @RequestParam(required = false) String id_equipment,
-            @RequestParam(required = false) String name_equipment,
-            @RequestParam(required = false) String post) {
-        var list = equipmentServiceImp.getEquipmentInventory(page, itens, validity, enviroment, id_owner, id_equipment, name_equipment, post);
         return ResponseEntity.ok(list);
     }
 
@@ -106,8 +88,8 @@ public class EquipmentController {
             @ApiResponse(responseCode = "200", description = "Filtered equipment list successfully retrieved")
     })
     @GetMapping("/search")
-    public ResponseEntity<List<EquipmentDetailsDTO>> getEquipmentSearch(int page, int itens, String searchTerm){
-        var list = equipmentServiceImp.getEquipmentSearchBar(page, itens, searchTerm);
+    public ResponseEntity<List<EquipmentSearchBarDTO>> getEquipmentSearch(String searchTerm){
+        var list = equipmentServiceImp.getEquipmentSearchBar(searchTerm);
         return ResponseEntity.ok(list);
     }
 
@@ -170,10 +152,8 @@ public class EquipmentController {
     public ResponseEntity<EquipmentDetailsDTO> updateEquipment(
             @Parameter(description = "The ID of the equipment to update", required = true)
             @PathVariable String id_equipment,
-
             @Parameter(description = "Data transfer object for updating the equipment", required = true)
             @RequestBody @Valid EquipmentUpdateDTO dados,
-
             @Parameter(description = "User log ID for tracking changes", required = true)
             @RequestParam Long userLog_id)
     {

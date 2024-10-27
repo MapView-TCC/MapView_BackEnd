@@ -82,4 +82,18 @@ public class Equipment {
         this.owner = null;
         this.operative = true;
     }
+    public Equipment(Long rfid) {
+        this.idEquipment = null;
+        this.rfid = rfid;
+        this.type = null;
+        this.model = null;
+        this.validity = null;
+        this.admin_rights = null;
+        this.observation = null;
+        this.location = null;
+        this.owner = null;
+        this.operative = true;
+    }
+
+
 }

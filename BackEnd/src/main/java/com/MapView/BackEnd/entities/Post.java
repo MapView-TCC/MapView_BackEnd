@@ -21,7 +21,7 @@ public class Post {
     private Long id_post;
     private String post;
     private boolean operative;
-    @ManyToMany(mappedBy = "environments")
+    @ManyToMany(mappedBy = "posts")
     @JsonBackReference
     private Set<Environment> posts;
 

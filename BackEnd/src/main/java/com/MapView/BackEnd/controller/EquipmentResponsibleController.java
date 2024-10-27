@@ -1,12 +1,14 @@
 package com.MapView.BackEnd.controller;
 
 import com.MapView.BackEnd.dtos.CostCenter.CostCenterDetailsDTO;
+import com.MapView.BackEnd.dtos.EquipmentResponsible.EquipmentResponsibleSearchDetailsDTO;
 import com.MapView.BackEnd.serviceImp.EquipmentResponsibleServiceImp;
 import com.MapView.BackEnd.dtos.EquipmentResponsible.EquipmentResponsibleCreateDTO;
 import com.MapView.BackEnd.dtos.EquipmentResponsible.EquipmentResponsibleDetailsDTO;
 import com.MapView.BackEnd.dtos.EquipmentResponsible.EquipmentResponsibleUpdateDTO;
 import io.swagger.v3.oas.annotations.ExternalDocumentation;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -114,6 +116,20 @@ public class EquipmentResponsibleController {
     public ResponseEntity<Void> active(@PathVariable Long id_equip_resp){
         equipmentResponsibleServiceImp.activateEquipmentResponsible(id_equip_resp);
         return ResponseEntity.ok().build();
+    }
+
+
+    @Operation(summary = "Filter equipment", description = "Retrieve equipment with optional filters for validity, environment, owner, etc.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Filtered equipment list successfully retrieved")
+    })
+    @GetMapping("/filter")
+    public ResponseEntity<EquipmentResponsibleSearchDetailsDTO> getAllEquipmentFilter(
+
+            @RequestParam(required = false) String id_equipment
+   ) {
+        var list = equipmentResponsibleServiceImp.getEquipmentInventory( id_equipment );
+        return ResponseEntity.ok(list);
     }
 }
 

@@ -16,14 +16,17 @@ import com.MapView.BackEnd.dtos.Post.PostCreateDTO;
 import com.MapView.BackEnd.dtos.Post.PostDetailDTO;
 import com.MapView.BackEnd.dtos.Register.RegisterCreateDTO;
 import com.MapView.BackEnd.dtos.Register.RegisterDetailsDTO;
+import com.MapView.BackEnd.dtos.Register.RegisterUpdateDTO;
 import com.MapView.BackEnd.dtos.Register.ResponsibleResgisterDTO;
 import com.MapView.BackEnd.dtos.Responsible.ResponsibleCrateDTO;
 import com.MapView.BackEnd.dtos.Responsible.ResponsibleDetailsDTO;
 import com.MapView.BackEnd.entities.*;
 import com.MapView.BackEnd.enums.EnumAction;
+import com.MapView.BackEnd.infra.Exception.ExistingEntityException;
 import com.MapView.BackEnd.infra.Exception.NotFoundException;
 import com.MapView.BackEnd.repository.*;
 import com.MapView.BackEnd.service.RegisterService;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -53,6 +56,7 @@ public class RegisterServiceImp implements RegisterService {
     private final ClassesServiceImp classesServiceImp;
     private final ResponsibleServiceImp responsibleServiceImp;
     private  final EquipmentResponsibleServiceImp equipmentResponsibleServiceImp;
+    private  final CostCenterRepository costCenterRepository;
 
 
     public RegisterServiceImp(PostRepository postRepository,
@@ -71,7 +75,7 @@ public class RegisterServiceImp implements RegisterService {
                               MainOwnerServiceImp mainOwnerServiceImp,
                               CostCenterServiceImp costCenterServiceImp,
                               ClassesServiceImp classesServiceImp,
-                              ResponsibleServiceImp responsibleServiceImp, EquipmentResponsibleServiceImp equipmentResponsibleServiceImp) {
+                              ResponsibleServiceImp responsibleServiceImp, EquipmentResponsibleServiceImp equipmentResponsibleServiceImp, CostCenterRepository costCenterRepository) {
 
         this.postRepository = postRepository;
         this.environmentRepository = environmentRepository;
@@ -92,16 +96,17 @@ public class RegisterServiceImp implements RegisterService {
         this.classesServiceImp = classesServiceImp;
         this.responsibleServiceImp = responsibleServiceImp;
         this.equipmentResponsibleServiceImp = equipmentResponsibleServiceImp;
+        this.costCenterRepository = costCenterRepository;
     }
 
 
     @Override
-    public RegisterDetailsDTO register(RegisterCreateDTO data, Long userLog_id) {
+     public RegisterDetailsDTO register(RegisterCreateDTO data, Long userLog_id) {
         Users userlog = userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("This uses is incorrect"));
 
 
-            PostDetailDTO post = postServiceImp.createPost(new PostCreateDTO(data.post()),userLog_id);
-            LocationDetalsDTO location = locationServiceImp.createLocation(new LocationCreateDTO(post.id_post(),data.id_eviroment()));
+            PostDetailDTO post = postServiceImp.createPost(new PostCreateDTO(data.post()), userLog_id);
+            LocationDetalsDTO location = locationServiceImp.createLocation(new LocationCreateDTO(post.id_post(),data.id_environment()));
             CostCenterDetailsDTO costcenter = costCenterServiceImp.createCostCenter(new CostCenterCreateDTO(data.costCenter_name()),userLog_id);
 
             MainOwnerDetailsDTO owner = mainOwnerServiceImp.createMainOwner(new MainOwnerCreateDTO(data.id_owner(),costcenter.id_cost_center()),userLog_id);
@@ -118,7 +123,7 @@ public class RegisterServiceImp implements RegisterService {
 
                 List<ResponsibleDetailsDTO> responsibleDetailsDTO = new ArrayList<>();
 
-                for (ResponsibleResgisterDTO listResponsible: data.dataResposible()) {
+                for (ResponsibleResgisterDTO listResponsible: data.dataResponsible()) {
                     ClassesDetaiLDTO newClasses = classesServiceImp.createClasses(new ClassesCreateDTO(listResponsible.enumCourse(), listResponsible.name_classes(), userLog_id,LocalDate.now()),userLog_id);
 
                     ResponsibleDetailsDTO responsible = responsibleServiceImp.createResposible(new ResponsibleCrateDTO(
@@ -135,6 +140,109 @@ public class RegisterServiceImp implements RegisterService {
 
             return new RegisterDetailsDTO(equipment,location,responsibleDetailsDTO);
     }
+
+    // metodo para fazer a atualização
+    @Override
+    public RegisterDetailsDTO updateRegister( RegisterUpdateDTO data,String id_equipment, Long userLog_id) {
+        // Encontrar e verificar o registro do usuário
+        Users userLog = userRepository.findById(userLog_id)
+                .orElseThrow(() -> new NotFoundException("User not found"));
+
+        // Obter o equipamento a ser atualizado
+        Equipment equipment = equipmentRepository.findById(id_equipment)
+                .orElseThrow(() -> new NotFoundException("Equipment not found"));
+
+        // Atualizar dados básicos do Equipment
+        equipment.setName_equipment(data.name_equipment());
+        equipment.setRfid(data.rfid());
+        equipment.setType(data.type());
+        equipment.setModel(data.model());
+        equipment.setValidity(getStartDateFromQuarter(data.validity()));
+        equipment.setAdmin_rights(data.admin_rights());
+        equipment.setObservation(data.observation());
+        Location location = equipment.getLocation();
+
+
+        if(data.post() != null){
+            try {
+                if (location.getPost().getPost() != data.post()) {
+                    Post post = postRepository.findByPost(data.post()).orElse(null);
+                    if (post == null) {
+                        Post newPost = postRepository.save(new Post(new PostCreateDTO(data.post())));
+                        equipment.getLocation().setPost(newPost);
+                        equipmentRepository.save(equipment);
+                    }
+                }
+                } catch(DataIntegrityViolationException e){
+                    throw new ExistingEntityException("put it already linked to other equipment");
+            }
+        }
+
+       if (data.id_environment() != null){
+           try {
+
+               if (data.id_environment() != location.getEnvironment().getId_environment()) {
+                   Environment environment = environmentRepository.findById(data.id_environment()).orElseThrow(() -> new NotFoundException("Environment not found"));
+                   equipment.getLocation().setEnvironment(environment);
+                   equipmentRepository.save(equipment);
+               }
+
+           }catch(DataIntegrityViolationException e){
+               throw new ExistingEntityException("put it already linked to other equipment");
+           }
+       }
+
+       if(data.costCenter_name() != null){
+           if (data.costCenter_name() != equipment.getOwner().getCostCenter().getConstcenter()){
+               CostCenter costCenter = costCenterRepository.findByConstcenter(data.costCenter_name()).orElse(null);
+               if (costCenter == null) {
+                   CostCenter newCostCenter = new CostCenter(new CostCenterCreateDTO(data.costCenter_name()));
+                   equipment.getOwner().setCostCenter(costCenterRepository.save(newCostCenter));
+               }
+
+           }
+       }
+
+       if (data.id_owner() != null){
+           if(data.id_owner() != equipment.getOwner().getId_owner()){
+              MainOwner mainOwner =  mainOwnerRepository.findById(data.id_owner()).orElse(null);
+              if (mainOwner == null){
+                  mainOwnerRepository.save(new MainOwner())
+              }
+           }
+       }
+
+
+
+        // Log da atualização
+        UserlogCreate(userLog, "Equipment", equipment.getIdEquipment(), "Updated Equipment");
+
+        // Atualizar e salvar cada `Responsible`
+        List<ResponsibleDetailsDTO> responsibleDetailsDTO = new ArrayList<>();
+        for (ResponsibleResgisterDTO responsibleDTO : data.dataResponsible()) {
+            Responsible responsible = responsibleRepository.findByEdv(responsibleDTO.edv())
+                    .orElseThrow(() -> new NotFoundException("Responsible not found"));
+            responsible.setResponsible(responsibleDTO.responsible_name());
+            responsible.setEdv(responsibleDTO.edv());
+            responsibleRepository.save(responsible);
+
+            responsibleDetailsDTO.add(new ResponsibleDetailsDTO(responsible));
+        }
+
+        // Retornar detalhes atualizados
+        return new RegisterDetailsDTO(
+                new EquipmentDetailsDTO(equipment),
+                new LocationDetalsDTO(location),
+                responsibleDetailsDTO
+        );
+    }
+
+    public Location updateRegisterLocation(Location location,Long id_environmen,String post){
+
+        return  null;
+    }
+
+
 
 
     public static LocalDate getStartDateFromQuarter(String quarterStr) {
@@ -157,5 +265,3 @@ public class RegisterServiceImp implements RegisterService {
 
     }
 }
-
-

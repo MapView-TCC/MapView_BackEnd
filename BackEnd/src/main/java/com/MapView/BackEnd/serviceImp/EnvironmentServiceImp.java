@@ -4,9 +4,7 @@ import com.MapView.BackEnd.entities.Environment;
 import com.MapView.BackEnd.entities.UserLog;
 import com.MapView.BackEnd.entities.Users;
 import com.MapView.BackEnd.enums.EnumAction;
-import com.MapView.BackEnd.infra.Exception.BlankErrorException;
-import com.MapView.BackEnd.infra.Exception.OperativeFalseException;
-import com.MapView.BackEnd.infra.Exception.OpetativeTrueException;
+import com.MapView.BackEnd.infra.Exception.*;
 import com.MapView.BackEnd.repository.EnvironmentRepository;
 import com.MapView.BackEnd.repository.RaspberryRepository;
 import com.MapView.BackEnd.repository.UserLogRepository;
@@ -15,7 +13,7 @@ import com.MapView.BackEnd.service.EnvironmentService;
 import com.MapView.BackEnd.dtos.Environment.EnvironmentCreateDTO;
 import com.MapView.BackEnd.dtos.Environment.EnvironmentDetailsDTO;
 import com.MapView.BackEnd.dtos.Environment.EnvironmentUpdateDTO;
-import com.MapView.BackEnd.infra.Exception.NotFoundException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
@@ -64,17 +62,23 @@ public class EnvironmentServiceImp implements EnvironmentService {
 
     @Override
     public EnvironmentDetailsDTO createEnvironment(EnvironmentCreateDTO data, Long userLog_id) {
-        var rasp = raspberryRepository.findById(data.id_raspberry()).orElseThrow(()->new NotFoundException("Id Raspberry Not Found"));
-        var environment = new Environment(data, rasp);
+        try{
 
-        Long id_environment = environmentRepository.save(environment).getId_environment();
+            var rasp = raspberryRepository.findById(data.id_raspberry()).orElseThrow(()->new NotFoundException("Id Raspberry Not Found"));
+            var environment = new Environment(data, rasp);
 
-        Users users = this.userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("Id not found!"));
+            Long id_environment = environmentRepository.save(environment).getId_environment();
 
-        var userLog = new UserLog(users,"Environment", id_environment.toString(),"Create new Environment", EnumAction.CREATE);
-        userLogRepository.save(userLog);
+            Users users = this.userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("Id not found!"));
 
-        return new EnvironmentDetailsDTO(environment);
+            var userLog = new UserLog(users,"Environment", id_environment.toString(),"Create new Environment", EnumAction.CREATE);
+            userLogRepository.save(userLog);
+
+            return new EnvironmentDetailsDTO(environment);
+
+        }catch (DataIntegrityViolationException e){
+            throw new ExistingEntityException("This Environment: "+data.environment_name()+" already exist");
+        }
     }
 
     @Override

@@ -12,7 +12,7 @@ import java.util.List;
 public interface TrackingHistoryService {
 
     TrackingHistoryDetailsDTO getTrackingHistory(Long id_tracking);
-    List<TrackingHistoryDetailsDTO> getAllTrackingHistory(int page, int itens);
+    List<TrackingHistoryDetailsDTO> getAllTrackingHistory();
     TrackingHistoryDetailsDTO createTrackingHistory(TrackingHistoryCreateDTO dados);
     List<TrackingHistoryDetailsDTO> FilterTracking(int page, int itens, EnumTrackingAction action,
                                                    Integer day, Integer month, Integer year, EnumColors colors,
