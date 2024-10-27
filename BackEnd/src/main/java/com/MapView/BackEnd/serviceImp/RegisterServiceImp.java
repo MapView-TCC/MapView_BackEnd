@@ -180,7 +180,6 @@ public class RegisterServiceImp implements RegisterService {
 
        if (data.id_environment() != null){
            try {
-
                if (data.id_environment() != location.getEnvironment().getId_environment()) {
                    Environment environment = environmentRepository.findById(data.id_environment()).orElseThrow(() -> new NotFoundException("Environment not found"));
                    equipment.getLocation().setEnvironment(environment);
@@ -191,13 +190,14 @@ public class RegisterServiceImp implements RegisterService {
                throw new ExistingEntityException("put it already linked to other equipment");
            }
        }
-
+        CostCenter costCenter = costCenterRepository.findByConstcenter(data.costCenter_name()).orElse(null);
        if(data.costCenter_name() != null){
            if (data.costCenter_name() != equipment.getOwner().getCostCenter().getConstcenter()){
-               CostCenter costCenter = costCenterRepository.findByConstcenter(data.costCenter_name()).orElse(null);
+
                if (costCenter == null) {
                    CostCenter newCostCenter = new CostCenter(new CostCenterCreateDTO(data.costCenter_name()));
                    equipment.getOwner().setCostCenter(costCenterRepository.save(newCostCenter));
+                   costCenter = newCostCenter;
                }
 
            }
@@ -207,7 +207,8 @@ public class RegisterServiceImp implements RegisterService {
            if(data.id_owner() != equipment.getOwner().getId_owner()){
               MainOwner mainOwner =  mainOwnerRepository.findById(data.id_owner()).orElse(null);
               if (mainOwner == null){
-                  mainOwnerRepository.save(new MainOwner())
+                  MainOwner newMainOwner = mainOwnerRepository.save(new MainOwner(data.id_owner(),costCenter));
+                  equipment.setOwner(newMainOwner);
               }
            }
        }
@@ -219,23 +220,30 @@ public class RegisterServiceImp implements RegisterService {
 
         // Atualizar e salvar cada `Responsible`
         List<ResponsibleDetailsDTO> responsibleDetailsDTO = new ArrayList<>();
+        List<EquipmentResponsible> currentEquipmentResponsibleList = equipmentResponsibleRepository.findByIdEquipment(equipment);
+        List<EquipmentResponsible> updatedEquipmentResponsibleList = new ArrayList<>();
+
         for (ResponsibleResgisterDTO responsibleDTO : data.dataResponsible()) {
+
+            // Verifica se o responsável já existe no banco de dados
             Responsible responsible = responsibleRepository.findByEdv(responsibleDTO.edv())
-                    .orElseThrow(() -> new NotFoundException("Responsible not found"));
+                    .orElse(null);
+
+            // Atualiza os dados do responsável
             responsible.setResponsible(responsibleDTO.responsible_name());
-            responsible.setEdv(responsibleDTO.edv());
+            Classes classes = classesRepository.findByClasses(responsibleDTO.name_classes()).orElseThrow(()-> new NotFoundException("Classes not found"));
+            if (responsibleDTO.enumCourse() != classes.getEnumCourse()){
+                classes.setEnumCourse(responsibleDTO.enumCourse());
+            }
+            responsible.setClasses(classes);
             responsibleRepository.save(responsible);
 
-            responsibleDetailsDTO.add(new ResponsibleDetailsDTO(responsible));
-        }
 
-        // Retornar detalhes atualizados
-        return new RegisterDetailsDTO(
-                new EquipmentDetailsDTO(equipment),
-                new LocationDetalsDTO(location),
-                responsibleDetailsDTO
-        );
+        }
+        return null;
     }
+
+
 
     public Location updateRegisterLocation(Location location,Long id_environmen,String post){
 

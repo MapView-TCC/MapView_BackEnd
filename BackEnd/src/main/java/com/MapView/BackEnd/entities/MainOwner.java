@@ -33,5 +33,10 @@ public class MainOwner {
         this.costCenter = costCenter;
         this.operative = true;
     }
+    public MainOwner( String id_owner, CostCenter costCenter) {
+        this.id_owner = id_owner;
+        this.costCenter = costCenter;
+        this.operative = true;
+    }
 
 }
