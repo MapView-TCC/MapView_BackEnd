@@ -30,4 +30,9 @@ public class Post {
         this.operative = true;
 
     }
+    public Post(String post_name){
+        this.post = post_name;
+        this.operative = true;
+
+    }
 }

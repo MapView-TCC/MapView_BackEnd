@@ -45,6 +45,8 @@ public class EquipmentServiceImp implements EquipmentService {
 
 
 
+
+
     public EquipmentServiceImp(EntityManager entityManager, EquipmentRepository equipmentRepository, LocationRepository locationRepository, MainOwnerRepository mainOwnerRepository,
                                UserLogRepository userLogRepository, UserRepository userRepository, FileStorageProperties fileStorageProperties, TrackingHistoryRepository trackingHistoryRepository, ImageRepository imageRepository) {
         this.entityManager = entityManager;
@@ -96,6 +98,7 @@ public class EquipmentServiceImp implements EquipmentService {
                 // Localização
                 Location location = locationRepository.findById(Long.valueOf(data.id_location()))
                         .orElseThrow(() -> new RuntimeException("Id location ("+data.id_location()+ ") not found!"));
+
 
                 // Proprietário principal
                 MainOwner mainOwner = mainOwnerRepository.findById(String.valueOf(data.id_owner()))
@@ -255,6 +258,7 @@ public class EquipmentServiceImp implements EquipmentService {
         }
         Users users = this.userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("Id not found"));
         equipment.setOperative(false);
+        equipment.setLocation(null);
         var userLog = new UserLog(users, "Equipment", id_equipment, "Operative", "Inactivated area", EnumAction.UPDATE);
         equipmentRepository.save(equipment);
         userLogRepository.save(userLog);

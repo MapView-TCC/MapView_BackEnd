@@ -13,5 +13,4 @@ public interface EnvironmentRepository extends JpaRepository<Environment,Long> {
     List<Environment> findEnvironmentByOperativeTrue();
 
 
-    Optional<Environment> findByEnvironment_name(String name_environment);
 }

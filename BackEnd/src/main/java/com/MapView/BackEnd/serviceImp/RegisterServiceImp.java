@@ -153,43 +153,71 @@ public class RegisterServiceImp implements RegisterService {
                 .orElseThrow(() -> new NotFoundException("Equipment not found"));
 
         // Atualizar dados básicos do Equipment
-        equipment.setName_equipment(data.name_equipment());
-        equipment.setRfid(data.rfid());
-        equipment.setType(data.type());
-        equipment.setModel(data.model());
-        equipment.setValidity(getStartDateFromQuarter(data.validity()));
-        equipment.setAdmin_rights(data.admin_rights());
-        equipment.setObservation(data.observation());
-        Location location = equipment.getLocation();
-
-
-        if(data.post() != null){
-            try {
-                if (location.getPost().getPost() != data.post()) {
-                    Post post = postRepository.findByPost(data.post()).orElse(null);
-                    if (post == null) {
-                        Post newPost = postRepository.save(new Post(new PostCreateDTO(data.post())));
-                        equipment.getLocation().setPost(newPost);
-                        equipmentRepository.save(equipment);
-                    }
-                }
-                } catch(DataIntegrityViolationException e){
-                    throw new ExistingEntityException("put it already linked to other equipment");
+        if (data.name_equipment() != null) {
+            if (data.name_equipment().length() < 8){
+                throw new IllegalArgumentException("O nome do equipamento deve ser 8 ou maior caracteres.");
             }
+           equipment.setName_equipment(data.name_equipment());
         }
 
-       if (data.id_environment() != null){
-           try {
-               if (data.id_environment() != location.getEnvironment().getId_environment()) {
-                   Environment environment = environmentRepository.findById(data.id_environment()).orElseThrow(() -> new NotFoundException("Environment not found"));
-                   equipment.getLocation().setEnvironment(environment);
-                   equipmentRepository.save(equipment);
-               }
+        if (data.rfid() != null) {
+            equipment.setRfid(data.rfid());
+        }
 
-           }catch(DataIntegrityViolationException e){
-               throw new ExistingEntityException("put it already linked to other equipment");
-           }
-       }
+        if (data.type() != null) {
+            equipment.setType(data.type());
+        }
+
+        if (data.model() != null) {
+            equipment.setModel(data.model());
+        }
+
+        if (data.validity() != null) {
+            try {
+                equipment.setValidity(getStartDateFromQuarter(data.validity()));
+            }catch (IllegalArgumentException e ){
+                throw new IllegalArgumentException("Fomato de data enviado errado");
+            }
+
+        }
+
+        if (data.admin_rights() != null) {
+            equipment.setAdmin_rights(data.admin_rights());
+        }
+
+        if (data.observation() != null) {
+            equipment.setObservation(data.observation());
+        }
+        Location location = new Location();
+        if (data.post() != null) {
+            Post post = postRepository.findByPost(data.post()).orElse(null);
+            if (post == null) {
+                post = postRepository.save(new Post(data.post()));
+            }
+            location.setPost(post);
+        }
+
+        if (data.id_environment() != null) {
+            Environment environment = environmentRepository.findById(data.id_environment())
+                    .orElseThrow(() -> new NotFoundException("Environment not found"));
+            location.setEnvironment(environment);
+        }
+
+
+        Location location1= locationRepository.findByPostAndEnvironment(location.getPost(),location.getEnvironment()).orElse(null);
+
+        if ( location1 != null){
+            if (equipmentRepository.existsByLocation(location1)){
+                throw new ExistingEntityException("Equipamento ja atrelado a um equipamento");
+            }
+            equipment.setLocation(location1);
+
+        }else {
+            Location newLoc = locationRepository.save(location);
+            equipment.setLocation(newLoc);
+        }
+
+
         CostCenter costCenter = costCenterRepository.findByConstcenter(data.costCenter_name()).orElse(null);
        if(data.costCenter_name() != null){
            if (data.costCenter_name() != equipment.getOwner().getCostCenter().getConstcenter()){
@@ -218,28 +246,29 @@ public class RegisterServiceImp implements RegisterService {
         // Log da atualização
         UserlogCreate(userLog, "Equipment", equipment.getIdEquipment(), "Updated Equipment");
 
-        // Atualizar e salvar cada `Responsible`
-        List<ResponsibleDetailsDTO> responsibleDetailsDTO = new ArrayList<>();
-        List<EquipmentResponsible> currentEquipmentResponsibleList = equipmentResponsibleRepository.findByIdEquipment(equipment);
-        List<EquipmentResponsible> updatedEquipmentResponsibleList = new ArrayList<>();
+        if(data.dataResponsible() != null){
 
-        for (ResponsibleResgisterDTO responsibleDTO : data.dataResponsible()) {
+            for (ResponsibleResgisterDTO responsibleDTO : data.dataResponsible()) {
+                Responsible responsible = responsibleRepository.findByEdv(responsibleDTO.edv())
+                        .orElse(null);
 
-            // Verifica se o responsável já existe no banco de dados
-            Responsible responsible = responsibleRepository.findByEdv(responsibleDTO.edv())
-                    .orElse(null);
 
-            // Atualiza os dados do responsável
-            responsible.setResponsible(responsibleDTO.responsible_name());
-            Classes classes = classesRepository.findByClasses(responsibleDTO.name_classes()).orElseThrow(()-> new NotFoundException("Classes not found"));
-            if (responsibleDTO.enumCourse() != classes.getEnumCourse()){
-                classes.setEnumCourse(responsibleDTO.enumCourse());
+                responsible.setResponsible(responsibleDTO.responsible_name());
+                Classes classes = classesRepository.findByClasses(responsibleDTO.name_classes()).orElseThrow(()-> new NotFoundException("Classes not found"));
+                if (responsibleDTO.enumCourse() != classes.getEnumCourse()){
+                    classes.setEnumCourse(responsibleDTO.enumCourse());
+                    responsible.setClasses(classesRepository.save(classes));
+                }
+
+                if(responsible == null){
+                    Responsible newResponsible = responsibleRepository.save(new Responsible(responsibleDTO.responsible_name(),responsibleDTO.edv(),classes,userLog));
+                    equipmentResponsibleServiceImp.createEquipmentResponsible(new EquipmentResponsibleCreateDTO(equipment.getIdEquipment(), newResponsible.getId_responsible(),LocalDate.now(),null));
+                }
+
+                responsibleRepository.save(responsible);
             }
-            responsible.setClasses(classes);
-            responsibleRepository.save(responsible);
-
-
         }
+        equipmentRepository.save(equipment);
         return null;
     }
 
@@ -255,6 +284,7 @@ public class RegisterServiceImp implements RegisterService {
 
     public static LocalDate getStartDateFromQuarter(String quarterStr) {
         // Dividir a string em ano e trimestre
+
         String[] parts = quarterStr.split("\\.");
         int year = Integer.parseInt(parts[0]);
         int quarter = Integer.parseInt(parts[1].substring(1)); // Pega o número do trimestre
