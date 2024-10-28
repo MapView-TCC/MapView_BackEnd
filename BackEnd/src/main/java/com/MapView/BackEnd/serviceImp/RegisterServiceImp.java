@@ -143,13 +143,13 @@ public class RegisterServiceImp implements RegisterService {
 
     // metodo para fazer a atualização
     @Override
-    public RegisterDetailsDTO updateRegister( RegisterUpdateDTO data,String id_equipment, Long userLog_id) {
+    public RegisterDetailsDTO updateRegister( RegisterUpdateDTO data, Long userLog_id) {
         // Encontrar e verificar o registro do usuário
         Users userLog = userRepository.findById(userLog_id)
                 .orElseThrow(() -> new NotFoundException("User not found"));
 
         // Obter o equipamento a ser atualizado
-        Equipment equipment = equipmentRepository.findById(id_equipment)
+        Equipment equipment = equipmentRepository.findById(data.id_equipment())
                 .orElseThrow(() -> new NotFoundException("Equipment not found"));
 
         // Atualizar dados básicos do Equipment

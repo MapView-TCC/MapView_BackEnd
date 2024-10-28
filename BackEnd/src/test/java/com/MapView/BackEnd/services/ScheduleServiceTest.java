@@ -1,4 +1,4 @@
-package com.MapView.BackEnd.tests;
+package com.MapView.BackEnd.services;
 
 import com.MapView.BackEnd.dtos.Notification.NotificationCreateDTO;
 import com.MapView.BackEnd.entities.Equipment;
@@ -16,6 +16,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -26,9 +27,9 @@ import java.util.List;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE) // Usar o banco H2 real
+@ActiveProfiles("test") // configurar o banco de dados H2
 @Transactional
-public class ScheduleTest {
+public class ScheduleServiceTest {
 
     @InjectMocks
     private ScheduleServiceImp scheduleServiceImp;  // ScheduleServiceImp vai usar os mocks
@@ -115,14 +116,12 @@ public class ScheduleTest {
         // Cria um equipamento com validade no ano atual e no mesmo trimestre
         Equipment equipment = new Equipment();
         equipment.setIdEquipment(idEquipment);
-        equipment.setValidity(LocalDate.now()); // Supondo que a validade é hoje
+        equipment.setValidity(LocalDate.now()); // data de validade é hj
 
         // Simula o retorno do repositório com o equipamento
         when(equipmentRepository.findAllByOperativeTrue()).thenReturn(Collections.singletonList(equipment));
 
         // Executa o método que deve criar a notificação
-        scheduleServiceImp.createNotification();
-
         scheduleServiceImp.createNotification();
 
         // Verifica se a notificação foi criada
