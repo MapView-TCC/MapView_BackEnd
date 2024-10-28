@@ -5,6 +5,7 @@ import com.MapView.BackEnd.entities.Equipment;
 import com.MapView.BackEnd.entities.Location;
 import com.MapView.BackEnd.entities.MainOwner;
 import com.MapView.BackEnd.enums.EnumModelEquipment;
+import jakarta.validation.Valid;
 
 import java.time.LocalDate;
 
@@ -21,8 +22,7 @@ public record EquipmentDetailsDTO(
         MainOwner owner) {
 
     public EquipmentDetailsDTO(Equipment equipment) {
-        this(equipment.getIdEquipment(), equipment.getName_equipment(), equipment.getRfid(), equipment.getType(), equipment.getModel(),
-                equipment.getValidity(), equipment.getAdmin_rights(), equipment.getObservation(), equipment.getLocation(),
+        this(equipment.getIdEquipment(), equipment.getName_equipment(), equipment.getRfid(), equipment.getType(), equipment.getModel(), equipment.getValidity(), equipment.getAdmin_rights(), equipment.getObservation(), equipment.getLocation(),
                 equipment.getOwner());
     }
 

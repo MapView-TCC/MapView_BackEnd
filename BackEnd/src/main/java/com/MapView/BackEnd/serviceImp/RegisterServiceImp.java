@@ -157,7 +157,7 @@ public class RegisterServiceImp implements RegisterService {
             if (data.name_equipment().length() < 8){
                 throw new IllegalArgumentException("O nome do equipamento deve ser 8 ou maior caracteres.");
             }
-           equipment.setName_equipment(data.name_equipment());
+            equipment.setName_equipment(data.name_equipment());
         }
 
         if (data.rfid() != null) {
@@ -188,58 +188,64 @@ public class RegisterServiceImp implements RegisterService {
         if (data.observation() != null) {
             equipment.setObservation(data.observation());
         }
-        Location location = new Location();
-        if (data.post() != null) {
-            Post post = postRepository.findByPost(data.post()).orElse(null);
-            if (post == null) {
-                post = postRepository.save(new Post(data.post()));
+        if (equipment.getLocation() != null){
+
+            Location location = new Location();
+            if (data.post() != null) {
+                Post post = postRepository.findByPost(data.post()).orElse(null);
+                if (post == null) {
+                    post = postRepository.save(new Post(data.post()));
+                }
+                location.setPost(post);
             }
-            location.setPost(post);
-        }
 
-        if (data.id_environment() != null) {
-            Environment environment = environmentRepository.findById(data.id_environment())
-                    .orElseThrow(() -> new NotFoundException("Environment not found"));
-            location.setEnvironment(environment);
-        }
-
-
-        Location location1= locationRepository.findByPostAndEnvironment(location.getPost(),location.getEnvironment()).orElse(null);
-
-        if ( location1 != null){
-            if (equipmentRepository.existsByLocation(location1)){
-                throw new ExistingEntityException("Equipamento ja atrelado a um equipamento");
+            if (data.id_environment() != null) {
+                Environment environment = environmentRepository.findById(data.id_environment())
+                        .orElseThrow(() -> new NotFoundException("Environment not found"));
+                location.setEnvironment(environment);
             }
-            equipment.setLocation(location1);
 
+
+            Location location1= locationRepository.findByPostAndEnvironment(location.getPost(),location.getEnvironment()).orElse(null);
+
+            if ( location1 != null){
+                if (equipmentRepository.existsByLocation(location1)){
+                    if (equipment.getLocation().getId_location() != location1.getId_location()){
+                        throw new ExistingEntityException("Equipamento ja atrelado a um equipamento");
+                    }
+                    equipment.setLocation(location1);
+                }
+            } else {
+                Location newLoc = locationRepository.save(location);
+                equipment.setLocation(newLoc);
+            }
         }else {
-            Location newLoc = locationRepository.save(location);
-            equipment.setLocation(newLoc);
+            equipment.setLocation(null);
         }
 
 
         CostCenter costCenter = costCenterRepository.findByConstcenter(data.costCenter_name()).orElse(null);
-       if(data.costCenter_name() != null){
-           if (data.costCenter_name() != equipment.getOwner().getCostCenter().getConstcenter()){
+        if(data.costCenter_name() != null){
+            if (data.costCenter_name() != equipment.getOwner().getCostCenter().getConstcenter()){
 
-               if (costCenter == null) {
-                   CostCenter newCostCenter = new CostCenter(new CostCenterCreateDTO(data.costCenter_name()));
-                   equipment.getOwner().setCostCenter(costCenterRepository.save(newCostCenter));
-                   costCenter = newCostCenter;
-               }
+                if (costCenter == null) {
+                    CostCenter newCostCenter = new CostCenter(new CostCenterCreateDTO(data.costCenter_name()));
+                    equipment.getOwner().setCostCenter(costCenterRepository.save(newCostCenter));
+                    costCenter = newCostCenter;
+                }
 
-           }
-       }
+            }
+        }
 
-       if (data.id_owner() != null){
-           if(data.id_owner() != equipment.getOwner().getId_owner()){
-              MainOwner mainOwner =  mainOwnerRepository.findById(data.id_owner()).orElse(null);
-              if (mainOwner == null){
-                  MainOwner newMainOwner = mainOwnerRepository.save(new MainOwner(data.id_owner(),costCenter));
-                  equipment.setOwner(newMainOwner);
-              }
-           }
-       }
+        if (data.id_owner() != null){
+            if(data.id_owner() != equipment.getOwner().getId_owner()){
+                MainOwner mainOwner =  mainOwnerRepository.findById(data.id_owner()).orElse(null);
+                if (mainOwner == null){
+                    MainOwner newMainOwner = mainOwnerRepository.save(new MainOwner(data.id_owner(),costCenter));
+                    equipment.setOwner(newMainOwner);
+                }
+            }
+        }
 
 
 
