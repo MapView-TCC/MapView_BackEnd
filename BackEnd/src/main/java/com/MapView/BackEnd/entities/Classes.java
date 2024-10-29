@@ -41,4 +41,12 @@ public class Classes {
         this.creation_date = data.criation_date();
         this.operative = true;
     }
+
+    public Classes(EnumCourse course, String name_classes,Users user, LocalDate localDate){
+        this.enumCourse = course;
+        this.classes = name_classes;
+        this.user = user;
+        this.creation_date = localDate;
+        this.operative = true;
+    }
 }

@@ -95,10 +95,14 @@ public class EquipmentServiceImp implements EquipmentService {
                 Users users = this.userRepository.findById(userLog_id)
                         .orElseThrow(()  -> new NotFoundException("Id user_log ("+userLog_id+") not found!"));
 
-                // Localização
+                //
+
                 Location location = locationRepository.findById(Long.valueOf(data.id_location()))
                         .orElseThrow(() -> new RuntimeException("Id location ("+data.id_location()+ ") not found!"));
-
+                
+                if(equipmentRepository.existsByLocation(location)){
+                    throw new ExistingEntityException("equipamento ja atrelado a essa localização");
+                }
 
                 // Proprietário principal
                 MainOwner mainOwner = mainOwnerRepository.findById(String.valueOf(data.id_owner()))

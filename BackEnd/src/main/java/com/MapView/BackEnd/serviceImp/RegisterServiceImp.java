@@ -148,7 +148,7 @@ public class RegisterServiceImp implements RegisterService {
         Users userLog = userRepository.findById(userLog_id)
                 .orElseThrow(() -> new NotFoundException("User not found"));
 
-        // Obter o equipamento a ser atualizado
+
         Equipment equipment = equipmentRepository.findById(id_equipment)
                 .orElseThrow(() -> new NotFoundException("Equipment not found"));
 
@@ -188,23 +188,23 @@ public class RegisterServiceImp implements RegisterService {
         if (data.observation() != null) {
             equipment.setObservation(data.observation());
         }
-        if (equipment.getLocation() != null){
-
+        if (data.id_environment() != null){
             Location location = new Location();
+
             if (data.post() != null) {
+            System.out.println(data.post());
                 Post post = postRepository.findByPost(data.post()).orElse(null);
+                System.out.println(post);
                 if (post == null) {
                     post = postRepository.save(new Post(data.post()));
                 }
                 location.setPost(post);
             }
-
             if (data.id_environment() != null) {
                 Environment environment = environmentRepository.findById(data.id_environment())
                         .orElseThrow(() -> new NotFoundException("Environment not found"));
                 location.setEnvironment(environment);
             }
-
 
             Location location1= locationRepository.findByPostAndEnvironment(location.getPost(),location.getEnvironment()).orElse(null);
 
@@ -219,21 +219,18 @@ public class RegisterServiceImp implements RegisterService {
                 Location newLoc = locationRepository.save(location);
                 equipment.setLocation(newLoc);
             }
-        }else {
-            equipment.setLocation(null);
         }
 
 
-        CostCenter costCenter = costCenterRepository.findByConstcenter(data.costCenter_name()).orElse(null);
         if(data.costCenter_name() != null){
+            CostCenter costCenter = costCenterRepository.findByConstcenter(data.costCenter_name()).orElse(null);
             if (data.costCenter_name() != equipment.getOwner().getCostCenter().getConstcenter()){
 
                 if (costCenter == null) {
                     CostCenter newCostCenter = new CostCenter(new CostCenterCreateDTO(data.costCenter_name()));
                     equipment.getOwner().setCostCenter(costCenterRepository.save(newCostCenter));
-                    costCenter = newCostCenter;
-                }
 
+                }
             }
         }
 
@@ -241,7 +238,7 @@ public class RegisterServiceImp implements RegisterService {
             if(data.id_owner() != equipment.getOwner().getId_owner()){
                 MainOwner mainOwner =  mainOwnerRepository.findById(data.id_owner()).orElse(null);
                 if (mainOwner == null){
-                    MainOwner newMainOwner = mainOwnerRepository.save(new MainOwner(data.id_owner(),costCenter));
+                    MainOwner newMainOwner = mainOwnerRepository.save(new MainOwner(data.id_owner(),equipment.getOwner().getCostCenter()));
                     equipment.setOwner(newMainOwner);
                 }
             }
@@ -259,12 +256,15 @@ public class RegisterServiceImp implements RegisterService {
                         .orElse(null);
 
 
-                responsible.setResponsible(responsibleDTO.responsible_name());
-                Classes classes = classesRepository.findByClasses(responsibleDTO.name_classes()).orElseThrow(()-> new NotFoundException("Classes not found"));
-                if (responsibleDTO.enumCourse() != classes.getEnumCourse()){
+                Classes classes = classesRepository.findByClasses(responsibleDTO.name_classes()).orElse(null);
+                if (classes == null){
+                    classes = classesRepository.save(new Classes(responsibleDTO.enumCourse(),responsibleDTO.name_classes(),userLog,LocalDate.now()));
+
+                }else {
                     classes.setEnumCourse(responsibleDTO.enumCourse());
                     responsible.setClasses(classesRepository.save(classes));
                 }
+
 
                 if(responsible == null){
                     Responsible newResponsible = responsibleRepository.save(new Responsible(responsibleDTO.responsible_name(),responsibleDTO.edv(),classes,userLog));
