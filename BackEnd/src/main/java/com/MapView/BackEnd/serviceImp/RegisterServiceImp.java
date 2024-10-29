@@ -281,7 +281,7 @@ public class RegisterServiceImp implements RegisterService {
 
 
 
-    public Location updateRegisterLocation(Location location,Long id_environmen,String post){
+    public Location updateRegisterLocation(Location location,Long id_environment,String post){
 
         return  null;
     }
