@@ -148,7 +148,7 @@ public class RegisterServiceImp implements RegisterService {
         // Encontrar e verificar o registro do usuário
         Users userLog = userRepository.findById(userLog_id)
                 .orElseThrow(() -> new NotFoundException("User not found"));
-        
+
         // Obter o equipamento a ser atualizado
         Equipment equipment = equipmentRepository.findById(data.id_equipment())
                 .orElseThrow(() -> new NotFoundException("Equipment not found"));
