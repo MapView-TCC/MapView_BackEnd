@@ -1,4 +1,4 @@
-package com.MapView.BackEnd.tests;
+package com.MapView.BackEnd.services;
 
 import com.MapView.BackEnd.dtos.Responsible.ResponsibleCrateDTO;
 import com.MapView.BackEnd.dtos.Responsible.ResponsibleDetailsDTO;
@@ -7,10 +7,10 @@ import com.MapView.BackEnd.entities.Responsible;
 import com.MapView.BackEnd.entities.Users;
 import com.MapView.BackEnd.repository.ClassesRepository;
 import com.MapView.BackEnd.repository.ResponsibleRepository;
-import com.MapView.BackEnd.repository.UserLogRepository;
 import com.MapView.BackEnd.repository.UserRepository;
 import com.MapView.BackEnd.serviceImp.ResponsibleServiceImp;
 import jakarta.transaction.Transactional;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -25,9 +25,9 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE) // Usar o banco H2 real
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Transactional
-public class ResponsibleTest {
+public class teste {
 
     @InjectMocks
     private ResponsibleServiceImp responsibleServiceImp;
@@ -41,38 +41,38 @@ public class ResponsibleTest {
     @Mock
     private ClassesRepository classesRepository;
 
-    @Mock
-    private UserLogRepository userLogRepository;
+    private Long userLogId;
+    private Long responsibleId;
+    private Long classesId;
+    private Users user;
+    private Classes classes;
+    private Responsible responsible;
 
-    @Test
-    void createResponsible() {
+    @BeforeEach
+    public void setUp() {
         // Definir IDs de teste
-        Long userLogId = 1L;
-        Long responsibleId = 1L;
-        Long classesId = 1L;
+        userLogId = 1L;
+        responsibleId = 1L;
+        classesId = 1L;
 
-        // Mock para o usuario
-        Users user = new Users();
+        // Mock para o usuário
+        user = new Users();
         user.setId_user(userLogId);
         user.setOperative(true);
 
+        // Configurar o comportamento do repositório de usuários
+        when(userRepository.findById(userLogId)).thenReturn(Optional.of(user));
+
         // Mock para as classes
-        Classes classes = new Classes();
+        classes = new Classes();
         classes.setId_classes(classesId);
         classes.setOperative(true);
 
-
-        // Configurando comportamento esperado do repositório de usuários
-        when(userRepository.findById(userLogId)).thenReturn(Optional.of(user));
+        // Configurar o comportamento do repositório de classes
         when(classesRepository.findById(classesId)).thenReturn(Optional.of(classes));
 
-        // Criando o DTO responsável
-        ResponsibleCrateDTO responsibleDTO = new ResponsibleCrateDTO(
-                "Maria", "92903520", classesId, userLogId
-        );
-
-        // Mock para o responsável a ser criado
-        Responsible responsible = new Responsible();
+        // Mock para o responsável
+        responsible = new Responsible();
         responsible.setId_responsible(responsibleId);
         responsible.setResponsible("Maria");
         responsible.setEdv("92903520");
@@ -80,8 +80,13 @@ public class ResponsibleTest {
         responsible.setUser(user);
         responsible.setOperative(true);
 
-        // Configurando o comportamento do repositório de responsáveis para salvar o responsável
-        when(responsibleRepository.save(any(Responsible.class))).thenReturn(responsible);
+        // Configurar o comportamento do repositório de responsáveis
+        when(responsibleRepository.findById(responsibleId)).thenReturn(Optional.of(responsible));
+    }
+
+    @Test
+    void createResponsible() {
+        ResponsibleCrateDTO responsibleDTO = new ResponsibleCrateDTO("Maria", "92903520", classesId, userLogId);
 
         // Chamando o método para testar
         ResponsibleDetailsDTO result = responsibleServiceImp.createResposible(responsibleDTO, userLogId);
@@ -94,5 +99,4 @@ public class ResponsibleTest {
         // Verificando se o repositório de responsáveis foi chamado uma vez
         verify(responsibleRepository, times(1)).save(any(Responsible.class));
     }
-
 }

@@ -99,7 +99,7 @@ public class EquipmentServiceImp implements EquipmentService {
 
                 Location location = locationRepository.findById(Long.valueOf(data.id_location()))
                         .orElseThrow(() -> new RuntimeException("Id location ("+data.id_location()+ ") not found!"));
-                
+
                 if(equipmentRepository.existsByLocation(location)){
                     throw new ExistingEntityException("equipamento ja atrelado a essa localização");
                 }

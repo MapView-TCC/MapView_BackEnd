@@ -1,5 +1,6 @@
 package com.MapView.BackEnd.serviceImp;
 
+import com.MapView.BackEnd.dtos.User.UserDetailsDTO;
 import com.MapView.BackEnd.entities.UserLog;
 import com.MapView.BackEnd.entities.Users;
 import com.MapView.BackEnd.enums.EnumAction;
@@ -16,6 +17,7 @@ import com.MapView.BackEnd.dtos.Responsible.ResponsibleDetailsDTO;
 import com.MapView.BackEnd.dtos.Responsible.ResponsibleUpdateDTO;
 import com.MapView.BackEnd.entities.Responsible;
 import com.MapView.BackEnd.infra.Exception.NotFoundException;
+import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
@@ -28,25 +30,26 @@ public class ResponsibleServiceImp implements ResponsibleService {
     private final ClassesRepository classesRepository;
     private final UserRepository userRepository;
     private final UserLogRepository userLogRepository;
+    private final UserServiceImp userServiceImp;
 
-    public ResponsibleServiceImp(ResponsibleRepository responsibleRepository, ClassesRepository classesRepository, UserRepository userRepository, UserLogRepository userLogRepository) {
+    public ResponsibleServiceImp(ResponsibleRepository responsibleRepository, ClassesRepository classesRepository, UserRepository userRepository, UserLogRepository userLogRepository, UserServiceImp userServiceImp) {
         this.responsibleRepository = responsibleRepository;
         this.classesRepository = classesRepository;
         this.userRepository = userRepository;
         this.userLogRepository = userLogRepository;
+        this.userServiceImp = userServiceImp;
     }
 
     @Override
     public ResponsibleDetailsDTO createResposible(ResponsibleCrateDTO data, Long userLog_id) {
-        Users users = this.userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("Id not found"));
+        System.out.println("Ver o id " + userLog_id);
+        UserDetailsDTO users = this.userServiceImp.getUser(userLog_id);
         Responsible verifyByName = responsibleRepository.findByResponsible(data.responsible_name()).orElse(null);
 
         if(verifyByName ==null){
-
             var user = userRepository.findById(data.id_user()).orElseThrow(() -> new NotFoundException("User Id Not Found"));
 
             if(!user.isOperative()){
-                System.out.println("User ID: " + user.getId_user() + ", Is Operative: " + user.isOperative());
                 throw new OperativeFalseException("The inactive User cannot be accessed.");
             }
 
@@ -58,7 +61,10 @@ public class ResponsibleServiceImp implements ResponsibleService {
             var responsible = new Responsible(data.responsible_name(), data.edv(), classe,user);
             Long id_responsible = responsibleRepository.save(responsible).getId_responsible();
 
-            var userLog = new UserLog(users, "Responsible", id_responsible.toString(), "Create new Responsible", EnumAction.CREATE);
+            Users users1 = new Users();
+            BeanUtils.copyProperties(users, users1);
+
+            var userLog = new UserLog(users1, "Responsible", id_responsible.toString(), "Create new Responsible", EnumAction.CREATE);
             userLogRepository.save(userLog);
 
             return new ResponsibleDetailsDTO(responsible);
