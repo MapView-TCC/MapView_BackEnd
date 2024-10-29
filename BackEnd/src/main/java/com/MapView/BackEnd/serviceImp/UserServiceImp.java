@@ -11,6 +11,7 @@ import com.MapView.BackEnd.service.UserService;
 import com.MapView.BackEnd.entities.Users;
 import com.MapView.BackEnd.enums.RoleUser;
 import com.MapView.BackEnd.infra.Exception.NotFoundException;
+import org.apache.catalina.User;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 
@@ -46,8 +47,14 @@ public class UserServiceIpm implements UserService {
     }
 
     public UserDetailsDTO loggedUser(Jwt jwt){
-        String userName = jwt.getClaimAsString("email");
-        user
+        String email = jwt.getClaimAsString("email");
+
+        Users user  = userRepository.findByEmail(email).orElseThrow(() -> new NotFoundException("User not found"));
+        UserRole role = userRoleRepository.findByUser(user).orElse()
+
+        return new UserDetailsDTO(user,role);
+
+
 
     }
 
