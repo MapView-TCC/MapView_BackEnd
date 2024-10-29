@@ -1,4 +1,4 @@
-package com.MapView.BackEnd.tests;
+package com.MapView.BackEnd.services;
 
 import com.MapView.BackEnd.dtos.Responsible.ResponsibleCrateDTO;
 import com.MapView.BackEnd.dtos.Responsible.ResponsibleDetailsDTO;
@@ -14,12 +14,12 @@ import com.MapView.BackEnd.repository.UserLogRepository;
 import com.MapView.BackEnd.repository.UserRepository;
 import com.MapView.BackEnd.serviceImp.ResponsibleServiceImp;
 import jakarta.transaction.Transactional;
-import org.aspectj.weaver.ast.Not;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.util.Collections;
 import java.util.List;
@@ -30,9 +30,9 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE) // Usar o banco H2 real
+@ActiveProfiles("test")
 @Transactional
-public class ResponsibleTest {
+public class ResponsibleServiceTest {
 
     @InjectMocks
     private ResponsibleServiceImp responsibleServiceImp;
@@ -101,7 +101,7 @@ public class ResponsibleTest {
     }
 
     @Test
-    void GetAllResponsible() {
+    void findAllResponsible() {
         // Definir IDs de teste
         Long userLogId = 1L;
         Long responsibleId = 1L;

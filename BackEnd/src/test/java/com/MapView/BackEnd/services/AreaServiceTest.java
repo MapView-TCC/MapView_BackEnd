@@ -1,4 +1,4 @@
-package com.MapView.BackEnd.tests;
+package com.MapView.BackEnd.services;
 
 import com.MapView.BackEnd.dtos.Area.AreaCreateDTO;
 import com.MapView.BackEnd.dtos.Area.AreaDetailsDTO;
@@ -17,6 +17,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.util.Optional;
 
@@ -27,9 +28,10 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE) // Usar o banco H2 real, usa um banco de dados real em vez de um em memória
+//@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE) // Usar o banco H2 real, usa um banco de dados real em vez de um em memória
+@ActiveProfiles("test") // configurar o banco de dados H2
 @Transactional
-public class AreaTest {
+public class AreaServiceTest {
 
     @InjectMocks
     private AreaServiceImp areaServiceImp; // Classe a ser testada, com os mocks injetados
