@@ -141,6 +141,7 @@ public class RegisterServiceImp implements RegisterService {
             return new RegisterDetailsDTO(equipment,location,responsibleDetailsDTO);
     }
 
+
     // metodo para fazer a atualização
     @Override
     public RegisterDetailsDTO updateRegister( RegisterUpdateDTO data, Long userLog_id) {
