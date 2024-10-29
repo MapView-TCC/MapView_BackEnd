@@ -14,6 +14,6 @@ public interface CostCenterService {
     List<CostCenterDetailsDTO> getAllCostCenter(Long userLog_id);
     CostCenterDetailsDTO createCostCenter(CostCenterCreateDTO dados,Long userLog_id);
     CostCenterDetailsDTO updateCostCenter(Long id, CostCenterUpdateDTO dados,Long userLog_id);
-    void activateCostCenter(Long id_cost_cente,Long userLog_id); // put
+    void activateCostCenter(Long id_cost_center,Long userLog_id); // put
     void inactivateCostCenter(Long id_cost_center,Long userLog_id); // put
 }

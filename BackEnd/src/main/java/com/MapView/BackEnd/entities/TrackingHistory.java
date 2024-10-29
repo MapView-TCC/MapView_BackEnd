@@ -1,12 +1,11 @@
 package com.MapView.BackEnd.entities;
 
-import com.MapView.BackEnd.enums.EnumColors;
+import com.MapView.BackEnd.enums.EnumWarnings;
 import com.MapView.BackEnd.enums.EnumTrackingAction;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
-import java.time.Instant;
 import java.time.LocalDateTime;
 
 @Table(name = "tracking_history")
@@ -39,18 +38,18 @@ public class TrackingHistory {
     private EnumTrackingAction action;
 
     @Enumerated(value = EnumType.STRING)
-    private EnumColors warning;
+    private EnumWarnings warning;
 
 
 
-    public TrackingHistory( Environment environment, EnumColors warning) {
+    public TrackingHistory( Environment environment, EnumWarnings warning) {
         this.equipment = null;
         this.environment = environment;
         this.action = null;
         this.warning = warning;
     }
 
-    public TrackingHistory(Environment environment, Equipment equipment, EnumTrackingAction action, EnumColors warning) {
+    public TrackingHistory(Environment environment, Equipment equipment, EnumTrackingAction action, EnumWarnings warning) {
         this.equipment = equipment;
         this.environment = environment;
         this.action = action;
@@ -58,7 +57,7 @@ public class TrackingHistory {
     }
 
     // para salvar um tracking history quando salvar um equipment
-    public TrackingHistory(Equipment equipment, Environment environment,  EnumTrackingAction action, EnumColors warning) {
+    public TrackingHistory(Equipment equipment, Environment environment,  EnumTrackingAction action, EnumWarnings warning) {
         this.datetime = LocalDateTime.now();
         this.equipment = equipment;
         this.environment = environment;

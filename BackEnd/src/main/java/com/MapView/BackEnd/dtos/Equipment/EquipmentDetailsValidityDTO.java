@@ -6,7 +6,8 @@ import com.MapView.BackEnd.entities.MainOwner;
 import com.MapView.BackEnd.enums.EnumModelEquipment;
 
 public record EquipmentDetailsValidityDTO(
-    String id_equipment,
+    Long id_equipment,
+    String code,
     String name_equipment,
     long rfid,
     String type,
@@ -18,7 +19,7 @@ public record EquipmentDetailsValidityDTO(
     MainOwner owner) {
 
     public EquipmentDetailsValidityDTO(Equipment equipment,String validity_tranformated) {
-            this(equipment.getIdEquipment(), equipment.getName_equipment(), equipment.getRfid(), equipment.getType(), equipment.getModel(), validity_tranformated, equipment.getAdmin_rights(), equipment.getObservation(), equipment.getLocation(),
+            this(equipment.getId_equipment(), equipment.getCode(), equipment.getName_equipment(), equipment.getRfid(), equipment.getType(), equipment.getModel(), validity_tranformated, equipment.getAdmin_rights(), equipment.getObservation(), equipment.getLocation(),
                     equipment.getOwner());
         }
 }

@@ -102,4 +102,18 @@ public class UserServiceTest {
         assertEquals("test@gmail.com", result.email());
         assertEquals(RoleUser.USER, result.roleUser());
     }
+
+    @Test
+    void setUserRole() {
+        Long userId = 1L;
+
+        Users users = new Users();
+        users.setId_user(userId);
+        users.setEmail("test@gmail.com");
+        users.setRole(RoleUser.USER);
+        users.setOperative(true);
+
+        when(userRepository.findById(userId)).thenReturn(Optional.of(users));
+        userServiceImp.setPrivilege(userId, RoleUser.ADMIN);
+    }
 }

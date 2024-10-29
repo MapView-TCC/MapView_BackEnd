@@ -1,10 +1,9 @@
 package com.MapView.BackEnd.service;
 
-import com.MapView.BackEnd.dtos.Equipment.EquipmentDetailsDTO;
 import com.MapView.BackEnd.dtos.TrackingHistory.TrackingHistoryCreateDTO;
 import com.MapView.BackEnd.dtos.TrackingHistory.TrackingHistoryDetailsDTO;
 import com.MapView.BackEnd.dtos.TrackingHistory.TrackingHistoryWrongLocationDTO;
-import com.MapView.BackEnd.enums.EnumColors;
+import com.MapView.BackEnd.enums.EnumWarnings;
 import com.MapView.BackEnd.enums.EnumTrackingAction;
 
 import java.util.List;
@@ -15,7 +14,7 @@ public interface TrackingHistoryService {
     List<TrackingHistoryDetailsDTO> getAllTrackingHistory();
     TrackingHistoryDetailsDTO createTrackingHistory(TrackingHistoryCreateDTO dados);
     List<TrackingHistoryDetailsDTO> FilterTracking(int page, int itens, EnumTrackingAction action,
-                                                   Integer day, Integer month, Integer year, EnumColors colors,
+                                                   Integer day, Integer month, Integer year, EnumWarnings colors,
                                                    String id_equipment);
     void deleteTracking(Long id_tracking);
     List<TrackingHistoryWrongLocationDTO> findWrongLocationEquipments (Long id_environment);

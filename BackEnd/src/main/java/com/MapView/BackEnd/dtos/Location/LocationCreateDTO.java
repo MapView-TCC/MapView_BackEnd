@@ -5,8 +5,8 @@ import jakarta.validation.constraints.Positive;
 
 public record LocationCreateDTO(@Positive
                                 @Min(1)
-                                Long id_post,
+                                Long post,
                                 @Positive
                                 @Min(1)
-                                Long id_environment) {
+                                Long environment) {
 }

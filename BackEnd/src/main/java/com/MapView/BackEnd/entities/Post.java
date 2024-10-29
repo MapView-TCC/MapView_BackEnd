@@ -2,6 +2,7 @@ package com.MapView.BackEnd.entities;
 
 import com.MapView.BackEnd.dtos.Post.PostCreateDTO;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -20,6 +21,7 @@ public class Post {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id_post;
     private String post;
+    @JsonIgnore
     private boolean operative;
     @ManyToMany(mappedBy = "posts")
     @JsonBackReference

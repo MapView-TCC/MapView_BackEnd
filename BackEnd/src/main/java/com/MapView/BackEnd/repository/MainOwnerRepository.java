@@ -8,6 +8,6 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface MainOwnerRepository extends JpaRepository<MainOwner,String> {
+public interface MainOwnerRepository extends JpaRepository<MainOwner,Long> {
     List<MainOwner> findAllByOperativeTrue();
 }

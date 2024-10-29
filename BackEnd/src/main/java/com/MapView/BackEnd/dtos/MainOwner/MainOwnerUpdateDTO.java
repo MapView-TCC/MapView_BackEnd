@@ -5,6 +5,6 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
 
 public record MainOwnerUpdateDTO(
-                                 String owner_name,
-                                 Long id_cost_center) {
+                                 String cod_owner,
+                                 Long costCenter) {
 }

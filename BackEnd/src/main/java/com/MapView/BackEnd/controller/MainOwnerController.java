@@ -48,7 +48,7 @@ public class MainOwnerController {
         var mainOwner = mainOwnerServiceImp.createMainOwner(mainOwnerDTO, userLog_id);
         var uri = uriBuilder.path("/api/v1/mainowner/{id}").buildAndExpand(mainOwner.id_owner()).toUri();
         return ResponseEntity.created(uri).body(new MainOwnerDetailsDTO(
-                mainOwner.id_owner(), mainOwner.costCenter()
+                mainOwner.id_owner(), mainOwner.cod_owner(), mainOwner.costCenter()
         ));
     }
 
@@ -69,13 +69,13 @@ public class MainOwnerController {
             @ApiResponse(responseCode = "200", description = "Main owner successfully retrieved"),
             @ApiResponse(responseCode = "404", description = "Main owner not found")
     })
-    @GetMapping("/{mainowner_id}")
+    @GetMapping("/{id_owner}")
     public ResponseEntity<MainOwnerDetailsDTO> getMainOwner(
             @Parameter(description = "The ID of the main owner to retrieve", required = true)
-            @PathVariable String mainowner_id,
+            @PathVariable Long id_owner,
             @Parameter(description = "User log ID for tracking changes", required = true)
             @RequestParam Long userLog_id) {
-        var mainOwnerDetailsDTO = mainOwnerServiceImp.getMainOwner(mainowner_id, userLog_id);
+        var mainOwnerDetailsDTO = mainOwnerServiceImp.getMainOwner(id_owner, userLog_id);
         return ResponseEntity.ok(mainOwnerDetailsDTO);
     }
 
@@ -84,16 +84,16 @@ public class MainOwnerController {
             @ApiResponse(responseCode = "200", description = "Main owner successfully updated"),
             @ApiResponse(responseCode = "404", description = "Main owner not found")
     })
-    @PutMapping("/{mainowner_id}")
+    @PutMapping("/{id_owner}")
     @Transactional
     public ResponseEntity<MainOwnerDetailsDTO> updateMainOwner(
             @Parameter(description = "User log ID for tracking changes", required = true)
             @RequestParam Long userLog_id,
             @Parameter(description = "The ID of the main owner to update", required = true)
-            @PathVariable String mainowner_id,
+            @PathVariable Long id_owner,
             @Parameter(description = "Data transfer object for updating the main owner", required = true)
             @RequestBody @Valid MainOwnerUpdateDTO dados) {
-        var updateMainOwner = mainOwnerServiceImp.updateMainOwner(mainowner_id, dados, userLog_id);
+        var updateMainOwner = mainOwnerServiceImp.updateMainOwner(id_owner, dados, userLog_id);
         return ResponseEntity.ok(updateMainOwner);
     }
 
@@ -102,14 +102,14 @@ public class MainOwnerController {
             @ApiResponse(responseCode = "200", description = "Main owner successfully inactivated"),
             @ApiResponse(responseCode = "404", description = "Main owner not found")
     })
-    @PutMapping("/inactivate/{mainowner_id}")
+    @PutMapping("/inactivate/{id_owner}")
     @Transactional
     public ResponseEntity<Void> inactivate(
             @Parameter(description = "User log ID for tracking changes", required = true)
             @RequestParam Long userLog_id,
             @Parameter(description = "The ID of the main owner to inactivate", required = true)
-            @PathVariable String mainowner_id) {
-        mainOwnerServiceImp.inactivateMainOwner(mainowner_id, userLog_id);
+            @PathVariable Long id_owner) {
+        mainOwnerServiceImp.inactivateMainOwner(id_owner, userLog_id);
         return ResponseEntity.ok().build();
     }
 
@@ -118,14 +118,14 @@ public class MainOwnerController {
             @ApiResponse(responseCode = "200", description = "Main owner successfully activated"),
             @ApiResponse(responseCode = "404", description = "Main owner not found")
     })
-    @PutMapping("/active/{mainowner_id}")
+    @PutMapping("/active/{id_owner}")
     @Transactional
     public ResponseEntity<Void> active(
             @Parameter(description = "User log ID for tracking changes", required = true)
             @RequestParam Long userLog_id,
             @Parameter(description = "The ID of the main owner to activate", required = true)
-            @PathVariable String mainowner_id) {
-        mainOwnerServiceImp.activateMainOwner(mainowner_id, userLog_id);
+            @PathVariable Long id_owner) {
+        mainOwnerServiceImp.activateMainOwner(id_owner, userLog_id);
         return ResponseEntity.ok().build();
     }
 

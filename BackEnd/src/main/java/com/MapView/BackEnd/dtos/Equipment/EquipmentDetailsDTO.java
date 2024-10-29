@@ -10,7 +10,8 @@ import jakarta.validation.Valid;
 import java.time.LocalDate;
 
 public record EquipmentDetailsDTO(
-        String id_equipment,
+        Long id_equipment,
+        String code,
         String name_equipment,
         long rfid,
         String type,
@@ -22,7 +23,7 @@ public record EquipmentDetailsDTO(
         MainOwner owner) {
 
     public EquipmentDetailsDTO(Equipment equipment) {
-        this(equipment.getIdEquipment(), equipment.getName_equipment(), equipment.getRfid(), equipment.getType(), equipment.getModel(), equipment.getValidity(), equipment.getAdmin_rights(), equipment.getObservation(), equipment.getLocation(),
+        this(equipment.getId_equipment(), equipment.getCode(), equipment.getName_equipment(), equipment.getRfid(), equipment.getType(), equipment.getModel(), equipment.getValidity(), equipment.getAdmin_rights(), equipment.getObservation(), equipment.getLocation(),
                 equipment.getOwner());
     }
 

@@ -42,7 +42,7 @@ public class MainOwnerServiceImp implements MainOwnerService {
     }
 
     @Override
-    public MainOwnerDetailsDTO getMainOwner(String id_owner,Long userLog_id) {
+    public MainOwnerDetailsDTO getMainOwner(Long id_owner,Long userLog_id) {
         var mainOwner = this.mainOwnerRepository.findById(id_owner).orElseThrow(() -> new NotFoundException("Id not found"));
         Users user = this.userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("Id not found"));
         if (!mainOwner.isOperative()){
@@ -68,29 +68,26 @@ public class MainOwnerServiceImp implements MainOwnerService {
 
     @Override
     public MainOwnerDetailsDTO createMainOwner(MainOwnerCreateDTO data,Long userLog_id) {
-        Users user = this.userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("Id not found"));
-        MainOwner existVerifyMainOwner = mainOwnerRepository.findById(data.id_owner()).orElse(null);
-        if (existVerifyMainOwner == null){
-                CostCenter costCenter = costCenterRepository.findById(data.id_cost_center())
-                        .orElseThrow(() -> new RuntimeException("Não encontrado!"));
+        try {
+            Users user = this.userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("Id not found"));
 
+            var costCenter = costCenterRepository.findById(data.costCenter()).orElseThrow(() -> new NotFoundException("Id not found"));
+            var mainOwner = new MainOwner(data, costCenter);
 
-                MainOwner mainOwner = new MainOwner(data, costCenter);
-                String mainowner_id = mainOwnerRepository.save(mainOwner).getId_owner();
+            Long id_owner = mainOwnerRepository.save(mainOwner).getId_owner();
 
-                var userLog = new UserLog(user,"MainOwner",mainowner_id.toString(),"Create new MainOwner", EnumAction.CREATE);
-                userLogRepository.save(userLog);
-                System.out.println("Post: MainOwner ");
+            var userLog = new UserLog(user,"MainOwner",id_owner.toString(),"Create new MainOwner", EnumAction.CREATE);
+            userLogRepository.save(userLog);
+            System.out.println("Post: MainOwner ");
 
-
-                return new MainOwnerDetailsDTO(mainOwner);
+            return new MainOwnerDetailsDTO(mainOwner);
+        } catch (DataIntegrityViolationException e){
+            throw new ExistingEntityException("This main owner already exists");
         }
-        return new MainOwnerDetailsDTO(existVerifyMainOwner);
-
     }
 
     @Override
-    public MainOwnerDetailsDTO updateMainOwner(String id_owner, MainOwnerUpdateDTO dados,Long userLog_id) {
+    public MainOwnerDetailsDTO updateMainOwner(Long id_owner, MainOwnerUpdateDTO dados,Long userLog_id) {
         Users user = this.userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("Id not found"));
         var mainowner = mainOwnerRepository.findById(id_owner).orElseThrow(() -> new NotFoundException("Main Owner id not found"));
 
@@ -104,10 +101,10 @@ public class MainOwnerServiceImp implements MainOwnerService {
         if (!mainowner.isOperative()){
             return null;
         }
-        if (dados.id_cost_center() != null){
-            var costcenter = costCenterRepository.findById(dados.id_cost_center()).orElseThrow(() -> new NotFoundException("Cost Center id not found"));
+        if (dados.costCenter() != null){
+            var costcenter = costCenterRepository.findById(dados.costCenter()).orElseThrow(() -> new NotFoundException("Cost Center id not found"));
             mainowner.setCostCenter(costcenter);
-            userlog.setField(userlog.getField()+"Cost_id to: "+dados.id_cost_center());
+            userlog.setField(userlog.getField()+"Cost_id to: "+dados.costCenter());
         }
 
         mainOwnerRepository.save(mainowner);
@@ -116,7 +113,7 @@ public class MainOwnerServiceImp implements MainOwnerService {
     }
 
     @Override
-    public void activateMainOwner(String id_owner,Long userLog_id) {
+    public void activateMainOwner(Long id_owner,Long userLog_id) {
         var mainowner = this.mainOwnerRepository.findById(id_owner).orElseThrow(() -> new NotFoundException("Cost Center id not found"));
         if (mainowner.isOperative()){
             throw new OperativeFalseException("It is already activate");
@@ -124,12 +121,12 @@ public class MainOwnerServiceImp implements MainOwnerService {
         Users user = this.userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("Id not found"));
         mainowner.setOperative(true);
         mainOwnerRepository.save(mainowner);
-        var userLog = new UserLog(user,"MainOwner",id_owner,"Operative","Activated MainOwner",EnumAction.UPDATE);
+        var userLog = new UserLog(user,"MainOwner",mainowner.getCod_owner(),"Operative","Activated MainOwner",EnumAction.UPDATE);
         userLogRepository.save(userLog);
     }
 
     @Override
-    public void inactivateMainOwner(String id_owner,Long userLog_id) {
+    public void inactivateMainOwner(Long id_owner,Long userLog_id) {
         var mainowner = this.mainOwnerRepository.findById(id_owner).orElseThrow(()-> new NotFoundException("id NOT FOUND"));
         if (!mainowner.isOperative()){
             throw new OpetativeTrueException("It is already inactivate");
@@ -137,7 +134,7 @@ public class MainOwnerServiceImp implements MainOwnerService {
         Users user = this.userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("Id not found"));
         mainowner.setOperative(false);
         mainOwnerRepository.save(mainowner);
-        var userLog = new UserLog(user,"MainOwner",id_owner,"Operative","Inactivated MainOwner",EnumAction.UPDATE);
+        var userLog = new UserLog(user,"MainOwner",mainowner.getCod_owner(),"Operative","Inactivated MainOwner",EnumAction.UPDATE);
         userLogRepository.save(userLog);
     }
 }

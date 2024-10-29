@@ -63,7 +63,7 @@ public class CostCenterServiceImp implements CostCenterService {
     @Override
     public CostCenterDetailsDTO createCostCenter(CostCenterCreateDTO dados,Long userLog_id) {
         Users user = this.userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("Id not found"));
-        CostCenter verifyCostCenter = costCenterRepository.findByConstcenter(dados.costCenter_name()).orElse(null);
+        CostCenter verifyCostCenter = costCenterRepository.findByCostCenter(dados.costCenter()).orElse(null);
         if (verifyCostCenter == null){
             try {
 
@@ -77,7 +77,7 @@ public class CostCenterServiceImp implements CostCenterService {
                 return new CostCenterDetailsDTO(costcenter);
 
             }catch (DataIntegrityViolationException e ){
-                throw new ExistingEntityException("It"+ dados.costCenter_name() + "CostCenter already exists");
+                throw new ExistingEntityException("It"+ dados.costCenter() + "CostCenter already exists");
             }
 
         }
@@ -96,9 +96,9 @@ public class CostCenterServiceImp implements CostCenterService {
         Users user = this.userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("Id not found"));
         var userlog = new UserLog(user,"Area", id.toString(),null,"Infos update",EnumAction.UPDATE);
 
-        if (dados.costCenter_name() != null){
-            costCenter.setConstcenter(dados.costCenter_name());
-            userlog.setField("const_center_name to: "+ dados.costCenter_name());
+        if (dados.costCenter() != null){
+            costCenter.setCostCenter(dados.costCenter());
+            userlog.setField("const_center_name to: "+ dados.costCenter());
         }
 
         costCenterRepository.save(costCenter);

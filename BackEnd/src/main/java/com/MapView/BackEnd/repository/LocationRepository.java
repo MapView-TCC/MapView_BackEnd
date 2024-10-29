@@ -18,6 +18,5 @@ public interface LocationRepository extends JpaRepository<Location,Long> {
     Optional<Location> findByEnvironment(Environment environment);
     Optional<Location> findByPostAndEnvironment(Post post,Environment environment);
 
-
     Location save (LocationCreateDTO data);
 }

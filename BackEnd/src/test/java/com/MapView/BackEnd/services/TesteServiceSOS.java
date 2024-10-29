@@ -7,6 +7,7 @@ import com.MapView.BackEnd.dtos.User.UserDetailsDTO;
 import com.MapView.BackEnd.entities.Classes;
 import com.MapView.BackEnd.entities.Responsible;
 import com.MapView.BackEnd.entities.Users;
+import com.MapView.BackEnd.enums.RoleUser;
 import com.MapView.BackEnd.repository.ClassesRepository;
 import com.MapView.BackEnd.repository.ResponsibleRepository;
 import com.MapView.BackEnd.repository.UserLogRepository;
@@ -75,19 +76,18 @@ public class TesteServiceSOS {
         classesId = 1L;
 
         // Mock para o usuario
-        Users user1 = new Users();
-        user1.setId_user(userLogId);
-        user1.setOperative(true);
+        user = new Users();
+        user.setId_user(userLogId);
+        user.setOperative(true);
 
         // Mock para as classes
-        Classes classes1 = new Classes();
-        classes1.setId_classes(classesId);
-        classes1.setOperative(true);
+        classes = new Classes();
+        classes.setId_classes(classesId);
+        classes.setOperative(true);
 
         // Configurando comportamento esperado do repositório de usuários
-        when(userRepository.findById(userLogId)).thenReturn(Optional.of(user1));
-        when(classesRepository.findById(classesId)).thenReturn(Optional.of(classes1));
-
+        when(userRepository.findById(userLogId)).thenReturn(Optional.of(user));
+        when(classesRepository.findById(classesId)).thenReturn(Optional.of(classes));
     }
 
     @Test
@@ -119,6 +119,4 @@ public class TesteServiceSOS {
 
         verify(responsibleRepository, times(1)).save(any(Responsible.class));
     }
-
-
 }

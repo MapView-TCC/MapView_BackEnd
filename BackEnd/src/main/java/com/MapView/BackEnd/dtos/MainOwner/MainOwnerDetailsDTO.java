@@ -4,11 +4,12 @@ import com.MapView.BackEnd.entities.CostCenter;
 import com.MapView.BackEnd.entities.MainOwner;
 
 public record MainOwnerDetailsDTO(
-        String id_owner,
+        Long id_owner,
+        String cod_owner,
         CostCenter costCenter
 ) {
 
     public MainOwnerDetailsDTO(MainOwner mainOwner) {
-        this(mainOwner.getId_owner(), mainOwner.getCostCenter());
+        this(mainOwner.getId_owner(), mainOwner.getCod_owner(), mainOwner.getCostCenter());
     }
 }

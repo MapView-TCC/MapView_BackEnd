@@ -44,12 +44,12 @@ public class LocationServiceImp implements LocationService {
     @Override
     public LocationDetalsDTO createLocation(LocationCreateDTO data) {
         try {
-            var post = postRepository.findById(data.id_post()).orElseThrow(() -> new NotFoundException("Post Id not Found"));
+            var post = postRepository.findById(data.post()).orElseThrow(() -> new NotFoundException("Post Id not Found"));
             if (!post.isOperative()) {
                 throw new OperativeFalseException("The inactive post cannot be accessed.");
             }
 
-            var environment = environmentRepository.findById(data.id_environment()).orElseThrow(() -> new NotFoundException("Environment Id Not Found"));
+            var environment = environmentRepository.findById(data.environment()).orElseThrow(() -> new NotFoundException("Environment Id Not Found"));
             if (!environment.isOperative()) {
                 throw new OperativeFalseException("The inactive environment cannot be accessed.");
             }
@@ -70,19 +70,19 @@ public class LocationServiceImp implements LocationService {
     public LocationDetalsDTO updateLocation(Long id_location, LocationUpdateDTO data) {
         var location = locationRepository.findById(id_location).orElseThrow(() -> new NotFoundException("Location Id Not Found"));
 
-        var post = postRepository.findById(data.id_post()).orElseThrow(() -> new NotFoundException("Post Id not Found"));
+        var post = postRepository.findById(data.post()).orElseThrow(() -> new NotFoundException("Post Id not Found"));
         if(!post.isOperative()){
             throw new OperativeFalseException("The inactive post cannot be accessed.");
         }
-        var environment = environmentRepository.findById(data.id_environment()).orElseThrow(() -> new NotFoundException("Environment Id Not Found"));
+        var environment = environmentRepository.findById(data.environment()).orElseThrow(() -> new NotFoundException("Environment Id Not Found"));
         if(!environment.isOperative()){
             throw new OperativeFalseException("The inactive environment cannot be accessed.");
         }
 
-        if(data.id_environment() != null){
+        if(data.environment() != null){
             location.setEnvironment(environment);
         }
-        if(data.id_post() != null){
+        if(data.post() != null){
             location.setPost(post);
         }
         locationRepository.save(location);

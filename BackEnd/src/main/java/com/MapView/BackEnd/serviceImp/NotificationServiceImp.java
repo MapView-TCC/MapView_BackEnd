@@ -49,7 +49,7 @@ public class NotificationServiceImp implements NotificationService {
     @Override
     public NotificationDetailsDTO createNotification(NotificationCreateDTO notificationCreateDTO) {
         // Buscar o equipamento usando o ID fornecido no DTO
-        Equipment equipment = equipmentRepository.findById(notificationCreateDTO.id_equipment())
+        Equipment equipment = equipmentRepository.findByCode(notificationCreateDTO.code())
                 .orElseThrow(() -> new NotFoundException("Equipment not found"));
 
         // Criar a nova notificação

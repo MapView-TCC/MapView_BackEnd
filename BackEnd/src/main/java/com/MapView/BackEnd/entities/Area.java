@@ -1,6 +1,7 @@
 package com.MapView.BackEnd.entities;
 
 import com.MapView.BackEnd.dtos.Area.AreaCreateDTO;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.*;
@@ -21,6 +22,7 @@ public class Area {
     @Schema(description = "Area name", example = "Área A", required = true)
     private String area_name;
     @Schema(description = "Operative", example = "True or False")
+    @JsonIgnore
     private boolean operative;
 
     public Area(AreaCreateDTO dados) {

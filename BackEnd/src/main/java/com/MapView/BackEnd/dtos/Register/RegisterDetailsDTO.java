@@ -26,7 +26,7 @@ public record RegisterDetailsDTO (String id_equipment,
                                   List<ResponsibleDetailsDTO> responsible) {
 
     public RegisterDetailsDTO(EquipmentDetailsDTO equipment, LocationDetalsDTO location, List<ResponsibleDetailsDTO> equipmentResponsible){
-        this(equipment.id_equipment(),
+        this(equipment.code(),
                 equipment.name_equipment(),
                 equipment.rfid(),
                 equipment.type(),

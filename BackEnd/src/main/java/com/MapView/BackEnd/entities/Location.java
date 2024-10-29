@@ -25,10 +25,6 @@ public class Location {
     @JoinColumn(name = "id_environment")
     private Environment environment;
 
-//    @OneToMany(mappedBy = "location") // Mapeia a relação inversa no Equipment
-//    @JsonManagedReference // the one that gets serialized normally.
-//    private Set<Equipment> equipments = new HashSet<>();
-
     public Location(Post post, Environment environment){
         this.post = post;
         this.environment = environment;

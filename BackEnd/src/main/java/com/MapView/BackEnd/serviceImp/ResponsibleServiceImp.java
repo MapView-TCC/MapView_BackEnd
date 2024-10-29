@@ -42,7 +42,6 @@ public class ResponsibleServiceImp implements ResponsibleService {
 
     @Override
     public ResponsibleDetailsDTO createResposible(ResponsibleCrateDTO data, Long userLog_id) {
-        System.out.println("Ver o id " + userLog_id);
         UserDetailsDTO users = this.userServiceImp.getUser(userLog_id);
         Responsible verifyByName = responsibleRepository.findByResponsible(data.responsible_name()).orElse(null);
 

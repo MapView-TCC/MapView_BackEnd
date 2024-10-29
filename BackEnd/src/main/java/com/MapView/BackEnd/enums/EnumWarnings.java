@@ -1,6 +1,6 @@
 package com.MapView.BackEnd.enums;
 
-public enum EnumColors {
+public enum EnumWarnings {
     RED,
     YELLOW,
     GREEN
