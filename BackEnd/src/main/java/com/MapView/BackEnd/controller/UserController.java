@@ -71,9 +71,10 @@ public class UserController {
         var users = userServiceIpm.getAllUser();
         return ResponseEntity.ok(users);
     }
-
+    @GetMapping("/loggedUser")
     public ResponseEntity<UserDetailsDTO> loggedUser(@AuthenticationPrincipal Jwt jwt){
         UserDetailsDTO loggedUser = userServiceIpm.loggedUser(jwt);
+        return ResponseEntity.ok(loggedUser);
 
     }
 
