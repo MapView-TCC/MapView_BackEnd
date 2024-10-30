@@ -87,7 +87,7 @@ CREATE TABLE IF NOT EXISTS cost_center (
 -- Creating the Main Owner table (dono principal)
 CREATE TABLE IF NOT EXISTS main_owner (
     id_owner INT AUTO_INCREMENT PRIMARY KEY,
-    cod_owner VARCHAR UNIQUE,
+    cod_owner VARCHAR(255) UNIQUE,
     id_cost_center INT NOT NULL,
     operative TINYINT NOT NULL,
     FOREIGN KEY(id_cost_center) REFERENCES cost_center(id_cost_center)
@@ -111,7 +111,7 @@ CREATE TABLE IF NOT EXISTS equipment (
     admin_rights VARCHAR(255),
     observation TEXT,
     id_location INT,
-    id_owner VARCHAR(255),
+    id_owner INT,
     id_image int,
     operative TINYINT,
     FOREIGN KEY(id_location) REFERENCES location(id_location),

@@ -117,7 +117,7 @@ INSERT INTO cost_center (cost_center_name, operative) VALUES
 INSERT INTO main_owner (cod_owner, id_cost_center, operative) VALUES
 ('FRG7CA', 1, 1),
 ('FRG7CB', 2, 1),
-('FRG7CC', 3, 1),
+(3, 3, 1),
 ('FRG7CD', 4, 1),
 ('FRG7CE', 5, 1);
 
@@ -130,32 +130,32 @@ INSERT INTO equipment (cod_equipment, name_equipment, rfid, type, model, validit
 ('E005', 'Printer E', 567890123456789, 'Printer', 'NOTEBOOK_STANDARD', '2025-05-01', 'User', 'Average condition', 5, 5,  1);
 
 INSERT INTO equipment (cod_equipment, name_equipment, rfid, type, model, validity, admin_rights, observation, id_location, id_owner, operative) VALUES
-('E021', 'Desktop 1', 345678901234560, 'Desktop', 'NOTEBOOK_STANDARD', '2025-01-01', 'Admin', 'Good condition', 1, 'FRG7CC',  1),
-('E022', 'Desktop 2', 456789012345671, 'Desktop', 'NOTEBOOK_STANDARD', '2024-12-31', 'User', 'Needs repair', 2, 'FRG7CC',  0),
-('E023', 'Desktop 3', 567890123456782, 'Desktop', 'NOTEBOOK_STANDARD', '2026-01-01', 'Admin', 'New', 3, 'FRG7CC',  1),
-('E024', 'Desktop 4', 678901234567893, 'Desktop', 'NOTEBOOK_STANDARD', '2024-11-30', 'User', 'Old', 4, 'FRG7CC',  1),
-('E025', 'Server 1', 789012345678904, 'Server', 'NOTEBOOK_STANDARD', '2025-05-01', 'User', 'Average condition', 5, 'FRG7CC',  0),
-('E026', 'Server 2', 890123456789015, 'Server', 'NOTEBOOK_STANDARD', '2025-07-15', 'Admin', 'Good condition', 1, 'FRG7CC',  1),
-('E027', 'Printer 1', 901234567890126, 'Printer', 'NOTEBOOK_STANDARD', '2026-02-20', 'User', 'New', 2, 'FRG7CC',  1),
-('E028', 'Printer 2', 123456789012358, 'Printer', 'NOTEBOOK_STANDARD', '2024-09-30', 'Admin', 'Needs replacement', 3, 'FRG7CC',  0),
-('E029', 'Scanner 1', 234567890123469, 'Scanner', 'NOTEBOOK_STANDARD', '2025-12-01', 'User', 'Good condition', 4, 'FRG7CC',  1),
-('E030', 'Scanner 2', 345678901234570, 'Scanner', 'NOTEBOOK_STANDARD', '2024-10-15', 'User', 'Old', 5, 'FRG7CC',  0),
-('E031', 'Projector 1', 456789012345681, 'Projector', 'NOTEBOOK_STANDARD', '2025-08-10', 'Admin', 'Good condition', 1, 'FRG7CC',  1),
-('E032', 'Projector 2', 567890123456792, 'Projector', 'NOTEBOOK_STANDARD', '2026-03-25', 'User', 'New', 2, 'FRG7CC',  1),
-('E033', 'Router 1', 678901234567803, 'Router', 'NOTEBOOK_STANDARD', '2025-07-01', 'Admin', 'Average condition', 3, 'FRG7CC',  1),
-('E034', 'Router 2', 789012345678914, 'Router', 'NOTEBOOK_STANDARD', '2024-08-30', 'User', 'Needs repair', 4, 'FRG7CC',  0),
-('E035', 'Switch 1', 890123456789025, 'Switch', 'NOTEBOOK_STANDARD', '2025-11-01', 'Admin', 'Good condition', 5, 'FRG7CC',  1),
-('E036', 'Switch 2', 901234567890136, 'Switch', 'NOTEBOOK_STANDARD', '2024-12-31', 'User', 'Old', 1, 'FRG7CC',  0),
-('E037', 'Monitor 1', 123456789012367, 'Monitor', 'NOTEBOOK_STANDARD', '2025-01-01', 'Admin', 'Good condition', 2, 'FRG7CC',  1),
-('E038', 'Monitor 2', 234567890123478, 'Monitor', 'NOTEBOOK_STANDARD', '2026-01-01', 'User', 'Needs repair', 3, 'FRG7CC',  0),
-('E039', 'Webcam 1', 345678901234589, 'Webcam', 'NOTEBOOK_STANDARD', '2025-05-01', 'User', 'Average condition', 4, 'FRG7CC',  1),
-('E040', 'Webcam 2', 456789012345690, 'Webcam', 'NOTEBOOK_STANDARD', '2024-11-30', 'Admin', 'Good condition', 5, 'FRG7CC',  1),
-('E041', 'Headset 1', 567890123456701, 'Headset', 'NOTEBOOK_STANDARD', '2025-08-10', 'User', 'New', 1, 'FRG7CC',  1),
-('E042', 'Headset 2', 678901234567812, 'Headset', 'NOTEBOOK_STANDARD', '2026-03-25', 'Admin', 'Needs replacement', 2, 'FRG7CC',  0),
-('E043', 'Microphone 1', 789012345678923, 'Microphone', 'NOTEBOOK_STANDARD', '2025-07-01', 'User', 'Good condition', 3, 'FRG7CC',  1),
-('E044', 'Microphone 2', 890123456789034, 'Microphone', 'NOTEBOOK_STANDARD', '2024-08-30', 'Admin', 'Old', 4, 'FRG7CC',  0),
-('E045', 'Laptop 1', 901234567890145, 'Laptop', 'NOTEBOOK_STANDARD', '2025-11-01', 'User', 'Good condition', 5, 'FRG7CC',  1),
-('E046', 'Laptop 2', 123456789012378, 'Laptop', 'NOTEBOOK_STANDARD', '2024-12-31', 'Admin', 'Needs repair', 1, 'FRG7CC',  0);
+('E021', 'Desktop 1', 345678901234560, 'Desktop', 'NOTEBOOK_STANDARD', '2025-01-01', 'Admin', 'Good condition', 1, 3,  1),
+('E022', 'Desktop 2', 456789012345671, 'Desktop', 'NOTEBOOK_STANDARD', '2024-12-31', 'User', 'Needs repair', 2, 3,  0),
+('E023', 'Desktop 3', 567890123456782, 'Desktop', 'NOTEBOOK_STANDARD', '2026-01-01', 'Admin', 'New', 3, 3,  1),
+('E024', 'Desktop 4', 678901234567893, 'Desktop', 'NOTEBOOK_STANDARD', '2024-11-30', 'User', 'Old', 4, 3,  1),
+('E025', 'Server 1', 789012345678904, 'Server', 'NOTEBOOK_STANDARD', '2025-05-01', 'User', 'Average condition', 5, 3,  0),
+('E026', 'Server 2', 890123456789015, 'Server', 'NOTEBOOK_STANDARD', '2025-07-15', 'Admin', 'Good condition', 1, 3,  1),
+('E027', 'Printer 1', 901234567890126, 'Printer', 'NOTEBOOK_STANDARD', '2026-02-20', 'User', 'New', 2, 3,  1),
+('E028', 'Printer 2', 123456789012358, 'Printer', 'NOTEBOOK_STANDARD', '2024-09-30', 'Admin', 'Needs replacement', 3, 3,  0),
+('E029', 'Scanner 1', 234567890123469, 'Scanner', 'NOTEBOOK_STANDARD', '2025-12-01', 'User', 'Good condition', 4, 3,  1),
+('E030', 'Scanner 2', 345678901234570, 'Scanner', 'NOTEBOOK_STANDARD', '2024-10-15', 'User', 'Old', 5, 3,  0),
+('E031', 'Projector 1', 456789012345681, 'Projector', 'NOTEBOOK_STANDARD', '2025-08-10', 'Admin', 'Good condition', 1, 3,  1),
+('E032', 'Projector 2', 567890123456792, 'Projector', 'NOTEBOOK_STANDARD', '2026-03-25', 'User', 'New', 2, 3,  1),
+('E033', 'Router 1', 678901234567803, 'Router', 'NOTEBOOK_STANDARD', '2025-07-01', 'Admin', 'Average condition', 3, 3,  1),
+('E034', 'Router 2', 789012345678914, 'Router', 'NOTEBOOK_STANDARD', '2024-08-30', 'User', 'Needs repair', 4, 3,  0),
+('E035', 'Switch 1', 890123456789025, 'Switch', 'NOTEBOOK_STANDARD', '2025-11-01', 'Admin', 'Good condition', 5, 3,  1),
+('E036', 'Switch 2', 901234567890136, 'Switch', 'NOTEBOOK_STANDARD', '2024-12-31', 'User', 'Old', 1, 3,  0),
+('E037', 'Monitor 1', 123456789012367, 'Monitor', 'NOTEBOOK_STANDARD', '2025-01-01', 'Admin', 'Good condition', 2, 3,  1),
+('E038', 'Monitor 2', 234567890123478, 'Monitor', 'NOTEBOOK_STANDARD', '2026-01-01', 'User', 'Needs repair', 3, 3,  0),
+('E039', 'Webcam 1', 345678901234589, 'Webcam', 'NOTEBOOK_STANDARD', '2025-05-01', 'User', 'Average condition', 4, 3,  1),
+('E040', 'Webcam 2', 456789012345690, 'Webcam', 'NOTEBOOK_STANDARD', '2024-11-30', 'Admin', 'Good condition', 5, 3,  1),
+('E041', 'Headset 1', 567890123456701, 'Headset', 'NOTEBOOK_STANDARD', '2025-08-10', 'User', 'New', 1, 3,  1),
+('E042', 'Headset 2', 678901234567812, 'Headset', 'NOTEBOOK_STANDARD', '2026-03-25', 'Admin', 'Needs replacement', 2, 3,  0),
+('E043', 'Microphone 1', 789012345678923, 'Microphone', 'NOTEBOOK_STANDARD', '2025-07-01', 'User', 'Good condition', 3, 3,  1),
+('E044', 'Microphone 2', 890123456789034, 'Microphone', 'NOTEBOOK_STANDARD', '2024-08-30', 'Admin', 'Old', 4, 3,  0),
+('E045', 'Laptop 1', 901234567890145, 'Laptop', 'NOTEBOOK_STANDARD', '2025-11-01', 'User', 'Good condition', 5, 3,  1),
+('E046', 'Laptop 2', 123456789012378, 'Laptop', 'NOTEBOOK_STANDARD', '2024-12-31', 'Admin', 'Needs repair', 1, 3,  0);
 
 -- Inserir novos registros de histórico de rastreio
 INSERT INTO tracking_history (id_equipment, id_environment,  action, warning, dateTime) VALUES

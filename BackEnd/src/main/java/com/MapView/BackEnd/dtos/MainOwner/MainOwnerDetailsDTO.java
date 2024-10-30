@@ -10,6 +10,6 @@ public record MainOwnerDetailsDTO(
 ) {
 
     public MainOwnerDetailsDTO(MainOwner mainOwner) {
-        this(mainOwner.getId_owner(), mainOwner.getCod_owner(), mainOwner.getCostCenter());
+        this(mainOwner.getId_owner(), mainOwner.getCodOwner(), mainOwner.getCostCenter());
     }
 }

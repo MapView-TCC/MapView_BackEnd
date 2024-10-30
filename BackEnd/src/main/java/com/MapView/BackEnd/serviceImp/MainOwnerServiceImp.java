@@ -121,7 +121,7 @@ public class MainOwnerServiceImp implements MainOwnerService {
         Users user = this.userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("Id not found"));
         mainowner.setOperative(true);
         mainOwnerRepository.save(mainowner);
-        var userLog = new UserLog(user,"MainOwner",mainowner.getCod_owner(),"Operative","Activated MainOwner",EnumAction.UPDATE);
+        var userLog = new UserLog(user,"MainOwner",mainowner.getCodOwner(),"Operative","Activated MainOwner",EnumAction.UPDATE);
         userLogRepository.save(userLog);
     }
 
@@ -134,7 +134,7 @@ public class MainOwnerServiceImp implements MainOwnerService {
         Users user = this.userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("Id not found"));
         mainowner.setOperative(false);
         mainOwnerRepository.save(mainowner);
-        var userLog = new UserLog(user,"MainOwner",mainowner.getCod_owner(),"Operative","Inactivated MainOwner",EnumAction.UPDATE);
+        var userLog = new UserLog(user,"MainOwner",mainowner.getCodOwner(),"Operative","Inactivated MainOwner",EnumAction.UPDATE);
         userLogRepository.save(userLog);
     }
 }

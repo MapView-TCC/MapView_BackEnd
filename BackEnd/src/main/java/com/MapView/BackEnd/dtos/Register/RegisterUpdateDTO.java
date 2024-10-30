@@ -7,7 +7,7 @@ import java.util.List;
 public record RegisterUpdateDTO(
 
         //Equipment
-        String id_equipment,
+        String code,
         String name_equipment,
         Long rfid,
         String type,

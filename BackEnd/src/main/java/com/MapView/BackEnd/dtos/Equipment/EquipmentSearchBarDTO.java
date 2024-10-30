@@ -15,8 +15,13 @@ public record EquipmentSearchBarDTO(String code,
                                     List<String> responsibles ) {
 
     public EquipmentSearchBarDTO(Equipment equipment, Location location, MainOwner mainOwner, Environment environment, String currentEnvironment, List<String> responsibles){
-        this(equipment.getCode(), equipment.getName_equipment(), location.getPost().getPost(),
-                mainOwner.getCod_owner(), environment.getEnvironment_name(), currentEnvironment, responsibles);
+        this(equipment.getCode(),
+                equipment.getName_equipment(),
+                location.getPost().getPost(),
+                mainOwner.getCodOwner(),
+                environment.getEnvironment_name(),
+                currentEnvironment,
+                responsibles);
     }
 
 }

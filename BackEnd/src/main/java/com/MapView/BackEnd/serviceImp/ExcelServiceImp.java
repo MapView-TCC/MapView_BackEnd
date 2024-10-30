@@ -88,7 +88,7 @@ public class ExcelServiceImp implements ExcelService {
             createDataCell(dataRow, 3, getQuarterStringFromDate(equipment.getValidity()), dataStyle);
 
             // Extrair informações textuais das entidades Location e MainOwner
-            String IdownerName = equipment.getOwner() != null ? equipment.getOwner().getCod_owner() : "N/A";
+            String IdownerName = equipment.getOwner() != null ? equipment.getOwner().getCodOwner() : "N/A";
             Location location = equipment.getLocation();
             String environment = (location != null && location.getEnvironment() != null) ? location.getEnvironment().getEnvironment_name() : "N/A";
             String postName = (location != null && location.getPost() != null) ? location.getPost().getPost() : "N/A";
