@@ -15,7 +15,7 @@ public record EquipmentResponsibleSearchDetailsDTO (
         long rfid,
         String type,
         EnumModelEquipment model,
-        LocalDate validity,
+        String validity,
         String admin_rights,
         String observation,
         Location location,
