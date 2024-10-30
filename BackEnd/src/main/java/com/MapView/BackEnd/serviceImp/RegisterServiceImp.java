@@ -201,11 +201,11 @@ public class RegisterServiceImp implements RegisterService {
                 }
                 location.setPost(post);
             }
-            if (data.id_environment() != null) {
-                Environment environment = environmentRepository.findById(data.id_environment())
-                        .orElseThrow(() -> new NotFoundException("Environment not found"));
-                location.setEnvironment(environment);
-            }
+
+            Environment environment = environmentRepository.findById(data.id_environment())
+                    .orElseThrow(() -> new NotFoundException("Environment not found"));
+            location.setEnvironment(environment);
+
 
             Location location1= locationRepository.findByPostAndEnvironment(location.getPost(),location.getEnvironment()).orElse(null);
 
