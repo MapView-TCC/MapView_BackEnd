@@ -1,10 +1,9 @@
 package com.MapView.BackEnd.serviceImp;
 
 import com.MapView.BackEnd.dtos.Equipment.*;
-import com.MapView.BackEnd.dtos.EquipmentResponsible.EquipmentResponsibleDetailsDTO;
 import com.MapView.BackEnd.entities.*;
 import com.MapView.BackEnd.enums.EnumAction;
-import com.MapView.BackEnd.enums.EnumColors;
+import com.MapView.BackEnd.enums.EnumWarnings;
 import com.MapView.BackEnd.enums.EnumModelEquipment;
 import com.MapView.BackEnd.enums.EnumTrackingAction;
 import com.MapView.BackEnd.infra.Exception.*;
@@ -62,15 +61,15 @@ public class EquipmentServiceImp implements EquipmentService {
 
 
     @Override
-    public EquipmentDetailsDTO getEquipment(String id_equipment, Long userLog_id) {
-        var equipment = equipmentRepository.findById(String.valueOf(id_equipment)).orElseThrow(() -> new NotFoundException("Id equipment not found!"));
+    public EquipmentDetailsDTO getEquipment(String code, Long userLog_id) {
+        var equipment = equipmentRepository.findByCode(code).orElseThrow(() -> new NotFoundException("Id equipment not found!"));
         Users user = this.userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("Id not found"));
 
         if (!equipment.isOperative()){
             throw new OperativeFalseException("The inactive responsible cannot be accessed.");
         }
 
-        var userLog = new UserLog(user, "Equipment", id_equipment, "Read Equipment", EnumAction.READ);
+        var userLog = new UserLog(user, "Equipment", code, "Read Equipment", EnumAction.READ);
         userLogRepository.save(userLog);
         return new EquipmentDetailsDTO(equipment);
     }
@@ -87,7 +86,7 @@ public class EquipmentServiceImp implements EquipmentService {
 
     @Override
     public EquipmentDetailsDTO  createEquipment(EquipmentCreateDTO data, Long userLog_id) {
-        Equipment verify = equipmentRepository.findByIdEquipmentAndOperativeTrue(data.id_equipment()).orElse(null);
+        Equipment verify = equipmentRepository.findByCodeAndOperativeTrue(data.code()).orElse(null);
 
         if (verify == null){
             try{
@@ -105,7 +104,7 @@ public class EquipmentServiceImp implements EquipmentService {
                 }
 
                 // Proprietário principal
-                MainOwner mainOwner = mainOwnerRepository.findById(String.valueOf(data.id_owner()))
+                MainOwner mainOwner = mainOwnerRepository.findById(data.id_owner())
                         .orElseThrow(() -> new RuntimeException("Id main owner " + data.id_owner() + ") not found!"));
 
                 if (!mainOwner.isOperative()) {
@@ -120,7 +119,7 @@ public class EquipmentServiceImp implements EquipmentService {
 
                 Equipment equipment  = equipmentRepository.save(new Equipment(data,getStartDateFromQuarter(data.validity()), location, mainOwner));
 
-                var userLog = new UserLog(users, "Equipment", data.id_equipment(), "Create new Equipment", EnumAction.CREATE);
+                var userLog = new UserLog(users, "Equipment", data.code(), "Create new Equipment", EnumAction.CREATE);
                 userLogRepository.save(userLog);
 
                 // Salvar o tracking history
@@ -128,7 +127,7 @@ public class EquipmentServiceImp implements EquipmentService {
 
                 TrackingHistory trackingHistory = new TrackingHistory(
                         equipment, environment, EnumTrackingAction.ENTER,
-                        EnumColors.GREEN
+                        EnumWarnings.GREEN
                 );
 
                 trackingHistoryRepository.save(trackingHistory);
@@ -141,12 +140,12 @@ public class EquipmentServiceImp implements EquipmentService {
                 throw new ExistingEntityException("rfid: ("+ data.rfid()+") Already exists");
             }
         }
-        throw new ExistingEntityException("Equipment: " + data.id_equipment() + " Already exists");
+        throw new ExistingEntityException("Equipment: " + data.code() + " Already exists");
     }
 
 
     @Override
-    public EquipmentDetailsDTO updateEquipment(String id_equipment, EquipmentUpdateDTO data, Long userLog_id) {
+    public EquipmentDetailsDTO updateEquipment(Long id_equipment, EquipmentUpdateDTO data, Long userLog_id) {
         var equipment = equipmentRepository.findById(id_equipment)
                 .orElseThrow(() -> new NotFoundException("Id not found"));
 
@@ -155,14 +154,14 @@ public class EquipmentServiceImp implements EquipmentService {
         }
 
         Users user = this.userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("Id not found"));
-        var userlog = new UserLog(user,"Equipment",data.id_equipment(),null,"Infos update",EnumAction.UPDATE);
+        var userlog = new UserLog(user,"Equipment",data.code(),null,"Infos update",EnumAction.UPDATE);
 
-        if (data.id_equipment() != null){
-            if(data.id_equipment().isBlank()){
+        if (data.code() != null){
+            if(data.code().isBlank()){
                 throw new BlankErrorException("Equipment id cannot be blank");
             }
-            equipment.setIdEquipment(data.id_equipment());
-            userlog.setField("equipment id to: " + data.id_equipment());
+            equipment.setCode(data.code());
+            userlog.setField("equipment id to: " + data.code());
         }
         if (data.name_equipment() != null){
             if(data.name_equipment().isBlank()){
@@ -221,9 +220,6 @@ public class EquipmentServiceImp implements EquipmentService {
         }
 
         if (data.id_owner() != null) {
-            if(data.id_owner().isBlank()){
-                throw new BlankErrorException("Owner id cannot be blank");
-            }
             var owner = mainOwnerRepository.findById(data.id_owner())
                     .orElseThrow(() -> new NotFoundException("Owner id not found"));
             equipment.setOwner(owner);
@@ -238,24 +234,24 @@ public class EquipmentServiceImp implements EquipmentService {
     }
 
     @Override
-    public void activateEquipment(String id_equipment, Long userLog_id) {
+    public void activateEquipment(String code, Long userLog_id) {
         Users users = this.userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("Id not found"));
-        var equipment = equipmentRepository.findById(id_equipment).orElseThrow(() -> new NotFoundException("Id not found"));
+        var equipment = equipmentRepository.findByCode(code).orElseThrow(() -> new NotFoundException("Id not found"));
 
         if (equipment.isOperative()){
             throw new OpetativeTrueException("It is already activate");
         }
 
         equipment.setOperative(true);
-        var userLog = new UserLog(users, "Equipment", id_equipment, "Operative", "Activated area", EnumAction.UPDATE);
+        var userLog = new UserLog(users, "Equipment", code, "Operative", "Activated area", EnumAction.UPDATE);
         equipmentRepository.save(equipment);
         userLogRepository.save(userLog);
     }
 
     @Override
-    public void inactivateEquipment(String id_equipment, Long userLog_id) {
+    public void inactivateEquipment(String code, Long userLog_id) {
 
-        var equipment = equipmentRepository.findById(id_equipment).orElseThrow(() -> new NotFoundException("Id not found"));
+        var equipment = equipmentRepository.findByCode(code).orElseThrow(() -> new NotFoundException("Id not found"));
 
         if (!equipment.isOperative()){
             throw new OperativeFalseException("It is already inactivate");
@@ -263,15 +259,13 @@ public class EquipmentServiceImp implements EquipmentService {
         Users users = this.userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("Id not found"));
         equipment.setOperative(false);
         equipment.setLocation(null);
-        var userLog = new UserLog(users, "Equipment", id_equipment, "Operative", "Inactivated area", EnumAction.UPDATE);
+        var userLog = new UserLog(users, "Equipment", code, "Operative", "Inactivated area", EnumAction.UPDATE);
         equipmentRepository.save(equipment);
         userLogRepository.save(userLog);
     }
 
     @Override
     public List<EquipmentSearchBarDTO> getEquipmentSearchBar(String searchTerm) {
-
-        EquipmentResponsible equipmentResponsible = new EquipmentResponsible();
 
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Equipment> criteriaQuery = criteriaBuilder.createQuery(Equipment.class);
@@ -291,8 +285,8 @@ public class EquipmentServiceImp implements EquipmentService {
             String searchLower = searchTerm.toLowerCase(); // para que ele aceite letras maiuscula e minusculas
             Predicate searchPredicate = criteriaBuilder.or(
                     criteriaBuilder.like(criteriaBuilder.lower(equipmentRoot.get("name_equipment")), "%" + searchLower + "%"),
-                    criteriaBuilder.like(criteriaBuilder.lower(mainOwnerJoin.get("id_owner")), "%" + searchLower + "%"),
-                    criteriaBuilder.like(criteriaBuilder.lower(equipmentRoot.get("idEquipment")), "%" + searchLower + "%"),
+                    criteriaBuilder.like(criteriaBuilder.lower(mainOwnerJoin.get("codOwner")), "%" + searchLower + "%"),
+                    criteriaBuilder.like(criteriaBuilder.lower(equipmentRoot.get("code")), "%" + searchLower + "%"),
                     criteriaBuilder.like(criteriaBuilder.lower(postJoin.get("post")), "%" + searchLower + "%"),
                     criteriaBuilder.like(criteriaBuilder.lower(environmentJoin.get("environment_name")), "%" + searchLower + "%")
             );
@@ -320,7 +314,7 @@ public class EquipmentServiceImp implements EquipmentService {
                     // Cria a lista de responsáveis
                     List<String> responsibles = equipment.getEquipmentResponsibles()
                             .stream()
-                            .map(responsible -> responsible.getId_responsible().getResponsible())
+                            .map(responsible -> responsible.getResponsible().getResponsible()) // VOU TER QUE MUDAR AQUI getId_responsible
                             .collect(Collectors.toList());
 
                     // Cria o DTO do equipamento
@@ -345,7 +339,6 @@ public class EquipmentServiceImp implements EquipmentService {
 
             return ResponseEntity.ok("File uploaded successfully. Download link: " + fileDownloadUri);
         } catch (IOException ex) {
-            ex.printStackTrace();
             return ResponseEntity.badRequest().body("File upload failed.");
         }
 
@@ -384,6 +377,18 @@ public class EquipmentServiceImp implements EquipmentService {
 
         // Retornar a data do primeiro dia do mês do trimestre
         return LocalDate.of(year, month, 1);
+    }
+
+    public static String getQuarterStringFromDate(LocalDate date) {
+        // Obter o ano
+        int year = date.getYear();
+
+        // Calcular o trimestre
+        int month = date.getMonthValue();
+        int quarter = (month - 1) / 3 + 1; // Q1 -> 1, Q2 -> 2, Q3 -> 3, Q4 -> 4
+
+        // Formatar a string no formato "YYYY.QX"
+        return year + ".Q" + quarter;
     }
 
 }

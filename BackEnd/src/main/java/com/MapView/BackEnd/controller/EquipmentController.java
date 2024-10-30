@@ -50,7 +50,7 @@ public class EquipmentController {
         var equipment = equipmentServiceImp.createEquipment(dados, userLog_id);
         var uri = uriBuilder.path("/api/v1/equipment/{id}").buildAndExpand(equipment.id_equipment()).toUri();
         return ResponseEntity.created(uri).body(new EquipmentDetailsDTO(
-                equipment.id_equipment(), equipment.name_equipment(), equipment.rfid(), equipment.type(),
+                equipment.id_equipment(), equipment.code(), equipment.name_equipment(), equipment.rfid(), equipment.type(),
                 equipment.model(), equipment.validity(), equipment.admin_rights(), equipment.observation(),
                 equipment.location(), equipment.owner()
         ));
@@ -98,13 +98,13 @@ public class EquipmentController {
             @ApiResponse(responseCode = "200", description = "Equipment successfully retrieved"),
             @ApiResponse(responseCode = "404", description = "Equipment not found")
     })
-    @GetMapping("/{id_equipment}")
+    @GetMapping("/{code}")
     public ResponseEntity<EquipmentDetailsDTO> getById(
             @Parameter(description = "The ID of the equipment to retrieve", required = true)
-            @PathVariable("id_equipment") String id_equipment,
+            @PathVariable("code") String code,
             @Parameter(description = "User log ID for tracking changes", required = true)
             @RequestParam Long userLog_id) {
-        var equipment = equipmentServiceImp.getEquipment(id_equipment, userLog_id);
+        var equipment = equipmentServiceImp.getEquipment(code, userLog_id);
         return ResponseEntity.ok(equipment);
     }
 
@@ -113,15 +113,15 @@ public class EquipmentController {
             @ApiResponse(responseCode = "200", description = "Equipment successfully inactivated"),
             @ApiResponse(responseCode = "404", description = "Equipment not found")
     })
-    @PutMapping("/inactivate/{id_equipment}")
+    @PutMapping("/inactivate/{code}")
     @Transactional
     public ResponseEntity<Void> inactivate(
             @Parameter(description = "The ID of the equipment to inactivate", required = true)
-            @PathVariable String id_equipment,
+            @PathVariable String code,
 
             @Parameter(description = "User log ID for tracking changes", required = true)
             @RequestParam Long userLog_id) {
-        equipmentServiceImp.inactivateEquipment(id_equipment, userLog_id);
+        equipmentServiceImp.inactivateEquipment(code, userLog_id);
         return ResponseEntity.ok().build();
     }
 
@@ -130,15 +130,15 @@ public class EquipmentController {
             @ApiResponse(responseCode = "200", description = "Equipment successfully activated"),
             @ApiResponse(responseCode = "404", description = "Equipment not found")
     })
-    @PutMapping("/active/{id_equipment}")
+    @PutMapping("/active/{code}")
     @Transactional
     public ResponseEntity<Void> active(
             @Parameter(description = "The ID of the equipment to activate", required = true)
-            @PathVariable String id_equipment,
+            @PathVariable String code,
 
             @Parameter(description = "User log ID for tracking changes", required = true)
             @RequestParam Long userLog_id) {
-        equipmentServiceImp.activateEquipment(id_equipment, userLog_id);
+        equipmentServiceImp.activateEquipment(code, userLog_id);
         return ResponseEntity.ok().build();
     }
 
@@ -151,7 +151,7 @@ public class EquipmentController {
     @Transactional
     public ResponseEntity<EquipmentDetailsDTO> updateEquipment(
             @Parameter(description = "The ID of the equipment to update", required = true)
-            @PathVariable String id_equipment,
+            @PathVariable Long id_equipment,
             @Parameter(description = "Data transfer object for updating the equipment", required = true)
             @RequestBody @Valid EquipmentUpdateDTO dados,
             @Parameter(description = "User log ID for tracking changes", required = true)

@@ -56,7 +56,7 @@ public class ClassesController {
 
         var classes = classesServiceImp.createClasses(data, userLog_id);
         var uri = uriBuilder.path("/ap1/v1/class/{id}").buildAndExpand(classes.id_classes()).toUri();
-        return ResponseEntity.created(uri).body(new ClassesDetaiLDTO(classes.id_classes(), classes.enumCourse(), classes.classes(), classes.user(), classes.criation_date()));
+        return ResponseEntity.created(uri).body(new ClassesDetaiLDTO(classes.id_classes(), classes.enumCourse(), classes.classes(), classes.user(), classes.creation_date()));
     }
 
     @Operation(summary = "Get class details", description = "Retrieve the details of a class by its ID.")

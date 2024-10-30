@@ -3,12 +3,14 @@ package com.MapView.BackEnd.controller;
 import com.MapView.BackEnd.dtos.FormsRegisterEnviroment.FormsRegisterEnviromentDetailsDTO;
 import com.MapView.BackEnd.dtos.FormsRegisterEnviroment.FormsRegisterEnvironmentCreateDTO;
 import com.MapView.BackEnd.serviceImp.FormsRegisterEnvironmentImp;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.transaction.Transactional;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("api/V1/registerEnvironment")
+@Tag(name = "Register Environment", description = "Operations related to Excel report generation")
 
 public class FormsRegisterEnvironment {
 

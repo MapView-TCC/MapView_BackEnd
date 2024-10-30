@@ -33,7 +33,7 @@ public class Responsible {
     private Users user;
     private boolean operative;
 
-    @OneToMany(mappedBy = "id_responsible",fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "responsible",fetch = FetchType.LAZY)
 
     private List<EquipmentResponsible> equipmentResponsibles = new ArrayList<>();
 
@@ -47,7 +47,7 @@ public class Responsible {
     }
 
     public  Responsible(ResponsibleCrateDTO data, Classes classes, Users users){
-        this.responsible = data.responsible_name();
+        this.responsible = data.responsible();
         this.edv = data.edv();
         this.classes = classes;
         this.user = users;

@@ -44,10 +44,7 @@ public class ScheduleServiceImp {
             if (validity != null && LocalDate.now().getYear() == validity.getYear()) {
 
                 if (getTrimestre(validity.getMonthValue()) == getTrimestre(LocalDate.now().getMonthValue())) {
-
-                    TrackingHistory trackingHistory = new TrackingHistory();
-
-                    NotificationCreateDTO notification = new NotificationCreateDTO(e.getIdEquipment());
+                    NotificationCreateDTO notification = new NotificationCreateDTO(e.getCode());
                     notificationServiceImp.createNotification(notification);
                 }
             }

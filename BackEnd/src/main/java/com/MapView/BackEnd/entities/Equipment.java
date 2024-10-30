@@ -20,8 +20,11 @@ import java.util.Set;
 public class Equipment {
 
     @Id
-    @Column(name = "id_equipment")
-    private String idEquipment;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id_equipment;
+
+    @Column(name = "cod_equipment")
+    private String code;
 
     // novo campo
     private String name_equipment;
@@ -52,13 +55,13 @@ public class Equipment {
     private Image id_image;
     private boolean operative;
 
-    @OneToMany(mappedBy = "idEquipment")
+    @OneToMany(mappedBy = "equipment")
     @JsonManagedReference
     private Set<EquipmentResponsible> equipmentResponsibles;
 
 
     public Equipment(EquipmentCreateDTO data, LocalDate date, Location location, MainOwner id_owner) {
-        this.idEquipment = data.id_equipment();
+        this.code = data.code();
         this.name_equipment = data.name_equipment();
         this.rfid = data.rfid();
         this.type = data.type();
@@ -70,8 +73,8 @@ public class Equipment {
         this.owner = id_owner;
         this.operative = true;
     }
-    public Equipment(String id_equipment, Long rfid) {
-        this.idEquipment = id_equipment;
+    public Equipment(String code, Long rfid) {
+        this.code = code;
         this.rfid = rfid;
         this.type = null;
         this.model = null;
@@ -83,7 +86,7 @@ public class Equipment {
         this.operative = true;
     }
     public Equipment(Long rfid) {
-        this.idEquipment = null;
+        this.id_equipment = null;
         this.rfid = rfid;
         this.type = null;
         this.model = null;

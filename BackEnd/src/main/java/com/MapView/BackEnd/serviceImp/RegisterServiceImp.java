@@ -144,13 +144,13 @@ public class RegisterServiceImp implements RegisterService {
 
     // metodo para fazer a atualização
     @Override
-    public RegisterDetailsDTO updateRegister( RegisterUpdateDTO data, Long userLog_id) {
+    public RegisterDetailsDTO updateRegister( RegisterUpdateDTO data,Long id_equipment, Long userLog_id) {
         // Encontrar e verificar o registro do usuário
         Users userLog = userRepository.findById(userLog_id)
                 .orElseThrow(() -> new NotFoundException("User not found"));
 
         // Obter o equipamento a ser atualizado
-        Equipment equipment = equipmentRepository.findById(data.id_equipment())
+        Equipment equipment = equipmentRepository.findById(id_equipment)
                 .orElseThrow(() -> new NotFoundException("Equipment not found"));
 
         // Atualizar dados básicos do Equipment
@@ -201,11 +201,11 @@ public class RegisterServiceImp implements RegisterService {
                 }
                 location.setPost(post);
             }
-            if (data.id_environment() != null) {
-                Environment environment = environmentRepository.findById(data.id_environment())
-                        .orElseThrow(() -> new NotFoundException("Environment not found"));
-                location.setEnvironment(environment);
-            }
+
+            Environment environment = environmentRepository.findById(data.id_environment())
+                    .orElseThrow(() -> new NotFoundException("Environment not found"));
+            location.setEnvironment(environment);
+
 
             Location location1= locationRepository.findByPostAndEnvironment(location.getPost(),location.getEnvironment()).orElse(null);
 
@@ -223,9 +223,12 @@ public class RegisterServiceImp implements RegisterService {
         }
 
 
+
+
         if(data.costCenter_name() != null){
-            CostCenter costCenter = costCenterRepository.findByConstcenter(data.costCenter_name()).orElse(null);
-            if (data.costCenter_name() != equipment.getOwner().getCostCenter().getConstcenter()){
+            CostCenter costCenter = costCenterRepository.findByCostCenter(data.costCenter_name()).orElse(null);
+            if (data.costCenter_name() != equipment.getOwner().getCostCenter().getCostCenter()){
+
 
                 if (costCenter == null) {
                     CostCenter newCostCenter = new CostCenter(new CostCenterCreateDTO(data.costCenter_name()));
@@ -236,8 +239,8 @@ public class RegisterServiceImp implements RegisterService {
         }
 
         if (data.id_owner() != null){
-            if(data.id_owner() != equipment.getOwner().getId_owner()){
-                MainOwner mainOwner =  mainOwnerRepository.findById(data.id_owner()).orElse(null);
+            if(data.id_owner() != equipment.getOwner().getCodOwner()){
+                MainOwner mainOwner =  mainOwnerRepository.findByCodOwner(data.id_owner()).orElse(null);
                 if (mainOwner == null){
                     MainOwner newMainOwner = mainOwnerRepository.save(new MainOwner(data.id_owner(),equipment.getOwner().getCostCenter()));
                     equipment.setOwner(newMainOwner);
@@ -248,7 +251,7 @@ public class RegisterServiceImp implements RegisterService {
 
 
         // Log da atualização
-        UserlogCreate(userLog, "Equipment", equipment.getIdEquipment(), "Updated Equipment");
+        UserlogCreate(userLog, "Equipment", equipment.getCode(), "Updated Equipment");
 
         if(data.dataResponsible() != null){
 
@@ -269,7 +272,7 @@ public class RegisterServiceImp implements RegisterService {
 
                 if(responsible == null){
                     Responsible newResponsible = responsibleRepository.save(new Responsible(responsibleDTO.responsible_name(),responsibleDTO.edv(),classes,userLog));
-                    equipmentResponsibleServiceImp.createEquipmentResponsible(new EquipmentResponsibleCreateDTO(equipment.getIdEquipment(), newResponsible.getId_responsible(),LocalDate.now(),null));
+                    equipmentResponsibleServiceImp.createEquipmentResponsible(new EquipmentResponsibleCreateDTO(equipment.getId_equipment(), newResponsible.getId_responsible(),LocalDate.now(),null));
                 }
 
                 responsibleRepository.save(responsible);

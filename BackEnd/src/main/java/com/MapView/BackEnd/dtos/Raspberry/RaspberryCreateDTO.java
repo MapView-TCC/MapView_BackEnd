@@ -11,10 +11,10 @@ public record RaspberryCreateDTO(
         String id_raspberry,
         @Min(value = 1, message = "Building Id cannot be smaller than 0.")
         @Positive(message = "CostCenter Id must be Positive.")
-        Long id_building,
+        Long building,
         @Min(value = 1, message = "Area Id cannot be smaller than 0.")
         @Positive(message = "CostCenter Id must be Positive.")
-        Long id_area
+        Long area
 
         ) {
 }

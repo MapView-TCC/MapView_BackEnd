@@ -61,10 +61,10 @@ public class  EquipmentResponsibleServiceImp implements EquipmentResponsibleServ
 
     @Override
     public EquipmentResponsibleDetailsDTO createEquipmentResponsible(EquipmentResponsibleCreateDTO data) {
-        Equipment equipment = equipmentRepository.findById(data.id_equipment())
+        Equipment equipment = equipmentRepository.findById(data.equipment())
                 .orElseThrow(() -> new NotFoundException("Equipment id not found"));
 
-        Responsible responsible = responsibleRepository.findById(data.id_responsible())
+        Responsible responsible = responsibleRepository.findById(data.responsible())
                 .orElseThrow(() -> new NotFoundException("Responsible id not found"));
 
         EquipmentResponsible equipmentResponsible = new EquipmentResponsible(data, equipment, responsible);
@@ -82,22 +82,22 @@ public class  EquipmentResponsibleServiceImp implements EquipmentResponsibleServ
         var equipmentResponsible = equipmentResponsibleRepository.findById(id_equip_resp)
                 .orElseThrow(() -> new NotFoundException("Equipment responsible id not found"));
 
-        if (dados.id_equipment() != null){
-            var equipment = equipmentRepository.findById(dados.id_equipment())
+        if (dados.equipment() != null){
+            var equipment = equipmentRepository.findById(dados.equipment())
                     .orElseThrow(() -> new NotFoundException("Equipment id not found"));
             if (!equipment.isOperative()){
                 throw new OperativeFalseException("The inactive equipment cannot be accessed.");
             }
-            equipmentResponsible.setIdEquipment(equipment);
+            equipmentResponsible.setEquipment(equipment);
         }
 
-        if (dados.id_responsible() != null){
-            var responsible = responsibleRepository.findById(dados.id_responsible())
+        if (dados.responsible() != null){
+            var responsible = responsibleRepository.findById(dados.responsible())
                     .orElseThrow(() -> new NotFoundException("Responsible id not found"));
             if (!responsible.isOperative()){
                 throw new OperativeFalseException("The inactive responsible cannot be accessed.");
             }
-            equipmentResponsible.setId_responsible(responsible);
+            equipmentResponsible.setResponsible(responsible);
         }
 
         if (dados.start_usage() != null){
@@ -129,7 +129,6 @@ public class  EquipmentResponsibleServiceImp implements EquipmentResponsibleServ
             throw new OpetativeTrueException("It is already activate");
         }
         equipmentResponsible.setOperative(true);
-        throw new OperativeFalseException("");
     }
 
     @Override
@@ -139,19 +138,18 @@ public class  EquipmentResponsibleServiceImp implements EquipmentResponsibleServ
             throw new OperativeFalseException("It is already inactivate");
         }
         equipmentResponsible.setOperative(false);
-        throw new OperativeFalseException("");
     }
 
     @Override
-    public EquipmentResponsibleSearchDetailsDTO getEquipmentInventory( String id_equipment) {
+    public EquipmentResponsibleSearchDetailsDTO getEquipmentInventory(String code) {
 
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<EquipmentResponsible> criteriaQuery = criteriaBuilder.createQuery(EquipmentResponsible.class);
 
         // Select From EquipmentResponsible
         Root<EquipmentResponsible> equipmentResponsibleRoot = criteriaQuery.from(EquipmentResponsible.class);
-        Join<EquipmentResponsible, Equipment> equipmentJoin = equipmentResponsibleRoot.join("idEquipment");
-        Join<EquipmentResponsible, Responsible> responsibleJoin = equipmentResponsibleRoot.join("id_responsible");
+        Join<EquipmentResponsible, Equipment> equipmentJoin = equipmentResponsibleRoot.join("equipment");
+        Join<EquipmentResponsible, Responsible> responsibleJoin = equipmentResponsibleRoot.join("responsible");
 
         // Join para obter os dados do equipamento
         Join<Equipment, MainOwner> mainOwnerJoin = equipmentJoin.join("owner");
@@ -164,8 +162,8 @@ public class  EquipmentResponsibleServiceImp implements EquipmentResponsibleServ
         // WHERE
 
 
-        if (id_equipment != null) {
-            predicates.add(criteriaBuilder.like(equipmentJoin.get("idEquipment"), "%" + id_equipment.toLowerCase() + "%"));
+        if (code != null) {
+            predicates.add(criteriaBuilder.like(equipmentJoin.get("code"), "%" + code.toLowerCase() + "%"));
         }
 
         // Filtra apenas responsáveis operacionais
@@ -180,8 +178,8 @@ public class  EquipmentResponsibleServiceImp implements EquipmentResponsibleServ
         EquipmentDetailsDTO equipmentDetailsDTO = null;
         for (EquipmentResponsible er: equipmentResponsibleList){
 
-            equipmentDetailsDTO = new EquipmentDetailsDTO(er.getIdEquipment());
-            responsibles.add(new ResponsibleDetailsDTO(er.getId_responsible()));
+            equipmentDetailsDTO = new EquipmentDetailsDTO(er.getEquipment());
+            responsibles.add(new ResponsibleDetailsDTO(er.getResponsible()));
 
 
 

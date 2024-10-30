@@ -82,13 +82,13 @@ public class ExcelServiceImp implements ExcelService {
         for (Equipment equipment : equipments) {
             HSSFRow dataRow = sheet.createRow(dataRowIndex);
 
-            createDataCell(dataRow, 0, equipment.getIdEquipment(), dataStyle);
+            createDataCell(dataRow, 0, equipment.getCode(), dataStyle);
             createDataCell(dataRow, 1, equipment.getType(), dataStyle);
             createDataCell(dataRow, 2, equipment.getModel().toString(), dataStyle);
             createDataCell(dataRow, 3, getQuarterStringFromDate(equipment.getValidity()), dataStyle);
 
             // Extrair informações textuais das entidades Location e MainOwner
-            String IdownerName = equipment.getOwner() != null ? equipment.getOwner().getId_owner() : "N/A";
+            String IdownerName = equipment.getOwner() != null ? equipment.getOwner().getCodOwner() : "N/A";
             Location location = equipment.getLocation();
             String environment = (location != null && location.getEnvironment() != null) ? location.getEnvironment().getEnvironment_name() : "N/A";
             String postName = (location != null && location.getPost() != null) ? location.getPost().getPost() : "N/A";

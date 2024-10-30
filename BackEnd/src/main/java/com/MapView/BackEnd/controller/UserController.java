@@ -51,7 +51,7 @@ public class UserController {
             @ApiResponse(responseCode = "200", description = "Privilege successfully updated"),
             @ApiResponse(responseCode = "404", description = "User not found")
     })
-    @PostMapping("/{user_id}")
+    @PutMapping("/{user_id}")
     @Transactional
     public ResponseEntity<Void> setPrivilege(
             @Parameter(description = "User role update DTO", required = true)

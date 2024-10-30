@@ -14,7 +14,7 @@ public record RegisterDetailsDTO (String id_equipment,
                                   long rfid,
                                   String type,
                                   EnumModelEquipment model,
-                                  LocalDate validity,
+                                  String validity,
                                   String admin_rights,
                                   String observation,
                                   Location location,
@@ -26,7 +26,7 @@ public record RegisterDetailsDTO (String id_equipment,
                                   List<ResponsibleDetailsDTO> responsible) {
 
     public RegisterDetailsDTO(EquipmentDetailsDTO equipment, LocationDetalsDTO location, List<ResponsibleDetailsDTO> equipmentResponsible){
-        this(equipment.id_equipment(),
+        this(equipment.code(),
                 equipment.name_equipment(),
                 equipment.rfid(),
                 equipment.type(),

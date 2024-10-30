@@ -16,5 +16,5 @@ public interface EquipmentResponsibleService {
     void activateEquipmentResponsible(Long id_equip_resp); // put
     void inactivateEquipmentResponsible(Long id_equip_resp); // put
 
-    EquipmentResponsibleSearchDetailsDTO getEquipmentInventory(String id_equipment);
+    EquipmentResponsibleSearchDetailsDTO getEquipmentInventory(String code);
 }

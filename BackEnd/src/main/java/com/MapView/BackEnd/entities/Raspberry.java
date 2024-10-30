@@ -10,7 +10,7 @@ import lombok.*;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode(of = "raspberry_name")
+@EqualsAndHashCode()
 public class Raspberry {
     @Id
     private String id_raspberry;

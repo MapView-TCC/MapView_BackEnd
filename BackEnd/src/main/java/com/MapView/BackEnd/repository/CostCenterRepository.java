@@ -13,5 +13,5 @@ public interface CostCenterRepository extends JpaRepository<CostCenter,Long> {
     List<CostCenter> findAllByOperativeTrue();
 
 
-    Optional<CostCenter> findByConstcenter(String name);
+    Optional<CostCenter> findByCostCenter(String name);
 }

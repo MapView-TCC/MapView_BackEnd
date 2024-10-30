@@ -64,7 +64,7 @@ public class EnvironmentServiceImp implements EnvironmentService {
     public EnvironmentDetailsDTO createEnvironment(EnvironmentCreateDTO data, Long userLog_id) {
         try{
 
-            var rasp = raspberryRepository.findById(data.id_raspberry()).orElseThrow(()->new NotFoundException("Id Raspberry Not Found"));
+            var rasp = raspberryRepository.findById(data.raspberry()).orElseThrow(()->new NotFoundException("Id Raspberry Not Found"));
             var environment = new Environment(data, rasp);
 
             Long id_environment = environmentRepository.save(environment).getId_environment();
@@ -100,8 +100,8 @@ public class EnvironmentServiceImp implements EnvironmentService {
             userlog.setField("environment_name");
             userlog.setDescription("environment_name to: " + data.environment_name());
         }
-        if (data.id_raspberry() != null){
-            var rasp = raspberryRepository.findById(data.id_raspberry()).orElseThrow(() -> new NotFoundException("Id Raspberry Not Found"));
+        if (data.raspberry() != null){
+            var rasp = raspberryRepository.findById(data.raspberry()).orElseThrow(() -> new NotFoundException("Id Raspberry Not Found"));
             if(!rasp.isOperative()){
                 throw new OperativeFalseException("The inactive raspberry cannot be updated.");
             }

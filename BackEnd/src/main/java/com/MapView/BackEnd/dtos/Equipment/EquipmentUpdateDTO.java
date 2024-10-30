@@ -7,7 +7,7 @@ import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 
 public record EquipmentUpdateDTO(
-        String id_equipment,
+        String code,
         String name_equipment,
         Long rfid,
         String type,
@@ -16,7 +16,7 @@ public record EquipmentUpdateDTO(
         String admin_rights,
         String observation,
         Long id_location,
-        String id_owner // id owner é um string
+        Long id_owner // id owner é um string
 ) {
 
 

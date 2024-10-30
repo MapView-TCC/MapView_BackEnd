@@ -7,7 +7,7 @@ import java.util.List;
 public record TrackingHistoryWrongLocationDTO(
 
 
-        String id_equipment,
+        String code,
         String name_equipment,
         String wrong_location,
         String location,
@@ -20,7 +20,7 @@ public record TrackingHistoryWrongLocationDTO(
 
 
     public TrackingHistoryWrongLocationDTO(Equipment equipment, Environment environment, List<String> responsibles) {
-        this(equipment.getIdEquipment(),
+        this(equipment.getCode(),
                 equipment.getName_equipment(),
                 environment.getEnvironment_name(),
                 equipment.getLocation().getEnvironment().getEnvironment_name()

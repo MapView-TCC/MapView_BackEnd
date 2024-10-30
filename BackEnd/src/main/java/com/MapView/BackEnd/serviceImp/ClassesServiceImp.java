@@ -1,5 +1,9 @@
 package com.MapView.BackEnd.serviceImp;
 
+import com.MapView.BackEnd.dtos.Classes.ClassesCreateDTO;
+import com.MapView.BackEnd.dtos.Classes.ClassesDetaiLDTO;
+import com.MapView.BackEnd.dtos.Classes.ClassesUpdateDTO;
+import com.MapView.BackEnd.entities.Classes;
 import com.MapView.BackEnd.entities.UserLog;
 import com.MapView.BackEnd.enums.EnumAction;
 import com.MapView.BackEnd.infra.Exception.*;
@@ -7,15 +11,9 @@ import com.MapView.BackEnd.repository.ClassesRepository;
 import com.MapView.BackEnd.repository.UserLogRepository;
 import com.MapView.BackEnd.repository.UserRepository;
 import com.MapView.BackEnd.service.ClassesService;
-import com.MapView.BackEnd.dtos.Classes.ClassesCreateDTO;
-import com.MapView.BackEnd.dtos.Classes.ClassesDetaiLDTO;
-import com.MapView.BackEnd.dtos.Classes.ClassesUpdateDTO;
-import com.MapView.BackEnd.entities.Classes;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import javax.xml.crypto.Data;
 import java.util.List;
 @Service
 
@@ -41,7 +39,7 @@ public class ClassesServiceImp implements ClassesService {
         Classes verifyClasses = classesRepository.findByClasses(data.classes()).orElse(null);
         if(verifyClasses ==null) {
             try {
-                var user = userRepository.findById(data.user_id()).orElseThrow(() -> new NotFoundException("User Id Not Found"));
+                var user = userRepository.findById(data.user()).orElseThrow(() -> new NotFoundException("User Id Not Found"));
                 var classe = new Classes(data, user);
                 Classes classes = classesRepository.save(classe);
 
@@ -91,36 +89,42 @@ public class ClassesServiceImp implements ClassesService {
 
     @Override
     public ClassesDetaiLDTO updateClasses(Long classes_id ,ClassesUpdateDTO data, Long userLog_id) {
-        var classes = classesRepository.findById(data.user_id()).orElseThrow(() -> new NotFoundException("Class Id Not Found"));
+        var classes = classesRepository.findById(classes_id).orElseThrow(() -> new NotFoundException("Class Id Not Found"));
+        System.out.println(classes_id);
 
         if(!classes.isOperative()){
             throw new OperativeFalseException("The inactive equipment cannot be updated.");
         }
 
-        var usuario_log = userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("User Id Not Found"));
-        var userlog = new UserLog(usuario_log,"Classes",classes_id.toString(),null,"Update Classes: ",EnumAction.UPDATE);
+        var usuario_log = userRepository.findById(userLog_id)
+                .orElseThrow(() -> new NotFoundException("User Id Not Found"));
+        var userlog = new UserLog(usuario_log, "Classes", classes_id.toString(), null, "Update Classes", EnumAction.UPDATE);
 
-        if(data.user_id() != null){
-            var user = userRepository.findById(data.user_id()).orElseThrow(() -> new NotFoundException("User Id Not Found"));
-            if (!user.isOperative()){
-                throw new OperativeFalseException("The inactive user cannot be updated.");
+        if (data.user() != null) {
+            var user = userRepository.findById(data.user())
+                    .orElseThrow(() -> new NotFoundException("User Id Not Found"));
+            if (!user.isOperative()) {
+                throw new OperativeFalseException("The inactive user cannot be assigned to this class.");
             }
             classes.setUser(user);
-            userlog.setField("userLog_id");
-            userlog.setDescription("userLog_id to: " + data.user_id());
-        }
-        if(data.criation_date() != null){
-
+            userlog.setField("user in classes");
+            userlog.setDescription("userLog_id to: " + data.user());
         }
 
-        if(data.classes() != null){
-            if (data.classes().isBlank()){
-                throw new BlankErrorException("Classes cannot be blank");
-            }
+        if (data.classes() != null && !data.classes().isBlank()) {
             classes.setClasses(data.classes());
             userlog.setField("classes");
             userlog.setDescription("classes to: " + data.classes());
+        } else if (data.classes() != null) {
+            throw new BlankErrorException("Classes cannot be blank");
         }
+
+        if (data.enumCourse() != null) {
+            classes.setEnumCourse(data.enumCourse());
+            userlog.setField("enumCourse");
+            userlog.setDescription("enumCourse updated to: " + data.enumCourse());
+        }
+
         classesRepository.save(classes);
         userLogRepository.save(userlog);
 
@@ -129,9 +133,9 @@ public class ClassesServiceImp implements ClassesService {
 
     @Override
     public List<ClassesDetaiLDTO> getAllClasses(Long userLog_id) {
-        var usuario_log = userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("User Id Not Found"));
-        if(usuario_log.isOperative()) {
-            var userLog = new UserLog(usuario_log, "Classes", "Read All Classes", EnumAction.READ);
+        var user_log = userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("User Id Not Found"));
+        if(user_log.isOperative()) {
+            var userLog = new UserLog(user_log, "Classes", "Read All Classes", EnumAction.READ);
             userLogRepository.save( userLog);
         }
         return this.classesRepository.findClassesByOperativeTrue().stream().map(ClassesDetaiLDTO::new).toList();

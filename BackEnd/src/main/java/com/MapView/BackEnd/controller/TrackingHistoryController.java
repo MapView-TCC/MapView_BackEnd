@@ -1,8 +1,7 @@
 package com.MapView.BackEnd.controller;
 
-import com.MapView.BackEnd.dtos.Equipment.EquipmentDetailsDTO;
 import com.MapView.BackEnd.dtos.TrackingHistory.TrackingHistoryWrongLocationDTO;
-import com.MapView.BackEnd.enums.EnumColors;
+import com.MapView.BackEnd.enums.EnumWarnings;
 import com.MapView.BackEnd.enums.EnumTrackingAction;
 import com.MapView.BackEnd.serviceImp.TrackingHistoryServiceImp;
 import com.MapView.BackEnd.dtos.TrackingHistory.TrackingHistoryCreateDTO;
@@ -93,7 +92,7 @@ public class TrackingHistoryController {
             @Parameter(description = "Optional year filter")
             @RequestParam(required = false) Integer year,
             @Parameter(description = "Optional color filter")
-            @RequestParam(required = false) EnumColors colors,
+            @RequestParam(required = false) EnumWarnings colors,
             @Parameter(description = "Optional equipment ID filter")
             @RequestParam(required = false) String id_equipment) {
         var list = trackingHistoryServiceImp.FilterTracking(page, itens, action, day, month, year, colors, id_equipment);

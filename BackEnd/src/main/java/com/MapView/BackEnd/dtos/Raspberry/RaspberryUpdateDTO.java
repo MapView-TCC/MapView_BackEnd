@@ -6,9 +6,8 @@ import jakarta.validation.constraints.Positive;
 
 public record RaspberryUpdateDTO(
         String raspberry_name,
-
-        Long id_building,
-        Long id_area
+        Long building,
+        Long area
 
 ) {
 }

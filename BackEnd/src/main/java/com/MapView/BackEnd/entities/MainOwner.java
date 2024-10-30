@@ -16,25 +16,25 @@ import java.util.Set;
 @NoArgsConstructor
 @EqualsAndHashCode(of = "id_owner")
 public class MainOwner {
+
     @Id
-    private String id_owner;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id_owner;
+
+    @Column(name = "cod_owner")
+    private String codOwner;
     @OneToOne
     @JoinColumn(name = "id_cost_center")
     private CostCenter costCenter;
     private boolean operative;
 
-//    @OneToMany(mappedBy = "owner") // Mapeia a relação inversa no Equipment
-//    @JsonManagedReference
-//    private Set<Equipment> equipments = new HashSet<>();
-
-
     public MainOwner(MainOwnerCreateDTO dados, CostCenter costCenter) {
-        this.id_owner = dados.id_owner();
+        this.codOwner = dados.cod_owner();
         this.costCenter = costCenter;
         this.operative = true;
     }
-    public MainOwner( String id_owner, CostCenter costCenter) {
-        this.id_owner = id_owner;
+    public MainOwner(  String cod_owner, CostCenter costCenter) {
+        this.codOwner = cod_owner;
         this.costCenter = costCenter;
         this.operative = true;
     }

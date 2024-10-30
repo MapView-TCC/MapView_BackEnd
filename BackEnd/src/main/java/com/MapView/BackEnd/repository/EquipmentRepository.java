@@ -13,13 +13,14 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface EquipmentRepository extends JpaRepository<Equipment,String> {
+public interface EquipmentRepository extends JpaRepository<Equipment,Long> {
     List<Equipment> findAllByOperativeTrue(Pageable pageable);
     List<Equipment> findAllByOperativeTrue();
-    Optional<Equipment> findByIdEquipmentAndOperativeTrue(String id);
+    Optional<Equipment> findByCodeAndOperativeTrue(String id);
     Optional<Equipment> findByValidity(LocalDate validity);
     List<Equipment> findByModel(EnumModelEquipment equipment);
     Optional<Equipment> findByRfid(Long rfid);
+    Optional<Equipment> findByCode(String code);
 
     boolean existsByLocation(Location location);
 

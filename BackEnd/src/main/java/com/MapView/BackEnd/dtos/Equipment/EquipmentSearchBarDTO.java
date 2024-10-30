@@ -6,7 +6,7 @@ import com.MapView.BackEnd.enums.EnumModelEquipment;
 import java.time.LocalDate;
 import java.util.List;
 
-public record EquipmentSearchBarDTO(String id_equipment,
+public record EquipmentSearchBarDTO(String code,
                                     String name_equipment,
                                     String location,
                                     String owner,
@@ -15,8 +15,13 @@ public record EquipmentSearchBarDTO(String id_equipment,
                                     List<String> responsibles ) {
 
     public EquipmentSearchBarDTO(Equipment equipment, Location location, MainOwner mainOwner, Environment environment, String currentEnvironment, List<String> responsibles){
-        this(equipment.getIdEquipment(), equipment.getName_equipment(), location.getPost().getPost(),
-                mainOwner.getId_owner(), environment.getEnvironment_name(), currentEnvironment, responsibles);
+        this(equipment.getCode(),
+                equipment.getName_equipment(),
+                location.getPost().getPost(),
+                mainOwner.getCodOwner(),
+                environment.getEnvironment_name(),
+                currentEnvironment,
+                responsibles);
     }
 
 }

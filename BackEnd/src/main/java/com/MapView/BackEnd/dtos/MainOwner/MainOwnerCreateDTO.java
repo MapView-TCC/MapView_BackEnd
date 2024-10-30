@@ -5,8 +5,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
 
 public record MainOwnerCreateDTO(@NotBlank(message = "Owner id cannot be blank.")
-                                 String id_owner,
+                                 String cod_owner,
                                  @Min(value = 1, message = "CostCenter Id cannot be smaller than 0.")
                                  @Positive(message = "CostCenter Id must be Positive.")
-                                 Long id_cost_center) {
+                                 Long costCenter) {
 }

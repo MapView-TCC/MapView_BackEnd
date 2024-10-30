@@ -65,13 +65,13 @@ public class RaspberryServiceImp implements RaspberryService {
         Raspberry existsVerifyRaspberry = raspberryRepository.findById(data.id_raspberry()).orElse(null);
         if(existsVerifyRaspberry == null){
 
-                Building building = buildingRepository.findById(data.id_building())
+                Building building = buildingRepository.findById(data.building())
                         .orElseThrow(() -> new NotFoundException("Building id not found."));
                 if (!building.isOperative()) {
                     throw new OperativeFalseException("The inactive building cannot be accessed.");
                 }
 
-                Area area = areaRepository.findById(data.id_area())
+                Area area = areaRepository.findById(data.area())
                         .orElseThrow(() -> new NotFoundException("Area id not found"));
                 if (!area.isOperative()) {
                     throw new OperativeFalseException("The inactive area cannot be accessed.");
@@ -112,18 +112,18 @@ public class RaspberryServiceImp implements RaspberryService {
             userlog.setDescription("userLog_id to: " + data.raspberry_name());
         }
 
-        if (data.id_building() != null){
-            var building = buildingRepository.findById(data.id_building()).orElseThrow(() -> new NotFoundException("Building id not found"));
+        if (data.building() != null){
+            var building = buildingRepository.findById(data.building()).orElseThrow(() -> new NotFoundException("Building id not found"));
             raspberry.setBuilding(building);
             userlog.setField("id_building");
-            userlog.setDescription("id_building to: " + data.id_building());
+            userlog.setDescription("id_building to: " + data.building());
         }
 
-        if (data.id_area() != null){
-            var area = areaRepository.findById(data.id_area()).orElseThrow(() -> new NotFoundException("Area id not found"));
+        if (data.area() != null){
+            var area = areaRepository.findById(data.area()).orElseThrow(() -> new NotFoundException("Area id not found"));
             raspberry.setArea(area);
             userlog.setField("id_area");
-            userlog.setDescription("id_area to: " + data.id_area());
+            userlog.setDescription("id_area to: " + data.area());
         }
 
         raspberryRepository.save(raspberry);

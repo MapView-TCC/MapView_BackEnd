@@ -11,5 +11,5 @@ import java.util.Optional;
 @Repository
 public interface RaspberryRepository extends JpaRepository<Raspberry,String> {
     List<Raspberry> findAllByOperativeTrue();
-    Optional<Raspberry>findById(String name);
+    Optional<Raspberry> findById(String name);
 }

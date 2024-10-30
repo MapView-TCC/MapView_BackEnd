@@ -14,7 +14,6 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(of = "id_environment")
-
 public class Environment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

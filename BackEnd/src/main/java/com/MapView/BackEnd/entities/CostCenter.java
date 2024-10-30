@@ -18,12 +18,12 @@ public class CostCenter {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id_cost_center;
     @Column(name = "cost_center_name")
-    private String constcenter;
+    private String costCenter;
 
     private boolean operative;
 
     public CostCenter(CostCenterCreateDTO dados) {
-        this.constcenter = dados.costCenter_name();
+        this.costCenter = dados.costCenter();
         this.operative = true;
     }
 

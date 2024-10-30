@@ -55,7 +55,7 @@ public class CostCenterController {
             UriComponentsBuilder uriBuilder) {
         var costcenter = costCenterServiceImp.createCostCenter(dados, userLog_id);
         var uri = uriBuilder.path("/api/v1/costcenter/{id}").buildAndExpand(costcenter.id_cost_center()).toUri();
-        return ResponseEntity.created(uri).body(new CostCenterDetailsDTO(costcenter.id_cost_center(), costcenter.cost_center_name()));
+        return ResponseEntity.created(uri).body(new CostCenterDetailsDTO(costcenter.id_cost_center(), costcenter.costCenter()));
     }
 
     @Operation(summary = "Get all cost centers", description = "Retrieve a paginated list of all cost centers.")

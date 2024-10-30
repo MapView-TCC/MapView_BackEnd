@@ -47,8 +47,8 @@ public class FormsRegisterController {
 
     @PutMapping
     @Transactional
-    public  ResponseEntity<RegisterDetailsDTO> updateregister(@RequestBody @Valid RegisterUpdateDTO data,@RequestParam Long userlog_id){
-        RegisterDetailsDTO register = registerServiceImp.updateRegister(data, userlog_id);
+    public  ResponseEntity<RegisterDetailsDTO> updateregister(@RequestBody @Valid RegisterUpdateDTO data,@RequestParam Long userlog_id,@RequestParam Long id_equipment){
+        RegisterDetailsDTO register = registerServiceImp.updateRegister(data, id_equipment,userlog_id);
 
         return  ResponseEntity.ok(register);
     }
