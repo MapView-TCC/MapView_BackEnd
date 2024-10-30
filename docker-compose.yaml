@@ -24,10 +24,32 @@ services:
       SPRING_DATASOURCE_URL: jdbc:mysql://mapview-db:3306/mapview
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: 1234
+      file.upload-dir=C:/Users/ct67ca/Pictures/MapView
+      spring.servlet.multipart.max-file-size=20MB
+      spring.servlet.multipart.max-request-size=20MB
+      server.error.include-stacktrace=never
+      logging.level.org.springframework.web=DEBUG
+      spring.web.servlet.logRequestDetails=true
+      #spring.security.oauth2.resourceserver.jwt.issuer-uri=https://login.microsoftonline.com/0ae51e19-07c8-4e4b-bb6d-648ee58410f4/v2.0
+      myapp.jwtUri=https://login.microsoftonline.com/0ae51e19-07c8-4e4b-bb6d-648ee58410f4/discovery/v2.0/keys
+          
     ports:
       - "8081:8081"
     networks:
       - mapview-net
+
+  frontend:
+	    container_name: angular
+	    build:
+	      context: ./frontend
+	      dockerfile: Dockerfile
+	    ports:
+	      - "4200:82"
+	    networks:
+	      - mapview-net
+
+
+  
 
 volumes:
   mysql-data:
