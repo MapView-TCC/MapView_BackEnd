@@ -3,6 +3,8 @@ package com.MapView.BackEnd.dtos.Notification;
 import com.MapView.BackEnd.entities.Equipment;
 import com.MapView.BackEnd.entities.Notification;
 
+import java.time.LocalDate;
+
 public record NotificationDetailsDTO(Long id_notification, String code, String name_equipment,
                                     String type, String environment_name, String post_name
 ) {
@@ -16,4 +18,6 @@ public record NotificationDetailsDTO(Long id_notification, String code, String n
             notification.getEquipment().getLocation().getEnvironment().getEnvironment_name(),
             notification.getEquipment().getLocation().getPost().getPost());
     }
+
+
 }

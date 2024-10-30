@@ -16,15 +16,27 @@ public record EquipmentDetailsDTO(
         long rfid,
         String type,
         EnumModelEquipment model,
-        LocalDate validity,
+        String validity,
         String admin_rights,
         String observation,
         Location location,
         MainOwner owner) {
 
     public EquipmentDetailsDTO(Equipment equipment) {
-        this(equipment.getId_equipment(), equipment.getCode(), equipment.getName_equipment(), equipment.getRfid(), equipment.getType(), equipment.getModel(), equipment.getValidity(), equipment.getAdmin_rights(), equipment.getObservation(), equipment.getLocation(),
+        this(equipment.getId_equipment(), equipment.getCode(), equipment.getName_equipment(), equipment.getRfid(), equipment.getType(), equipment.getModel(), getQuarterStringFromDate(equipment.getValidity()), equipment.getAdmin_rights(), equipment.getObservation(), equipment.getLocation(),
                 equipment.getOwner());
+    }
+
+    public static String getQuarterStringFromDate(LocalDate date) {
+        // Obter o ano
+        int year = date.getYear();
+
+        // Calcular o trimestre
+        int month = date.getMonthValue();
+        int quarter = (month - 1) / 3 + 1; // Q1 -> 1, Q2 -> 2, Q3 -> 3, Q4 -> 4
+
+        // Formatar a string no formato "YYYY.QX"
+        return year + ".Q" + quarter;
     }
 
 }
