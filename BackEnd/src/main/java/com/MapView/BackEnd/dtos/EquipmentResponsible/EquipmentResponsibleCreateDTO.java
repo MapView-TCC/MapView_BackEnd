@@ -9,9 +9,9 @@ import java.time.LocalDate;
 
 public record EquipmentResponsibleCreateDTO(
         @NotNull(message = "Equipment id cannot be null")
-        Long id_equipment,
+        Long equipment,
         @NotNull(message = "Responsible id cannot be null")
-        Long id_responsible,
+        Long responsible,
         LocalDate start_usage,
         LocalDate end_usage
 

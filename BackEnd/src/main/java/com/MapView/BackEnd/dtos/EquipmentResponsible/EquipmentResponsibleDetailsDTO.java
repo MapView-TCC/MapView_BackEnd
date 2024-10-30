@@ -19,8 +19,8 @@ public record EquipmentResponsibleDetailsDTO(
         LocalDate end_usage
 ) {
     public EquipmentResponsibleDetailsDTO(EquipmentResponsible equipmentResponsible){
-        this(equipmentResponsible.getId_equip_resp(), equipmentResponsible.getIdEquipment(),
-                equipmentResponsible.getId_responsible(), equipmentResponsible.getStart_usage(),
+        this(equipmentResponsible.getId_equip_resp(), equipmentResponsible.getEquipment(),
+                equipmentResponsible.getResponsible(), equipmentResponsible.getStart_usage(),
                 equipmentResponsible.getEnd_usage());
     }
 }

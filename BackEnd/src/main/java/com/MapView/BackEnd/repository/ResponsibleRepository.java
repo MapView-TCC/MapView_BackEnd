@@ -14,8 +14,6 @@ import java.util.Optional;
 public interface ResponsibleRepository extends JpaRepository<Responsible,Long> {
     List<Responsible> findByOperativeTrue();
     ResponsibleCrateDTO save (ResponsibleCrateDTO data);
-
     Optional<Responsible> findByEdv(String edv);
-
     Optional<Responsible> findByResponsible (String name);
 }

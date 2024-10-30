@@ -214,11 +214,11 @@ public class TrackingHistoryServiceImp implements TrackingHistoryService {
                     if (!addedEquipmentIds.contains(equipment.getCode())) {
                         addedEquipmentIds.add(equipment.getCode());
 
-                        List<EquipmentResponsible> equipmentResponsibles = equipmentResponsibleRepository.findByIdEquipment(equipment);
+                        List<EquipmentResponsible> equipmentResponsibles = equipmentResponsibleRepository.findByEquipment(equipment);
                         List<String> responsibles = new ArrayList<>();
 
                         for (EquipmentResponsible responsible : equipmentResponsibles) {
-                            responsibles.add(responsible.getId_responsible().getResponsible());
+                            responsibles.add(responsible.getResponsible().getResponsible());
                         }
 
                         wrongLocationDTOs.add(new TrackingHistoryWrongLocationDTO(equipment, environment,responsibles));

@@ -95,11 +95,12 @@ public class MainOwnerServiceImp implements MainOwnerService {
             throw new OperativeFalseException("The inactive equipment cannot be updated.");
         }
 
-
         var userlog = new UserLog(user,"Area", id_owner.toString(),null,"Infos update", EnumAction.UPDATE);
 
-        if (!mainowner.isOperative()){
-            return null;
+        if (dados.cod_owner() != null){
+            mainowner.setCodOwner(dados.cod_owner());
+            userlog.setField("code main owner");
+            userlog.setDescription("main owner code to: " + dados.cod_owner());
         }
         if (dados.costCenter() != null){
             var costcenter = costCenterRepository.findById(dados.costCenter()).orElseThrow(() -> new NotFoundException("Cost Center id not found"));

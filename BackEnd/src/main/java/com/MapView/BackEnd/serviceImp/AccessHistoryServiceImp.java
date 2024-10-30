@@ -42,7 +42,7 @@ public class AccessHistoryServiceImp implements AccessHistoryService {
 
     @Override
     public AccessHistoryDetailsDTO createAccessHistory(AccessHistoryCreateDTO dados) {
-        Users user = userRepository.findById(dados.user_id())
+        Users user = userRepository.findById(dados.user())
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado!"));
 
         AccessHistory history = new AccessHistory();

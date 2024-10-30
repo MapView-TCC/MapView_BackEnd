@@ -15,7 +15,7 @@ public interface EquipmentService {
     EquipmentDetailsDTO getEquipment(String code, Long userLog_id);
     List<EquipmentDetailsDTO> getAllEquipment(int page, int itens, Long userLog_id);
     EquipmentDetailsDTO createEquipment(EquipmentCreateDTO dados, Long userLog_id);
-    EquipmentDetailsDTO updateEquipment(String code, EquipmentUpdateDTO dados, Long userLog_id);
+    EquipmentDetailsDTO updateEquipment(Long id_equipment, EquipmentUpdateDTO dados, Long userLog_id);
     void activateEquipment(String code, Long userLog_id); // put
     void inactivateEquipment(String code, Long userLog_id); // put
 

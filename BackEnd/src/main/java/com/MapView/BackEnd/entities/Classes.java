@@ -38,7 +38,7 @@ public class Classes {
         this.enumCourse = data.enumCourse();
         this.classes = data.classes();
         this.user = user;
-        this.creation_date = data.criation_date();
+        this.creation_date = data.creation_date();
         this.operative = true;
     }
 

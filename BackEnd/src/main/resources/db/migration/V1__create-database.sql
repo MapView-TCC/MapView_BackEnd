@@ -170,8 +170,8 @@ CREATE TABLE IF NOT EXISTS user_log (
     id_user INT NOT NULL,
     altered_table VARCHAR(255),
     id_altered VARCHAR(255),
-    field VARCHAR(255),
-    description VARCHAR(255),
+    field TEXT,
+    description TEXT,
     datetime TIMESTAMP,
     action ENUM('CREATE', 'UPDATE', 'READ', 'DELETE'),
     FOREIGN KEY(id_user) REFERENCES users(id_user)

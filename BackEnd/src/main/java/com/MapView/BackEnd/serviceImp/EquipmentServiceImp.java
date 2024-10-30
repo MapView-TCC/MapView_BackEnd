@@ -145,8 +145,8 @@ public class EquipmentServiceImp implements EquipmentService {
 
 
     @Override
-    public EquipmentDetailsDTO updateEquipment(String code, EquipmentUpdateDTO data, Long userLog_id) {
-        var equipment = equipmentRepository.findByCode(code)
+    public EquipmentDetailsDTO updateEquipment(Long id_equipment, EquipmentUpdateDTO data, Long userLog_id) {
+        var equipment = equipmentRepository.findById(id_equipment)
                 .orElseThrow(() -> new NotFoundException("Id not found"));
 
         if(!equipment.isOperative()){
@@ -285,7 +285,7 @@ public class EquipmentServiceImp implements EquipmentService {
             String searchLower = searchTerm.toLowerCase(); // para que ele aceite letras maiuscula e minusculas
             Predicate searchPredicate = criteriaBuilder.or(
                     criteriaBuilder.like(criteriaBuilder.lower(equipmentRoot.get("name_equipment")), "%" + searchLower + "%"),
-                    criteriaBuilder.like(criteriaBuilder.lower(mainOwnerJoin.get("id_owner")), "%" + searchLower + "%"),
+                    criteriaBuilder.like(criteriaBuilder.lower(mainOwnerJoin.get("codOwner")), "%" + searchLower + "%"),
                     criteriaBuilder.like(criteriaBuilder.lower(equipmentRoot.get("code")), "%" + searchLower + "%"),
                     criteriaBuilder.like(criteriaBuilder.lower(postJoin.get("post")), "%" + searchLower + "%"),
                     criteriaBuilder.like(criteriaBuilder.lower(environmentJoin.get("environment_name")), "%" + searchLower + "%")
@@ -314,7 +314,7 @@ public class EquipmentServiceImp implements EquipmentService {
                     // Cria a lista de responsáveis
                     List<String> responsibles = equipment.getEquipmentResponsibles()
                             .stream()
-                            .map(responsible -> responsible.getId_responsible().getResponsible())
+                            .map(responsible -> responsible.getResponsible().getResponsible()) // VOU TER QUE MUDAR AQUI getId_responsible
                             .collect(Collectors.toList());
 
                     // Cria o DTO do equipamento

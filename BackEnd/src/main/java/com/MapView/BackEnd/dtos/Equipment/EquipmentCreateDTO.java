@@ -19,7 +19,8 @@ public record  EquipmentCreateDTO(
         @Positive
         @Min(1)
         Long id_location,
-        @NotBlank
+        @Positive
+        @Min(1)
         Long id_owner
 ) {
 }

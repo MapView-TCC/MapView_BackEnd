@@ -5,8 +5,8 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import java.time.LocalDate;
 
 public record EquipmentResponsibleUpdateDTO (
-        Long id_equipment,
-        Long id_responsible,
+        Long equipment,
+        Long responsible,
         LocalDate start_usage,
         LocalDate end_usage
 

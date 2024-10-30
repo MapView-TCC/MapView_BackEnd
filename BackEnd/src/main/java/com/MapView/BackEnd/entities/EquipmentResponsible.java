@@ -26,12 +26,12 @@ public class EquipmentResponsible {
     @ManyToOne
     @JoinColumn(name = "id_equipment", nullable = false)
     @JsonBackReference
-    private Equipment idEquipment;
+    private Equipment equipment;
 
     @ManyToOne()
     @JoinColumn(name = "id_responsible", nullable = false )
     @JsonBackReference
-    private Responsible id_responsible;
+    private Responsible responsible;
 
     private LocalDate start_usage;
     private LocalDate end_usage;
@@ -41,16 +41,16 @@ public class EquipmentResponsible {
 
     public EquipmentResponsible(EquipmentResponsibleCreateDTO equipmentResponsibleCreateDTO, Equipment equipment,
                                 Responsible responsible) {
-        this.idEquipment = equipment;
-        this.id_responsible = responsible;
+        this.equipment = equipment;
+        this.responsible = responsible;
         this.start_usage = equipmentResponsibleCreateDTO.start_usage();
         this.end_usage = null;
         this.operative = true;
     }
 
     public EquipmentResponsible(  Responsible responsible, Equipment equipment) {
-        this.idEquipment = equipment;
-        this.id_responsible = responsible;
+        this.equipment = equipment;
+        this.responsible = responsible;
         this.start_usage = LocalDate.now();
         this.end_usage = null;
         this.operative = true;

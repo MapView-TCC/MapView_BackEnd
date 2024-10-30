@@ -49,7 +49,7 @@ public class ResponsibleController {
         var responsible = responsibleServiceImp.createResposible(data, userLog_id);
         var uri = uriBuilder.path("/ap1/v1/responsible/{id}").buildAndExpand(responsible.responsible_id()).toUri();
         return ResponseEntity.created(uri).body(new ResponsibleDetailsDTO(
-                responsible.responsible_id(), responsible.responsible_name(), responsible.edv(), responsible.classes(), responsible.users()
+                responsible.responsible_id(), responsible.responsible(), responsible.edv(), responsible.classes(), responsible.users()
         ));
     }
 

@@ -147,17 +147,17 @@ public class EquipmentController {
             @ApiResponse(responseCode = "200", description = "Equipment successfully updated"),
             @ApiResponse(responseCode = "404", description = "Equipment not found")
     })
-    @PutMapping("/{code}")
+    @PutMapping("/{id_equipment}")
     @Transactional
     public ResponseEntity<EquipmentDetailsDTO> updateEquipment(
             @Parameter(description = "The ID of the equipment to update", required = true)
-            @PathVariable String code,
+            @PathVariable Long id_equipment,
             @Parameter(description = "Data transfer object for updating the equipment", required = true)
             @RequestBody @Valid EquipmentUpdateDTO dados,
             @Parameter(description = "User log ID for tracking changes", required = true)
             @RequestParam Long userLog_id)
     {
-        EquipmentDetailsDTO equipmentDetailsDTO = equipmentServiceImp.updateEquipment(code, dados, userLog_id);
+        EquipmentDetailsDTO equipmentDetailsDTO = equipmentServiceImp.updateEquipment(id_equipment, dados, userLog_id);
         return ResponseEntity.ok(equipmentDetailsDTO);
     }
 

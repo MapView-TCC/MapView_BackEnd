@@ -18,7 +18,7 @@ public record ClassesDetaiLDTO (
                                 String classes,
                                 Users user,
                                 @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
-                                LocalDate criation_date) {
+                                LocalDate creation_date) {
 
     public ClassesDetaiLDTO(Classes classes){
         this(classes.getId_classes(),classes.getEnumCourse(), classes.getClasses(), classes.getUser(),classes.getCreation_date());

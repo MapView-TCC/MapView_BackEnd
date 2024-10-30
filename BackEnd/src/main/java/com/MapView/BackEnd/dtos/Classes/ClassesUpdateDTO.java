@@ -10,6 +10,5 @@ import java.time.LocalDateTime;
 
 public record ClassesUpdateDTO(EnumCourse enumCourse,
                                String classes,
-                               Long user_id,
-                               LocalDate criation_date) {
+                               Long user) {
 }

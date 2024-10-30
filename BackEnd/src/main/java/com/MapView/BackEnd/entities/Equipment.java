@@ -55,7 +55,7 @@ public class Equipment {
     private Image id_image;
     private boolean operative;
 
-    @OneToMany(mappedBy = "idEquipment")
+    @OneToMany(mappedBy = "equipment")
     @JsonManagedReference
     private Set<EquipmentResponsible> equipmentResponsibles;
 
