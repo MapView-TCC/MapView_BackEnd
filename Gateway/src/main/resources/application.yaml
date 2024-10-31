@@ -13,7 +13,7 @@ spring:
             client-secret: CnS8Q~2WbfXrqPcWMJNwfZZaNcjRieYvkZY44bqm
             scope: openid,profile,email
 
-            redirect-uri: http://localhost:5173/callback
+            redirect-uri: http://localhost:4200/ambiente
             provider: azure
 
 
@@ -34,7 +34,7 @@ spring:
           filters:
             - name: TokenRelay
 
-            - AddResponseHeader=Access-Control-Allow-Origin, http://localhost:5173
+            - AddResponseHeader=Access-Control-Allow-Origin, http://localhost:4200
             - AddResponseHeader=Access-Control-Allow-Methods, GET, POST, PUT, DELETE, OPTIONS
             - AddResponseHeader=Access-Control-Allow-Headers, Authorization, Content-Type
 
@@ -45,7 +45,7 @@ spring:
           filters:
             - name: TokenRelay
 
-            - AddResponseHeader=Access-Control-Allow-Origin, http://localhost:5173
+            - AddResponseHeader=Access-Control-Allow-Origin, http://localhost:4200
             - AddResponseHeader=Access-Control-Allow-Methods, GET
             - AddResponseHeader=Access-Control-Allow-Headers, Authorization, Content-Type
 
@@ -56,7 +56,7 @@ spring:
           filters:
             - name: TokenRelay
 
-            - AddResponseHeader=Access-Control-Allow-Origin, http://localhost:5173
+            - AddResponseHeader=Access-Control-Allow-Origin, http://localhost:4200
             - AddResponseHeader=Access-Control-Allow-Methods, GET, POST, PUT, DELETE, OPTIONS
             - AddResponseHeader=Access-Control-Allow-Headers, Authorization, Content-Type
 
@@ -67,7 +67,7 @@ spring:
           filters:
             - name: TokenRelay
 
-            - AddResponseHeader=Access-Control-Allow-Origin, http://localhost:5173, http://localhost:8000
+            - AddResponseHeader=Access-Control-Allow-Origin, http://localhost:4200, http://localhost:8000
             - AddResponseHeader=Access-Control-Allow-Methods, GET, POST, PUT, DELETE, OPTIONS
             - AddResponseHeader=Access-Control-Allow-Headers, Authorization, Content-Type
 
@@ -78,7 +78,7 @@ spring:
 
           filters:
             - name: TokenRelay
-            - AddResponseHeader=Access-Control-Allow-Origin, http://localhost:5173
+            - AddResponseHeader=Access-Control-Allow-Origin, http://localhost:4200
             - AddResponseHeader=Access-Control-Allow-Methods, GET, POST, DELETE
             - AddResponseHeader=Access-Control-Allow-Headers, Authorization, Content-Type
 
@@ -88,7 +88,7 @@ spring:
             - Path=/api/v1/trackingHistory/filter
           filters:
             - name: TokenRelay
-            - AddResponseHeader=Access-Control-Allow-Origin, http://localhost:5173
+            - AddResponseHeader=Access-Control-Allow-Origin, http://localhost:4200
             - AddResponseHeader=Access-Control-Allow-Methods, GET
             - AddResponseHeader=Access-Control-Allow-Headers, Authorization, Content-Type
 
@@ -98,7 +98,7 @@ spring:
             - Path=/api/v1/trackingHistory/wronglocations
           filters:
             - name: TokenRelay
-            - AddResponseHeader=Access-Control-Allow-Origin, http://localhost:5173
+            - AddResponseHeader=Access-Control-Allow-Origin, http://localhost:4200
             - AddResponseHeader=Access-Control-Allow-Methods, GET
             - AddResponseHeader=Access-Control-Allow-Headers, Authorization, Content-Type
 
@@ -109,7 +109,7 @@ spring:
           filters:
             - name: TokenRelay
 
-            - AddResponseHeader=Access-Control-Allow-Origin, http://localhost:5173
+            - AddResponseHeader=Access-Control-Allow-Origin, http://localhost:4200
             - AddResponseHeader=Access-Control-Allow-Methods, GET
             - AddResponseHeader=Access-Control-Allow-Headers, Authorization, Content-Type
 
@@ -120,7 +120,7 @@ spring:
           filters:
             - name: TokenRelay
 
-            - AddResponseHeader=Access-Control-Allow-Origin, http://localhost:5173
+            - AddResponseHeader=Access-Control-Allow-Origin, http://localhost:4200
             - AddResponseHeader=Access-Control-Allow-Methods, GET, OPTIONS
             - AddResponseHeader=Access-Control-Allow-Headers, Authorization, Content-Type
 
@@ -131,7 +131,7 @@ spring:
           filters:
             - name: TokenRelay
 
-            - AddResponseHeader=Access-Control-Allow-Origin, http://localhost:5173
+            - AddResponseHeader=Access-Control-Allow-Origin, http://localhost:4200
             - AddResponseHeader=Access-Control-Allow-Methods, GET, POST, DELETE, OPTIONS
             - AddResponseHeader=Access-Control-Allow-Headers, Authorization, Content-Type
 
@@ -141,7 +141,7 @@ spring:
             - Path=/api/v1/equipment
           filters:
             - name: TokenRelay
-            - AddResponseHeader=Access-Control-Allow-Origin, http://localhost:5173
+            - AddResponseHeader=Access-Control-Allow-Origin, http://localhost:4200
             - AddResponseHeader=Access-Control-Allow-Methods, GET, POST, DELETE, OPTIONS
             - AddResponseHeader=Access-Control-Allow-Headers, Authorization, Content-Type
 
@@ -151,7 +151,7 @@ spring:
             - Path=/api/v1/equipment/image
           filters:
             - name: TokenRelay
-            - AddResponseHeader=Access-Control-Allow-Origin, http://localhost:5173
+            - AddResponseHeader=Access-Control-Allow-Origin, http://localhost:4200
             - AddResponseHeader=Access-Control-Allow-Methods, POST
             - AddResponseHeader=Access-Control-Allow-Headers, Authorization, Content-Type
 
@@ -161,7 +161,7 @@ spring:
             - Path=/api/v1/equipment/filter
           filters:
             - name: TokenRelay
-            - AddResponseHeader=Access-Control-Allow-Origin, http://localhost:5173
+            - AddResponseHeader=Access-Control-Allow-Origin, http://localhost:4200
             - AddResponseHeader=Access-Control-Allow-Methods, GET, POST, DELETE, OPTIONS
             - AddResponseHeader=Access-Control-Allow-Headers, Authorization, Content-Type
 
@@ -171,7 +171,7 @@ spring:
             - Path=/api/v1/equipment/search
           filters:
             - name: TokenRelay
-            - AddResponseHeader=Access-Control-Allow-Origin, http://localhost:5173
+            - AddResponseHeader=Access-Control-Allow-Origin, http://localhost:4200
             - AddResponseHeader=Access-Control-Allow-Methods, GET, POST, DELETE, OPTIONS
             - AddResponseHeader=Access-Control-Allow-Headers, Authorization, Content-Type
 
@@ -181,7 +181,7 @@ spring:
             - Path=/api/v1/equipment/{id_equipment}
           filters:
             - name: TokenRelay
-            - AddResponseHeader=Access-Control-Allow-Origin, http://localhost:5173
+            - AddResponseHeader=Access-Control-Allow-Origin, http://localhost:4200
             - AddResponseHeader=Access-Control-Allow-Methods, GET, POST, DELETE, OPTIONS
             - AddResponseHeader=Access-Control-Allow-Headers, Authorization, Content-Type
 
@@ -191,7 +191,7 @@ spring:
             - Path=/api/v1/equipment/inactivate/{id_equipment}
           filters:
             - name: TokenRelay
-            - AddResponseHeader=Access-Control-Allow-Origin, http://localhost:5173
+            - AddResponseHeader=Access-Control-Allow-Origin, http://localhost:4200
             - AddResponseHeader=Access-Control-Allow-Methods, GET, POST, DELETE, OPTIONS
             - AddResponseHeader=Access-Control-Allow-Headers, Authorization, Content-Type
 
@@ -201,7 +201,7 @@ spring:
             - Path=/api/v1/equipment/active/{id_equipment}
           filters:
             - name: TokenRelay
-            - AddResponseHeader=Access-Control-Allow-Origin, http://localhost:5173
+            - AddResponseHeader=Access-Control-Allow-Origin, http://localhost:4200
             - AddResponseHeader=Access-Control-Allow-Methods, GET, POST, DELETE, OPTIONS
             - AddResponseHeader=Access-Control-Allow-Headers, Authorization, Content-Type
 
