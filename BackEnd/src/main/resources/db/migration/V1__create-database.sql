@@ -1,7 +1,16 @@
 -- Creating the User table
+CREATE TABLE IF NOT EXISTS area (
+    id_area INT AUTO_INCREMENT PRIMARY KEY,
+    area_code VARCHAR(255) UNIQUE NOT NULL,
+    area_name VARCHAR(255) NOT NULL,
+    operative TINYINT NOT NULL
+);
+
 CREATE TABLE IF NOT EXISTS users (
     user_id INT AUTO_INCREMENT PRIMARY KEY AUTO_INCREMENT,
     email VARCHAR(255) NOT NULL UNIQUE,
+    id_area int,
+    FOREIGN KEY (id_area) REFERENCES area(id_area),
     operative TINYINT NOT NULL
 );
 
@@ -47,12 +56,7 @@ CREATE TABLE IF NOT EXISTS building (
 );
 
 -- Creating the Area table
-CREATE TABLE IF NOT EXISTS area (
-    id_area INT AUTO_INCREMENT PRIMARY KEY,
-    area_code VARCHAR(255) UNIQUE NOT NULL,
-    area_name VARCHAR(255) NOT NULL,
-    operative TINYINT NOT NULL
-);
+
 
 -- Creating the Raspberry table
 CREATE TABLE IF NOT EXISTS raspberry (

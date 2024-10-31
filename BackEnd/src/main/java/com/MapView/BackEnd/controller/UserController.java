@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("ap1/v1/user")
@@ -78,6 +79,10 @@ public class UserController {
         UserRoleDetailsDTO loggedUser = userServiceIpm.loggedUserRole(jwt);
         return ResponseEntity.ok(loggedUser);
 
+    }
+    @GetMapping("/credentials")
+    public Map<String, String> getCredentials(@AuthenticationPrincipal Jwt jwt){
+        return this.userServiceIpm.getCredencials(jwt);
     }
 
     @Operation(summary = "Activate a user", description = "Activate a user by their ID.")

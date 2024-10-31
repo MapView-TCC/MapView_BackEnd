@@ -14,23 +14,20 @@ import com.MapView.BackEnd.repository.UserRoleRepository;
 import com.MapView.BackEnd.service.UserRoleService;
 import com.MapView.BackEnd.service.UserService;
 import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
-<<<<<<< HEAD
+import java.util.Map;
 
-=======
 @Service
->>>>>>> 39ccf86 (mapeando enpoints)
+
 public class UserServiceImp implements UserService {
     private final UserRepository userRepository;
     private final RoleRespository roleRespository;
     private final UserRoleRepository userRoleRepository;
 
-<<<<<<< HEAD
-=======
 
-
->>>>>>> 39ccf86 (mapeando enpoints)
     public UserServiceImp(UserRepository userRepository, RoleRespository roleRespository, UserRoleRepository userRoleRepository) {
         this.userRepository = userRepository;
         this.roleRespository = roleRespository;
@@ -55,11 +52,24 @@ public class UserServiceImp implements UserService {
 
     public UserRoleDetailsDTO loggedUserRole(Jwt jwt){
         String email = loggedUser(jwt).getClaimAsString("email");
+        
         Users user  = userRepository.findByEmail(email).orElseThrow(() -> new NotFoundException("User not found"));
         UserRole userRole = userRoleRepository.findByUser(user).orElseThrow(() ->new NotFoundException("Not found role "));
 
         return new UserRoleDetailsDTO(userRole);
 
+    }
+    
+    public Map<String, String> getCredencials(Jwt jwt){
+        Map<String, String> attributesMap = new HashMap<>();
+        String id_token = loggedUser(jwt).getClaimAsString("id_token");
+        String email = loggedUser(jwt).getClaimAsString("email");
+
+        attributesMap.put("id_token", id_token);
+        attributesMap.put("email", email);
+
+
+        return attributesMap;
     }
     public Jwt loggedUser(Jwt jwt){
         return jwt;
