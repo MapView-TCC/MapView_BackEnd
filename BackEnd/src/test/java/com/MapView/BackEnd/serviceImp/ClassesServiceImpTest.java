@@ -1,4 +1,4 @@
-package com.MapView.BackEnd.services;
+package com.MapView.BackEnd.serviceImp;
 
 import com.MapView.BackEnd.dtos.Classes.ClassesCreateDTO;
 import com.MapView.BackEnd.dtos.Classes.ClassesDetaiLDTO;
@@ -11,12 +11,10 @@ import com.MapView.BackEnd.infra.Exception.NotFoundException;
 import com.MapView.BackEnd.repository.ClassesRepository;
 import com.MapView.BackEnd.repository.UserLogRepository;
 import com.MapView.BackEnd.repository.UserRepository;
-import com.MapView.BackEnd.serviceImp.ClassesServiceImp;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
@@ -33,7 +31,7 @@ import static org.mockito.Mockito.when;
 @SpringBootTest
 @ActiveProfiles("test") // configurar o banco de dados H2
 @Transactional
-public class ClassesServiceTest {
+public class ClassesServiceImpTest {
 
     @InjectMocks
     private ClassesServiceImp classesServiceImp;
@@ -86,7 +84,7 @@ public class ClassesServiceTest {
         assertEquals(EnumCourse.ADMINISTRACAO, result.enumCourse());
         assertEquals("Teste", result.classes());
         assertEquals(user, result.user());
-        assertEquals(LocalDate.of(2024, 9, 25), result.criation_date());
+        assertEquals(LocalDate.of(2024, 9, 25), result.creation_date());
     }
 
     @Test
@@ -113,7 +111,7 @@ public class ClassesServiceTest {
         createClass.setEnumCourse(createDTO.enumCourse());
         createClass.setClasses(createClass.getClasses());
         createClass.setUser(user);
-        createClass.setCreation_date(createDTO.criation_date());
+        createClass.setCreation_date(createDTO.creation_date());
         createClass.setOperative(true);
 
         // Simulando a criação no repositório
@@ -199,7 +197,7 @@ public class ClassesServiceTest {
 
         when(classesRepository.findById(classesId)).thenReturn(Optional.of(classe));
 
-        ClassesUpdateDTO updateDTO = new ClassesUpdateDTO(EnumCourse.DIGITAL_SOLUTIONS, "Classe Atualizada", userLogId, LocalDate.now());
+        ClassesUpdateDTO updateDTO = new ClassesUpdateDTO(EnumCourse.DIGITAL_SOLUTIONS, "Classe Atualizada", userLogId);
         ClassesDetaiLDTO result = classesServiceImp.updateClasses(classesId, updateDTO, userLogId);
 
         assertNotNull(result);
@@ -215,9 +213,9 @@ public class ClassesServiceTest {
         when(userRepository.findById(userLogId)).thenReturn(Optional.of(users));
         when(classesRepository.findById(classesId)).thenReturn(Optional.empty());
 
-        Exception exception = assertThrows(NotFoundException.class, () -> {
-            classesServiceImp.updateClasses(classesId, new ClassesUpdateDTO(EnumCourse.DIGITAL_SOLUTIONS, "teste", userLogId, LocalDate.now()), userLogId);
-        });
+        Exception exception = assertThrows(NotFoundException.class, () ->
+                classesServiceImp.updateClasses(classesId, new ClassesUpdateDTO(EnumCourse.DIGITAL_SOLUTIONS, "teste", userLogId), userLogId)
+        );
 
         assertEquals("Class Id Not Found", exception.getMessage());
     }

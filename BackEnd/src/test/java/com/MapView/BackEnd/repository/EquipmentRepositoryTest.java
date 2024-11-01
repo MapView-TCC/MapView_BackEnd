@@ -33,7 +33,7 @@ class EquipmentRepositoryTest {
     private Equipment createEquipment(EquipmentCreateDTO dto){
         Equipment newEquipment = new Equipment();
 
-        newEquipment.setIdEquipment(dto.id_equipment());
+        newEquipment.setCode(dto.code());
         newEquipment.setName_equipment(dto.name_equipment());
         newEquipment.setRfid(dto.rfid());
         newEquipment.setType(dto.type());
@@ -55,7 +55,7 @@ class EquipmentRepositoryTest {
         location.setId_location(1L);
 
         MainOwner mainOwner = new MainOwner();
-        mainOwner.setId_owner("FCA0JA");
+        mainOwner.setCodOwner("FCA0JA");
         mainOwner.setOperative(true);
 
         String validy = "2027.Q1";
@@ -95,7 +95,7 @@ class EquipmentRepositoryTest {
         location.setId_location(1L);
 
         MainOwner mainOwner = new MainOwner();
-        mainOwner.setId_owner("FCA0JA");
+        mainOwner.setCodOwner("FCA0JA");
         mainOwner.setOperative(true);
 
         EnumModelEquipment model = EnumModelEquipment.DESKTOP_EXTERNO;
@@ -133,7 +133,7 @@ class EquipmentRepositoryTest {
         location.setId_location(1L);
 
         MainOwner mainOwner = new MainOwner();
-        mainOwner.setId_owner("FCA0JA");
+        mainOwner.setCodOwner("FCA0JA");
         mainOwner.setOperative(true);
 
         EnumModelEquipment model = EnumModelEquipment.DESKTOP_EXTERNO;

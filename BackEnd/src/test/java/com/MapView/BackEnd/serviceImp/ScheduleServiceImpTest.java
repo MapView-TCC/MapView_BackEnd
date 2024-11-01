@@ -1,4 +1,4 @@
-package com.MapView.BackEnd.services;
+package com.MapView.BackEnd.serviceImp;
 
 import com.MapView.BackEnd.dtos.Notification.NotificationCreateDTO;
 import com.MapView.BackEnd.entities.Equipment;
@@ -7,14 +7,10 @@ import com.MapView.BackEnd.entities.TrackingHistory;
 import com.MapView.BackEnd.repository.EquipmentRepository;
 import com.MapView.BackEnd.repository.NotificationRepository;
 import com.MapView.BackEnd.repository.TrackingHistoryRepository;
-import com.MapView.BackEnd.serviceImp.NotificationServiceImp;
-import com.MapView.BackEnd.serviceImp.ScheduleServiceImp;
-import com.MapView.BackEnd.serviceImp.TrackingHistoryServiceImp;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
@@ -29,7 +25,7 @@ import static org.mockito.Mockito.*;
 @SpringBootTest
 @ActiveProfiles("test") // configurar o banco de dados H2
 @Transactional
-public class ScheduleServiceTest {
+public class ScheduleServiceImpTest {
 
     @InjectMocks
     private ScheduleServiceImp scheduleServiceImp;  // ScheduleServiceImp vai usar os mocks
@@ -111,11 +107,12 @@ public class ScheduleServiceTest {
     @Test
     void testCreateNotification() {
 
-        String idEquipment = "E001";
+        Long id_equipment = 1L;
 
         // Cria um equipamento com validade no ano atual e no mesmo trimestre
         Equipment equipment = new Equipment();
-        equipment.setIdEquipment(idEquipment);
+        equipment.setId_equipment(id_equipment);
+        equipment.setCode("E001");
         equipment.setValidity(LocalDate.now()); // data de validade é hj
 
         // Simula o retorno do repositório com o equipamento
@@ -142,11 +139,12 @@ public class ScheduleServiceTest {
 
     @Test
     void testCreateNotification_EquipmentNotInCurrentTrimestre() {
-        String idEquipment = "E001";
-
         // Cria um equipamento com validade no ano atual, mas em outro trimestre
+        Long id_equipment = 1L;
+
         Equipment equipment = new Equipment();
-        equipment.setIdEquipment(idEquipment);
+        equipment.setId_equipment(id_equipment);
+        equipment.setCode("E001");
         equipment.setValidity(LocalDate.now().plusMonths(5)); // Supondo que está fora do trimestre atual
 
         // Simula o retorno do repositório com o equipamento

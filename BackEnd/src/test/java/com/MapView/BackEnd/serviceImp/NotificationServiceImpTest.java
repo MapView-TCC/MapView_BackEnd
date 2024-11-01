@@ -1,16 +1,14 @@
-package com.MapView.BackEnd.services;
+package com.MapView.BackEnd.serviceImp;
 
 import com.MapView.BackEnd.dtos.Notification.NotificationCreateDTO;
 import com.MapView.BackEnd.dtos.Notification.NotificationDetailsDTO;
 import com.MapView.BackEnd.entities.*;
 import com.MapView.BackEnd.repository.EquipmentRepository;
 import com.MapView.BackEnd.repository.NotificationRepository;
-import com.MapView.BackEnd.serviceImp.NotificationServiceImp;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
@@ -28,7 +26,7 @@ import static org.mockito.Mockito.when;
 @SpringBootTest
 @ActiveProfiles("test") // configurar o banco de dados H2
 @Transactional
-public class NotificationServiceTests {
+public class NotificationServiceImpTest {
 
     @InjectMocks
     private NotificationServiceImp notificationServiceImp;
@@ -50,7 +48,7 @@ public class NotificationServiceTests {
 
         // Inicializar um equipamento mockado
         Equipment equipment = new Equipment();
-        equipment.setIdEquipment("E001"); // Definir um ID para o equipamento
+        equipment.setCode("E001"); // Definir um ID para o equipamento
         equipment.setName_equipment("Equipamento Teste");
         equipment.setType("Tipo novo");
 
@@ -120,11 +118,10 @@ public class NotificationServiceTests {
 
         // Inicializar um equipamento mockado
         Equipment equipment = new Equipment();
-        equipment.setIdEquipment("E001"); // Definir um ID para o equipamento
+        equipment.setCode("E001");
         equipment.setName_equipment("Equipamento Teste");
         equipment.setType("Tipo novo");
 
-        // Criar o post e o environment
         Environment environment = new Environment();
         environment.setId_environment(environmentId);
         environment.setEnvironment_name("Sala 2");
@@ -133,15 +130,14 @@ public class NotificationServiceTests {
         post.setId_post(postId);
         post.setPost("Mesa 21");
 
-        // Criar um objeto Location e associá-lo ao equipamento
         Location location = new Location();
-        location.setEnvironment(environment); // Inicializar o ambiente com um nome
-        location.setPost(post); // Inicializar o posto com um nome
-        equipment.setLocation(location); // Associar a localização ao equipamento
+        location.setEnvironment(environment);
+        location.setPost(post);
+        equipment.setLocation(location);
 
         // Criar uma notificação usando o equipamento
         Notification notification = new Notification(equipment);
-        notification.setId_notification(notificationId); // Definir um ID para a notificação
+        notification.setId_notification(notificationId);
         notification.setDate_notification(LocalDate.now());
 
         when(notificationRepository.findById(notificationId)).thenReturn(Optional.of(notification));
@@ -158,11 +154,12 @@ public class NotificationServiceTests {
     @Test
     void testNotificationCreate() {
         Long notificationId = 1L;
-        String equipmentId = "E001"; // Adicione um ID para o equipamento
+        Long id_equipment = 1L; // Adicione um ID para o equipamento
 
         // Inicializar um equipamento mockado
         Equipment equipment = new Equipment();
-        equipment.setIdEquipment("E001"); // Definir um ID para o equipamento
+        equipment.setId_equipment(id_equipment);
+        equipment.setCode("E001"); // Definir um ID para o equipamento
         equipment.setName_equipment("Equipamento Teste");
         equipment.setType("Tipo novo");
 
@@ -182,10 +179,10 @@ public class NotificationServiceTests {
         equipment.setLocation(location); // Associar a localização ao equipamento
 
         // Criar um DTO para a notificação
-        NotificationCreateDTO notificationCreateDTO = new NotificationCreateDTO(equipmentId); // Supondo que tenha um construtor que aceita um ID de equipamento
+        NotificationCreateDTO notificationCreateDTO = new NotificationCreateDTO(equipment.getCode());
 
         // Configurar o comportamento esperado do repositório
-        when(equipmentRepository.findById(equipmentId)).thenReturn(Optional.of(equipment)); // Mock do repositório de equipamentos
+        when(equipmentRepository.findByCode(equipment.getCode())).thenReturn(Optional.of(equipment)); // Mock do repositório de equipamentos
 
         // thenAnswer(...): Em vez de retornar um valor fixo, essa função permite definir uma lógica personalizada que será executada quando o metodo for chamado
         when(notificationRepository.save(any(Notification.class))).thenAnswer(invocation -> {
@@ -202,7 +199,7 @@ public class NotificationServiceTests {
         // Verificações
         assertNotNull(result);
         assertEquals(notificationId, result.id_notification()); // Agora isso deve ser 1
-        assertEquals(equipment.getIdEquipment(), result.id_equipment());
+        assertEquals(equipment.getCode(), result.code());
         assertEquals(equipment.getName_equipment(), result.name_equipment());
         assertEquals(equipment.getType(), result.type());
         assertEquals(environment.getEnvironment_name(), result.environment_name());

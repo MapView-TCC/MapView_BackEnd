@@ -1,4 +1,4 @@
-package com.MapView.BackEnd.services;
+package com.MapView.BackEnd.serviceImp;
 
 import com.MapView.BackEnd.dtos.Building.BuildingCreateDTO;
 import com.MapView.BackEnd.dtos.Building.BuildingDetailsDTO;
@@ -9,12 +9,10 @@ import com.MapView.BackEnd.entities.Users;
 import com.MapView.BackEnd.repository.BuildingRepository;
 import com.MapView.BackEnd.repository.UserLogRepository;
 import com.MapView.BackEnd.repository.UserRepository;
-import com.MapView.BackEnd.serviceImp.BuildingServiceImp;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
@@ -28,7 +26,7 @@ import static org.mockito.Mockito.when;
 @SpringBootTest
 @ActiveProfiles("test") // configurar o banco de dados H2
 @Transactional
-public class BuildingServiceTest {
+public class BuildingServiceImpTest {
 
     @InjectMocks
     private BuildingServiceImp buildingServiceImp;

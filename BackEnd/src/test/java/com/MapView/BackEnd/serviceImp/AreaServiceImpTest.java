@@ -1,4 +1,4 @@
-package com.MapView.BackEnd.services;
+package com.MapView.BackEnd.serviceImp;
 
 import com.MapView.BackEnd.dtos.Area.AreaCreateDTO;
 import com.MapView.BackEnd.dtos.Area.AreaDetailsDTO;
@@ -10,12 +10,10 @@ import com.MapView.BackEnd.infra.Exception.NotFoundException;
 import com.MapView.BackEnd.repository.AreaRepository;
 import com.MapView.BackEnd.repository.UserLogRepository;
 import com.MapView.BackEnd.repository.UserRepository;
-import com.MapView.BackEnd.serviceImp.AreaServiceImp;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
@@ -31,7 +29,7 @@ import static org.mockito.Mockito.when;
 //@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE) // Usar o banco H2 real, usa um banco de dados real em vez de um em memória
 @ActiveProfiles("test") // configurar o banco de dados H2
 @Transactional
-public class AreaServiceTest {
+public class AreaServiceImpTest {
 
     @InjectMocks
     private AreaServiceImp areaServiceImp; // Classe a ser testada, com os mocks injetados
@@ -63,7 +61,7 @@ public class AreaServiceTest {
     }
 
     @Test
-    void testGetArea_Success() {
+    void testGetAreaSuccess() {
         Long userLogId = 1L;
         Long areaId = 1L;
 
@@ -72,12 +70,12 @@ public class AreaServiceTest {
         when(userRepository.findById(userLogId)).thenReturn(Optional.of(user)); // Simula que o usuário foi encontrado
 
         // Mock da área
-        Area area = new Area(); // Cria uma área simulada
-        area.setId_area(areaId); // Define o ID da área
-        area.setArea_code("Teste codigo"); // Define o código da área
-        area.setArea_name("Teste nome"); // Define o nome da área
-        area.setOperative(true); // Define como ativa
-        when(areaRepository.findById(areaId)).thenReturn(Optional.of(area)); // Simula que a área foi encontrada
+        Area area = new Area();
+        area.setId_area(areaId);
+        area.setArea_code("Teste codigo");
+        area.setArea_name("Teste nome");
+        area.setOperative(true);
+        when(areaRepository.findById(areaId)).thenReturn(Optional.of(area));
 
         // Chamada do método
         AreaDetailsDTO result = areaServiceImp.getArea(userLogId, areaId); // Obtém os detalhes da área
@@ -104,7 +102,7 @@ public class AreaServiceTest {
     }
 
     @Test
-    void testCreateArea_Success() {
+    void testCreateAreaSuccess() {
         AreaCreateDTO createDTO = new AreaCreateDTO("CA600", "Área A"); // Criação do DTO para área
         Long userLogId = 1L;
         Users user = new Users(); // simulação do usuário
@@ -141,8 +139,8 @@ public class AreaServiceTest {
         area.setArea_code("CA600"); // Define o código antigo da área
         area.setOperative(true);
 
-        when(areaRepository.findById(areaId)).thenReturn(Optional.of(area)); // Simula que a área foi encontrada
-        when(userRepository.findById(anyLong())).thenReturn(Optional.of(user)); // Simula que o usuário foi encontrado
+        when(areaRepository.findById(areaId)).thenReturn(Optional.of(area));
+        when(userRepository.findById(anyLong())).thenReturn(Optional.of(user));
 
         AreaDetailsDTO result = areaServiceImp.updateArea(areaId, updateDTO, 1L); // Chama o método para atualizar a área
 

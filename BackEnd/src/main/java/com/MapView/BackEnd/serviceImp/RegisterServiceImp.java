@@ -9,11 +9,11 @@ import com.MapView.BackEnd.dtos.Equipment.EquipmentDetailsDTO;
 import com.MapView.BackEnd.dtos.EquipmentResponsible.EquipmentResponsibleCreateDTO;
 import com.MapView.BackEnd.dtos.EquipmentResponsible.EquipmentResponsibleDetailsDTO;
 import com.MapView.BackEnd.dtos.Location.LocationCreateDTO;
-import com.MapView.BackEnd.dtos.Location.LocationDetalsDTO;
+import com.MapView.BackEnd.dtos.Location.LocationDetailsDTO;
 import com.MapView.BackEnd.dtos.MainOwner.MainOwnerCreateDTO;
 import com.MapView.BackEnd.dtos.MainOwner.MainOwnerDetailsDTO;
 import com.MapView.BackEnd.dtos.Post.PostCreateDTO;
-import com.MapView.BackEnd.dtos.Post.PostDetailDTO;
+import com.MapView.BackEnd.dtos.Post.PostDetailsDTO;
 import com.MapView.BackEnd.dtos.Register.RegisterCreateDTO;
 import com.MapView.BackEnd.dtos.Register.RegisterDetailsDTO;
 import com.MapView.BackEnd.dtos.Register.RegisterUpdateDTO;
@@ -26,7 +26,6 @@ import com.MapView.BackEnd.infra.Exception.ExistingEntityException;
 import com.MapView.BackEnd.infra.Exception.NotFoundException;
 import com.MapView.BackEnd.repository.*;
 import com.MapView.BackEnd.service.RegisterService;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -105,8 +104,8 @@ public class RegisterServiceImp implements RegisterService {
         Users userlog = userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("This uses is incorrect"));
 
 
-            PostDetailDTO post = postServiceImp.createPost(new PostCreateDTO(data.post()), userLog_id);
-            LocationDetalsDTO location = locationServiceImp.createLocation(new LocationCreateDTO(post.id_post(),data.id_environment()));
+            PostDetailsDTO post = postServiceImp.createPost(new PostCreateDTO(data.post()), userLog_id);
+            LocationDetailsDTO location = locationServiceImp.createLocation(new LocationCreateDTO(post.id_post(),data.id_environment()));
             CostCenterDetailsDTO costcenter = costCenterServiceImp.createCostCenter(new CostCenterCreateDTO(data.costCenter_name()),userLog_id);
 
             MainOwnerDetailsDTO owner = mainOwnerServiceImp.createMainOwner(new MainOwnerCreateDTO(data.id_owner(),costcenter.id_cost_center()),userLog_id);

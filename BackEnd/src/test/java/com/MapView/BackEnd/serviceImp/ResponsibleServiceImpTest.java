@@ -1,4 +1,4 @@
-package com.MapView.BackEnd.services;
+package com.MapView.BackEnd.serviceImp;
 
 import com.MapView.BackEnd.dtos.Responsible.ResponsibleCrateDTO;
 import com.MapView.BackEnd.dtos.Responsible.ResponsibleDetailsDTO;
@@ -12,12 +12,10 @@ import com.MapView.BackEnd.repository.ClassesRepository;
 import com.MapView.BackEnd.repository.ResponsibleRepository;
 import com.MapView.BackEnd.repository.UserLogRepository;
 import com.MapView.BackEnd.repository.UserRepository;
-import com.MapView.BackEnd.serviceImp.ResponsibleServiceImp;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
@@ -32,7 +30,7 @@ import static org.mockito.Mockito.*;
 @SpringBootTest
 @ActiveProfiles("test")
 @Transactional
-public class ResponsibleServiceTest {
+public class ResponsibleServiceImpTest {
 
     @InjectMocks
     private ResponsibleServiceImp responsibleServiceImp;
@@ -91,9 +89,11 @@ public class ResponsibleServiceTest {
         // Chamando o método para testar
         ResponsibleDetailsDTO result = responsibleServiceImp.createResposible(responsibleDTO, userLogId);
 
+        System.out.println(result);
+
         // Verificações
         assertNotNull(result);
-        assertEquals("Maria", result.responsible_name());
+        assertEquals("Maria", result.responsible());
         assertEquals("92903520", result.edv());
 
         // Verificando se o repositório de responsáveis foi chamado uma vez
@@ -144,7 +144,7 @@ public class ResponsibleServiceTest {
         assertNotNull(result);
         assertFalse(result.isEmpty());
         assertEquals(1, result.size());
-        assertEquals("Maria", result.get(0).responsible_name());
+        assertEquals("Maria", result.get(0).responsible());
         assertEquals("92903520", result.get(0).edv());
     }
 
@@ -187,7 +187,7 @@ public class ResponsibleServiceTest {
 
         // Verificações
         assertNotNull(result);
-        assertEquals("Maria", result.responsible_name());
+        assertEquals("Maria", result.responsible());
         assertEquals("92903520", result.edv());
     }
 
