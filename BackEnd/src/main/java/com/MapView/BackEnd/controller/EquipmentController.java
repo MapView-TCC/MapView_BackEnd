@@ -104,7 +104,7 @@ public class EquipmentController {
             @PathVariable("code") String code,
             @Parameter(description = "User log ID for tracking changes", required = true)
             @RequestParam Long userLog_id) {
-        var equipment = equipmentServiceImp.getEquipment(code, userLog_id);
+        var equipment = equipmentServiceImp.getEquipmentCode(code, userLog_id);
         return ResponseEntity.ok(equipment);
     }
 

@@ -31,7 +31,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class EquipmentServiceImp implements EquipmentService {
-    @PersistenceContext
+
     private final EntityManager entityManager;
     private final EquipmentRepository equipmentRepository ;
     private final LocationRepository locationRepository;
@@ -41,10 +41,6 @@ public class EquipmentServiceImp implements EquipmentService {
     private final Path fileStorageLocation;
     private final TrackingHistoryRepository trackingHistoryRepository;
     private final ImageRepository imageRepository;
-
-
-
-
 
     public EquipmentServiceImp(EntityManager entityManager, EquipmentRepository equipmentRepository, LocationRepository locationRepository, MainOwnerRepository mainOwnerRepository,
                                UserLogRepository userLogRepository, UserRepository userRepository, FileStorageProperties fileStorageProperties, TrackingHistoryRepository trackingHistoryRepository, ImageRepository imageRepository) {
@@ -61,7 +57,7 @@ public class EquipmentServiceImp implements EquipmentService {
 
 
     @Override
-    public EquipmentDetailsDTO getEquipment(String code, Long userLog_id) {
+    public EquipmentDetailsDTO getEquipmentCode(String code, Long userLog_id) {
         var equipment = equipmentRepository.findByCode(code).orElseThrow(() -> new NotFoundException("Id equipment not found!"));
         Users user = this.userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("Id not found"));
 
@@ -330,7 +326,7 @@ public class EquipmentServiceImp implements EquipmentService {
             Path targetLocation = fileStorageLocation.resolve(fileName);
             file.transferTo(targetLocation);
 
-            equipament_image(targetLocation,equipType);
+            equipment_image(targetLocation,equipType);
 
             String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
                     .path("/api/files/download/")
@@ -344,7 +340,7 @@ public class EquipmentServiceImp implements EquipmentService {
 
     }
 
-    public void equipament_image(Path targetLocation, EnumModelEquipment equipmentModel){
+    public void equipment_image(Path targetLocation, EnumModelEquipment equipmentModel){
         String targetLocatioString = targetLocation.toString();
 
         List<Equipment> allEquipments = equipmentRepository.findByModel(equipmentModel);
