@@ -6,19 +6,18 @@ import com.MapView.BackEnd.service.UserLogService;
 import com.MapView.BackEnd.dtos.UserLog.UserLogDetailDTO;
 import com.MapView.BackEnd.entities.UserLog;
 import com.MapView.BackEnd.infra.Exception.NotFoundException;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 @Service
 
-public class UserLogImp implements UserLogService {
+public class UserLogServiceImp implements UserLogService {
 
 
     private final UserLogRepository userLogRepository;
     private final UserRepository userRepository;
 
-    public UserLogImp(UserLogRepository userLogRepository, UserRepository userRepository) {
+    public UserLogServiceImp(UserLogRepository userLogRepository, UserRepository userRepository) {
         this.userLogRepository = userLogRepository;
         this.userRepository = userRepository;
     }
