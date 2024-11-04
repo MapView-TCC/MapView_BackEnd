@@ -2,7 +2,7 @@ package com.MapView.BackEnd.controller;
 
 import com.MapView.BackEnd.serviceImp.PostServiceImp;
 import com.MapView.BackEnd.dtos.Post.PostCreateDTO;
-import com.MapView.BackEnd.dtos.Post.PostDetailDTO;
+import com.MapView.BackEnd.dtos.Post.PostDetailsDTO;
 import com.MapView.BackEnd.dtos.Post.PostUpdateDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -33,21 +33,21 @@ public class PostController {
     @Operation(summary = "Create a new post", description = "Endpoint to create a new post in the system.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Post successfully created",
-                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = PostDetailDTO.class))),
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = PostDetailsDTO.class))),
             @ApiResponse(responseCode = "400", description = "Data validation error"),
             @ApiResponse(responseCode = "500", description = "Internal server error")
     })
     @PostMapping
     @Transactional
-    public ResponseEntity<PostDetailDTO> createPost(
+    public ResponseEntity<PostDetailsDTO> createPost(
             @Parameter(description = "Data transfer object for creating a new post", required = true)
             @RequestBody @Valid PostCreateDTO data,
             @Parameter(description = "User log ID for tracking changes", required = true)
             @RequestParam Long userLog_id,
             UriComponentsBuilder uriBuilder) {
-        PostDetailDTO post = postServiceImp.createPost(data, userLog_id);
+        PostDetailsDTO post = postServiceImp.createPost(data, userLog_id);
         var uri = uriBuilder.path("/api/v1/post/{id}").buildAndExpand(post.id_post()).toUri();
-        return ResponseEntity.created(uri).body(new PostDetailDTO(post.id_post(), post.post()));
+        return ResponseEntity.created(uri).body(new PostDetailsDTO(post.id_post(), post.post()));
     }
 
     @Operation(summary = "Retrieve a post by ID", description = "Get the details of a post by its ID.")
@@ -56,7 +56,7 @@ public class PostController {
             @ApiResponse(responseCode = "404", description = "Post not found")
     })
     @GetMapping("/{id_post}")
-    public ResponseEntity<PostDetailDTO> getPost(
+    public ResponseEntity<PostDetailsDTO> getPost(
             @Parameter(description = "The ID of the post to retrieve", required = true)
             @PathVariable("id_post") Long id_post,
             @Parameter(description = "User log ID for tracking changes", required = true)
@@ -70,7 +70,7 @@ public class PostController {
             @ApiResponse(responseCode = "200", description = "Posts list successfully retrieved")
     })
     @GetMapping
-    public ResponseEntity<List<PostDetailDTO>> getAllPost(
+    public ResponseEntity<List<PostDetailsDTO>> getAllPost(
             @Parameter(description = "User log ID for tracking changes", required = true)
             @RequestParam Long userLog_id) {
         var post = postServiceImp.getAllPost(userLog_id);
@@ -84,7 +84,7 @@ public class PostController {
     })
     @PutMapping("/{id_post}")
     @Transactional
-    public ResponseEntity<PostDetailDTO> updatePost(
+    public ResponseEntity<PostDetailsDTO> updatePost(
             @Parameter(description = "The ID of the post to update", required = true)
             @PathVariable("id_post") Long id_post,
             @Parameter(description = "Data transfer object for updating the post", required = true)
