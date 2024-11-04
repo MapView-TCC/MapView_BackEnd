@@ -110,7 +110,7 @@ public class RegisterServiceImp implements RegisterService {
 
             MainOwnerDetailsDTO owner = mainOwnerServiceImp.createMainOwner(new MainOwnerCreateDTO(data.id_owner(),costcenter.id_cost_center()),userLog_id);
             EquipmentDetailsDTO equipment = equipmentServiceImp.createEquipment(new EquipmentCreateDTO(
-                    data.id_equipment(),
+                    data.code(),
                     data.name_equipment(),
                     data.rfid(), data.type(),
                     data.model(),data.validity(),

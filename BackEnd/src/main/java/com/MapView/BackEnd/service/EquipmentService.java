@@ -12,7 +12,7 @@ import java.util.Optional;
 
 public interface EquipmentService {
 
-    EquipmentDetailsDTO getEquipment(String code, Long userLog_id);
+    EquipmentDetailsDTO getEquipmentCode(String code, Long userLog_id);
     List<EquipmentDetailsDTO> getAllEquipment(int page, int itens, Long userLog_id);
     EquipmentDetailsDTO createEquipment(EquipmentCreateDTO dados, Long userLog_id);
     EquipmentDetailsDTO updateEquipment(Long id_equipment, EquipmentUpdateDTO dados, Long userLog_id);
