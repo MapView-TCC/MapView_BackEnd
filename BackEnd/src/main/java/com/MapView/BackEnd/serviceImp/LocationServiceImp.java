@@ -7,12 +7,11 @@ import com.MapView.BackEnd.repository.LocationRepository;
 import com.MapView.BackEnd.repository.PostRepository;
 import com.MapView.BackEnd.service.LocationService;
 import com.MapView.BackEnd.dtos.Location.LocationCreateDTO;
-import com.MapView.BackEnd.dtos.Location.LocationDetalsDTO;
+import com.MapView.BackEnd.dtos.Location.LocationDetailsDTO;
 import com.MapView.BackEnd.dtos.Location.LocationUpdateDTO;
 import com.MapView.BackEnd.entities.Location;
 import com.MapView.BackEnd.infra.Exception.NotFoundException;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -31,18 +30,18 @@ public class LocationServiceImp implements LocationService {
     }
 
     @Override
-    public LocationDetalsDTO getLocation(Long id_location) {
+    public LocationDetailsDTO getLocation(Long id_location) {
         var loc = locationRepository.findById(id_location).orElseThrow(() -> new NotFoundException("Location id not found"));
-        return new LocationDetalsDTO(loc);
+        return new LocationDetailsDTO(loc);
     }
 
     @Override
-    public List<LocationDetalsDTO> getAllLocation() {
-        return this.locationRepository.findAll().stream().map(LocationDetalsDTO::new).toList();
+    public List<LocationDetailsDTO> getAllLocation() {
+        return this.locationRepository.findAll().stream().map(LocationDetailsDTO::new).toList();
     }
 
     @Override
-    public LocationDetalsDTO createLocation(LocationCreateDTO data) {
+    public LocationDetailsDTO createLocation(LocationCreateDTO data) {
         try {
             var post = postRepository.findById(data.post()).orElseThrow(() -> new NotFoundException("Post Id not Found"));
             if (!post.isOperative()) {
@@ -55,9 +54,9 @@ public class LocationServiceImp implements LocationService {
             }
 
             var location = new Location(post, environment);
-            locationRepository.save(location);
+            location = locationRepository.save(location);
             System.out.println("Post: Post ");
-            return new LocationDetalsDTO(location);
+            return new LocationDetailsDTO(location);
 
 
         }catch (DataIntegrityViolationException e ){
@@ -67,7 +66,7 @@ public class LocationServiceImp implements LocationService {
     }
 
     @Override
-    public LocationDetalsDTO updateLocation(Long id_location, LocationUpdateDTO data) {
+    public LocationDetailsDTO updateLocation(Long id_location, LocationUpdateDTO data) {
         var location = locationRepository.findById(id_location).orElseThrow(() -> new NotFoundException("Location Id Not Found"));
 
         var post = postRepository.findById(data.post()).orElseThrow(() -> new NotFoundException("Post Id not Found"));
@@ -86,6 +85,6 @@ public class LocationServiceImp implements LocationService {
             location.setPost(post);
         }
         locationRepository.save(location);
-        return new LocationDetalsDTO(location);
+        return new LocationDetailsDTO(location);
     }
 }

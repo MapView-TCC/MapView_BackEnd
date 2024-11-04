@@ -71,14 +71,16 @@ public class MainOwnerServiceImp implements MainOwnerService {
         try {
             Users user = this.userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("Id not found"));
 
-            var costCenter = costCenterRepository.findById(data.costCenter()).orElseThrow(() -> new NotFoundException("Id not found"));
-            var mainOwner = new MainOwner(data, costCenter);
+            CostCenter costCenter = costCenterRepository.findById(data.costCenter()).orElseThrow(() -> new NotFoundException("Id not found"));
 
-            Long id_owner = mainOwnerRepository.save(mainOwner).getId_owner();
+            MainOwner mainOwner = new MainOwner(data, costCenter);
+            mainOwner = mainOwnerRepository.save(mainOwner);
 
-            var userLog = new UserLog(user,"MainOwner",id_owner.toString(),"Create new MainOwner", EnumAction.CREATE);
+
+            UserLog userLog = new UserLog(user, "MainOwner",
+                    mainOwner.getId_owner() != null ? mainOwner.getId_owner().toString() : "N/A",
+                    "Create new MainOwner", EnumAction.CREATE);
             userLogRepository.save(userLog);
-            System.out.println("Post: MainOwner ");
 
             return new MainOwnerDetailsDTO(mainOwner);
         } catch (DataIntegrityViolationException e){

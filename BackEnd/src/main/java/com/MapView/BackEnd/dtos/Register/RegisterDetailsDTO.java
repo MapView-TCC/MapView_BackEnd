@@ -1,12 +1,11 @@
 package com.MapView.BackEnd.dtos.Register;
 
 import com.MapView.BackEnd.dtos.Equipment.EquipmentDetailsDTO;
-import com.MapView.BackEnd.dtos.Location.LocationDetalsDTO;
+import com.MapView.BackEnd.dtos.Location.LocationDetailsDTO;
 import com.MapView.BackEnd.dtos.Responsible.ResponsibleDetailsDTO;
 import com.MapView.BackEnd.entities.*;
 import com.MapView.BackEnd.enums.EnumModelEquipment;
 
-import java.time.LocalDate;
 import java.util.List;
 
 public record RegisterDetailsDTO (String id_equipment,
@@ -25,7 +24,7 @@ public record RegisterDetailsDTO (String id_equipment,
 
                                   List<ResponsibleDetailsDTO> responsible) {
 
-    public RegisterDetailsDTO(EquipmentDetailsDTO equipment, LocationDetalsDTO location, List<ResponsibleDetailsDTO> equipmentResponsible){
+    public RegisterDetailsDTO(EquipmentDetailsDTO equipment, LocationDetailsDTO location, List<ResponsibleDetailsDTO> equipmentResponsible){
         this(equipment.code(),
                 equipment.name_equipment(),
                 equipment.rfid(),
