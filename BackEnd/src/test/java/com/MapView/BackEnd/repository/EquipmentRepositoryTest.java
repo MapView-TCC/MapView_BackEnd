@@ -133,7 +133,7 @@ class EquipmentRepositoryTest {
         location.setId_location(1L);
 
         MainOwner mainOwner = new MainOwner();
-        mainOwner.setId_owner("FCA0JA");
+        mainOwner.setId_owner(1L);
         mainOwner.setOperative(true);
 
         EnumModelEquipment model = EnumModelEquipment.DESKTOP_EXTERNO;
