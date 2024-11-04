@@ -8,7 +8,9 @@ import com.MapView.BackEnd.enums.EnumModelEquipment;
 
 import java.util.List;
 
-public record RegisterDetailsDTO (String id_equipment,
+public record RegisterDetailsDTO (Long id_equipment,
+
+                                  String code,
                                   String name_equipment,
                                   long rfid,
                                   String type,
@@ -25,7 +27,7 @@ public record RegisterDetailsDTO (String id_equipment,
                                   List<ResponsibleDetailsDTO> responsible) {
 
     public RegisterDetailsDTO(EquipmentDetailsDTO equipment, LocationDetailsDTO location, List<ResponsibleDetailsDTO> equipmentResponsible){
-        this(equipment.code(),
+        this(equipment.id_equipment(), equipment.code(),
                 equipment.name_equipment(),
                 equipment.rfid(),
                 equipment.type(),

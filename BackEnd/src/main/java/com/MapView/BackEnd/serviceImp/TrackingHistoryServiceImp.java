@@ -135,7 +135,8 @@ public class TrackingHistoryServiceImp implements TrackingHistoryService {
         }
         System.out.println("_-----5--------");
         // Salva histórico de rastreamento com o ambiente do último rastreamento e ação 'OUT'.
-        trackingHistoryRepository.save(new TrackingHistory(last_track_local,equipment.get(),  EnumTrackingAction.OUT, EnumWarnings.GREEN));
+        TrackingHistory outtrackingHistory =trackingHistoryRepository.save(new TrackingHistory(last_track_local,equipment.get(),  EnumTrackingAction.OUT, EnumWarnings.GREEN));
+        template.convertAndSend("/equip",outtrackingHistory);
 
         // Salva novo histórico de rastreamento com o ambiente atual e ação 'ENTER'.
         TrackingHistory trackingHistory = trackingHistoryRepository.save(new TrackingHistory(local_tracking, equipment.get(),  EnumTrackingAction.ENTER, EnumWarnings.GREEN));

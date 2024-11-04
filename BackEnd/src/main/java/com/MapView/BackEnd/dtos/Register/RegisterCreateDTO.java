@@ -9,7 +9,7 @@ public record RegisterCreateDTO (
         //Equipment
 
 
-        String id_equipment,
+        String code,
 
         String name_equipment,
         Long rfid,

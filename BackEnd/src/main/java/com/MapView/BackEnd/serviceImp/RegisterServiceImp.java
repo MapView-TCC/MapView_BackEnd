@@ -44,12 +44,10 @@ public class RegisterServiceImp implements RegisterService {
     private final UserRepository userRepository;
     private final MainOwnerRepository mainOwnerRepository;
     private final ResponsibleRepository responsibleRepository;
-    private final EquipmentResponsibleRepository equipmentResponsibleRepository;
     private final ClassesRepository classesRepository;
     private final EquipmentServiceImp equipmentServiceImp;
     private final LocationServiceImp locationServiceImp;
     private final PostServiceImp postServiceImp;
-    private final EnvironmentServiceImp environmentServiceImp;
     private final MainOwnerServiceImp mainOwnerServiceImp;
     private final CostCenterServiceImp costCenterServiceImp;
     private final ClassesServiceImp classesServiceImp;
@@ -84,12 +82,10 @@ public class RegisterServiceImp implements RegisterService {
         this.userRepository = userRepository;
         this.mainOwnerRepository = mainOwnerRepository;
         this.responsibleRepository = responsibleRepository;
-        this.equipmentResponsibleRepository = equipmentResponsibleRepository;
         this.classesRepository = classesRepository;
         this.equipmentServiceImp = equipmentServiceImp;
         this.locationServiceImp = locationServiceImp;
         this.postServiceImp = postServiceImp;
-        this.environmentServiceImp = environmentServiceImp;
         this.mainOwnerServiceImp = mainOwnerServiceImp;
         this.costCenterServiceImp = costCenterServiceImp;
         this.classesServiceImp = classesServiceImp;
@@ -110,7 +106,7 @@ public class RegisterServiceImp implements RegisterService {
 
             MainOwnerDetailsDTO owner = mainOwnerServiceImp.createMainOwner(new MainOwnerCreateDTO(data.id_owner(),costcenter.id_cost_center()),userLog_id);
             EquipmentDetailsDTO equipment = equipmentServiceImp.createEquipment(new EquipmentCreateDTO(
-                    data.id_equipment(),
+                    data.code(),
                     data.name_equipment(),
                     data.rfid(), data.type(),
                     data.model(),data.validity(),
