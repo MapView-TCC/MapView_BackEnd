@@ -1,6 +1,7 @@
 package com.MapView.BackEnd.entities;
 
 import com.MapView.BackEnd.dtos.Environment.EnvironmentCreateDTO;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
@@ -22,6 +23,7 @@ public class Environment {
     @OneToOne
     @JoinColumn(name = "id_raspberry")
     private Raspberry raspberry;
+    @JsonIgnore
     private boolean operative;
     @ManyToMany
     @JoinTable(

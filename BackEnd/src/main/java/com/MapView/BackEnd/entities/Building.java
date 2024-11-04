@@ -1,6 +1,7 @@
 package com.MapView.BackEnd.entities;
 
 import com.MapView.BackEnd.dtos.Building.BuildingCreateDTO;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -17,6 +18,7 @@ public class Building {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id_building;
     private String building_code;
+    @JsonIgnore
     private boolean operative;
 
     public Building(BuildingCreateDTO dados) {

@@ -2,6 +2,7 @@ package com.MapView.BackEnd.entities;
 
 import com.MapView.BackEnd.dtos.MainOwner.MainOwnerCreateDTO;
 import com.MapView.BackEnd.dtos.MainOwner.MainOwnerDetailsDTO;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
@@ -26,6 +27,7 @@ public class MainOwner {
     @OneToOne
     @JoinColumn(name = "id_cost_center")
     private CostCenter costCenter;
+    @JsonIgnore
     private boolean operative;
 
     public MainOwner(MainOwnerCreateDTO dados, CostCenter costCenter) {

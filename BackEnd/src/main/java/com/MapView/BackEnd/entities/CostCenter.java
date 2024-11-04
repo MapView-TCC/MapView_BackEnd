@@ -1,6 +1,7 @@
 package com.MapView.BackEnd.entities;
 
 import com.MapView.BackEnd.dtos.CostCenter.CostCenterCreateDTO;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -19,7 +20,7 @@ public class CostCenter {
     private Long id_cost_center;
     @Column(name = "cost_center_name")
     private String costCenter;
-
+    @JsonIgnore
     private boolean operative;
 
     public CostCenter(CostCenterCreateDTO dados) {

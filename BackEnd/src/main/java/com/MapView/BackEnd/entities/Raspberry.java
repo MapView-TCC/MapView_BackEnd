@@ -1,6 +1,7 @@
 package com.MapView.BackEnd.entities;
 
 import com.MapView.BackEnd.dtos.Raspberry.RaspberryCreateDTO;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -20,6 +21,7 @@ public class Raspberry {
     @OneToOne
     @JoinColumn(name = "id_area")
     private Area area;
+    @JsonIgnore
     private boolean operative;
 
 

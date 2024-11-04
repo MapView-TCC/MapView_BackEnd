@@ -3,6 +3,7 @@ package com.MapView.BackEnd.entities;
 import com.MapView.BackEnd.dtos.Equipment.EquipmentCreateDTO;
 import com.MapView.BackEnd.enums.EnumModelEquipment;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
@@ -53,6 +54,7 @@ public class Equipment {
     @ManyToOne
     @JoinColumn(name = "id_image")
     private Image id_image;
+    @JsonIgnore
     private boolean operative;
 
     @OneToMany(mappedBy = "equipment")

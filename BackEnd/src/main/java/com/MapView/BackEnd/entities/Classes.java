@@ -2,6 +2,7 @@ package com.MapView.BackEnd.entities;
 
 import com.MapView.BackEnd.dtos.Classes.ClassesCreateDTO;
 import com.MapView.BackEnd.enums.EnumCourse;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -31,6 +32,7 @@ public class Classes {
     private Users user;
     @CreationTimestamp
     private LocalDate creation_date;
+    @JsonIgnore
     private boolean operative;
 
 
