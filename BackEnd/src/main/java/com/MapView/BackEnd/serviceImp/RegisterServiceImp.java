@@ -115,11 +115,10 @@ public class RegisterServiceImp implements RegisterService {
                     location.id_location(),
                     owner.id_owner()),
                     userLog_id);
-
-                List<ResponsibleDetailsDTO> responsibleDetailsDTO = new ArrayList<>();
-
-                for (ResponsibleResgisterDTO listResponsible: data.dataResponsible()) {
-                    ClassesDetaiLDTO newClasses = classesServiceImp.createClasses(new ClassesCreateDTO(listResponsible.enumCourse(), listResponsible.name_classes(), userLog_id,LocalDate.now()),userLog_id);
+             List<ResponsibleDetailsDTO> responsibleDetailsDTO = new ArrayList<>();
+            if (data.dataResponsible() != null) {
+                for (ResponsibleResgisterDTO listResponsible : data.dataResponsible()) {
+                    ClassesDetaiLDTO newClasses = classesServiceImp.createClasses(new ClassesCreateDTO(listResponsible.enumCourse(), listResponsible.name_classes(), userLog_id, LocalDate.now()), userLog_id);
 
                     ResponsibleDetailsDTO responsible = responsibleServiceImp.createResposible(new ResponsibleCrateDTO(
                             listResponsible.responsible_name(),
@@ -128,10 +127,11 @@ public class RegisterServiceImp implements RegisterService {
                             userLog_id), userLog_id);
 
                     responsibleDetailsDTO.add(responsible);
-                    EquipmentResponsibleDetailsDTO equipmentResponsible = equipmentResponsibleServiceImp.createEquipmentResponsible(new EquipmentResponsibleCreateDTO(equipment.id_equipment(),responsible.responsible_id(),LocalDate.now(),LocalDate.now()));
-                    UserlogCreate(userlog,"EquipmentResponsible",equipmentResponsible.id_equip_resp().toString(),"Create new EquipmentResponsible");
+                    EquipmentResponsibleDetailsDTO equipmentResponsible = equipmentResponsibleServiceImp.createEquipmentResponsible(new EquipmentResponsibleCreateDTO(equipment.id_equipment(), responsible.responsible_id(), LocalDate.now(), LocalDate.now()));
+                    UserlogCreate(userlog, "EquipmentResponsible", equipmentResponsible.id_equip_resp().toString(), "Create new EquipmentResponsible");
 
                 }
+            }
 
             return new RegisterDetailsDTO(equipment,location,responsibleDetailsDTO);
     }
@@ -244,9 +244,6 @@ public class RegisterServiceImp implements RegisterService {
         }
 
 
-
-        // Log da atualização
-        UserlogCreate(userLog, "Equipment", equipment.getCode(), "Updated Equipment");
 
         if(data.dataResponsible() != null){
 

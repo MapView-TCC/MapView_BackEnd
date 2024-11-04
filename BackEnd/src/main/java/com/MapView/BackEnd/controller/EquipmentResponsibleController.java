@@ -126,9 +126,9 @@ public class EquipmentResponsibleController {
     @GetMapping("/filter")
     public ResponseEntity<EquipmentResponsibleSearchDetailsDTO> getAllEquipmentFilter(
 
-            @RequestParam(required = false) String id_equipment
+            @RequestParam(required = false) Long id_equipment
    ) {
-        var list = equipmentResponsibleServiceImp.getEquipmentInventory( id_equipment );
+        var list = equipmentResponsibleServiceImp.getEquipmentInventory(id_equipment);
         return ResponseEntity.ok(list);
     }
 }

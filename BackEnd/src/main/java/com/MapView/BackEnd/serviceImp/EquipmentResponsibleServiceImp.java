@@ -15,6 +15,7 @@ import com.MapView.BackEnd.dtos.EquipmentResponsible.EquipmentResponsibleDetails
 import com.MapView.BackEnd.dtos.EquipmentResponsible.EquipmentResponsibleUpdateDTO;
 import com.MapView.BackEnd.infra.Exception.NotFoundException;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
 import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
@@ -141,21 +142,21 @@ public class  EquipmentResponsibleServiceImp implements EquipmentResponsibleServ
     }
 
     @Override
-    public EquipmentResponsibleSearchDetailsDTO getEquipmentInventory(String code) {
+    public EquipmentResponsibleSearchDetailsDTO getEquipmentInventory(Long code) {
 
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<EquipmentResponsible> criteriaQuery = criteriaBuilder.createQuery(EquipmentResponsible.class);
+        CriteriaQuery<Equipment> criteriaQuery = criteriaBuilder.createQuery(Equipment.class);
 
         // Select From EquipmentResponsible
-        Root<EquipmentResponsible> equipmentResponsibleRoot = criteriaQuery.from(EquipmentResponsible.class);
-        Join<EquipmentResponsible, Equipment> equipmentJoin = equipmentResponsibleRoot.join("equipment");
-        Join<EquipmentResponsible, Responsible> responsibleJoin = equipmentResponsibleRoot.join("responsible");
+        Root<Equipment> equipmentRoot = criteriaQuery.from(Equipment.class);
+        //Join<EquipmentResponsible, Equipment> equipmentJoin = equipmentRoot.join("equipment");
+        //Join<EquipmentResponsible, Responsible> responsibleJoin = equipmentRoot.join("responsible");
 
         // Join para obter os dados do equipamento
-        Join<Equipment, MainOwner> mainOwnerJoin = equipmentJoin.join("owner");
-        Join<Equipment, Location> locationJoin = equipmentJoin.join("location");
-        Join<Location, Post> postJoin = locationJoin.join("post");
-        Join<Location, Environment> environmentJoin = locationJoin.join("environment");
+        //Join<Equipment, MainOwner> mainOwnerJoin = equipmentJoin.join("owner");
+        //Join<Equipment, Location> locationJoin = equipmentJoin.join("location");
+        //Join<Location, Post> postJoin = locationJoin.join("post");
+        //oin<Location, Environment> environmentJoin = locationJoin.join("environment");
 
         List<Predicate> predicates = new ArrayList<>();
 
@@ -163,30 +164,34 @@ public class  EquipmentResponsibleServiceImp implements EquipmentResponsibleServ
 
 
         if (code != null) {
-            predicates.add(criteriaBuilder.like(equipmentJoin.get("code"), "%" + code.toLowerCase() + "%"));
+            predicates.add(criteriaBuilder.equal(equipmentRoot.get("id_equipment"),code));
         }
 
         // Filtra apenas responsáveis operacionais
-        predicates.add(criteriaBuilder.equal(equipmentResponsibleRoot.get("operative"), true));
+        predicates.add(criteriaBuilder.equal(equipmentRoot.get("operative"), true));
 
         criteriaQuery.where(criteriaBuilder.and(predicates.toArray(new Predicate[0])));
 
         // Executa a consulta
-        TypedQuery<EquipmentResponsible> query = entityManager.createQuery(criteriaQuery);
-        List<EquipmentResponsible> equipmentResponsibleList = query.getResultList();
-        List<ResponsibleDetailsDTO> responsibles = new ArrayList<>();
-        EquipmentDetailsDTO equipmentDetailsDTO = null;
-        for (EquipmentResponsible er: equipmentResponsibleList){
+        try {
+            Equipment query = entityManager.createQuery(criteriaQuery).getSingleResult();
 
-            equipmentDetailsDTO = new EquipmentDetailsDTO(er.getEquipment());
-            responsibles.add(new ResponsibleDetailsDTO(er.getResponsible()));
+            List<ResponsibleDetailsDTO> responsibles = new ArrayList<>();
+            List<EquipmentResponsible> equipmentResponsible = equipmentResponsibleRepository.findByEquipment(query);
+            if (equipmentResponsible != null) {
+                for (EquipmentResponsible equiprep : equipmentResponsible) {
+                    responsibles.add(new ResponsibleDetailsDTO(equiprep.getResponsible()));
+                }
+            }
 
+            // Mapeia a lista de EquipmentResponsible para EquipmentResponsibleDetailsDTO
+            return new EquipmentResponsibleSearchDetailsDTO(new EquipmentDetailsDTO(query),responsibles);
 
-
+        }catch (NoResultException e){
+            throw new NotFoundException("Equipment not found");
         }
 
-        // Mapeia a lista de EquipmentResponsible para EquipmentResponsibleDetailsDTO
-        return new EquipmentResponsibleSearchDetailsDTO(equipmentDetailsDTO,responsibles);
+
     }
 
 }

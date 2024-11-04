@@ -10,6 +10,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 public record EquipmentResponsibleSearchDetailsDTO (
+        Long id_equipment,
         String code,
         String name_equipment,
         long rfid,
@@ -23,8 +24,14 @@ public record EquipmentResponsibleSearchDetailsDTO (
         List<ResponsibleDetailsDTO> responsibles
 ) {
     public EquipmentResponsibleSearchDetailsDTO(EquipmentDetailsDTO equipment, List<ResponsibleDetailsDTO> responsible){
-        this(equipment.code(), equipment.name_equipment(), equipment.rfid(), equipment.type(), equipment.model(),
-                equipment.validity(), equipment.admin_rights(), equipment.observation(), equipment.location(),
+        this(equipment.id_equipment(),
+                equipment.code(),
+                equipment.name_equipment(),
+                equipment.rfid(), equipment.type(),
+                equipment.model(),
+                equipment.validity(),
+                equipment.admin_rights(),
+                equipment.observation(), equipment.location(),
                 equipment.owner(),responsible);
     }
 }
