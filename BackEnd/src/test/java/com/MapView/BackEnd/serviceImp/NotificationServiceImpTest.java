@@ -154,11 +154,11 @@ public class NotificationServiceImpTest {
     @Test
     void testNotificationCreate() {
         Long notificationId = 1L;
-        Long id_equipment = 1L; // Adicione um ID para o equipamento
+        Long equipmentId = 1L; // Adicione um ID para o equipamento
 
         // Inicializar um equipamento mockado
         Equipment equipment = new Equipment();
-        equipment.setId_equipment(id_equipment);
+        equipment.setId_equipment(equipmentId);
         equipment.setCode("E001"); // Definir um ID para o equipamento
         equipment.setName_equipment("Equipamento Teste");
         equipment.setType("Tipo novo");

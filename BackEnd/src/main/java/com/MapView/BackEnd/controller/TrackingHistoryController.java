@@ -105,7 +105,7 @@ public class TrackingHistoryController {
     })
     @DeleteMapping("/{id_tracking}")
     public ResponseEntity<Void> deleteTracking(@PathVariable("id_tracking") Long id_tracking){
-        trackingHistoryServiceImp.deleteTracking(id_tracking);
+        trackingHistoryServiceImp.deleteTrackingById(id_tracking);
         return ResponseEntity.ok().build();
     }
 

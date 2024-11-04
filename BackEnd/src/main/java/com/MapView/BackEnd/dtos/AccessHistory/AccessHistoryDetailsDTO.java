@@ -9,7 +9,8 @@ import java.time.LocalDateTime;
 
 public record AccessHistoryDetailsDTO(Long id_history,
                                       Users users,
-                                      Instant login_dateTime,
+                                      @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy HH:mm ")
+                                      LocalDateTime login_dateTime,
                                       @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy HH:mm ")
                                       LocalDateTime logout_dateTime) {
     public AccessHistoryDetailsDTO(AccessHistory history) {

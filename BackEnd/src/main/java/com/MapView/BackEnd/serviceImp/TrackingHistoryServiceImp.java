@@ -30,7 +30,7 @@ public class TrackingHistoryServiceImp implements TrackingHistoryService {
     private final LocationRepository locationRepository;
     private final EquipmentResponsibleRepository equipmentResponsibleRepository;
 
-    private  SimpMessagingTemplate template;
+    private SimpMessagingTemplate template;
 
 
     public TrackingHistoryServiceImp(TrackingHistoryRepository trackingHistoryRepository, EnvironmentRepository environmentRepository, EquipmentRepository equipmentRepository, LocationRepository locationRepository, EquipmentResponsibleRepository equipmentResponsibleRepository, SimpMessagingTemplate template) {
@@ -187,15 +187,6 @@ public class TrackingHistoryServiceImp implements TrackingHistoryService {
                 .collect(Collectors.toList());
     }
 
-    @Override
-    public void deleteTracking(Long id_tracking) {
-        var tracking = trackingHistoryRepository.findById(id_tracking).orElseThrow(() ->
-                new NotFoundException("Id not found"));
-        if (tracking != null){
-            trackingHistoryRepository.deleteById(id_tracking);
-        }
-    }
-
     public List<TrackingHistoryWrongLocationDTO> findWrongLocationEquipments(Long id_environment) {
         // Verifica se o ambiente existe
         Environment environment = environmentRepository.findById(id_environment)
@@ -241,6 +232,3 @@ public class TrackingHistoryServiceImp implements TrackingHistoryService {
     }
 
 }
-
-
-
