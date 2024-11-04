@@ -21,11 +21,11 @@ public class AccessHistory {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id_history;
     //cascade = CascadeType.ALL
-    @OneToOne()
+    @OneToOne
     @JoinColumn(name = "id_user")
     private Users user;
     @CreationTimestamp
-    private Instant login_datetime;
+    private LocalDateTime login_datetime;
     private LocalDateTime logout_datetime;
 
 }

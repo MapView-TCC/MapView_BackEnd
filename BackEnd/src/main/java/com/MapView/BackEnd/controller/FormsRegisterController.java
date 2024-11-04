@@ -39,7 +39,7 @@ public class FormsRegisterController {
     @PostMapping
     @Transactional
     public ResponseEntity<RegisterDetailsDTO> register(@RequestBody @Valid RegisterCreateDTO dataRegister, @RequestParam Long userLog_id){
-        System.out.println(dataRegister.id_equipment());
+        System.out.println(dataRegister.code());
         RegisterDetailsDTO  register = registerServiceImp.register(dataRegister,userLog_id);
         return ResponseEntity.ok(register);
 
