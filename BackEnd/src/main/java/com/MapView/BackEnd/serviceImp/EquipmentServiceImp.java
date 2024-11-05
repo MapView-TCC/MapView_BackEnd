@@ -32,15 +32,15 @@ import java.util.stream.Collectors;
 @Service
 public class EquipmentServiceImp implements EquipmentService {
 
-    private final EntityManager entityManager;
-    private final EquipmentRepository equipmentRepository ;
-    private final LocationRepository locationRepository;
-    private final MainOwnerRepository mainOwnerRepository;
-    private final UserLogRepository userLogRepository;
-    private final UserRepository userRepository;
-    private final Path fileStorageLocation;
-    private final TrackingHistoryRepository trackingHistoryRepository;
-    private final ImageRepository imageRepository;
+    private EntityManager entityManager;
+    private EquipmentRepository equipmentRepository ;
+    private LocationRepository locationRepository;
+    private MainOwnerRepository mainOwnerRepository;
+    private UserLogRepository userLogRepository;
+    private UserRepository userRepository;
+    private Path fileStorageLocation;
+    private TrackingHistoryRepository trackingHistoryRepository;
+    private ImageRepository imageRepository;
 
     public EquipmentServiceImp(EntityManager entityManager, EquipmentRepository equipmentRepository, LocationRepository locationRepository, MainOwnerRepository mainOwnerRepository,
                                UserLogRepository userLogRepository, UserRepository userRepository, FileStorageProperties fileStorageProperties, TrackingHistoryRepository trackingHistoryRepository, ImageRepository imageRepository) {
@@ -54,6 +54,14 @@ public class EquipmentServiceImp implements EquipmentService {
         this.trackingHistoryRepository = trackingHistoryRepository;
         this.imageRepository = imageRepository;
     }
+
+    // Construtor para testes
+//    public EquipmentServiceImp1(EquipmentRepository equipmentRepository, UserLogRepository userLogRepository, UserRepository userRepository) {
+//        this.equipmentRepository = equipmentRepository;
+//        this.userLogRepository = userLogRepository;
+//        this.userRepository = userRepository;
+//        // Configure default values ou deixe como null
+//    }
 
 
     @Override
@@ -341,24 +349,22 @@ public class EquipmentServiceImp implements EquipmentService {
     }
 
     public void equipment_image(Path targetLocation, EnumModelEquipment equipmentModel){
-        String targetLocatioString = targetLocation.toString();
+        String targetLocationString = targetLocation.toString();
 
         List<Equipment> allEquipments = equipmentRepository.findByModel(equipmentModel);
 
-        Image image  = imageRepository.findByModel(equipmentModel);
-        if(image==null){
-
-            Image newimage = imageRepository.save(new Image(targetLocatioString,equipmentModel));
-            for (Equipment equipment : allEquipments) {
-                equipment.setId_image(newimage);
-            }
+        Image image = imageRepository.findByModel(equipmentModel);
+        if (image == null) {
+            image = new Image(targetLocationString, equipmentModel);
+            image = imageRepository.save(image);
+        } else {
+            image.setImage(targetLocationString);
+            imageRepository.save(image);
         }
 
-        image.setImage(targetLocatioString);
-        imageRepository.save(image);
-
-
-
+        for (Equipment equipment : allEquipments) {
+            equipment.setId_image(image);
+        }
         equipmentRepository.saveAll(allEquipments);
     }
 
