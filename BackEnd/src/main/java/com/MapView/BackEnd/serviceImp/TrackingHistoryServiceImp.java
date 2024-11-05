@@ -108,13 +108,20 @@ public class TrackingHistoryServiceImp implements TrackingHistoryService {
 
                     System.out.println("_-----1--------");
                     // Salva novo histórico de rastreamento marcando a ação como 'ENTER' e cor como 'GREEN'.
-                    TrackingHistory trackingHistory = trackingHistoryRepository.save(new TrackingHistory(local_tracking, equipment.get(),EnumTrackingAction.ENTER, EnumWarnings.GREEN));
+                    Equipment equipmentTrack = equipment.get();
+                    TrackingHistory trackingHistory = trackingHistoryRepository.save(new TrackingHistory(local_tracking, equipmentTrack,EnumTrackingAction.ENTER, EnumWarnings.GREEN));
+                    if(equipment.get().getName_equipment() == null){
+                        trackingHistory.setWarning(EnumWarnings.RED);
+                    }
                     template.convertAndSend("/equip",trackingHistory);
                     return new TrackingHistoryDetailsDTO(trackingHistory);
                 }
                 System.out.println("_-----2--------");
                 // Salva novo histórico de rastreamento marcando a ação como 'OUT' e cor como 'GREEN'.
                 TrackingHistory trackingHistory = trackingHistoryRepository.save(new TrackingHistory(local_tracking, equipment.get(),EnumTrackingAction.ENTER, EnumWarnings.GREEN));
+                if(equipment.get().getName_equipment() == null){
+                    trackingHistory.setWarning(EnumWarnings.RED);
+                }
                 template.convertAndSend("/equip",trackingHistory);
                 return new TrackingHistoryDetailsDTO(trackingHistory);
             }
@@ -129,6 +136,9 @@ public class TrackingHistoryServiceImp implements TrackingHistoryService {
             }
             // Salva novo histórico de rastreamento marcando a ação como 'OUT' e cor como 'GREEN'.
             TrackingHistory trackingHistory = trackingHistoryRepository.save(new TrackingHistory(local_tracking, equipment.get(),EnumTrackingAction.OUT, EnumWarnings.GREEN));
+            if(equipment.get().getName_equipment() == null){
+                trackingHistory.setWarning(EnumWarnings.RED);
+            }
             template.convertAndSend("/equip",trackingHistory);
             System.out.println("_-----4--------");
             return new TrackingHistoryDetailsDTO(trackingHistory);
@@ -136,13 +146,17 @@ public class TrackingHistoryServiceImp implements TrackingHistoryService {
         System.out.println("_-----5--------");
         // Salva histórico de rastreamento com o ambiente do último rastreamento e ação 'OUT'.
         TrackingHistory outtrackingHistory =trackingHistoryRepository.save(new TrackingHistory(last_track_local,equipment.get(),  EnumTrackingAction.OUT, EnumWarnings.GREEN));
+        if(equipment.get().getName_equipment() == null){
+            outtrackingHistory.setWarning(EnumWarnings.RED);
+        }
         template.convertAndSend("/equip",outtrackingHistory);
 
         // Salva novo histórico de rastreamento com o ambiente atual e ação 'ENTER'.
         TrackingHistory trackingHistory = trackingHistoryRepository.save(new TrackingHistory(local_tracking, equipment.get(),  EnumTrackingAction.ENTER, EnumWarnings.GREEN));
+        if(equipment.get().getName_equipment() == null){
+            trackingHistory.setWarning(EnumWarnings.RED);
+        }
         template.convertAndSend("/equip",trackingHistory);
-
-
         // Retorna os detalhes do histórico de rastreamento.
         return new TrackingHistoryDetailsDTO(trackingHistory);
     }
