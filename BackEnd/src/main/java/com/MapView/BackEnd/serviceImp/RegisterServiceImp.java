@@ -207,7 +207,10 @@ public class RegisterServiceImp implements RegisterService {
             if ( location1 != null){
                 if (equipmentRepository.existsByLocation(location1)){
                     if (equipment.getLocation().getId_location() != location1.getId_location()){
-                        throw new ExistingEntityException("Equipamento ja atrelado a um equipamento");
+                        Equipment equipmentByLocation = equipmentRepository.findByLocation(location1).orElseThrow(()-> new NotFoundException("Equipment by location not found"));
+                        equipmentByLocation.setLocation(null);
+                        equipmentRepository.save(equipmentByLocation);
+                        equipment.setLocation(location1);
                     }
                     equipment.setLocation(location1);
                 }

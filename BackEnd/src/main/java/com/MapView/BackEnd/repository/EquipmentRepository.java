@@ -23,5 +23,6 @@ public interface EquipmentRepository extends JpaRepository<Equipment,Long> {
     Optional<Equipment> findByCode(String code);
 
     boolean existsByLocation(Location location);
+    Optional<Equipment> findByLocation (Location location);
 
 }
