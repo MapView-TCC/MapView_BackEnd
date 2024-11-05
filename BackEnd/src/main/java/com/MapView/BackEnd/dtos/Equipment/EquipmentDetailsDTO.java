@@ -28,15 +28,18 @@ public record EquipmentDetailsDTO(
     }
 
     public static String getQuarterStringFromDate(LocalDate date) {
-        // Obter o ano
-        int year = date.getYear();
+        if(date != null){
+            // Obter o ano
+            int year = date.getYear();
 
-        // Calcular o trimestre
-        int month = date.getMonthValue();
-        int quarter = (month - 1) / 3 + 1; // Q1 -> 1, Q2 -> 2, Q3 -> 3, Q4 -> 4
+            // Calcular o trimestre
+            int month = date.getMonthValue();
+            int quarter = (month - 1) / 3 + 1; // Q1 -> 1, Q2 -> 2, Q3 -> 3, Q4 -> 4
 
-        // Formatar a string no formato "YYYY.QX"
-        return year + ".Q" + quarter;
+            // Formatar a string no formato "YYYY.QX"
+            return year + ".Q" + quarter;
+        }
+        return null;
     }
 
 }
