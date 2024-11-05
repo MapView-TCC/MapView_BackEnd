@@ -27,7 +27,6 @@ public class Equipment {
     @Column(name = "cod_equipment")
     private String code;
 
-    // novo campo
     private String name_equipment;
 
     private Long rfid;
@@ -38,22 +37,18 @@ public class Equipment {
     private String admin_rights; // codigo que eles tem para fazer as requisições
     private String observation;
 
-    //@ManyToOne
     @OneToOne
     @JoinColumn(name = "id_location")
-    //@JsonBackReference
     private Location location;
 
-
-    //@ManyToOne
     @OneToOne
     @JoinColumn(name = "id_owner")
-    //@JsonBackReference // it will be omitted from serialization.
     private MainOwner owner;
 
     @ManyToOne
     @JoinColumn(name = "id_image")
     private Image id_image;
+
     @JsonIgnore
     private boolean operative;
 

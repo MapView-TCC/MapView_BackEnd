@@ -107,7 +107,7 @@ public class AreaServiceImpTest {
         Long userLogId = 1L;
         Users user = new Users(); // simulação do usuário
 
-        when(userRepository.findById(userLogId)).thenReturn(Optional.of(user)); // Simula que o usuário foi encontrado
+        when(userRepository.findById(userLogId)).thenReturn(Optional.of(user));
 
         // Criar a instância da área com ID definido
         Area savedArea = new Area();
@@ -116,16 +116,16 @@ public class AreaServiceImpTest {
         savedArea.setArea_name(createDTO.area_name());
         savedArea.setOperative(true); // Defina como necessário
 
-        when(areaRepository.save(any(Area.class))).thenReturn(savedArea); // Simula o salvamento da área
+        when(areaRepository.save(any(Area.class))).thenReturn(savedArea);
 
-        AreaDetailsDTO result = areaServiceImp.createArea(createDTO, userLogId); // Chama o método para criar a área
+        AreaDetailsDTO result = areaServiceImp.createArea(createDTO, userLogId);
 
-        assertNotNull(result); // Verifica se o resultado não é nulo
-        assertEquals("Área A", result.area_name()); // Verificando o nome da área
-        assertEquals("CA600", result.area_code()); // Verificando o código da área
-        verify(userLogRepository).save(any(UserLog.class)); // Verifica se o log foi salvo
+        assertNotNull(result);
+        assertEquals("Área A", result.area_name());
+        assertEquals("CA600", result.area_code());
+        verify(userLogRepository).save(any(UserLog.class));
 
-        System.out.println(result); // mostrar o resultado
+        System.out.println(result);
     }
 
 
