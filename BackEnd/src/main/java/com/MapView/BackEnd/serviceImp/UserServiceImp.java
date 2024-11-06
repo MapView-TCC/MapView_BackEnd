@@ -36,6 +36,7 @@ public class UserServiceImp implements UserService {
     }
 
 
+
     @Override
     public UserDetailsDTO createUser(UserCreateDTO data) {
         var user = new Users(data.email());
