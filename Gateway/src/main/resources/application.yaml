@@ -13,7 +13,7 @@ spring:
             client-secret: CnS8Q~2WbfXrqPcWMJNwfZZaNcjRieYvkZY44bqm
             scope: openid,profile,email
 
-            redirect-uri: http://localhost:4200/ambiente
+            redirect-uri: http://localhost:4200/callback
             provider: azure
 
 
@@ -38,7 +38,43 @@ spring:
             - AddResponseHeader=Access-Control-Allow-Methods, GET, POST, PUT, DELETE, OPTIONS
             - AddResponseHeader=Access-Control-Allow-Headers, Authorization, Content-Type
 
+        - id: resource
+          uri: ws://localhost:9000/connect
+          predicates:
+            - Path=/connect
+          filters:
+            - name: TokenRelay
+
+            - AddResponseHeader=Access-Control-Allow-Origin, http://localhost:4200
+            - AddResponseHeader=Access-Control-Allow-Methods, GET, POST, PUT, DELETE, OPTIONS
+            - AddResponseHeader=Access-Control-Allow-Headers, Authorization, Content-Type
+
+
+
         - id: resourceequip
+          uri: http://localhost:9000
+          predicates:
+            - Path=/resource/equip
+          filters:
+            - name: TokenRelay
+
+            - AddResponseHeader=Access-Control-Allow-Origin, http://localhost:4200
+            - AddResponseHeader=Access-Control-Allow-Methods, GET
+            - AddResponseHeader=Access-Control-Allow-Headers, Authorization, Content-Type
+
+
+        - id: credentials_token
+          uri: http://localhost:9000
+          predicates:
+            - Path=/credentials
+          filters:
+
+
+            - AddResponseHeader=Access-Control-Allow-Origin, http://localhost:4200
+            - AddResponseHeader=Access-Control-Allow-Methods, GET, POST, PUT, DELETE, OPTIONS
+
+
+        - id: resource_equip
           uri: http://localhost:9000
           predicates:
             - Path=/resource/equip
@@ -72,7 +108,7 @@ spring:
             - AddResponseHeader=Access-Control-Allow-Headers, Authorization, Content-Type
 
         - id: trackingHistory
-          uri: http://localhost:9000/api/v1/trackingHistory
+          uri: http://localhost:9000
           predicates:
             - Path=/api/v1/trackingHistory
 

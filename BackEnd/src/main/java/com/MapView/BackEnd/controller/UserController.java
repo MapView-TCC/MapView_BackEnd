@@ -1,5 +1,7 @@
 package com.MapView.BackEnd.controller;
 
+import com.MapView.BackEnd.dtos.Token;
+import com.MapView.BackEnd.dtos.TokenDetailsDTO;
 import com.MapView.BackEnd.dtos.User.UserCreateDTO;
 import com.MapView.BackEnd.dtos.UserRole.UserRoleDetailsDTO;
 import com.MapView.BackEnd.serviceImp.UserServiceImp;
@@ -22,7 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("ap1/v1/user")
+//@RequestMapping("ap1/v1/user")
 @Tag(name = "User", description = "Operations related to user management")
 public class UserController {
 
@@ -74,15 +76,17 @@ public class UserController {
         var users = userServiceIpm.getAllUser();
         return ResponseEntity.ok(users);
     }
-    @GetMapping("/loggedUser")
-    public ResponseEntity<UserRoleDetailsDTO> loggedUser(@AuthenticationPrincipal Jwt jwt){
-        UserRoleDetailsDTO loggedUser = userServiceIpm.loggedUserRole(jwt);
-        return ResponseEntity.ok(loggedUser);
+    @GetMapping("/credentials")
+    @CrossOrigin(origins = "http://localhost:4200")
+    public ResponseEntity<TokenDetailsDTO> getCredentials(@AuthenticationPrincipal Jwt jwt){
+        Token credentials = userServiceIpm.getCredencials(jwt);
+        System.out.println(credentials);
+        return ResponseEntity.ok(new TokenDetailsDTO(credentials));
 
     }
-    @GetMapping("/credentials")
-    public Map<String, String> getCredentials(@AuthenticationPrincipal Jwt jwt){
-        return this.userServiceIpm.getCredencials(jwt);
+    @GetMapping("/loggedUser")
+    public Map<String, String> loggedUser(@AuthenticationPrincipal Jwt jwt){
+        return this.userServiceIpm.loggedUser(jwt);
     }
 
     @Operation(summary = "Activate a user", description = "Activate a user by their ID.")

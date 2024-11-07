@@ -56,13 +56,14 @@ public class SecurityConfig {
                         .requestMatchers("/api/v1/notifications").authenticated()
                         .requestMatchers(HttpMethod.GET,"/api/v1/trackingHistory/**").authenticated()
                         .requestMatchers(HttpMethod.POST,"/api/v1/trackingHistory").hasAnyRole("MEIO_OFICIAL","INSTRUTOR","GESTOR")
-                        .requestMatchers(HttpMethod.GET,"/api/v1/environment").authenticated()
+                        .requestMatchers(HttpMethod.GET,"/api/v1/environment/**").authenticated()
                         .requestMatchers(HttpMethod.PUT,"/api/v1/environment").hasAnyRole("MEIO_OFICIAL","INSTRUTOR","GESTOR")
                         .requestMatchers(HttpMethod.POST,"/api/v1/environment").hasAnyRole("MEIO_OFICIAL","INSTRUTOR","GESTOR")
                         .requestMatchers(HttpMethod.GET,"/api/v1/excel").hasAnyRole("MEIO_OFICIAL","INSTRUTOR","GESTOR")
                         .requestMatchers(HttpMethod.POST,"/api/v1/register").hasAnyRole("MEIO_OFICIAL","INSTRUTOR","GESTOR")
                         .requestMatchers(HttpMethod.POST,"/api/v1/registerEnvironment").hasAnyRole("MEIO_OFICIAL","INSTRUTOR","GESTOR")
                         .requestMatchers(HttpMethod.GET, "/api/v1/equipment/search").authenticated()
+                        .requestMatchers("/credentials").permitAll()
                         .requestMatchers("/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/**").permitAll()
                         .requestMatchers("/ap1/v1/user/**").authenticated()   // Protege a rota /user
                         .anyRequest().authenticated())// Permite outras requisições
