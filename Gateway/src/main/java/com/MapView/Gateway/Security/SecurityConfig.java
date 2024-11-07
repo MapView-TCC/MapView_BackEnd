@@ -10,6 +10,7 @@ import org.springframework.security.oauth2.client.registration.ReactiveClientReg
 import org.springframework.security.oauth2.jwt.NimbusReactiveJwtDecoder;
 import org.springframework.security.oauth2.jwt.ReactiveJwtDecoder;
 import org.springframework.security.web.server.SecurityWebFilterChain;
+import org.springframework.security.web.server.authentication.RedirectServerAuthenticationFailureHandler;
 import org.springframework.security.web.server.authentication.RedirectServerAuthenticationSuccessHandler;
 
 @Configuration
@@ -31,13 +32,16 @@ public class SecurityConfig {
 
         http.authorizeExchange(conf -> conf
                         .pathMatchers("/login").permitAll()
+                        .pathMatchers("/userinfo").authenticated()
                         .anyExchange().authenticated())
 
                 // - Define o resolvedor de requisições de autorização.
                 // - Redireciona para "/profile" após a autenticação bem-sucedida.
 
                 .oauth2Login(conf -> conf
-                        .authenticationSuccessHandler(new RedirectServerAuthenticationSuccessHandler("http://localhost:4200/ambiente")))
+                        .authenticationSuccessHandler(new RedirectServerAuthenticationSuccessHandler("http://localhost:4200/environment"))
+                        .authenticationFailureHandler(new RedirectServerAuthenticationFailureHandler("http://localhost:4200/")))
+
 
                 // - Define o decodificador JWT para validar tokens de acesso.
 

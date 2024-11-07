@@ -1,5 +1,7 @@
 package com.MapView.BackEnd.serviceImp;
 
+import com.MapView.BackEnd.dtos.Token;
+import com.MapView.BackEnd.dtos.TokenDetailsDTO;
 import com.MapView.BackEnd.dtos.User.UserCreateDTO;
 import com.MapView.BackEnd.dtos.User.UserDetailsDTO;
 import com.MapView.BackEnd.dtos.UserRole.UserRoleDetailsDTO;
@@ -50,7 +52,7 @@ public class UserServiceImp implements UserService {
     }
 
     public UserRoleDetailsDTO loggedUserRole(Jwt jwt){
-        String email = loggedUser(jwt).getClaimAsString("email");
+        String email = jwt.getClaimAsString("email");
         
         Users user  = userRepository.findByEmail(email).orElseThrow(() -> new NotFoundException("User not found"));
         UserRole userRole = userRoleRepository.findByUser(user).orElseThrow(() ->new NotFoundException("Not found role "));
@@ -59,10 +61,10 @@ public class UserServiceImp implements UserService {
 
     }
     
-    public Map<String, String> getCredencials(Jwt jwt){
+    public Map<String, String> loggedUser(Jwt jwt){
         Map<String, String> attributesMap = new HashMap<>();
-        String id_token = loggedUser(jwt).getClaimAsString("id_token");
-        String email = loggedUser(jwt).getClaimAsString("email");
+        String id_token = jwt.getClaimAsString("id_token");
+        String email =jwt.getClaimAsString("email");
 
         attributesMap.put("id_token", id_token);
         attributesMap.put("email", email);
@@ -70,8 +72,10 @@ public class UserServiceImp implements UserService {
 
         return attributesMap;
     }
-    public Jwt loggedUser(Jwt jwt){
-        return jwt;
+    public Token getCredencials(Jwt jwt){
+        String id_token = jwt.getClaimAsString("id_token");
+
+        return new Token(id_token);
     }
 
 
