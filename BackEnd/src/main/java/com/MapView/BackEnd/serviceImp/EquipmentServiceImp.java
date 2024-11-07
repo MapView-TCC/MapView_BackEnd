@@ -100,11 +100,15 @@ public class EquipmentServiceImp implements EquipmentService {
 
                 //
 
-                Location location = locationRepository.findById(Long.valueOf(data.id_location()))
+                Location location = locationRepository.findById(data.id_location())
                         .orElseThrow(() -> new RuntimeException("Id location ("+data.id_location()+ ") not found!"));
 
-                if(equipmentRepository.existsByLocation(location)){
-                    throw new ExistingEntityException("equipamento ja atrelado a essa localização");
+                // Verificar se já existe um equipamento com esta localização
+                Equipment existingEquipmentWithLocation = equipmentRepository.findByLocation(location).orElse(null);
+                if (existingEquipmentWithLocation != null) {
+                    // Desvincular a localização do equipamento anterior
+                    existingEquipmentWithLocation.setLocation(null);
+                    equipmentRepository.save(existingEquipmentWithLocation);
                 }
 
                 // Proprietário principal
