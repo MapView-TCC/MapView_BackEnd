@@ -90,15 +90,15 @@ public class EquipmentServiceImp implements EquipmentService {
 
     @Override
     public EquipmentDetailsDTO  createEquipment(EquipmentCreateDTO data, Long userLog_id) {
-        Equipment verify = equipmentRepository.findByCodeAndOperativeTrue(data.code()).orElse(null);
+        // Para não slavar os menos codigos, deixar letras minúsculas e verifica a existência
+        String normalizedCode = data.code().toLowerCase();
+
+        Equipment verify = equipmentRepository.findByCodeAndOperativeTrue(normalizedCode).orElse(null);
 
         if (verify == null){
             try{
-
                 Users users = this.userRepository.findById(userLog_id)
                         .orElseThrow(()  -> new NotFoundException("Id user_log ("+userLog_id+") not found!"));
-
-                //
 
                 Location location = locationRepository.findById(data.id_location())
                         .orElseThrow(() -> new RuntimeException("Id location ("+data.id_location()+ ") not found!"));
@@ -119,13 +119,16 @@ public class EquipmentServiceImp implements EquipmentService {
                     throw new OperativeFalseException("The inactive mainOwner cannot be accessed.");
                 }
 
-                System.out.println(data.name_equipment());
+                // Converte a validade para o formato correto (com "Q" em maiúsculo)
+                String formattedValidity = data.validity().toUpperCase();
 
+                // se não seguir o padrão de {ANO}.Q{TRIMESTRE} lança um erro
+                if (!formattedValidity.matches("\\d{4}\\.Q[1-4]")) {
+                    throw new IllegalArgumentException("Invalid validity format. Expected format is YYYY.QX.");
+                }
 
                 // Cria o equipamento
-
-
-                Equipment equipment  = equipmentRepository.save(new Equipment(data,getStartDateFromQuarter(data.validity()), location, mainOwner));
+                Equipment equipment  = equipmentRepository.save(new Equipment(data,getStartDateFromQuarter(formattedValidity), location, mainOwner));
 
                 var userLog = new UserLog(users, "Equipment", data.code(), "Create new Equipment", EnumAction.CREATE);
                 userLogRepository.save(userLog);
@@ -141,7 +144,6 @@ public class EquipmentServiceImp implements EquipmentService {
                 trackingHistoryRepository.save(trackingHistory);
 
                 System.out.println(new EquipmentDetailsDTO(equipment));
-                System.out.println("Post: Equipment ");
                 return new EquipmentDetailsDTO(equipment);
 
             }catch (DataIntegrityViolationException e ){
