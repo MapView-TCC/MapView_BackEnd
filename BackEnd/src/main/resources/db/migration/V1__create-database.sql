@@ -6,26 +6,24 @@ CREATE TABLE IF NOT EXISTS area (
     operative TINYINT NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS users (
-    user_id INT AUTO_INCREMENT PRIMARY KEY AUTO_INCREMENT,
-    email VARCHAR(255) NOT NULL UNIQUE,
-    id_area int,
-    FOREIGN KEY (id_area) REFERENCES area(id_area),
-    operative TINYINT NOT NULL
-);
-
 CREATE TABLE roles (
     id INT AUTO_INCREMENT PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(50) UNIQUE NOT NULL
 );
 
-CREATE TABLE user_roles (
-    user_roles_id INT PRIMARY KEY AUTO_INCREMENT,
-    user_id INT,
-    role_id INT,
-    FOREIGN KEY (user_id) REFERENCES users(user_id),
-    FOREIGN KEY (role_id) REFERENCES roles(id)
+CREATE TABLE IF NOT EXISTS users (
+    user_id INT AUTO_INCREMENT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(255),
+    email VARCHAR(255) NOT NULL UNIQUE,
+    id_role INT,
+    id_area int,
+    operative TINYINT NOT NULL,
+    FOREIGN KEY (id_area) REFERENCES area(id_area),
+    FOREIGN KEY (id_role) REFERENCES roles(id)
 );
+
+
+
 
 
 -- Creating the Access History table

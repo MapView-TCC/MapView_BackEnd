@@ -10,7 +10,6 @@ import java.util.List;
 public interface UserService {
     UserDetailsDTO getUser(Long id_UserService);
     List<UserDetailsDTO> getAllUser();
-    UserDetailsDTO createUser(UserCreateDTO data);
     void activeUser(Long id_UserService);
     void inactivateUser(Long id_UserService);
 }

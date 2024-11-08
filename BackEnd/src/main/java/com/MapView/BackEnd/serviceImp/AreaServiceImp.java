@@ -92,7 +92,7 @@ public class AreaServiceImp implements AreaService {
             userlog.setField("area_name to: " + data.area_name());
         }
         if (data.area_code() != null && !data.area_code().isBlank()) {
-            area.setArea_code(data.area_code());
+            area.setCode(data.area_code());
             userlog.setField(userlog.getField() + ", area_code to: " + data.area_code());
         }
 
