@@ -2,6 +2,7 @@ package com.MapView.BackEnd.controller;
 
 import com.MapView.BackEnd.dtos.Token;
 import com.MapView.BackEnd.dtos.TokenDetailsDTO;
+import com.MapView.BackEnd.dtos.User.LoggedUserDetails;
 import com.MapView.BackEnd.dtos.User.UserCreateDTO;
 import com.MapView.BackEnd.dtos.UserRole.UserRoleDetailsDTO;
 import com.MapView.BackEnd.serviceImp.UserServiceImp;
@@ -35,24 +36,6 @@ public class UserController {
     }
 
 
-    @Operation(summary = "Create a new user", description = "Endpoint to create a new user in the system.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "User successfully created"),
-            @ApiResponse(responseCode = "400", description = "Invalid data provided"),
-            @ApiResponse(responseCode = "500", description = "Internal server error")
-    })
-    @PostMapping
-    @CrossOrigin(origins = "http://localhost:5173")
-    @Transactional
-    public ResponseEntity<UserDetailsDTO> createUser(
-            @Parameter(description = "Data transfer object for creating a new user", required = true)
-            @RequestBody @Valid UserCreateDTO data,
-            UriComponentsBuilder uriBuilder) {
-        UserDetailsDTO user = userServiceIpm.createUser(data);
-        var uri = uriBuilder.path("/user/{id}").buildAndExpand(user.id()).toUri();
-        return ResponseEntity.created(uri).body(new UserDetailsDTO(user.id(), user.email()));
-    }
-
 
     @Operation(summary = "Get user by ID", description = "Retrieve user details by their ID.")
     @ApiResponses(value = {
@@ -85,8 +68,8 @@ public class UserController {
 
     }
     @GetMapping("/loggedUser")
-    public Map<String, String> loggedUser(@AuthenticationPrincipal Jwt jwt){
-        return this.userServiceIpm.loggedUser(jwt);
+    public LoggedUserDetails loggedUser(@AuthenticationPrincipal Jwt jwt){
+        return new LoggedUserDetails(this.userServiceIpm.loggedUser(jwt));
     }
 
     @Operation(summary = "Activate a user", description = "Activate a user by their ID.")

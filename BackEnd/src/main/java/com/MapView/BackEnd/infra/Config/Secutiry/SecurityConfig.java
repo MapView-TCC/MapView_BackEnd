@@ -1,11 +1,10 @@
 package com.MapView.BackEnd.infra.Config.Secutiry;
 
 import com.MapView.BackEnd.dtos.User.UserDetailsDTO;
-import com.MapView.BackEnd.entities.UserRole;
 import com.MapView.BackEnd.entities.Users;
 import com.MapView.BackEnd.repository.UserRepository;
 import com.MapView.BackEnd.serviceImp.UserLogServiceImp;
-import com.MapView.BackEnd.serviceImp.UserRoleServiceImp;
+import com.MapView.BackEnd.serviceImp.UserServiceImp;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,6 +14,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
@@ -29,15 +29,19 @@ import java.util.*;
 public class SecurityConfig {
 
     private final UserRepository userRepository;
-    private final UserRoleServiceImp userRoleServiceImp;
+
     private  final UserLogServiceImp userLogImp;
+    private  final UserServiceImp userServiceImp;
+
+
     @Value("${myapp.jwtUri}")
     private String jwkSetUri;
 
-    public SecurityConfig(UserRepository userRepository, UserRoleServiceImp userRoleServiceImp, UserLogServiceImp userLogImp) {
+    public SecurityConfig(UserRepository userRepository, UserLogServiceImp userLogImp, UserServiceImp userServiceImp) {
         this.userRepository = userRepository;
-        this.userRoleServiceImp = userRoleServiceImp;
         this.userLogImp = userLogImp;
+
+        this.userServiceImp = userServiceImp;
     }
 
     @Bean
@@ -66,6 +70,7 @@ public class SecurityConfig {
                         .requestMatchers("/credentials").permitAll()
                         .requestMatchers("/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/**").permitAll()
                         .requestMatchers("/ap1/v1/user/**").authenticated()   // Protege a rota /user
+                        .requestMatchers("/connect").authenticated()
                         .anyRequest().authenticated())// Permite outras requisições
 
                 .oauth2ResourceServer(oauth2 -> oauth2
@@ -85,27 +90,27 @@ public class SecurityConfig {
         converter.setJwtGrantedAuthoritiesConverter(jwt -> {
             String email = jwt.getClaimAsString("email");  // Extrai o email do token
             System.out.println("Email extraído do token: " + email);  // Apenas para depuração
-            return getRolesFromDatabase(email);  // Busca as roles do banco de dados
+            return getRolesFromDatabase(email,jwt);  // Busca as roles do banco de dados
         });
         return converter;
     }
 
     // Busca as roles do banco de dados e as converte em GrantedAuthority
-    private Collection<GrantedAuthority> getRolesFromDatabase(String email) {
+    private Collection<GrantedAuthority> getRolesFromDatabase(String email, Jwt jwt) {
 
         Users user = userRepository.findByEmail(email).orElse(null);
+        String name2 = jwt.getClaimAsString("name");
+        user.setName(name2);
         System.out.println("Usuário encontrado: " +new UserDetailsDTO(user));
 
 
         if (user != null) {
-
-            UserRole userRoles = userRoleServiceImp.getUserRoleByUser(user);
-
-            System.out.println(userRoles.getRole().getName());
-            return List.of(new SimpleGrantedAuthority(userRoles.getRole().getName()));
+            return List.of(new SimpleGrantedAuthority(user.getRole().getName()));
         }
+        String name = jwt.getClaimAsString("name");
+        Users entityUser = new Users(email,name);
+        Users newUser = userServiceImp.userWithoutRole(entityUser);
 
-
-        return List.of();
+        return List.of(new SimpleGrantedAuthority(newUser.getRole().getName()));
     }
 }

@@ -4,6 +4,7 @@ import com.MapView.BackEnd.dtos.Role.RoleCreateDTO;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -18,11 +19,12 @@ public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @Column(name = "name")
     private String name;
+    @OneToMany(mappedBy = "role")
+    private List<Users> users;
 
-    @OneToMany(mappedBy = "role", fetch = FetchType.LAZY)
-    private Set<UserRole> userRoles;
 
 
     public Role(RoleCreateDTO data) {

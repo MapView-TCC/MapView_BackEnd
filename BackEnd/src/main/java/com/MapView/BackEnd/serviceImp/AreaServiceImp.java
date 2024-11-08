@@ -25,6 +25,7 @@ import java.util.List;
 @Service
 public class AreaServiceImp implements AreaService {
 
+
     private final AreaRepository areaRepository;
     private final UserLogRepository userLogRepository;
     private final UserRepository userRepository;
@@ -93,8 +94,8 @@ public class AreaServiceImp implements AreaService {
             userLog.setField("Updated area_name to: " + data.area_name());
         }
         if (data.area_code() != null && !data.area_code().isBlank()) {
-            area.setArea_code(data.area_code());
-            userLog.setField(userLog.getField() + ", area_code to: " + data.area_code());
+            area.setCode(data.area_code());
+            userlog.setField(userlog.getField() + ", area_code to: " + data.area_code());
         }
 
         areaRepository.save(area);
@@ -102,6 +103,7 @@ public class AreaServiceImp implements AreaService {
 
         return new AreaDetailsDTO(area);
     }
+
 
     @Override
     public void activateArea(Long id_area, Long userLog_id) {

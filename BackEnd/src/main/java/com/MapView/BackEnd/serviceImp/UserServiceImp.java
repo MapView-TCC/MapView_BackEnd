@@ -93,14 +93,6 @@ public class UserServiceImp implements UserService {
 
 
 
-    @Override
-    public void setPrivilege(Long user_id, RoleUser roleUser) {
-        var user = userRepository.findById(user_id).orElseThrow(()-> new NotFoundException("User Id Not Found"));
-        if(user.status_check()){
-            user.setRole(roleUser);
-            userRepository.save(user);
-        }
-    }
 
 
 

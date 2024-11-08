@@ -18,7 +18,8 @@ public class Area {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id_area;
     @Schema(description = "Area code", example = "CA600", required = true)
-    private String area_code;
+    @Column(name = "ara_code")
+    private String code;
     @Schema(description = "Area name", example = "Área A", required = true)
     private String area_name;
     @Schema(description = "Operative", example = "True or False")
@@ -26,7 +27,7 @@ public class Area {
     private boolean operative;
 
     public Area(AreaCreateDTO dados) {
-        this.area_code = dados.area_code();
+        this.code = dados.area_code();
         this.area_name = dados.area_name();
         this.operative = true;
     }}
