@@ -43,6 +43,7 @@ public class UserLogServiceImp implements UserLogService {
            Users user = userRepository.findById(data.user_id())
                    .orElseThrow(() -> new NotFoundException("User not found"));
 
+
            UserLog userLog = new UserLog(
                    user,
                    data.altered_table(),
