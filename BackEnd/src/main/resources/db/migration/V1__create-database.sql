@@ -6,6 +6,17 @@ CREATE TABLE IF NOT EXISTS area (
     operative TINYINT NOT NULL
 );
 
+CREATE TABLE IF NOT EXISTS permission (
+    id_permission INT AUTO_INCREMENT PRIMARY KEY,
+    id_user INT,
+    id_role INT,
+    date DATE,
+    FOREIGN KEY (id_role) REFERENCES roles(id),
+    FOREIGN KEY(id_user) REFERENCES users(user_id)
+);
+
+
+
 CREATE TABLE roles (
     id INT AUTO_INCREMENT PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(50) UNIQUE NOT NULL

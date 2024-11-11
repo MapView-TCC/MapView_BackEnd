@@ -1,9 +1,8 @@
 package com.MapView.BackEnd.dtos.Equipment;
 
 import com.MapView.BackEnd.dtos.Notification.NotificationDetailsDTO;
-import com.MapView.BackEnd.entities.Equipment;
-import com.MapView.BackEnd.entities.Location;
-import com.MapView.BackEnd.entities.MainOwner;
+import com.MapView.BackEnd.dtos.Responsible.ResponsibleDetailsDTO;
+import com.MapView.BackEnd.entities.*;
 import com.MapView.BackEnd.enums.EnumModelEquipment;
 import jakarta.validation.Valid;
 

@@ -4,7 +4,6 @@ import com.MapView.BackEnd.dtos.Token;
 import com.MapView.BackEnd.dtos.TokenDetailsDTO;
 import com.MapView.BackEnd.dtos.User.LoggedUserDetails;
 import com.MapView.BackEnd.dtos.User.UserCreateDTO;
-import com.MapView.BackEnd.dtos.UserRole.UserRoleDetailsDTO;
 import com.MapView.BackEnd.serviceImp.UserServiceImp;
 import com.MapView.BackEnd.dtos.User.UserDetailsDTO;
 import com.MapView.BackEnd.serviceImp.UserServiceImp;

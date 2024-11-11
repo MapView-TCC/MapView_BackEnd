@@ -1,11 +1,11 @@
 -- Inserir novos usuários
 INSERT INTO users (email, operative) VALUES
-('maria.eduarda@example.com', 1),
-('ana.maria@example.com', 1),
-('thayna.quinteiro@example.com', 1),
-('sarah.santos@example.com', 1),
-('joao.borges@example.com', 1),
-('Campinas.ETS@br.bosch.com', 1);
+('maria.eduarda@example.com','',1,1, 1),
+('ana.maria@example.com','',2,1, 1),
+('thayna.quinteiro@example.com','',3,1, 1),
+('sarah.santos@example.com','',2,1, 1),
+('joao.borges@example.com','',1,1,1),
+('Campinas.ETS@br.bosch.com','',2,1,1);
 
 
 
