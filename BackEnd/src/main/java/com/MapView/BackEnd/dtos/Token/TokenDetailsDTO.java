@@ -1,6 +1,4 @@
-package com.MapView.BackEnd.dtos;
-
-import org.springframework.security.oauth2.jwt.Jwt;
+package com.MapView.BackEnd.dtos.Token;
 
 public record TokenDetailsDTO(String id_token) {
 

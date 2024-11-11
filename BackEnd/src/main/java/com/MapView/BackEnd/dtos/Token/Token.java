@@ -1,4 +1,4 @@
-package com.MapView.BackEnd.dtos;
+package com.MapView.BackEnd.dtos.Token;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

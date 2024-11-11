@@ -1,30 +1,25 @@
 package com.MapView.BackEnd.controller;
 
-import com.MapView.BackEnd.dtos.Token;
-import com.MapView.BackEnd.dtos.TokenDetailsDTO;
+import com.MapView.BackEnd.dtos.Token.Token;
+import com.MapView.BackEnd.dtos.Token.TokenDetailsDTO;
 import com.MapView.BackEnd.dtos.User.LoggedUserDetails;
-import com.MapView.BackEnd.dtos.User.UserCreateDTO;
 import com.MapView.BackEnd.serviceImp.UserServiceImp;
 import com.MapView.BackEnd.dtos.User.UserDetailsDTO;
-import com.MapView.BackEnd.serviceImp.UserServiceImp;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.transaction.Transactional;
-import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
-import java.util.Map;
 
 @RestController
-//@RequestMapping("ap1/v1/user")
+@RequestMapping("ap1/v1/user")
 @Tag(name = "User", description = "Operations related to user management")
 public class UserController {
 

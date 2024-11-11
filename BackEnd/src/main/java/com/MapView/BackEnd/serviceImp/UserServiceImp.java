@@ -1,10 +1,12 @@
 package com.MapView.BackEnd.serviceImp;
 
-import com.MapView.BackEnd.dtos.Token;
+import com.MapView.BackEnd.dtos.Token.Token;
 import com.MapView.BackEnd.dtos.User.UserDetailsDTO;
+import com.MapView.BackEnd.entities.Area;
 import com.MapView.BackEnd.entities.Role;
 import com.MapView.BackEnd.entities.Users;
 import com.MapView.BackEnd.infra.Exception.NotFoundException;
+import com.MapView.BackEnd.repository.AreaRepository;
 import com.MapView.BackEnd.repository.UserRepository;
 import com.MapView.BackEnd.service.UserService;
 import org.springframework.security.oauth2.jwt.Jwt;
@@ -17,13 +19,13 @@ import java.util.List;
 public class UserServiceImp implements UserService {
     private final UserRepository userRepository;
     private final RoleServiceImp roleServiceImp;
+    private  final AreaRepository areaRepository;
 
 
-    public UserServiceImp(UserRepository userRepository, RoleServiceImp roleServiceImp) {
+    public UserServiceImp(UserRepository userRepository, RoleServiceImp roleServiceImp, AreaRepository areaRepository) {
         this.userRepository = userRepository;
-
-
         this.roleServiceImp = roleServiceImp;
+        this.areaRepository = areaRepository;
     }
 
     @Override

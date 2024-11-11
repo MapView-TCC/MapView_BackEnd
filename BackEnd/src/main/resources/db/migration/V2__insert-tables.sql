@@ -8,18 +8,18 @@ INSERT INTO area (area_code, area_name, operative) VALUES
 
 -- Inserir novas roles
 INSERT INTO roles (name) VALUES
-('INSTRUTOR'),
+('ROLE_INSTRUTOR'),
 ('ROLE_APRENDIZ'),
-('GESTOR');
+('ROLE_GESTOR');
 
 -- Inserir novos usuários
-INSERT INTO users (email,name,id_role,id_area, operative) VALUES
-    ('maria.eduarda@example.com','ETS Campinas',1,1, 1),
-('ana.maria@example.com','ETS Campinas',2,1, 1),
-('thayna.quinteiro@example.com','ETS Campinas',3,1, 1),
-('sarah.santos@example.com','ETS Campinas',2,1, 1),
-('joao.borges@example.com','ETS Campinas',1,1,1),
-('Campinas.ETS@br.bosch.com','ETS Campinas',2,1,1);
+INSERT INTO users (email,name,id_role, operative) VALUES
+    ('maria.eduarda@example.com','ETS Campinas',1, 1),
+('ana.maria@example.com','ETS Campinas',2, 1),
+('thayna.quinteiro@example.com','ETS Campinas',3, 1),
+('sarah.santos@example.com','ETS Campinas',2, 1),
+('joao.borges@example.com','ETS Campinas',1,1),
+('Campinas.ETS@br.bosch.com','ETS Campinas',2,1);
 
 
 

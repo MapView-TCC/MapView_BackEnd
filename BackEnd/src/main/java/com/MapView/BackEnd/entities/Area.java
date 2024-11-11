@@ -18,7 +18,7 @@ public class Area {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id_area;
     @Schema(description = "Area code", example = "CA600", required = true)
-    @Column(name = "ara_code")
+    @Column(name = "area_code")
     private String code;
     @Schema(description = "Area name", example = "Área A", required = true)
     private String area_name;
