@@ -1,5 +1,6 @@
 package com.MapView.BackEnd.serviceImp;
 
+import com.MapView.BackEnd.dtos.TrackingHistory.TrackHistoryByenvironmentDetailsDTO;
 import com.MapView.BackEnd.dtos.TrackingHistory.TrackingHistoryWrongLocationDTO;
 import com.MapView.BackEnd.entities.*;
 import com.MapView.BackEnd.enums.EnumWarnings;
@@ -56,6 +57,53 @@ public class TrackingHistoryServiceImp implements TrackingHistoryService {
 
 
     }
+
+    public List<TrackHistoryByenvironmentDetailsDTO> getLatestTrackingHistoryByEnvironmentWithActionEntre(Long idEnvironment) {
+        // Busca todas as movimentações para o ambiente especificado com ação 'ENTRE'
+        List<TrackingHistory> trackingHistories = trackingHistoryRepository.findAll()
+                .stream()
+                .filter(th -> th.getEnvironment().getId_environment().equals(idEnvironment)) // Filtra por ambiente
+                .filter(th -> th.getAction() == EnumTrackingAction.ENTER) // Filtra por ação 'ENTRE'
+                .collect(Collectors.toList());
+
+        // Agrupa por equipamento e seleciona a última movimentação de cada equipamento
+        Map<Equipment, TrackingHistory> latestTrackingHistoriesByEquipment = trackingHistories.stream()
+                .collect(Collectors.toMap(
+                        TrackingHistory::getEquipment, // chave: equipamento
+                        th -> th, // valor: a própria entrada de tracking
+                        (th1, th2) -> th1.getDatetime().isAfter(th2.getDatetime()) ? th1 : th2 // mantém a entrada mais recente
+                ));
+
+        // Mapeia cada equipamento para sua lista de responsáveis e cria o DTO final
+        List<TrackHistoryByenvironmentDetailsDTO> result = latestTrackingHistoriesByEquipment.entrySet().stream()
+                .map(entry -> {
+                    Equipment equipment = entry.getKey();
+                    TrackingHistory latestTrackingHistory = entry.getValue();
+
+                    // Busca os responsáveis pelo equipamento atual
+                    List<Responsible> responsible = new ArrayList<>();
+                    List<EquipmentResponsible> equipmentResponsibles = equipmentResponsibleRepository.findByEquipment(equipment);
+
+                    for (EquipmentResponsible responsible1: equipmentResponsibles){
+                        responsible.add(responsible1.getResponsible());
+                    }
+
+                    // Cria o DTO com detalhes do tracking e adiciona os responsáveis
+                    return new TrackHistoryByenvironmentDetailsDTO(
+                            latestTrackingHistory.getId(),
+                            latestTrackingHistory.getDatetime(),
+                            equipment,
+                            latestTrackingHistory.getEnvironment(),
+                            latestTrackingHistory.getAction(),
+                            latestTrackingHistory.getWarning(),
+                            responsible // Adiciona a lista de responsáveis
+                    );
+                })
+                .collect(Collectors.toList());
+
+        return result;
+    }
+
 
     @Async // Indica que o método pode ser executado de forma assíncrona.
     @Override

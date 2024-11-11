@@ -1,5 +1,6 @@
 package com.MapView.BackEnd.controller;
 
+import com.MapView.BackEnd.dtos.TrackingHistory.TrackHistoryByenvironmentDetailsDTO;
 import com.MapView.BackEnd.dtos.TrackingHistory.TrackingHistoryWrongLocationDTO;
 import com.MapView.BackEnd.enums.EnumWarnings;
 import com.MapView.BackEnd.enums.EnumTrackingAction;
@@ -97,6 +98,12 @@ public class TrackingHistoryController {
             @RequestParam(required = false) String id_equipment) {
         var list = trackingHistoryServiceImp.FilterTracking(page, itens, action, day, month, year, colors, id_equipment);
         return ResponseEntity.ok(list);
+    }
+
+    @GetMapping("/filterbyenvironment")
+    public ResponseEntity<List<TrackHistoryByenvironmentDetailsDTO>> filterbyenvironment(@RequestParam Long id_environment){
+       return  ResponseEntity.ok( trackingHistoryServiceImp.getLatestTrackingHistoryByEnvironmentWithActionEntre(id_environment));
+
     }
 
     @Operation(summary = "Permanently delete tracking history", description = "Deleting tracking history records.")
