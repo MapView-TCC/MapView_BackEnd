@@ -38,6 +38,29 @@ spring:
             - AddResponseHeader=Access-Control-Allow-Methods, GET, POST, PUT, DELETE, OPTIONS
             - AddResponseHeader=Access-Control-Allow-Headers, Authorization, Content-Type
 
+
+        - id: permission
+          uri: http://localhost:9000
+          predicates:
+            - Path=/api/v1/permissions
+          filters:
+            - name: TokenRelay
+
+            - AddResponseHeader=Access-Control-Allow-Origin, http://localhost:4200
+            - AddResponseHeader=Access-Control-Allow-Methods, GET, POST, PUT, DELETE, OPTIONS
+            - AddResponseHeader=Access-Control-Allow-Headers, Authorization, Content-Type
+
+        - id: filtered_permission
+          uri: http://localhost:9000
+          predicates:
+            - Path=/api/v1/permissions/filterRole
+          filters:
+            - name: TokenRelay
+
+            - AddResponseHeader=Access-Control-Allow-Origin, http://localhost:4200
+            - AddResponseHeader=Access-Control-Allow-Methods, GET, POST, PUT, DELETE, OPTIONS
+            - AddResponseHeader=Access-Control-Allow-Headers, Authorization, Content-Type
+
         - id: resource
           uri: ws://localhost:9000/connect
           predicates:

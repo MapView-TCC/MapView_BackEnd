@@ -1,15 +1,9 @@
--- Inserir novos usuários
-INSERT INTO users (email, operative) VALUES
-('maria.eduarda@example.com', 1),
-('ana.maria@example.com', 1),
-('thayna.quinteiro@example.com', 1),
-('sarah.santos@example.com', 1),
-('joao.borges@example.com', 1),
-('bruna.cruz8@senaisp.edu.br', 'ADMIN', 1),
-('sarah.cruz@br.bosch.com', 'ADMIN', 1),
-('joao.carvalho89@senaisp.edu.br', 'ADMIN', 1),
-('Campinas.ETS@br.bosch.com', 1);
-
+INSERT INTO area (area_code, area_name, operative) VALUES
+('ETS', 'Engineering Technical School', 1),
+('BTC', 'Bosch Training Center', 1),
+('BD', 'Bosch Digital', 1),
+('PT', 'Power Tools', 1),
+('BISB', 'Bosch Integrated Solutions Brazil', 1);
 
 
 -- Inserir novas roles
@@ -18,14 +12,20 @@ INSERT INTO roles (name) VALUES
 ('ROLE_APRENDIZ'),
 ('GESTOR');
 
--- Associar usuários às suas roles
-INSERT INTO user_roles (user_id, role_id) VALUES
-(1, 1),  -- maria.eduarda@example.com é INSTRUTOR
-(2, 2),  -- ana.maria@example.com é APRENDIZ
-(3, 3),  -- thayna.quinteiro@example.com é GESTOR
-(4, 2),  -- sarah.santos@example.com é APRENDIZ
-(5, 1),  -- joao.borges@example.com é INSTRUTOR
-(6, 2);
+-- Inserir novos usuários
+INSERT INTO users (email,name,id_role,id_area, operative) VALUES
+    ('maria.eduarda@example.com','ETS Campinas',1,1, 1),
+('ana.maria@example.com','ETS Campinas',2,1, 1),
+('thayna.quinteiro@example.com','ETS Campinas',3,1, 1),
+('sarah.santos@example.com','ETS Campinas',2,1, 1),
+('joao.borges@example.com','ETS Campinas',1,1,1),
+('Campinas.ETS@br.bosch.com','ETS Campinas',2,1,1);
+
+
+
+
+
+
 
 -- Inserir novos registros de histórico de acesso
 INSERT INTO access_history (id_user, login_datetime, logout_datetime) VALUES
@@ -83,13 +83,6 @@ INSERT INTO building (building_code, operative) VALUES
 ('Ca590', 1),
 ('Ca600', 1);
 
--- Inserir novas áreas
-INSERT INTO area (area_code, area_name, operative) VALUES
-('ETS', 'Engineering Technical School', 1),
-('BTC', 'Bosch Training Center', 1),
-('BD', 'Bosch Digital', 1),
-('PT', 'Power Tools', 1),
-('BISB', 'Bosch Integrated Solutions Brazil', 1);
 
 -- Inserir novos Raspberry Pi
 INSERT INTO raspberry (id_raspberry, id_building, id_area, operative) VALUES

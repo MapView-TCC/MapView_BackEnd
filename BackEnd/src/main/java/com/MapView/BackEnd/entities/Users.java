@@ -25,7 +25,7 @@ public class Users {
 
     private String name;
     @ManyToOne
-    @Column(name = "id_role")
+    @JoinColumn(name = "id_role")
     private Role role;
     @OneToOne
     @JoinColumn(name = "id_area")

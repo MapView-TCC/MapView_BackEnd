@@ -8,9 +8,10 @@ import com.MapView.BackEnd.infra.Exception.NotFoundException;
 import com.MapView.BackEnd.repository.PermissionRepository;
 import com.MapView.BackEnd.repository.RoleRespository;
 import com.MapView.BackEnd.repository.UserRepository;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
-
+@Service
 public class PermissionServiceImp {
 
     private final PermissionRepository permissionRepository;

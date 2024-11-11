@@ -16,13 +16,15 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class Permission {
 
-
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id_permission;
-    @Column(name = "id_user")
+    @JoinColumn(name = "id_user")
     @OneToOne
     private Users users;
-    @Column(name = "id_role")
     @ManyToOne
+    @JoinColumn(name = "id_role")
+
     private Role role;
     private LocalDate date;
 
