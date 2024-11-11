@@ -25,6 +25,9 @@ public class Role {
     @OneToMany(mappedBy = "role")
     private List<Users> users;
 
+    @OneToMany(mappedBy = "role", fetch = FetchType.LAZY)
+    private List<Permission> permissoes;
+
 
 
     public Role(RoleCreateDTO data) {
