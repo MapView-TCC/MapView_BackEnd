@@ -27,10 +27,6 @@ public class Users {
     @ManyToOne
     @JoinColumn(name = "id_role")
     private Role role;
-    @OneToOne
-    @JoinColumn(name = "id_area")
-    private Area area;
-
     @Column(nullable = false)
     @JsonIgnore
     private boolean operative;
@@ -44,7 +40,6 @@ public class Users {
     public Users(String email,String name,Role role){
         this.email = email;
         this.name = name;
-        this.area= null;
         this.role = role;
         this.operative = true;
     }

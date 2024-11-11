@@ -16,9 +16,7 @@ CREATE TABLE IF NOT EXISTS users (
     email VARCHAR(255) NOT NULL UNIQUE,
     name VARCHAR(255),
     id_role INT,
-    id_area int,
     operative TINYINT NOT NULL,
-    FOREIGN KEY (id_area) REFERENCES area(id_area),
     FOREIGN KEY (id_role) REFERENCES roles(id)
 );
 

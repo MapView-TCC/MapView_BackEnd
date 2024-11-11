@@ -1,6 +1,6 @@
 package com.MapView.BackEnd.serviceImp;
 
-import com.MapView.BackEnd.dtos.PermissionCreateDTO;
+import com.MapView.BackEnd.dtos.Permission.PermissionCreateDTO;
 import com.MapView.BackEnd.entities.Permission;
 import com.MapView.BackEnd.entities.Role;
 import com.MapView.BackEnd.entities.Users;
@@ -8,6 +8,7 @@ import com.MapView.BackEnd.infra.Exception.NotFoundException;
 import com.MapView.BackEnd.repository.PermissionRepository;
 import com.MapView.BackEnd.repository.RoleRespository;
 import com.MapView.BackEnd.repository.UserRepository;
+import org.apache.catalina.User;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -26,7 +27,7 @@ public class PermissionServiceImp {
 
     public Permission createPermission(PermissionCreateDTO permissionCreateDTO){
         Users user = this.userRepository.findById(permissionCreateDTO.id_user()).orElseThrow(()-> new NotFoundException("User not found"));
-        Role role = this.roleRespository.findById(permissionCreateDTO.id_role()).orElseThrow(()-> new NotFoundException("Role not found"));
+        Role role = this.roleRespository.findByName(permissionCreateDTO.role().toString()).orElseThrow(()-> new NotFoundException("Role not found"));
 
         Permission permission = new Permission(user,role);
         Permission savedPermission = permissionRepository.save(permission);
@@ -34,6 +35,19 @@ public class PermissionServiceImp {
         return savedPermission;
 
     }
+
+    public void acceptPermission(Long id_permission){
+        Permission permission = permissionRepository.findById(id_permission).orElseThrow((()-> new NotFoundException("permission not found")));
+        Users user = userRepository.findById(permission.getUsers().getId_user()).orElseThrow(()-> new NotFoundException("User not found"));
+        Role role = roleRespository.findById(permission.getRole().getId()).orElseThrow(()-> new NotFoundException("User not found"));
+        user.setRole(role);
+    }
+
+    public void declinedPermission(Long id_permission){
+        Permission permission = permissionRepository.findById(id_permission).orElseThrow((()-> new NotFoundException("permission not found")));
+        permissionRepository.delete(permission);
+    }
+
 
 
     public List<Permission> getAll (){
