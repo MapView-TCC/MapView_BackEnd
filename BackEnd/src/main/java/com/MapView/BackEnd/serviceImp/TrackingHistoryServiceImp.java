@@ -1,11 +1,8 @@
 package com.MapView.BackEnd.serviceImp;
 
-<<<<<<< HEAD
 import com.MapView.BackEnd.dtos.TrackingHistory.*;
-=======
 import com.MapView.BackEnd.dtos.TrackingHistory.TrackHistoryByEnvironmentDetailsDTO;
 import com.MapView.BackEnd.dtos.TrackingHistory.TrackingHistoryWrongLocationDTO;
->>>>>>> feature/Tracking
 import com.MapView.BackEnd.entities.*;
 import com.MapView.BackEnd.enums.EnumWarnings;
 import com.MapView.BackEnd.enums.EnumTrackingAction;

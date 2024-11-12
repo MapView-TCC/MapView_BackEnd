@@ -1,6 +1,6 @@
 package com.MapView.BackEnd.controller;
 
-import com.MapView.BackEnd.dtos.TrackingHistory.TrackHistoryByenvironmentDetailsDTO;
+import com.MapView.BackEnd.dtos.TrackingHistory.TrackHistoryByEnvironmentDetailsDTO;
 import com.MapView.BackEnd.dtos.TrackingHistory.TrackingHistoryWrongLocationDTO;
 import com.MapView.BackEnd.enums.EnumWarnings;
 import com.MapView.BackEnd.enums.EnumTrackingAction;
@@ -101,7 +101,7 @@ public class TrackingHistoryController {
     }
 
     @GetMapping("/filterbyenvironment")
-    public ResponseEntity<List<TrackHistoryByenvironmentDetailsDTO>> filterbyenvironment(@RequestParam Long id_environment){
+    public ResponseEntity<List<TrackHistoryByEnvironmentDetailsDTO>> filterbyenvironment(@RequestParam Long id_environment){
        return  ResponseEntity.ok( trackingHistoryServiceImp.getLatestTrackingHistoryByEnvironmentWithActionEntre(id_environment));
 
     }
