@@ -113,8 +113,6 @@ public class TrackingHistoryServiceImp implements TrackingHistoryService {
         // Tenta encontrar um equipamento pelo RFID fornecido nos dados.
         Optional<Equipment> equipment = equipmentRepository.findByRfid(dados.rfid());
 
-        TrackingHistory history = new TrackingHistory();
-
         // isEmpty -> Retorna um valor booliano que indica se um variável foi inicializado.
         if (equipment.isEmpty()) {
             // Salva um novo histórico de rastreamento com o RFID e ambiente encontrado, marcando como 'RED'.
@@ -226,9 +224,6 @@ public class TrackingHistoryServiceImp implements TrackingHistoryService {
         }
         return responsible;
     }
-
-
-
 
     @Override
     public List<TrackingHistoryDetailsDTO> FilterTracking(int page, int itens, EnumTrackingAction action, Integer day,

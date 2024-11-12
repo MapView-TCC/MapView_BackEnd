@@ -30,7 +30,7 @@ public class AccessHistoryServiceImp implements AccessHistoryService {
     @Override
     public AccessHistoryDetailsDTO getAccessHistory(Long id_history) {
         AccessHistory accessHistory = this.accessHistoryRepository.findById(id_history)
-                .orElseThrow(() -> new NotFoundException("Id not found"));
+                .orElseThrow(() -> new NotFoundException("Access history with ID " + id_history + " not found"));
 
         return new AccessHistoryDetailsDTO(accessHistory);
     }
@@ -45,7 +45,7 @@ public class AccessHistoryServiceImp implements AccessHistoryService {
     @Override
     public AccessHistoryDetailsDTO createAccessHistory(AccessHistoryCreateDTO dados) {
         Users user = userRepository.findById(dados.user())
-                .orElseThrow(() -> new RuntimeException("Usuário não encontrado!"));
+                .orElseThrow(() -> new RuntimeException("User with ID " + dados.user() + " not found"));
 
         AccessHistory history = new AccessHistory();
         history.setUser(user);
@@ -58,7 +58,7 @@ public class AccessHistoryServiceImp implements AccessHistoryService {
 
     @Override
     public AccessHistoryDetailsDTO updateAccessHistory(Long id_history) {
-        var history = accessHistoryRepository.findById(id_history).orElseThrow(() -> new NotFoundException("Id not found"));
+        var history = accessHistoryRepository.findById(id_history).orElseThrow(() -> new NotFoundException("Access history with ID " + id_history + " not found"));
 
         // Atualiza a data de logout no objeto history
         history.setLogout_datetime(LocalDateTime.now());

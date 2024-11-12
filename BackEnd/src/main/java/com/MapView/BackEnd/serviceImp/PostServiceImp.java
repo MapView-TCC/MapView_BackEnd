@@ -34,11 +34,16 @@ public class PostServiceImp implements PostService {
 
     @Override
     public PostDetailsDTO getPost(Long id_post, Long userLog_id) {
-        Post post = this.postRepository.findById(id_post).orElseThrow(() -> new NotFoundException("Post id Not Found"));
-        if(!post.isOperative()){
-            throw new OperativeFalseException("The inactive post cannot be accessed.");
+        Post post = this.postRepository.findById(id_post)
+                .orElseThrow(() -> new NotFoundException("Post with ID " + id_post + " not found."));
+
+        if (!post.isOperative()) {
+            throw new OperativeFalseException("The post with ID " + id_post + " is inactive and cannot be accessed.");
         }
-        Users user = this.userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("Id not found"));
+
+        Users user = this.userRepository.findById(userLog_id)
+                .orElseThrow(() -> new NotFoundException("User with ID " + userLog_id + " not found."));
+
         var userLog = new UserLog(user,"Post",id_post.toString(),"Read Post", EnumAction.READ);
         userLogRepository.save(userLog);
 
@@ -47,12 +52,16 @@ public class PostServiceImp implements PostService {
 
 
     public PostDetailsDTO getPostByPost(String postname, Long userLog_id) {
-        Post post = this.postRepository.findByPost(postname).orElseThrow(() -> new NotFoundException("Post id Not Found"));
+        Post post = this.postRepository.findByPost(postname)
+                .orElseThrow(() -> new NotFoundException("Post with the name '" + postname + "' not found."));
 
-        if(!post.isOperative()){
-            throw new OperativeFalseException("The inactive post cannot be accessed.");
+        if (!post.isOperative()) {
+            throw new OperativeFalseException("The post '" + postname + "' is inactive and cannot be accessed.");
         }
-        Users user = this.userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("Id not found"));
+
+        Users user = this.userRepository.findById(userLog_id)
+                .orElseThrow(() -> new NotFoundException("User with ID " + userLog_id + " not found."));
+
         var userLog = new UserLog(user,"Post",post.getId_post().toString(),"Read Post", EnumAction.READ);
         userLogRepository.save(userLog);
 
@@ -61,7 +70,9 @@ public class PostServiceImp implements PostService {
 
     @Override
     public List<PostDetailsDTO> getAllPost(Long userLog_id) {
-        Users user = this.userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("Id not found"));
+        Users user = this.userRepository.findById(userLog_id)
+                .orElseThrow(() -> new NotFoundException("User with ID " + userLog_id + " not found."));
+
         var userLog = new UserLog(user,"Post","Read All Post", EnumAction.READ);
         userLogRepository.save(userLog);
 
@@ -70,9 +81,11 @@ public class PostServiceImp implements PostService {
 
     @Override
     public PostDetailsDTO createPost(PostCreateDTO data, Long userLog_id) {
-        Users user = this.userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("Id not found"));
+        Users user = this.userRepository.findById(userLog_id)
+                .orElseThrow(() -> new NotFoundException("User with ID " + userLog_id + " not found."));
+
         Post verifyPost = postRepository.findByPost(data.post()).orElse(null);
-        if (verifyPost == null){
+        if (verifyPost == null) {
             try {
                 var post = new Post(data);
                 Post returnPost = postRepository.save(post);
@@ -83,27 +96,30 @@ public class PostServiceImp implements PostService {
 
                 return new PostDetailsDTO(returnPost);
 
-            }catch (DataIntegrityViolationException e ){
-                throw new ExistingEntityException("Post ("+data.post()+") already exists.");
+            } catch (DataIntegrityViolationException e) {
+                throw new ExistingEntityException("Post with the name '" + data.post() + "' already exists.");
             }
         }
         return new PostDetailsDTO(verifyPost);
-
     }
 
     @Override
     public PostDetailsDTO updatePost(Long id_post, PostUpdateDTO data, Long userLog_id) {
-        var post = this.postRepository.findById(id_post).orElseThrow(() ->new NotFoundException("Post Id Not Found"));
-        if(!post.isOperative()){
-            throw new OperativeFalseException("The inactive post cannot be accessed.");
+        var post = this.postRepository.findById(id_post)
+                .orElseThrow(() -> new NotFoundException("Post with ID " + id_post + " not found."));
+
+        if (!post.isOperative()) {
+            throw new OperativeFalseException("The post with ID " + id_post + " is inactive and cannot be updated.");
         }
 
-        Users user = this.userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("Id not found"));
-        var userlog = new UserLog(user,"Area", id_post.toString(),null,"Infos update",EnumAction.UPDATE);
+        Users user = this.userRepository.findById(userLog_id)
+                .orElseThrow(() -> new NotFoundException("User with ID " + userLog_id + " not found."));
+
+        var userlog = new UserLog(user, "Area", id_post.toString(), "Updated Info", EnumAction.UPDATE);
 
         if(data.post() != null){
             post.setPost(data.post());
-            userlog.setField("Post to: "+data.post());
+            userlog.setField("Post name to: " + data.post());
         }
 
         postRepository.save(post);
@@ -114,10 +130,12 @@ public class PostServiceImp implements PostService {
 
     @Override
     public  void activePost(Long id_post,Long userLog_id) {
-        Users user = this.userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("Id not found"));
+        Users user = this.userRepository.findById(userLog_id)
+                .orElseThrow(() -> new NotFoundException("User with ID " + userLog_id + " not found."));
 
+        Post post = this.postRepository.findById(id_post)
+                .orElseThrow(() -> new NotFoundException("Post with ID " + id_post + " not found."));
 
-        Post post = this.postRepository.findById(id_post).orElseThrow(() -> new NotFoundException("Post Id Not Found"));
         post.setOperative(true);
         postRepository.save(post);
 
@@ -127,9 +145,12 @@ public class PostServiceImp implements PostService {
 
     @Override
     public void inactivatePost(Long post_id,Long userLog_id) {
-        Users user = this.userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("Id not found"));
+        Users user = this.userRepository.findById(userLog_id)
+                .orElseThrow(() -> new NotFoundException("User with ID " + userLog_id + " not found."));
 
-        Post post = this.postRepository.findById(post_id).orElseThrow(() -> new NotFoundException("Post Id Not Found"));
+        Post post = this.postRepository.findById(post_id)
+                .orElseThrow(() -> new NotFoundException("Post with ID " + post_id + " not found."));
+
         post.setOperative(false);
         postRepository.save(post);
 

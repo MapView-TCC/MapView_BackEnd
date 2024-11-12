@@ -31,7 +31,8 @@ public class LocationServiceImp implements LocationService {
 
     @Override
     public LocationDetailsDTO getLocation(Long id_location) {
-        var loc = locationRepository.findById(id_location).orElseThrow(() -> new NotFoundException("Location id not found"));
+        var loc = locationRepository.findById(id_location)
+                .orElseThrow(() -> new NotFoundException("Location with id " + id_location + " not found."));
         return new LocationDetailsDTO(loc);
     }
 
@@ -43,47 +44,52 @@ public class LocationServiceImp implements LocationService {
     @Override
     public LocationDetailsDTO createLocation(LocationCreateDTO data) {
         try {
-            var post = postRepository.findById(data.post()).orElseThrow(() -> new NotFoundException("Post Id not Found"));
+            var post = postRepository.findById(data.post())
+                    .orElseThrow(() -> new NotFoundException("Post with id " + data.post() + " not found."));
             if (!post.isOperative()) {
-                throw new OperativeFalseException("The inactive post cannot be accessed.");
+                throw new OperativeFalseException("The post with id " + data.post() + " is inactive and cannot be accessed.");
             }
 
-            var environment = environmentRepository.findById(data.environment()).orElseThrow(() -> new NotFoundException("Environment Id Not Found"));
+            var environment = environmentRepository.findById(data.environment())
+                    .orElseThrow(() -> new NotFoundException("Environment with id " + data.environment() + " not found."));
             if (!environment.isOperative()) {
-                throw new OperativeFalseException("The inactive environment cannot be accessed.");
+                throw new OperativeFalseException("The environment with id " + data.environment() + " is inactive and cannot be accessed.");
             }
 
             var location = new Location(post, environment);
             location = locationRepository.save(location);
-            System.out.println("Post: Post ");
+            System.out.println("Post: " + post);
             return new LocationDetailsDTO(location);
 
 
         }catch (DataIntegrityViolationException e ){
-            throw new LocationAlreadyExistsException("The location with these values has been created");
+            throw new LocationAlreadyExistsException("A location with the specified post and environment already exists.");
         }
 
     }
 
     @Override
     public LocationDetailsDTO updateLocation(Long id_location, LocationUpdateDTO data) {
-        var location = locationRepository.findById(id_location).orElseThrow(() -> new NotFoundException("Location Id Not Found"));
+        var location = locationRepository.findById(id_location)
+                .orElseThrow(() -> new NotFoundException("Location with id " + id_location + " not found."));
 
-        var post = postRepository.findById(data.post()).orElseThrow(() -> new NotFoundException("Post Id not Found"));
+        var post = postRepository.findById(data.post())
+                .orElseThrow(() -> new NotFoundException("Post with id " + data.post() + " not found."));
+
         if(!post.isOperative()){
             throw new OperativeFalseException("The inactive post cannot be accessed.");
         }
-        var environment = environmentRepository.findById(data.environment()).orElseThrow(() -> new NotFoundException("Environment Id Not Found"));
+
+        var environment = environmentRepository.findById(data.environment())
+                .orElseThrow(() -> new NotFoundException("Environment with id " + data.environment() + " not found."));
+
         if(!environment.isOperative()){
-            throw new OperativeFalseException("The inactive environment cannot be accessed.");
+            throw new OperativeFalseException("The environment with id " + data.environment() + " is inactive and cannot be accessed.");
         }
 
-        if(data.environment() != null){
-            location.setEnvironment(environment);
-        }
-        if(data.post() != null){
-            location.setPost(post);
-        }
+        location.setEnvironment(environment);
+        location.setPost(post);
+
         locationRepository.save(location);
         return new LocationDetailsDTO(location);
     }

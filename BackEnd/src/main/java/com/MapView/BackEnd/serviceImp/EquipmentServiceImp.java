@@ -10,7 +10,6 @@ import com.MapView.BackEnd.infra.Exception.*;
 import com.MapView.BackEnd.repository.*;
 import com.MapView.BackEnd.service.EquipmentService;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.*;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -55,22 +54,17 @@ public class EquipmentServiceImp implements EquipmentService {
         this.imageRepository = imageRepository;
     }
 
-    // Construtor para testes
-//    public EquipmentServiceImp1(EquipmentRepository equipmentRepository, UserLogRepository userLogRepository, UserRepository userRepository) {
-//        this.equipmentRepository = equipmentRepository;
-//        this.userLogRepository = userLogRepository;
-//        this.userRepository = userRepository;
-//        // Configure default values ou deixe como null
-//    }
-
 
     @Override
     public EquipmentDetailsDTO getEquipmentCode(String code, Long userLog_id) {
-        var equipment = equipmentRepository.findByCode(code).orElseThrow(() -> new NotFoundException("Id equipment not found!"));
-        Users user = this.userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("Id not found"));
+        var equipment = equipmentRepository.findByCode(code)
+                .orElseThrow(() -> new NotFoundException("Equipment with code '" + code + "' not found."));
 
-        if (!equipment.isOperative()){
-            throw new OperativeFalseException("The inactive responsible cannot be accessed.");
+        Users user = this.userRepository.findById(userLog_id)
+                .orElseThrow(() -> new NotFoundException("User with ID '" + userLog_id + "' not found."));
+
+        if (!equipment.isOperative()) {
+            throw new OperativeFalseException("The selected equipment is inactive and cannot be accessed.");
         }
 
         var userLog = new UserLog(user, "Equipment", code, "Read Equipment", EnumAction.READ);
@@ -80,7 +74,9 @@ public class EquipmentServiceImp implements EquipmentService {
 
     @Override
     public List<EquipmentDetailsDTO>    getAllEquipment(int page, int itens, Long userLog_id) {
-        Users user = this.userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("Id not found"));
+        Users user = this.userRepository.findById(userLog_id)
+                .orElseThrow(() -> new NotFoundException("User with ID '" + userLog_id + "' not found."));
+
         var userLog = new UserLog(user,"Equipment","Read All Equipment", EnumAction.READ);
         userLogRepository.save(userLog);
 
@@ -98,10 +94,10 @@ public class EquipmentServiceImp implements EquipmentService {
         if (verify == null){
             try{
                 Users users = this.userRepository.findById(userLog_id)
-                        .orElseThrow(()  -> new NotFoundException("Id user_log ("+userLog_id+") not found!"));
+                        .orElseThrow(() -> new NotFoundException("User with ID '" + userLog_id + "' not found."));
 
                 Location location = locationRepository.findById(data.id_location())
-                        .orElseThrow(() -> new RuntimeException("Id location ("+data.id_location()+ ") not found!"));
+                        .orElseThrow(() -> new RuntimeException("Location with ID '" + data.id_location() + "' not found."));
 
                 // Verificar se já existe um equipamento com esta localização
                 Equipment existingEquipmentWithLocation = equipmentRepository.findByLocation(location).orElse(null);
@@ -113,7 +109,7 @@ public class EquipmentServiceImp implements EquipmentService {
 
                 // Proprietário principal
                 MainOwner mainOwner = mainOwnerRepository.findById(data.id_owner())
-                        .orElseThrow(() -> new RuntimeException("Id main owner " + data.id_owner() + ") not found!"));
+                        .orElseThrow(() -> new RuntimeException("Main owner with ID '" + data.id_owner() + "' not found."));
 
                 if (!mainOwner.isOperative()) {
                     throw new OperativeFalseException("The inactive mainOwner cannot be accessed.");
@@ -147,23 +143,26 @@ public class EquipmentServiceImp implements EquipmentService {
                 return new EquipmentDetailsDTO(equipment);
 
             }catch (DataIntegrityViolationException e ){
-                throw new ExistingEntityException("rfid: ("+ data.rfid()+") Already exists");
+                throw new ExistingEntityException("RFID '" + data.rfid() + "' already exists for another equipment.");
             }
         }
-        throw new ExistingEntityException("Equipment: " + data.code() + " Already exists");
+        throw new ExistingEntityException("Equipment with code '" + data.code() + "' already exists.");
     }
 
 
     @Override
     public EquipmentDetailsDTO updateEquipment(Long id_equipment, EquipmentUpdateDTO data, Long userLog_id) {
-        var equipment = equipmentRepository.findById(id_equipment)
-                .orElseThrow(() -> new NotFoundException("Id not found"));
+        var equipment = equipmentRepository.findByCode(data.code())
+                .orElseThrow(() -> new NotFoundException("Equipment with code '" + data.code() + "' not found."));
 
-        if(!equipment.isOperative()){
-            throw new OperativeFalseException("The inactive equipment cannot be updated.");
+
+        if (!equipment.isOperative()) {
+            throw new OperativeFalseException("The selected equipment is inactive and cannot be accessed.");
         }
 
-        Users user = this.userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("Id not found"));
+        Users user = this.userRepository.findById(userLog_id)
+                .orElseThrow(() -> new NotFoundException("User with ID '" + userLog_id + "' not found."));
+
         var userlog = new UserLog(user,"Equipment",data.code(),null,"Infos update",EnumAction.UPDATE);
 
         if (data.code() != null){
@@ -224,14 +223,16 @@ public class EquipmentServiceImp implements EquipmentService {
 
         if (data.id_location() != null) {
             var location = locationRepository.findById(data.id_location())
-                    .orElseThrow(() -> new NotFoundException("Location id not found"));
+                    .orElseThrow(() -> new RuntimeException("Location with ID '" + data.id_location() + "' not found."));
+
             equipment.setLocation(location);
             userlog.setField(userlog.getField()+" ,"+"equipment location to: " + data.id_location());
         }
 
         if (data.id_owner() != null) {
             var owner = mainOwnerRepository.findById(data.id_owner())
-                    .orElseThrow(() -> new NotFoundException("Owner id not found"));
+                    .orElseThrow(() -> new RuntimeException("Main owner with ID '" + data.id_owner() + "' not found."));
+
             equipment.setOwner(owner);
             userlog.setField(userlog.getField()+" ,"+"equipment main owner to: " + data.id_owner());
         }
@@ -245,11 +246,16 @@ public class EquipmentServiceImp implements EquipmentService {
 
     @Override
     public void activateEquipment(String code, Long userLog_id) {
-        Users users = this.userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("Id not found"));
-        var equipment = equipmentRepository.findByCode(code).orElseThrow(() -> new NotFoundException("Id not found"));
+        Users users = this.userRepository.findById(userLog_id)
+                .orElseThrow(() -> new NotFoundException("User with ID '" + userLog_id + "' not found."));
+
+
+        var equipment = equipmentRepository.findByCode(code)
+                .orElseThrow(() -> new NotFoundException("Equipment with code '" + code + "' not found."));
+
 
         if (equipment.isOperative()){
-            throw new OpetativeTrueException("It is already activate");
+            throw new OperativeTrueException("It is already activate");
         }
 
         equipment.setOperative(true);
@@ -261,12 +267,15 @@ public class EquipmentServiceImp implements EquipmentService {
     @Override
     public void inactivateEquipment(String code, Long userLog_id) {
 
-        var equipment = equipmentRepository.findByCode(code).orElseThrow(() -> new NotFoundException("Id not found"));
+        var equipment = equipmentRepository.findByCode(code)
+                .orElseThrow(() -> new NotFoundException("Equipment with code '" + code + "' not found."));
 
-        if (!equipment.isOperative()){
-            throw new OperativeFalseException("It is already inactivate");
+
+        if (!equipment.isOperative()) {
+            throw new OperativeFalseException("The selected equipment is inactive and cannot be accessed.");
         }
-        Users users = this.userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("Id not found"));
+        Users users = this.userRepository.findById(userLog_id)
+                .orElseThrow(() -> new NotFoundException("User with ID '" + userLog_id + "' not found."));
         equipment.setOperative(false);
         equipment.setLocation(null);
         var userLog = new UserLog(users, "Equipment", code, "Operative", "Inactivated area", EnumAction.UPDATE);

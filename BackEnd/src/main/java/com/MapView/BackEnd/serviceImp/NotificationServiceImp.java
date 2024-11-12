@@ -32,7 +32,7 @@ public class NotificationServiceImp implements NotificationService {
     @Override
     public void deleteNotificationById(Long id_notification) {
         var notification = notificationRepository.findById(id_notification).orElseThrow(() ->
-                new NotFoundException("Id not found"));
+                new NotFoundException("Notification with ID " + id_notification + " not found. Deletion cannot proceed."));
         if (notification != null){
             notificationRepository.deleteById(id_notification);
         }
@@ -40,7 +40,8 @@ public class NotificationServiceImp implements NotificationService {
 
     @Override
     public NotificationDetailsDTO getNotification(Long id_notification) {
-        Notification notification = this.notificationRepository.findById(id_notification).orElseThrow(() -> new NotFoundException("Id notification not found!"));
+        Notification notification = this.notificationRepository.findById(id_notification)
+                .orElseThrow(() -> new NotFoundException("Notification with ID " + id_notification + " not found. Deletion cannot proceed."));
         System.out.println(notification);
         return new NotificationDetailsDTO(notification);
 
@@ -50,7 +51,7 @@ public class NotificationServiceImp implements NotificationService {
     public NotificationDetailsDTO createNotification(NotificationCreateDTO notificationCreateDTO) {
         // Buscar o equipamento usando o ID fornecido no DTO
         Equipment equipment = equipmentRepository.findByCode(notificationCreateDTO.code())
-                .orElseThrow(() -> new NotFoundException("Equipment not found"));
+                .orElseThrow(() -> new NotFoundException("Equipment not found with code: " + notificationCreateDTO.code()));
 
         // Criar a nova notificação
         Notification notification = new Notification(equipment);
