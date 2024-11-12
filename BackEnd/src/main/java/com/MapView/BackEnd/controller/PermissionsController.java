@@ -29,11 +29,7 @@ public class PermissionsController {
     public List<PermissionDetailsDTO> getByRole(Role role){
         return this.permissionServiceImp.filterByRole(role).stream().map(PermissionDetailsDTO::new).toList();
     }
-    @PostMapping
-    @Transactional
-    public PermissionDetailsDTO permissionAccept(PermissionCreateDTO permissionCreateDTO){
-        return new PermissionDetailsDTO(this.permissionServiceImp.createPermission(permissionCreateDTO));
-    }
+
     @PostMapping("/decline")
     @Transactional
     public ResponseEntity<Void> declinePermission(@RequestParam Long id_permission){
