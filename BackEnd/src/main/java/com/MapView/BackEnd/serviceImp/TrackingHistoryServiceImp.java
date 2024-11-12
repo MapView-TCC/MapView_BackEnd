@@ -1,6 +1,11 @@
 package com.MapView.BackEnd.serviceImp;
 
+<<<<<<< HEAD
 import com.MapView.BackEnd.dtos.TrackingHistory.*;
+=======
+import com.MapView.BackEnd.dtos.TrackingHistory.TrackHistoryByEnvironmentDetailsDTO;
+import com.MapView.BackEnd.dtos.TrackingHistory.TrackingHistoryWrongLocationDTO;
+>>>>>>> feature/Tracking
 import com.MapView.BackEnd.entities.*;
 import com.MapView.BackEnd.enums.EnumWarnings;
 import com.MapView.BackEnd.enums.EnumTrackingAction;
@@ -55,12 +60,12 @@ public class TrackingHistoryServiceImp implements TrackingHistoryService {
 
     }
 
-    public List<TrackHistoryByenvironmentDetailsDTO> getLatestTrackingHistoryByEnvironmentWithActionEntre(Long idEnvironment) {
-        // Busca todas as movimentações para o ambiente especificado com ação 'ENTRE'
+    public List<TrackHistoryByEnvironmentDetailsDTO> getLatestTrackingHistoryByEnvironmentWithActionEntre(Long idEnvironment) {
+
         List<TrackingHistory> trackingHistories = trackingHistoryRepository.findAll()
                 .stream()
                 .filter(th -> th.getEnvironment().getId_environment().equals(idEnvironment)) // Filtra por ambiente
-                .filter(th -> th.getAction() == EnumTrackingAction.ENTER) // Filtra por ação 'ENTRE'
+                .filter(th -> th.getAction() == EnumTrackingAction.ENTER) // Filtra por ação 'ENTER'
                 .collect(Collectors.toList());
 
         // Agrupa por equipamento e seleciona a última movimentação de cada equipamento
@@ -72,28 +77,26 @@ public class TrackingHistoryServiceImp implements TrackingHistoryService {
                 ));
 
         // Mapeia cada equipamento para sua lista de responsáveis e cria o DTO final
-        List<TrackHistoryByenvironmentDetailsDTO> result = latestTrackingHistoriesByEquipment.entrySet().stream()
+        List<TrackHistoryByEnvironmentDetailsDTO> result = latestTrackingHistoriesByEquipment.entrySet().stream()
                 .map(entry -> {
                     Equipment equipment = entry.getKey();
                     TrackingHistory latestTrackingHistory = entry.getValue();
 
                     // Busca os responsáveis pelo equipamento atual
-                    List<Responsible> responsible = new ArrayList<>();
-                    List<EquipmentResponsible> equipmentResponsibles = equipmentResponsibleRepository.findByEquipment(equipment);
-
-                    for (EquipmentResponsible responsible1: equipmentResponsibles){
-                        responsible.add(responsible1.getResponsible());
-                    }
+                    List<Responsible> responsibles = equipmentResponsibleRepository.findByEquipment(equipment)
+                            .stream()
+                            .map(EquipmentResponsible::getResponsible)
+                            .collect(Collectors.toList());
 
                     // Cria o DTO com detalhes do tracking e adiciona os responsáveis
-                    return new TrackHistoryByenvironmentDetailsDTO(
+                    return new TrackHistoryByEnvironmentDetailsDTO(
                             latestTrackingHistory.getId(),
                             latestTrackingHistory.getDatetime(),
                             equipment,
                             latestTrackingHistory.getEnvironment(),
                             latestTrackingHistory.getAction(),
                             latestTrackingHistory.getWarning(),
-                            responsible // Adiciona a lista de responsáveis
+                            responsibles // Adiciona a lista de responsáveis
                     );
                 })
                 .collect(Collectors.toList());
