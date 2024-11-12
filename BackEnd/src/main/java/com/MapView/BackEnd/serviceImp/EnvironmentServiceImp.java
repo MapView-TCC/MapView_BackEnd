@@ -14,7 +14,6 @@ import com.MapView.BackEnd.dtos.Environment.EnvironmentCreateDTO;
 import com.MapView.BackEnd.dtos.Environment.EnvironmentDetailsDTO;
 import com.MapView.BackEnd.dtos.Environment.EnvironmentUpdateDTO;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -38,14 +37,16 @@ public class EnvironmentServiceImp implements EnvironmentService {
 
     @Override
     public EnvironmentDetailsDTO getEnvironment(Long environment_id, Long userLog_id) {
-        var environment = environmentRepository.findById(environment_id).orElseThrow(() -> new NotFoundException("Environment Id Not Found"));
+        var environment = environmentRepository.findById(environment_id)
+                .orElseThrow(() -> new NotFoundException("Environment with ID " + environment_id + " not found."));
 
-        if(!environment.isOperative()){
-            throw new OperativeFalseException("Id Inactive");
+        if (!environment.isOperative()) {
+            throw new OperativeFalseException("The environment with ID " + environment_id + " is inactive.");
         }
 
-        var id_user = userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("User Id Not Found"));
-        var userLog = new UserLog(id_user,"Environment",environment_id.toString(),"Read Environment", EnumAction.READ);
+        var id_user = userRepository.findById(userLog_id)
+                .orElseThrow(() -> new NotFoundException("User with ID " + userLog_id + " not found."));
+        var userLog = new UserLog(id_user, "Environment", environment_id.toString(), "Read Environment", EnumAction.READ);
         userLogRepository.save(userLog);
 
         return new EnvironmentDetailsDTO(environment);
@@ -53,40 +54,49 @@ public class EnvironmentServiceImp implements EnvironmentService {
 
     @Override
     public List<EnvironmentDetailsDTO> getAllEnvironment(Long userLog_id) {
-        var id_user = userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("User Id Not Found"));
-        var userLog = new UserLog(id_user,"Environment","Read All Environment", EnumAction.READ);
+        var id_user = userRepository.findById(userLog_id)
+                .orElseThrow(() -> new NotFoundException("User with ID " + userLog_id + " not found."));
+
+        var userLog = new UserLog(id_user, "Environment", "Read All Environments", EnumAction.READ);
         userLogRepository.save(userLog);
 
-        return this.environmentRepository.findEnvironmentByOperativeTrue().stream().map(EnvironmentDetailsDTO::new).toList();
+        return environmentRepository.findEnvironmentByOperativeTrue().stream()
+                .map(EnvironmentDetailsDTO::new)
+                .toList();
     }
 
     @Override
     public EnvironmentDetailsDTO createEnvironment(EnvironmentCreateDTO data, Long userLog_id) {
         try{
 
-            var rasp = raspberryRepository.findById(data.raspberry()).orElseThrow(()->new NotFoundException("Id Raspberry Not Found"));
+            var rasp = raspberryRepository.findById(data.raspberry())
+                    .orElseThrow(() -> new NotFoundException("Raspberry with ID " + data.raspberry() + " not found."));
             var environment = new Environment(data, rasp);
 
             Long id_environment = environmentRepository.save(environment).getId_environment();
 
-            Users users = this.userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("Id not found!"));
+            Users users = userRepository.findById(userLog_id)
+                    .orElseThrow(() -> new NotFoundException("User with ID " + userLog_id + " not found."));
 
-            var userLog = new UserLog(users,"Environment", id_environment.toString(),"Create new Environment", EnumAction.CREATE);
+            var userLog = new UserLog(users, "Environment", id_environment.toString(), "Created new Environment", EnumAction.CREATE);
             userLogRepository.save(userLog);
 
             return new EnvironmentDetailsDTO(environment);
 
         }catch (DataIntegrityViolationException e){
-            throw new ExistingEntityException("This Environment: "+data.environment_name()+" already exist");
+            throw new ExistingEntityException("This Environment: " + data.environment_name() + " already exist");
         }
     }
 
     @Override
     public EnvironmentDetailsDTO updateEnvironment(Long environment_id, EnvironmentUpdateDTO data, Long userLog_id) {
-        var user = userRepository.findById(userLog_id).orElseThrow(()->new NotFoundException("Id Environment Not Found"));
+        var user = userRepository.findById(userLog_id)
+                .orElseThrow(() -> new NotFoundException("User with ID " + userLog_id + " not found."));
 
-        var environment = environmentRepository.findById(environment_id).orElseThrow(()->new NotFoundException("Id Environment Not Found"));
-        if(!environment.isOperative()){
+        var environment = environmentRepository.findById(environment_id)
+                .orElseThrow(() -> new NotFoundException("Environment with ID " + environment_id + " not found."));
+
+        if (!environment.isOperative()) {
             throw new OperativeFalseException("The inactive environment cannot be updated.");
         }
 
@@ -113,40 +123,41 @@ public class EnvironmentServiceImp implements EnvironmentService {
         environmentRepository.save(environment);
         userLogRepository.save(userlog);
 
-
         return new EnvironmentDetailsDTO(environment);
     }
 
     @Override
     public void activateEnvironment(Long id_environment, Long userLog_id) {
-        var environment = environmentRepository.findById(id_environment).orElseThrow(()->new NotFoundException("Id Environment Not Found"));
-        if(environment.isOperative()){
-            throw new OpetativeTrueException("It is already activate");
+        var environment = environmentRepository.findById(id_environment)
+                .orElseThrow(() -> new NotFoundException("Environment with ID " + id_environment + " not found."));
+
+        if (environment.isOperative()) {
+            throw new OperativeTrueException("The environment with ID " + id_environment + " is already active.");
         }
         environment.setOperative(true);
-        Users user = this.userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("Id not found"));
-        var userLog = new UserLog(user,"Environment",id_environment.toString(),"Operative","Activated Environment",EnumAction.UPDATE);
+
+        Users user = userRepository.findById(userLog_id)
+                .orElseThrow(() -> new NotFoundException("User with ID " + userLog_id + " not found."));
+        var userLog = new UserLog(user, "Environment", id_environment.toString(), "Operative", "Activated Environment", EnumAction.UPDATE);
         environmentRepository.save(environment);
         userLogRepository.save(userLog);
-
-
     }
 
     @Override
     public void inactivateEnvironment(Long id_environment, Long userLog_id) {
-        var environment = environmentRepository.findById(id_environment).orElseThrow(()->new NotFoundException("Id Environment Not Found"));
-        if(!environment.isOperative()){
-            throw new OperativeFalseException("It is already inactivate");
+        var environment = environmentRepository.findById(id_environment)
+                .orElseThrow(() -> new NotFoundException("Environment with ID " + id_environment + " not found."));
+
+        if (!environment.isOperative()) {
+            throw new OperativeFalseException("The environment with ID " + id_environment + " is already inactive.");
         }
         environment.setOperative(false);
-        Users user = this.userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("Id not found"));
-        var userLog = new UserLog(user,"Environment",id_environment.toString(),"Operative","Inactivated Environment",EnumAction.UPDATE);
+
+        Users user = userRepository.findById(userLog_id)
+                .orElseThrow(() -> new NotFoundException("User with ID " + userLog_id + " not found."));
+        var userLog = new UserLog(user, "Environment", id_environment.toString(), "Operative", "Inactivated Environment", EnumAction.UPDATE);
         environmentRepository.save(environment);
         userLogRepository.save(userLog);
-
-
-
-
     }
 
 }

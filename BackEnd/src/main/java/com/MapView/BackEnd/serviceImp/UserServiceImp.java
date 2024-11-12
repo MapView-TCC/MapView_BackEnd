@@ -22,10 +22,10 @@ public class UserServiceImp implements UserService {
 
     @Override
     public UserDetailsDTO getUser(Long id_user) {
-        Users user = this.userRepository.findById(id_user).orElseThrow(() -> new NotFoundException("User Id not found"));
-        if(!user.status_check()){
+        Users user = this.userRepository.findById(id_user)
+                .orElseThrow(() -> new NotFoundException("User with ID " + id_user + " not found"));
+        if (!user.status_check()) {
             return null;
-
         }
         return new UserDetailsDTO(user);
     }
@@ -48,8 +48,9 @@ public class UserServiceImp implements UserService {
 
     @Override
     public void setPrivilege(Long user_id, RoleUser roleUser) {
-        var user = userRepository.findById(user_id).orElseThrow(()-> new NotFoundException("User Id Not Found"));
-        if(user.status_check()){
+        var user = userRepository.findById(user_id)
+                .orElseThrow(() -> new NotFoundException("User with ID " + user_id + " not found"));
+        if (user.status_check()) {
             user.setRole(roleUser);
             userRepository.save(user);
         }
@@ -58,18 +59,23 @@ public class UserServiceImp implements UserService {
 
     @Override
     public void activeUser(Long id_user) {
-       var userClass = this.userRepository.findById(id_user);
-       if (userClass.isPresent()){
-           var user = userClass.get();
-           user.setOperative(true);
-       }
+        var userClass = this.userRepository.findById(id_user);
+        if (userClass.isPresent()) {
+            var user = userClass.get();
+            user.setOperative(true);
+        } else {
+            throw new NotFoundException("User with ID " + id_user + " not found");
+        }
     }
+
     @Override
     public void inactivateUser(Long id_user) {
         var userClass = this.userRepository.findById(id_user);
-        if (userClass.isPresent()){
+        if (userClass.isPresent()) {
             var user = userClass.get();
             user.setOperative(false);
+        } else {
+            throw new NotFoundException("User with ID " + id_user + " not found");
         }
     }
 }

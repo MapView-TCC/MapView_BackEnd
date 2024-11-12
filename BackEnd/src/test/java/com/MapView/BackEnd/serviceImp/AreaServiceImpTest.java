@@ -57,7 +57,7 @@ public class AreaServiceImpTest {
             areaServiceImp.createArea(areaCreateDTO, 1L); // Tenta criar a área
         });
 
-        assertEquals("Id not found", exception.getMessage()); // Verifica se a mensagem da exceção é correta
+        assertEquals("User with ID 1 not found.", exception.getMessage()); // Verifica se a mensagem da exceção é correta
     }
 
     @Test
@@ -98,7 +98,7 @@ public class AreaServiceImpTest {
             areaServiceImp.getArea(userLogId, areaId);
         });  // Tenta obter a área
 
-        assertEquals("Area id not found", exception.getMessage()); // Verifica a mensagem da exceção
+        assertEquals("Area with ID 1 not found.", exception.getMessage()); // Verifica a mensagem da exceção
     }
 
     @Test

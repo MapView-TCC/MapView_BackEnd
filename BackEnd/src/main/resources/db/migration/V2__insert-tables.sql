@@ -108,13 +108,23 @@ INSERT INTO main_owner (cod_owner, id_cost_center, operative) VALUES
 
 -- Inserir novos equipamentos
 INSERT INTO equipment (cod_equipment, name_equipment, rfid, type, model, validity, admin_rights, observation, id_location, id_owner, operative) VALUES
-('JV-L C00A0', 'Notebook 25', 0, 'Notebook', 'NOTEBOOK_STANDARD', '2025-01-01', 'RITM003011184', 'Boa condição', 1, 1,  1),
-('CA-C 005A0', 'Notebook 26', 1, 'Notebook', 'NOTEBOOK_STANDARD', '2025-01-01', 'RITM003011185', 'Boa condição', 2, 1,  1),
-('CA-C 0057K', 'Notebook 27', 2, 'Notebook', 'NOTEBOOK_STANDARD', '2025-01-01', 'RITM003011186', 'Boa condição', 3, 1,  1),
-('JVL-C 0008M', 'Notebook 28', 3, 'Notebook', 'NOTEBOOK_STANDARD', '2025-01-01', 'RITM003011187', 'Boa condição', 4, 1,  1),
-('JVL-C 0009X', 'Notebook 29', 4, 'Notebook', 'NOTEBOOK_STANDARD', '2025-01-01', 'RITM003011188', 'Boa condição', 5, 1,  1),
-('CA-C 005HG', 'Notebook 30', 5, 'Notebook', 'NOTEBOOK_STANDARD', '2025-01-01', 'RITM003011189', 'Boa condição', 6, 1,  1),
-('CA-C 006E1', 'Notebook 31', 6, 'Notebook', 'NOTEBOOK_STANDARD', '2025-01-01', 'RITM003011190', 'Boa condição', 7, 1,  1);
+('JV-L C00A0', 'Notebook 25', 202105091004720, 'Notebook', 'NOTEBOOK_STANDARD', '2025-01-01', 'RITM003011184', 'Boa condição', 1, 1,  1),
+('CA-C 005A0', 'Notebook 26', 202105091004731, 'Notebook', 'NOTEBOOK_STANDARD', '2025-01-01', 'RITM003011185', 'Boa condição', 2, 1,  1),
+('CA-C 0057K', 'Notebook 27', 202105091004732, 'Notebook', 'NOTEBOOK_STANDARD', '2025-01-01', 'RITM003011186', 'Boa condição', 3, 1,  1),
+('JVL-C 0008M', 'Notebook 28', 200000000020249, 'Notebook', 'NOTEBOOK_STANDARD', '2025-01-01', 'RITM003011187', 'Boa condição', 4, 1,  1),
+('JVL-C 0009X', 'Notebook 29', 200000000020248, 'Notebook', 'NOTEBOOK_STANDARD', '2025-01-01', 'RITM003011188', 'Boa condição', 5, 1,  1),
+('CA-C 005HG', 'Notebook 30', 202105091004735, 'Notebook', 'NOTEBOOK_STANDARD', '2025-01-01', 'RITM003011189', 'Boa condição', 6, 1,  1),
+('CA-C 006E1', 'Notebook 31', 200000000020247, 'Notebook', 'NOTEBOOK_STANDARD', '2025-01-01', 'RITM003011190', 'Boa condição', 7, 1,  1);
+
+-- Inserir novos tracking history
+INSERT INTO tracking_history (datetime, id_equipment, id_environment, action, warning) VALUES
+(CURRENT_TIMESTAMP, 1, 1, 'ENTER', 'YELLOW'),
+(CURRENT_TIMESTAMP, 2, 1, 'ENTER', 'YELLOW'),
+(CURRENT_TIMESTAMP, 3, 1, 'ENTER', 'YELLOW'),
+(CURRENT_TIMESTAMP, 4, 1, 'ENTER', 'YELLOW'),
+(CURRENT_TIMESTAMP, 5, 1, 'ENTER', 'YELLOW'),
+(CURRENT_TIMESTAMP, 6, 1, 'ENTER', 'YELLOW'),
+(CURRENT_TIMESTAMP, 7, 1, 'ENTER', 'YELLOW');
 
 -- Inserir novos responsáveis
 INSERT INTO responsible (responsible_name, edv, id_classes, id_user, operative) VALUES

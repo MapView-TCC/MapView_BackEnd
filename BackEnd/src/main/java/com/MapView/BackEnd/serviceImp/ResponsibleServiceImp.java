@@ -1,12 +1,11 @@
 package com.MapView.BackEnd.serviceImp;
 
-import com.MapView.BackEnd.dtos.User.UserDetailsDTO;
 import com.MapView.BackEnd.entities.UserLog;
 import com.MapView.BackEnd.entities.Users;
 import com.MapView.BackEnd.enums.EnumAction;
 import com.MapView.BackEnd.infra.Exception.BlankErrorException;
 import com.MapView.BackEnd.infra.Exception.OperativeFalseException;
-import com.MapView.BackEnd.infra.Exception.OpetativeTrueException;
+import com.MapView.BackEnd.infra.Exception.OperativeTrueException;
 import com.MapView.BackEnd.repository.ClassesRepository;
 import com.MapView.BackEnd.repository.ResponsibleRepository;
 import com.MapView.BackEnd.repository.UserLogRepository;
@@ -17,8 +16,6 @@ import com.MapView.BackEnd.dtos.Responsible.ResponsibleDetailsDTO;
 import com.MapView.BackEnd.dtos.Responsible.ResponsibleUpdateDTO;
 import com.MapView.BackEnd.entities.Responsible;
 import com.MapView.BackEnd.infra.Exception.NotFoundException;
-import org.springframework.beans.BeanUtils;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -178,7 +175,7 @@ public class ResponsibleServiceImp implements ResponsibleService {
 
         var responsible = responsibleRepository.findById(id_Responsible).orElseThrow(() -> new NotFoundException("Id not found"));
         if (responsible.isOperative()){
-            throw new OpetativeTrueException("It is already activate");
+            throw new OperativeTrueException("It is already activate");
         }
         responsible.setOperative(true);
         Users user = this.userRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("Id not found"));

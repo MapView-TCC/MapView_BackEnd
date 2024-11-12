@@ -26,7 +26,8 @@ public class UserLogServiceImp implements UserLogService {
 
     @Override
     public UserLogDetailsDTO getUserLog(Long userLog_id) {
-        UserLog userLog = this.userLogRepository.findById(userLog_id).orElseThrow(() -> new NotFoundException("User Id not found"));
+        UserLog userLog = this.userLogRepository.findById(userLog_id)
+                .orElseThrow(() -> new NotFoundException("User Log with ID " + userLog_id + " not found"));
 
         return new UserLogDetailsDTO(userLog);
     }
@@ -39,24 +40,23 @@ public class UserLogServiceImp implements UserLogService {
 
     @Override
     public UserLogDetailsDTO createUserLog(UserLogCreateDTO data) {
-       try {
-           Users user = userRepository.findById(data.user_id())
-                   .orElseThrow(() -> new NotFoundException("User not found"));
+        try {
+            Users user = userRepository.findById(data.user_id())
+                    .orElseThrow(() -> new NotFoundException("User with ID " + data.user_id() + " not found"));
 
+            UserLog userLog = new UserLog(
+                    user,
+                    data.altered_table(),
+                    data.id_altered(),
+                    data.field(),
+                    data.description(),
+                    data.action());
 
-           UserLog userLog = new UserLog(
-                   user,
-                   data.altered_table(),
-                   data.id_altered(),
-                   data.field(),
-                   data.description(),
-                   data.action());
+            userLog = userLogRepository.save(userLog);
 
-           userLog = userLogRepository.save(userLog);
-
-           return new UserLogDetailsDTO(userLog);
-       } catch (Exception e){
-           throw new RuntimeException("Erro ao salvar o log de usuário ", e);
-       }
+            return new UserLogDetailsDTO(userLog);
+        } catch (Exception e) {
+            throw new RuntimeException("Error saving the user log", e);
+        }
     }
 }

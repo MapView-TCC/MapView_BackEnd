@@ -5,7 +5,7 @@ import com.MapView.BackEnd.dtos.EquipmentResponsible.EquipmentResponsibleSearchD
 import com.MapView.BackEnd.dtos.Responsible.ResponsibleDetailsDTO;
 import com.MapView.BackEnd.entities.*;
 import com.MapView.BackEnd.infra.Exception.OperativeFalseException;
-import com.MapView.BackEnd.infra.Exception.OpetativeTrueException;
+import com.MapView.BackEnd.infra.Exception.OperativeTrueException;
 import com.MapView.BackEnd.repository.EquipmentRepository;
 import com.MapView.BackEnd.repository.EquipmentResponsibleRepository;
 import com.MapView.BackEnd.repository.ResponsibleRepository;
@@ -16,10 +16,8 @@ import com.MapView.BackEnd.dtos.EquipmentResponsible.EquipmentResponsibleUpdateD
 import com.MapView.BackEnd.infra.Exception.NotFoundException;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
-import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.Root;
 import org.springframework.stereotype.Service;
 import jakarta.persistence.criteria.*;
@@ -50,7 +48,7 @@ public class  EquipmentResponsibleServiceImp implements EquipmentResponsibleServ
     @Override
     public EquipmentResponsibleDetailsDTO getEquipmentResponsible(Long id_equip_resp) {
         EquipmentResponsible equipmentResponsible = this.equipmentResponsibleRepository.findById(id_equip_resp)
-                .orElseThrow(() -> new NotFoundException("Equipment responsible id not found"));
+                .orElseThrow(() -> new NotFoundException("Equipment Responsible with ID " + id_equip_resp + " not found."));
 
         return new EquipmentResponsibleDetailsDTO(equipmentResponsible);
     }
@@ -71,7 +69,7 @@ public class  EquipmentResponsibleServiceImp implements EquipmentResponsibleServ
         EquipmentResponsible equipmentResponsible = new EquipmentResponsible(data, equipment, responsible);
 
         equipmentResponsibleRepository.save(equipmentResponsible);
-        System.out.println("Post: Equipmentresponsible ");
+        System.out.println("Post: Equipment responsible ");
 
         return new EquipmentResponsibleDetailsDTO(equipmentResponsible);
 
@@ -81,40 +79,37 @@ public class  EquipmentResponsibleServiceImp implements EquipmentResponsibleServ
     public EquipmentResponsibleDetailsDTO updateEquipmentResponsible(Long id_equip_resp, EquipmentResponsibleUpdateDTO dados) {
 
         var equipmentResponsible = equipmentResponsibleRepository.findById(id_equip_resp)
-                .orElseThrow(() -> new NotFoundException("Equipment responsible id not found"));
+                .orElseThrow(() -> new NotFoundException("Equipment Responsible with ID " + id_equip_resp + " not found."));
 
-        if (dados.equipment() != null){
+        if (dados.equipment() != null) {
             var equipment = equipmentRepository.findById(dados.equipment())
-                    .orElseThrow(() -> new NotFoundException("Equipment id not found"));
-            if (!equipment.isOperative()){
-                throw new OperativeFalseException("The inactive equipment cannot be accessed.");
+                    .orElseThrow(() -> new NotFoundException("Equipment with ID " + dados.equipment() + " not found."));
+            if (!equipment.isOperative()) {
+                throw new OperativeFalseException("Cannot assign inactive equipment.");
             }
             equipmentResponsible.setEquipment(equipment);
         }
 
-        if (dados.responsible() != null){
+        if (dados.responsible() != null) {
             var responsible = responsibleRepository.findById(dados.responsible())
-                    .orElseThrow(() -> new NotFoundException("Responsible id not found"));
-            if (!responsible.isOperative()){
-                throw new OperativeFalseException("The inactive responsible cannot be accessed.");
+                    .orElseThrow(() -> new NotFoundException("Responsible with ID " + dados.responsible() + " not found."));
+            if (!responsible.isOperative()) {
+                throw new OperativeFalseException("Cannot assign inactive responsible.");
             }
             equipmentResponsible.setResponsible(responsible);
         }
 
-        if (dados.start_usage() != null){
+        if (dados.start_usage() != null) {
             equipmentResponsible.setStart_usage(dados.start_usage());
         }
 
         if (dados.end_usage() != null) {
-            // ver se a data inicial não está vazia
-            if (dados.start_usage() == null) {
-                throw new IllegalArgumentException("Start date must be set before setting the end date.");
+            if (equipmentResponsible.getStart_usage() == null) {
+                throw new IllegalArgumentException("Start date is required before setting the end date.");
             }
-            // O método isBefore é usado para comparar instantes de tempo, datas e horas.
             if (dados.end_usage().isBefore(dados.start_usage())) {
-                throw new IllegalArgumentException("The end date must be greater than or equal to the start date.");
+                throw new IllegalArgumentException("End date must be later than start date.");
             }
-
             equipmentResponsible.setEnd_usage(dados.end_usage());
         }
 
@@ -125,18 +120,22 @@ public class  EquipmentResponsibleServiceImp implements EquipmentResponsibleServ
 
     @Override
     public void activateEquipmentResponsible(Long id_equip_resp) {
-        var equipmentResponsible = equipmentResponsibleRepository.findById(id_equip_resp) .orElseThrow(() -> new NotFoundException("Equipment id not found"));
-        if (equipmentResponsible.isOperative()){
-            throw new OpetativeTrueException("It is already activate");
+        var equipmentResponsible = equipmentResponsibleRepository.findById(id_equip_resp)
+                .orElseThrow(() -> new NotFoundException("Equipment Responsible with ID " + id_equip_resp + " not found."));
+
+        if (equipmentResponsible.isOperative()) {
+            throw new OperativeTrueException("Equipment Responsible is already active.");
         }
         equipmentResponsible.setOperative(true);
     }
 
     @Override
     public void inactivateEquipmentResponsible(Long id_equip_resp) {
-        var equipmentResponsible = equipmentResponsibleRepository.findById(id_equip_resp).orElseThrow(() -> new NotFoundException("Equipment id not found"));
-        if (!equipmentResponsible.isOperative()){
-            throw new OperativeFalseException("It is already inactivate");
+        var equipmentResponsible = equipmentResponsibleRepository.findById(id_equip_resp)
+                .orElseThrow(() -> new NotFoundException("Equipment Responsible with ID " + id_equip_resp + " not found."));
+
+        if (!equipmentResponsible.isOperative()) {
+            throw new OperativeFalseException("Equipment Responsible is already inactive.");
         }
         equipmentResponsible.setOperative(false);
     }
@@ -188,10 +187,7 @@ public class  EquipmentResponsibleServiceImp implements EquipmentResponsibleServ
             return new EquipmentResponsibleSearchDetailsDTO(new EquipmentDetailsDTO(query),responsibles);
 
         }catch (NoResultException e){
-            throw new NotFoundException("Equipment not found");
+            throw new NotFoundException("Equipment with code " + code + " not found or is inactive.");
         }
-
-
     }
-
 }

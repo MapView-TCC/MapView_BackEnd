@@ -137,7 +137,7 @@ public class ClassesServiceImpTest {
             classesServiceImp.getClasseById(classesId, userlogId);
         });
 
-        assertEquals("Classes id Not Found", exception.getMessage());
+        assertEquals("Class with ID 1 not found", exception.getMessage());
     }
 
     // Teste do método getClasseByName
@@ -217,7 +217,7 @@ public class ClassesServiceImpTest {
                 classesServiceImp.updateClasses(classesId, new ClassesUpdateDTO(EnumCourse.DIGITAL_SOLUTIONS, "teste", userLogId), userLogId)
         );
 
-        assertEquals("Class Id Not Found", exception.getMessage());
+        assertEquals("Class with ID 1 not found", exception.getMessage());
     }
 
     // Teste do método getAllClasses

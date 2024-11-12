@@ -209,7 +209,7 @@ public class CostCenterServiceImpTest {
             costCenterServiceImp.createCostCenter(createDTO, userLogId);
         });
 
-        assertEquals("Id not found", exception.getMessage());
+        assertEquals("User with ID 1 not found", exception.getMessage());
     }
 
     @Test
@@ -228,7 +228,7 @@ public class CostCenterServiceImpTest {
             costCenterServiceImp.getCostCenter(costCenterId, userLogId);
         });
 
-        assertEquals("Id not found", exception.getMessage());
+        assertEquals("CostCenter with ID 1 not found", exception.getMessage());
     }
 
 }
