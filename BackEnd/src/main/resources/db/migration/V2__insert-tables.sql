@@ -22,11 +22,6 @@ INSERT INTO users (email,name,id_role, operative) VALUES
 ('Campinas.ETS@br.bosch.com','ETS Campinas',2,1);
 
 
-
-
-
-
-
 -- Inserir novos registros de histórico de acesso
 INSERT INTO access_history (id_user, login_datetime, logout_datetime) VALUES
 (1, '2024-09-10 08:00:00', '2024-09-10 17:00:00'),

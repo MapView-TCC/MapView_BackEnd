@@ -4,6 +4,7 @@ import com.MapView.BackEnd.dtos.Permission.PermissionCreateDTO;
 import com.MapView.BackEnd.entities.Permission;
 import com.MapView.BackEnd.entities.Role;
 import com.MapView.BackEnd.entities.Users;
+import com.MapView.BackEnd.enums.EnumRole;
 import com.MapView.BackEnd.infra.Exception.NotFoundException;
 import com.MapView.BackEnd.repository.PermissionRepository;
 import com.MapView.BackEnd.repository.RoleRespository;
@@ -25,9 +26,9 @@ public class PermissionServiceImp {
         this.roleRespository = roleRespository;
     }
 
-    public Permission createPermission(PermissionCreateDTO permissionCreateDTO){
-        Users user = this.userRepository.findById(permissionCreateDTO.id_user()).orElseThrow(()-> new NotFoundException("User not found"));
-        Role role = this.roleRespository.findByName(permissionCreateDTO.role().toString()).orElseThrow(()-> new NotFoundException("Role not found"));
+    public Permission createPermission(Long user_id, EnumRole roleEnum){
+        Users user = this.userRepository.findById(user_id).orElseThrow(()-> new NotFoundException("User not found"));
+        Role role = this.roleRespository.findByName(roleEnum.toString()).orElseThrow(()-> new NotFoundException("Role not found"));
 
         Permission permission = new Permission(user,role);
         Permission savedPermission = permissionRepository.save(permission);

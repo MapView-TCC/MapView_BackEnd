@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("ap1/v1/user")
+@RequestMapping("api/v1/user")
 @Tag(name = "User", description = "Operations related to user management")
 public class UserController {
 
