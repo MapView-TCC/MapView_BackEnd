@@ -3,6 +3,7 @@ package com.MapView.BackEnd.controller;
 import com.MapView.BackEnd.dtos.Permission.PermissionCreateDTO;
 import com.MapView.BackEnd.dtos.Permission.PermissionDetailsDTO;
 import com.MapView.BackEnd.entities.Role;
+import com.MapView.BackEnd.enums.EnumRole;
 import com.MapView.BackEnd.serviceImp.PermissionServiceImp;
 import jakarta.transaction.Transactional;
 import org.springframework.http.ResponseEntity;
@@ -45,8 +46,8 @@ public class PermissionsController {
     }
     @PostMapping
     @Transactional
-    public PermissionDetailsDTO createPermission(PermissionCreateDTO permissionCreateDTO){
-        return new PermissionDetailsDTO(this.permissionServiceImp.createPermission(permissionCreateDTO));
+    public PermissionDetailsDTO createPermission(@RequestParam Long user_id, @RequestParam EnumRole role){
+        return new PermissionDetailsDTO(this.permissionServiceImp.createPermission(user_id,role));
     }
 
 
