@@ -1,10 +1,12 @@
+
+-- Inserir novas áreas
+
 INSERT INTO area (area_code, area_name, operative) VALUES
 ('ETS', 'Engineering Technical School', 1),
 ('BTC', 'Bosch Training Center', 1),
 ('BD', 'Bosch Digital', 1),
 ('PT', 'Power Tools', 1),
 ('BISB', 'Bosch Integrated Solutions Brazil', 1);
-
 
 -- Inserir novas roles
 INSERT INTO roles (name) VALUES
@@ -78,6 +80,10 @@ INSERT INTO building (building_code, operative) VALUES
 ('Ca590', 1),
 ('Ca600', 1);
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 7dc9ddf74a4dcc18956878ffc03484cf70caa967
 
 -- Inserir novos Raspberry Pi
 INSERT INTO raspberry (id_raspberry, id_building, id_area, operative) VALUES
