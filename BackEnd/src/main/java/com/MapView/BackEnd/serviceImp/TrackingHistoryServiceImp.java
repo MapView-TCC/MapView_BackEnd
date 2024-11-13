@@ -105,7 +105,7 @@ public class TrackingHistoryServiceImp implements TrackingHistoryService {
     @Async // Indica que o método pode ser executado de forma assíncrona.
     @Override
     @CrossOrigin("http://localhost:3001") // Permite que requisições de um domínio específico (localhost:3001) acessem este endpoint.
-    public TrakingHistoryResponsibleDetails createTrackingHistory(TrackingHistoryCreateDTO dados) {
+    public TrackingHistoryResponsibleDetails createTrackingHistory(TrackingHistoryCreateDTO dados) {
         // Busca um ambiente pelo ID fornecido nos dados. Se não for encontrado, lança uma exceção NotFoundException.
         Environment local_tracking = environmentRepository.findById(dados.environment())
                 .orElseThrow(() -> new NotFoundException("Id not found"));
@@ -126,7 +126,7 @@ public class TrackingHistoryServiceImp implements TrackingHistoryService {
             // Envia a atualização para o tópico "/equip". - AQUI É O WEB SOCKET?
             template.convertAndSend("/equip",trackingHistory);
 
-            return new TrakingHistoryResponsibleDetails(trackingHistory,getResponsibles(trackingHistory));
+            return new TrackingHistoryResponsibleDetails(trackingHistory,getResponsibles(trackingHistory));
         }
 
         // Busca o último histórico de rastreamento para o equipamento encontrado, ordenando por data e hora em ordem decrescente.
@@ -156,7 +156,7 @@ public class TrackingHistoryServiceImp implements TrackingHistoryService {
                     if(equipment.get().getName_equipment() == null){
                         trackingHistory.setWarning(EnumWarnings.RED);
                     }
-                    TrakingHistoryResponsibleDetails detailDTO =  new TrakingHistoryResponsibleDetails(trackingHistory,getResponsibles(trackingHistory));
+                    TrackingHistoryResponsibleDetails detailDTO =  new TrackingHistoryResponsibleDetails(trackingHistory,getResponsibles(trackingHistory));
                     template.convertAndSend("/equip",detailDTO);
 
                     return detailDTO;
@@ -169,7 +169,7 @@ public class TrackingHistoryServiceImp implements TrackingHistoryService {
                 if(equipment.get().getName_equipment() == null){
                     trackingHistory.setWarning(EnumWarnings.RED);
                 }
-                TrakingHistoryResponsibleDetails detailDTO =  new TrakingHistoryResponsibleDetails(trackingHistory,getResponsibles(trackingHistory));
+                TrackingHistoryResponsibleDetails detailDTO =  new TrackingHistoryResponsibleDetails(trackingHistory,getResponsibles(trackingHistory));
                 template.convertAndSend("/equip",detailDTO);
 
                 return detailDTO;
@@ -180,7 +180,7 @@ public class TrackingHistoryServiceImp implements TrackingHistoryService {
                 System.out.println("_-----3--------");
                 // Salva novo histórico de rastreamento marcando a ação como 'OUT' e cor como 'YELLOW'.
                 TrackingHistory trackingHistory = trackingHistoryRepository.save(new TrackingHistory(local_tracking, equipment.get(),EnumTrackingAction.OUT, EnumWarnings.YELLOW));
-                TrakingHistoryResponsibleDetails detailDTO =  new TrakingHistoryResponsibleDetails(trackingHistory,getResponsibles(trackingHistory));
+                TrackingHistoryResponsibleDetails detailDTO =  new TrackingHistoryResponsibleDetails(trackingHistory,getResponsibles(trackingHistory));
                 template.convertAndSend("/equip",detailDTO);
 
                 return detailDTO;
@@ -190,7 +190,7 @@ public class TrackingHistoryServiceImp implements TrackingHistoryService {
             if(equipment.get().getName_equipment() == null){
                 trackingHistory.setWarning(EnumWarnings.RED);
             }System.out.println("_-----4--------");
-            TrakingHistoryResponsibleDetails detailDTO =  new TrakingHistoryResponsibleDetails(trackingHistory,getResponsibles(trackingHistory));
+            TrackingHistoryResponsibleDetails detailDTO =  new TrackingHistoryResponsibleDetails(trackingHistory,getResponsibles(trackingHistory));
             template.convertAndSend("/equip",detailDTO);
 
             return detailDTO;
@@ -201,7 +201,7 @@ public class TrackingHistoryServiceImp implements TrackingHistoryService {
         if(equipment.get().getName_equipment() == null){
             outtrackingHistory.setWarning(EnumWarnings.RED);
         }
-        TrakingHistoryResponsibleDetails detailDTO =  new TrakingHistoryResponsibleDetails(outtrackingHistory,getResponsibles(outtrackingHistory));
+        TrackingHistoryResponsibleDetails detailDTO =  new TrackingHistoryResponsibleDetails(outtrackingHistory,getResponsibles(outtrackingHistory));
         template.convertAndSend("/equip",detailDTO);
 
         // Salva novo histórico de rastreamento com o ambiente atual e ação 'ENTER'.
@@ -209,17 +209,16 @@ public class TrackingHistoryServiceImp implements TrackingHistoryService {
         if(equipment.get().getName_equipment() == null){
             trackingHistory.setWarning(EnumWarnings.RED);
         }
-        TrakingHistoryResponsibleDetails detailsInDTO =  new TrakingHistoryResponsibleDetails(trackingHistory,getResponsibles(trackingHistory));
+        TrackingHistoryResponsibleDetails detailsInDTO =  new TrackingHistoryResponsibleDetails(trackingHistory,getResponsibles(trackingHistory));
         template.convertAndSend("/equip",detailsInDTO);
 
         return detailsInDTO;
     }
 
-    public List<Responsible>getResponsibles(TrackingHistory trackingHistory){
+    public List<Responsible> getResponsibles(TrackingHistory trackingHistory) {
         List<Responsible> responsible = new ArrayList<>();
         List<EquipmentResponsible> equipmentResponsibles = equipmentResponsibleRepository.findByEquipment(trackingHistory.getEquipment());
-
-        for (EquipmentResponsible responsible1: equipmentResponsibles){
+        for (EquipmentResponsible responsible1 : equipmentResponsibles) {
             responsible.add(responsible1.getResponsible());
         }
         return responsible;

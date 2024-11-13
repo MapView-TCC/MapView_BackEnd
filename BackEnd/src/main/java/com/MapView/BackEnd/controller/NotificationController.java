@@ -39,7 +39,7 @@ public class NotificationController {
         var notification = notificationServiceImp.createNotification(data);
         var uri = builder.path("/api/v1/notification/{id}").buildAndExpand(notification.id_notification()).toUri();
         return ResponseEntity.created(uri).body(new NotificationDetailsDTO(notification.id_notification(), notification.code(), notification.name_equipment(),
-                notification.type(), notification.environment_name(), notification.post_name()));
+                notification.type(), notification.environment_name(), notification.post_name(), notification.validity()));
     }
 
     @Operation(summary = "Get notification by ID", description = "Retrieve notification details by ID.")

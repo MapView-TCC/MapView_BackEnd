@@ -3,7 +3,7 @@ package com.MapView.BackEnd.serviceImp;
 import com.MapView.BackEnd.dtos.TrackingHistory.TrackingHistoryCreateDTO;
 import com.MapView.BackEnd.dtos.TrackingHistory.TrackingHistoryDetailsDTO;
 import com.MapView.BackEnd.dtos.TrackingHistory.TrackingHistoryWrongLocationDTO;
-import com.MapView.BackEnd.dtos.TrackingHistory.TrakingHistoryResponsibleDetails;
+import com.MapView.BackEnd.dtos.TrackingHistory.TrackingHistoryResponsibleDetails;
 import com.MapView.BackEnd.entities.*;
 import com.MapView.BackEnd.enums.EnumTrackingAction;
 import com.MapView.BackEnd.enums.EnumWarnings;
@@ -22,9 +22,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.test.context.ActiveProfiles;
 
-import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -175,7 +173,7 @@ public class TrackingHistoryServiceImpTest {
         // Configura para salvar e retornar o trackingHistory criado
         when(trackingHistoryRepository.save(any(TrackingHistory.class))).thenReturn(trackingHistory);
 
-        TrakingHistoryResponsibleDetails result = trackingHistoryServiceImp.createTrackingHistory(createDTO);
+        TrackingHistoryResponsibleDetails result = trackingHistoryServiceImp.createTrackingHistory(createDTO);
 
         System.out.println(result);
 

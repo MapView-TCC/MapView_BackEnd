@@ -10,7 +10,7 @@ import com.MapView.BackEnd.enums.EnumWarnings;
 import java.time.LocalDateTime;
 import java.util.List;
 
-public record TrakingHistoryResponsibleDetails (Long id_tracking,
+public record TrackingHistoryResponsibleDetails(Long id_tracking,
                                                 LocalDateTime datetime,
                                                 Equipment equipment,
                                                 Environment environment,
@@ -18,7 +18,7 @@ public record TrakingHistoryResponsibleDetails (Long id_tracking,
                                                 EnumWarnings warning,
                                                 List<Responsible> responsibles) {
 
-    public TrakingHistoryResponsibleDetails(TrackingHistory trackingHistory,List<Responsible> responsibles) {
+    public TrackingHistoryResponsibleDetails(TrackingHistory trackingHistory, List<Responsible> responsibles) {
         this(trackingHistory.getId(), trackingHistory.getDatetime(), trackingHistory.getEquipment(),
                 trackingHistory.getEnvironment(), trackingHistory.getAction(),
                 trackingHistory.getWarning(),responsibles);
