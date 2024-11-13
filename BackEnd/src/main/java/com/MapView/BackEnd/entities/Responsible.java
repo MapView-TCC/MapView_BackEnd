@@ -1,6 +1,7 @@
 package com.MapView.BackEnd.entities;
 
 import com.MapView.BackEnd.dtos.Responsible.ResponsibleCrateDTO;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
@@ -35,7 +36,7 @@ public class Responsible {
     @JsonIgnore
     private boolean operative;
 
-    @OneToMany(mappedBy = "responsible",fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "responsible")
 
     private List<EquipmentResponsible> equipmentResponsibles = new ArrayList<>();
 

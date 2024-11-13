@@ -71,26 +71,30 @@ public class MainOwnerServiceImp implements MainOwnerService {
 
     @Override
     public MainOwnerDetailsDTO createMainOwner(MainOwnerCreateDTO data,Long userLog_id) {
-        try {
-            Users user = this.userRepository.findById(userLog_id)
-                    .orElseThrow(() -> new NotFoundException("User ID not found: " + userLog_id));
-            CostCenter costCenter = costCenterRepository.findById(data.costCenter())
-                    .orElseThrow(() -> new NotFoundException("Cost Center ID not found: " + data.costCenter()));
+        MainOwner owner  = mainOwnerRepository.findByCodOwner(data.cod_owner()).orElse(null);
+        if (owner != null) {
+            try {
+                Users user = this.userRepository.findById(userLog_id)
+                        .orElseThrow(() -> new NotFoundException("User ID not found: " + userLog_id));
+                CostCenter costCenter = costCenterRepository.findById(data.costCenter())
+                        .orElseThrow(() -> new NotFoundException("Cost Center ID not found: " + data.costCenter()));
 
-            MainOwner mainOwner = new MainOwner(data, costCenter);
-            mainOwner = mainOwnerRepository.save(mainOwner);
+                MainOwner mainOwner = new MainOwner(data, costCenter);
+                mainOwner = mainOwnerRepository.save(mainOwner);
 
 
-            UserLog userLog = new UserLog(user, "MainOwner",
-                    mainOwner.getId_owner() != null ? mainOwner.getId_owner().toString() : "N/A",
-                    "Create new MainOwner", EnumAction.CREATE);
-            userLogRepository.save(userLog);
+                UserLog userLog = new UserLog(user, "MainOwner",
+                        mainOwner.getId_owner() != null ? mainOwner.getId_owner().toString() : "N/A",
+                        "Create new MainOwner", EnumAction.CREATE);
+                userLogRepository.save(userLog);
 
-            return new MainOwnerDetailsDTO(mainOwner);
+                return new MainOwnerDetailsDTO(mainOwner);
 
-        } catch (DataIntegrityViolationException e){
-            throw new ExistingEntityException("A Main Owner with these values already exists.");
+            } catch (DataIntegrityViolationException e) {
+                throw new ExistingEntityException("A Main Owner with these values already exists.");
+            }
         }
+        return new MainOwnerDetailsDTO(owner);
     }
 
     @Override

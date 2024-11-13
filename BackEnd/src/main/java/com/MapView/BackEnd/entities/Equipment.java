@@ -5,8 +5,10 @@ import com.MapView.BackEnd.enums.EnumModelEquipment;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.Cascade;
 
 import java.time.LocalDate;
 import java.util.Set;
@@ -39,21 +41,24 @@ public class Equipment {
 
     @OneToOne
     @JoinColumn(name = "id_location")
+    @Cascade(org.hibernate.annotations.CascadeType.MERGE)
     private Location location;
 
     @OneToOne
     @JoinColumn(name = "id_owner")
+    @Cascade(org.hibernate.annotations.CascadeType.MERGE)
     private MainOwner owner;
 
     @ManyToOne
     @JoinColumn(name = "id_image")
+    @Cascade(org.hibernate.annotations.CascadeType.MERGE)
     private Image id_image;
 
     @JsonIgnore
     private boolean operative;
 
     @OneToMany(mappedBy = "equipment")
-    @JsonManagedReference
+
     private Set<EquipmentResponsible> equipmentResponsibles;
 
 
@@ -83,7 +88,8 @@ public class Equipment {
         this.operative = true;
     }
     public Equipment(Long rfid) {
-        this.id_equipment = null;
+
+        this.code = null;
         this.rfid = rfid;
         this.type = null;
         this.model = null;

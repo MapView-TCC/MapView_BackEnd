@@ -150,7 +150,7 @@ public class RegisterServiceImp implements RegisterService {
 
         // Atualizar dados básicos do Equipment
         if (data.name_equipment() != null) {
-            if (data.name_equipment().length() < 8){
+            if (data.name_equipment().length() < 8) {
                 throw new IllegalArgumentException("O nome do equipamento deve ser 8 ou maior caracteres.");
             }
             equipment.setName_equipment(data.name_equipment());
@@ -171,7 +171,7 @@ public class RegisterServiceImp implements RegisterService {
         if (data.validity() != null) {
             try {
                 equipment.setValidity(getStartDateFromQuarter(data.validity()));
-            }catch (IllegalArgumentException e ){
+            } catch (IllegalArgumentException e) {
                 throw new IllegalArgumentException("Fomato de data enviado errado");
             }
 
@@ -184,11 +184,11 @@ public class RegisterServiceImp implements RegisterService {
         if (data.observation() != null) {
             equipment.setObservation(data.observation());
         }
-        if (data.id_environment() != null){
+        if (data.id_environment() != null) {
             Location location = new Location();
 
             if (data.post() != null) {
-            System.out.println(data.post());
+                System.out.println(data.post());
                 Post post = postRepository.findByPost(data.post()).orElse(null);
                 System.out.println(post);
                 if (post == null) {
@@ -202,12 +202,12 @@ public class RegisterServiceImp implements RegisterService {
             location.setEnvironment(environment);
 
 
-            Location location1= locationRepository.findByPostAndEnvironment(location.getPost(),location.getEnvironment()).orElse(null);
+            Location location1 = locationRepository.findByPostAndEnvironment(location.getPost(), location.getEnvironment()).orElse(null);
 
-            if ( location1 != null){
-                if (equipmentRepository.existsByLocation(location1)){
-                    if (equipment.getLocation().getId_location() != location1.getId_location()){
-                        Equipment equipmentByLocation = equipmentRepository.findByLocation(location1).orElseThrow(()-> new NotFoundException("Equipment by location not found"));
+            if (location1 != null) {
+                if (equipmentRepository.existsByLocation(location1)) {
+                    if (equipment.getLocation().getId_location() != location1.getId_location()) {
+                        Equipment equipmentByLocation = equipmentRepository.findByLocation(location1).orElseThrow(() -> new NotFoundException("Equipment by location not found"));
                         equipmentByLocation.setLocation(null);
                         equipmentRepository.save(equipmentByLocation);
                         equipment.setLocation(location1);
@@ -221,11 +221,9 @@ public class RegisterServiceImp implements RegisterService {
         }
 
 
-
-
-        if(data.costCenter_name() != null){
+        if (data.costCenter_name() != null) {
             CostCenter costCenter = costCenterRepository.findByCostCenter(data.costCenter_name()).orElse(null);
-            if (data.costCenter_name() != equipment.getOwner().getCostCenter().getCostCenter()){
+            if (data.costCenter_name() != equipment.getOwner().getCostCenter().getCostCenter()) {
 
 
                 if (costCenter == null) {
@@ -236,41 +234,32 @@ public class RegisterServiceImp implements RegisterService {
             }
         }
 
-        if (data.id_owner() != null){
-            if(data.id_owner() != equipment.getOwner().getCodOwner()){
-                MainOwner mainOwner =  mainOwnerRepository.findByCodOwner(data.id_owner()).orElse(null);
-                if (mainOwner == null){
-                    MainOwner newMainOwner = mainOwnerRepository.save(new MainOwner(data.id_owner(),equipment.getOwner().getCostCenter()));
+        if (data.id_owner() != null) {
+            if (data.id_owner() != equipment.getOwner().getCodOwner()) {
+                MainOwner mainOwner = mainOwnerRepository.findByCodOwner(data.id_owner()).orElse(null);
+                if (mainOwner == null) {
+                    MainOwner newMainOwner = mainOwnerRepository.save(new MainOwner(data.id_owner(), equipment.getOwner().getCostCenter()));
                     equipment.setOwner(newMainOwner);
                 }
             }
         }
 
 
-
-        if(data.dataResponsible() != null){
-
+        if (data.dataResponsible() != null) {
             for (ResponsibleResgisterDTO responsibleDTO : data.dataResponsible()) {
-                Responsible responsible = responsibleRepository.findByEdv(responsibleDTO.edv())
-                        .orElse(null);
-
-
-                Classes classes = classesRepository.findByClasses(responsibleDTO.name_classes()).orElse(null);
-                if (classes == null){
-                    classes = classesRepository.save(new Classes(responsibleDTO.enumCourse(),responsibleDTO.name_classes(),userLog,LocalDate.now()));
-
-                }else {
-                    classes.setEnumCourse(responsibleDTO.enumCourse());
-                    responsible.setClasses(classesRepository.save(classes));
+                Responsible responsible = responsibleRepository.findByEdv(responsibleDTO.edv()).orElse(null);
+                if (responsible == null) {
+                    Classes classes = classesRepository.findByClasses(responsibleDTO.name_classes()).orElse(null);
+                    if (classes == null) {
+                        classes = classesRepository.save(new Classes(responsibleDTO.enumCourse(), responsibleDTO.name_classes(), userLog, LocalDate.now()));
+                    } else {
+                        classes.setEnumCourse(responsibleDTO.enumCourse());
+                    }
+                    responsible = responsibleRepository.save(new Responsible(responsibleDTO.responsible_name(), responsibleDTO.edv(), classes, userLog));
                 }
-
-
-                if(responsible == null){
-                    Responsible newResponsible = responsibleRepository.save(new Responsible(responsibleDTO.responsible_name(),responsibleDTO.edv(),classes,userLog));
-                    equipmentResponsibleServiceImp.createEquipmentResponsible(new EquipmentResponsibleCreateDTO(equipment.getId_equipment(), newResponsible.getId_responsible(),LocalDate.now(),null));
-                }
-
-                responsibleRepository.save(responsible);
+                equipmentResponsibleServiceImp.createEquipmentResponsible(
+                        new EquipmentResponsibleCreateDTO(equipment.getId_equipment(), responsible.getId_responsible(), LocalDate.now(), null)
+                );
             }
         }
         equipmentRepository.save(equipment);

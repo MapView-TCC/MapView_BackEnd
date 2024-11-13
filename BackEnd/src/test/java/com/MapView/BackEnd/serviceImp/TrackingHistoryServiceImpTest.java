@@ -3,7 +3,7 @@ package com.MapView.BackEnd.serviceImp;
 import com.MapView.BackEnd.dtos.TrackingHistory.TrackingHistoryCreateDTO;
 import com.MapView.BackEnd.dtos.TrackingHistory.TrackingHistoryDetailsDTO;
 import com.MapView.BackEnd.dtos.TrackingHistory.TrackingHistoryWrongLocationDTO;
-import com.MapView.BackEnd.dtos.TrackingHistory.TrackingHistoryResponsibleDetails;
+import com.MapView.BackEnd.dtos.TrackingHistory.TrakingResponsible;
 import com.MapView.BackEnd.entities.*;
 import com.MapView.BackEnd.enums.EnumTrackingAction;
 import com.MapView.BackEnd.enums.EnumWarnings;
@@ -173,7 +173,7 @@ public class TrackingHistoryServiceImpTest {
         // Configura para salvar e retornar o trackingHistory criado
         when(trackingHistoryRepository.save(any(TrackingHistory.class))).thenReturn(trackingHistory);
 
-        TrackingHistoryResponsibleDetails result = trackingHistoryServiceImp.createTrackingHistory(createDTO);
+        TrackingHistoryDetailsDTO result = trackingHistoryServiceImp.createTrackingHistory(createDTO);
 
         System.out.println(result);
 

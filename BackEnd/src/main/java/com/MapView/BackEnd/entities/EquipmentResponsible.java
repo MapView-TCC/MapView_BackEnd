@@ -3,6 +3,9 @@ package com.MapView.BackEnd.entities;
 import com.MapView.BackEnd.dtos.EquipmentResponsible.EquipmentResponsibleCreateDTO;
 import com.MapView.BackEnd.dtos.Responsible.ResponsibleCrateDTO;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.cglib.core.Local;
@@ -23,14 +26,18 @@ public class EquipmentResponsible {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id_equip_resp;
 
-    @ManyToOne
+    @ManyToOne()
+
     @JoinColumn(name = "id_equipment", nullable = false)
-    @JsonBackReference
+    @JsonIgnoreProperties({"equipmentResponsibles", "otherPropertiesToIgnore"}) // Ignora o relacionamento com "equipmentResponsibles" em Responsible
+    @JsonIgnore
     private Equipment equipment;
 
     @ManyToOne()
+
     @JoinColumn(name = "id_responsible", nullable = false )
-    @JsonBackReference
+    @JsonIgnoreProperties({"equipmentResponsibles", "otherPropertiesToIgnore"}) // Ignora o relacionamento com "equipmentResponsibles" em Responsible
+
     private Responsible responsible;
 
     private LocalDate start_usage;
