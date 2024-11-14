@@ -121,7 +121,7 @@ public class TrackingHistoryServiceImp implements TrackingHistoryService {
             // Salva um novo histórico de rastreamento com o RFID e ambiente encontrado, marcando como 'RED'.
 
             // Cria um novo equipamento com um UUID aleatório e o RFID fornecido.
-            Equipment emptyEquipment = equipmentRepository.save(new Equipment(UUID.randomUUID().toString().substring(0,8), dados.rfid()));
+            Equipment emptyEquipment = equipmentRepository.save(new Equipment(dados.rfid()));
             TrackingHistory trackingHistory = trackingHistoryRepository.save(new TrackingHistory(emptyEquipment, local_tracking,EnumTrackingAction.ENTER, EnumWarnings.RED));
 
             trackingHistoryRepository.save(trackingHistory);  // Salva o histórico de rastreamento.
