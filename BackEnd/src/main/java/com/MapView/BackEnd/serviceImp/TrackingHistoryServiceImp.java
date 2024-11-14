@@ -45,7 +45,7 @@ public class TrackingHistoryServiceImp implements TrackingHistoryService {
     @Override
     public TrackingHistoryDetailsDTO getTrackingHistory(Long id_tracking) {
         TrackingHistory trackingHistory = this.trackingHistoryRepository.findById(id_tracking)
-                .orElseThrow(() -> new NotFoundException("Id not found"));
+                .orElseThrow(() -> new NotFoundException("Tracking history with the provided ID not found."));
 
         return new TrackingHistoryDetailsDTO(trackingHistory);
     }
@@ -109,7 +109,7 @@ public class TrackingHistoryServiceImp implements TrackingHistoryService {
     public TrackingHistoryDetailsDTO createTrackingHistory(TrackingHistoryCreateDTO dados) {
         // Busca um ambiente pelo ID fornecido nos dados. Se não for encontrado, lança uma exceção NotFoundException.
         Environment local_tracking = environmentRepository.findById(dados.environment())
-                .orElseThrow(() -> new NotFoundException("Id not found"));
+                .orElseThrow(() -> new NotFoundException("Environment with the provided ID not found."));
 
         // Tenta encontrar um equipamento pelo RFID fornecido nos dados.
         Optional<Equipment> equipment = equipmentRepository.findByRfid(dados.rfid());
@@ -257,7 +257,7 @@ public class TrackingHistoryServiceImp implements TrackingHistoryService {
     public List<TrackingHistoryWrongLocationDTO> findWrongLocationEquipments(Long id_environment) {
         // Verifica se o ambiente existe
         Environment environment = environmentRepository.findById(id_environment)
-                .orElseThrow(() -> new NotFoundException("Environment not found"));
+                .orElseThrow(() -> new NotFoundException("Environment with ID " + id_environment + " not found."));
 
         List<TrackingHistory> trackingHistory = trackingHistoryRepository.findByEnvironment(environment);
         List<TrackingHistoryWrongLocationDTO> wrongLocationDTOs = new ArrayList<>();
@@ -267,6 +267,12 @@ public class TrackingHistoryServiceImp implements TrackingHistoryService {
         for (TrackingHistory track : trackingHistory) {
             if (track.getAction().equals(EnumTrackingAction.ENTER)) {
                 Equipment equipment = track.getEquipment();
+
+                // Verifica se o equipamento possui uma localização válida
+                if (equipment.getLocation() == null || equipment.getLocation().getEnvironment() == null) {
+                    throw new NotFoundException("Location with code " + equipment.getCode() + " not found.");
+                }
+
                 Long locationEquip = equipment.getLocation().getEnvironment().getId_environment();
 
                 if (!locationEquip.equals(id_environment)) {
@@ -291,8 +297,9 @@ public class TrackingHistoryServiceImp implements TrackingHistoryService {
 
     @Override
     public void deleteTrackingById(Long id_tracking) {
-        var tracking  = trackingHistoryRepository.findById(id_tracking).orElseThrow(() ->
-                new NotFoundException("Id not found"));
+        var tracking = trackingHistoryRepository.findById(id_tracking).orElseThrow(() ->
+                new NotFoundException("Histórico de rastreamento com ID " + id_tracking + " não encontrado."));
+
         if (tracking != null){
             trackingHistoryRepository.deleteById(id_tracking);
         }

@@ -7,24 +7,17 @@ import com.MapView.BackEnd.enums.EnumTrackingAction;
 import com.MapView.BackEnd.repository.*;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.time.LocalDate;
 import java.util.Optional;
 
+import static com.MapView.BackEnd.serviceImp.EquipmentServiceImp.getStartDateFromQuarter;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
@@ -53,57 +46,25 @@ public class EquipmentServiceImpTest {
 
     @Mock UserLogRepository userLogRepository;
 
-    @Mock
-    private FileStorageProperties fileStorageProperties;
-
-
-    @Mock
-    private ImageRepository imageRepository;
 
     @Mock
     private TrackingHistoryRepository trackingHistoryRepository;
 
 
-
-
     @Test
     void getEquipmentCode() {
-        // Criando a instância do serviço diretamente dentro do teste
-        EquipmentServiceImp equipmentServiceImp = new EquipmentServiceImp(
-                entityManager,
-                equipmentRepository,
-                locationRepository,
-                mainOwnerRepository,
-                userLogRepository,
-                userRepository,
-                fileStorageProperties,
-                trackingHistoryRepository,
-                imageRepository
-        );
-
         Long mainOwnerId = 1L;
         Long locationId = 1L;
         Long equipmentId = 1L;
         Long userLogId = 1L;
-        Long imageId = 1L;
         long rfid = 545645646;
-        String validity = "2027.Q1";
-
-        // Configurando o mock para o fileStorageProperties
-        when(fileStorageProperties.getUploadDir()).thenReturn("uploads");
+        String validityQuarter = "2027.Q1"; // Exemplo do trimestre
 
         // Mock para o repositório de usuários
         Users user = new Users();
         user.setId_user(userLogId);
         user.setOperative(true);
         when(userRepository.findById(userLogId)).thenReturn(Optional.of(user));
-
-        // Mock para o repositório de imagens
-        Image image = new Image();
-        image.setId_image(imageId);
-        image.setImage("https://example.com/image.jpg");
-        image.setModel(EnumModelEquipment.NOTEBOOK_STANDARD);
-        when(imageRepository.findById(imageId)).thenReturn(Optional.of(image));
 
         // Mock para o repositório de MainOwner
         MainOwner mainOwner = new MainOwner();
@@ -125,13 +86,16 @@ public class EquipmentServiceImpTest {
         equipment.setRfid(rfid);
         equipment.setType("Notebook");
         equipment.setModel(EnumModelEquipment.NOTEBOOK_STANDARD);
-        equipment.setValidity(LocalDate.parse(validity));
+
+        // Tranformar o trimestre em localdate
+        equipment.setValidity(getStartDateFromQuarter(validityQuarter)); // Converte "2027.Q1" para "2027-01-01"
+
         equipment.setAdmin_rights("GA15231SOUT5445");
         equipment.setObservation("Ta bom");
         equipment.setLocation(location);
         equipment.setOwner(mainOwner);
-        equipment.setId_image(image);
-        when(equipmentRepository.findById(equipmentId)).thenReturn(Optional.of(equipment));
+        equipment.setOperative(true);
+        when(equipmentRepository.findByCode("CA-C 005A0")).thenReturn(Optional.of(equipment));
 
         // Mock para o repositório de Histórico (TrackingHistory)
         TrackingHistory trackingHistory = new TrackingHistory();
@@ -142,10 +106,14 @@ public class EquipmentServiceImpTest {
 
         // Executando o método a ser testado
         EquipmentDetailsDTO result = equipmentServiceImp.getEquipmentCode(equipment.getCode(), userLogId);
+        System.out.println(result);
 
-        // Asserções (exemplo)
-        assertNotNull(result);
+        assertNotNull(result);  // Verifica se o resultado não é nulo
+        assertEquals("CA-C 005A0", result.code());  // Verifica o código do equipamento
+        assertEquals("Notebook 26", result.name_equipment());  // Verifica o nome do equipamento
+        assertEquals(EnumModelEquipment.NOTEBOOK_STANDARD, result.model());  // Verifica o modelo do equipamento
     }
+
 
     @Test
     void getAllEquipment() {
