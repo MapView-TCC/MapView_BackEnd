@@ -56,19 +56,6 @@ public class EquipmentController {
         ));
     }
 
-    @Operation(summary = "Upload an image for equipment", description = "Upload an image file and associate it with an equipment.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Image successfully uploaded"),
-            @ApiResponse(responseCode = "400", description = "Invalid file or equipment ID")
-    })
-    @PostMapping(value = "/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @Transactional
-    public ResponseEntity<String> uploadImage(
-            @Parameter(description = "Image upload data", required = true)
-            @RequestParam("file") MultipartFile file, @RequestParam EnumModelEquipment type) {
-        return equipmentServiceImp.uploadImageEquipament(file,type);
-    }
-
     @Operation(summary = "Retrieve all equipment", description = "Get a paginated list of all equipment in the system.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Equipment list successfully retrieved")

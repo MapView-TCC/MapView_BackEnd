@@ -31,27 +31,23 @@ import java.util.stream.Collectors;
 @Service
 public class EquipmentServiceImp implements EquipmentService {
 
-    private EntityManager entityManager;
-    private EquipmentRepository equipmentRepository ;
-    private LocationRepository locationRepository;
-    private MainOwnerRepository mainOwnerRepository;
-    private UserLogRepository userLogRepository;
-    private UserRepository userRepository;
-    private Path fileStorageLocation;
-    private TrackingHistoryRepository trackingHistoryRepository;
-    private ImageRepository imageRepository;
+    private final EntityManager entityManager;
+    private final EquipmentRepository equipmentRepository ;
+    private final LocationRepository locationRepository;
+    private final MainOwnerRepository mainOwnerRepository;
+    private final UserLogRepository userLogRepository;
+    private final UserRepository userRepository;
+    private final TrackingHistoryRepository trackingHistoryRepository;
 
     public EquipmentServiceImp(EntityManager entityManager, EquipmentRepository equipmentRepository, LocationRepository locationRepository, MainOwnerRepository mainOwnerRepository,
-                               UserLogRepository userLogRepository, UserRepository userRepository, FileStorageProperties fileStorageProperties, TrackingHistoryRepository trackingHistoryRepository, ImageRepository imageRepository) {
+                               UserLogRepository userLogRepository, UserRepository userRepository, TrackingHistoryRepository trackingHistoryRepository, ImageRepository imageRepository) {
         this.entityManager = entityManager;
         this.equipmentRepository = equipmentRepository;
         this.locationRepository = locationRepository;
         this.mainOwnerRepository = mainOwnerRepository;
         this.userLogRepository = userLogRepository;
         this.userRepository = userRepository;
-        this.fileStorageLocation = Paths.get(fileStorageProperties.getUploadDir()).toAbsolutePath().normalize();
         this.trackingHistoryRepository = trackingHistoryRepository;
-        this.imageRepository = imageRepository;
     }
 
 
@@ -73,7 +69,7 @@ public class EquipmentServiceImp implements EquipmentService {
     }
 
     @Override
-    public List<EquipmentDetailsDTO>    getAllEquipment(int page, int itens, Long userLog_id) {
+    public List<EquipmentDetailsDTO> getAllEquipment(int page, int itens, Long userLog_id) {
         Users user = this.userRepository.findById(userLog_id)
                 .orElseThrow(() -> new NotFoundException("User with ID '" + userLog_id + "' not found."));
 
@@ -85,7 +81,7 @@ public class EquipmentServiceImp implements EquipmentService {
 
 
     @Override
-    public EquipmentDetailsDTO  createEquipment(EquipmentCreateDTO data, Long userLog_id) {
+    public EquipmentDetailsDTO createEquipment(EquipmentCreateDTO data, Long userLog_id) {
         // Para não slavar os menos codigos, deixar letras minúsculas e verifica a existência
         String normalizedCode = data.code().toLowerCase();
 
@@ -179,10 +175,11 @@ public class EquipmentServiceImp implements EquipmentService {
             equipment.setName_equipment(data.name_equipment());
             userlog.setField(userlog.getField()+" ,"+"equipment name to: " + data.name_equipment());
         }
-        if (data.rfid() != 0) {
-            equipment.setRfid(data.rfid());
-            userlog.setField(userlog.getField()+" ,"+"equipment rfid to: " + data.rfid());
-        }
+
+//        if (data.rfid() != 0) {
+//            equipment.setRfid(data.rfid());
+//            userlog.setField(userlog.getField()+" ,"+"equipment rfid to: " + data.rfid());
+//        }
 
         if (data.type() != null) {
             if(data.type().isBlank()){
@@ -343,46 +340,6 @@ public class EquipmentServiceImp implements EquipmentService {
     }
 
 
-    public ResponseEntity<String> uploadImageEquipament (MultipartFile file,EnumModelEquipment equipType){
-        String fileName = StringUtils.cleanPath(file.getOriginalFilename());
-        try {
-            Path targetLocation = fileStorageLocation.resolve(fileName);
-            file.transferTo(targetLocation);
-
-            equipment_image(targetLocation,equipType);
-
-            String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
-                    .path("/api/files/download/")
-                    .path(fileName)
-                    .toUriString();
-
-            return ResponseEntity.ok("File uploaded successfully. Download link: " + fileDownloadUri);
-        } catch (IOException ex) {
-            return ResponseEntity.badRequest().body("File upload failed.");
-        }
-
-    }
-
-    public void equipment_image(Path targetLocation, EnumModelEquipment equipmentModel){
-        String targetLocationString = targetLocation.toString();
-
-        List<Equipment> allEquipments = equipmentRepository.findByModel(equipmentModel);
-
-        Image image = imageRepository.findByModel(equipmentModel);
-        if (image == null) {
-            image = new Image(targetLocationString, equipmentModel);
-            image = imageRepository.save(image);
-        } else {
-            image.setImage(targetLocationString);
-            imageRepository.save(image);
-        }
-
-        for (Equipment equipment : allEquipments) {
-            equipment.setId_image(image);
-        }
-        equipmentRepository.saveAll(allEquipments);
-    }
-
     public static LocalDate getStartDateFromQuarter(String quarterStr) {
         // Dividir a string em ano e trimestre
         String[] parts = quarterStr.split("\\.");
@@ -409,4 +366,3 @@ public class EquipmentServiceImp implements EquipmentService {
     }
 
 }
-
