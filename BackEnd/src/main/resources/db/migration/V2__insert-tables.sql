@@ -16,7 +16,7 @@ INSERT INTO roles (name) VALUES
 
 -- Inserir novos usuários
 INSERT INTO users (email,name,id_role, operative) VALUES
-    ('maria.eduarda@example.com','ETS Campinas',1, 1),
+('maria.eduarda@example.com','ETS Campinas',1, 1),
 ('ana.maria@example.com','ETS Campinas',2, 1),
 ('thayna.quinteiro@example.com','ETS Campinas',3, 1),
 ('sarah.santos@example.com','ETS Campinas',2, 1),
@@ -80,10 +80,7 @@ INSERT INTO building (building_code, operative) VALUES
 ('Ca590', 1),
 ('Ca600', 1);
 
-<<<<<<< HEAD
-=======
 
->>>>>>> 7dc9ddf74a4dcc18956878ffc03484cf70caa967
 
 -- Inserir novos Raspberry Pi
 INSERT INTO raspberry (id_raspberry, id_building, id_area, operative) VALUES
@@ -183,8 +180,8 @@ INSERT INTO responsible (responsible_name, edv, id_classes, id_user, operative) 
 ('Michael Green', 'EDV001', 1, 1, 1),
 ('Laura White', 'EDV002', 2, 2, 1),
 ('Peter Brown', 'EDV003', 3, 3, 0),
-('Emma Black', 'EDV004', 4, 4, 1),
-('James Clark', 'EDV005', 5, 5, 1);
+('Emma Black', 'EDV004', 2, 4, 1),
+('James Clark', 'EDV005', 1, 5, 1);
 
 -- Inserir novas associações entre equipamentos e responsáveis
 INSERT INTO equipment_responsible (id_equipment, id_responsible, start_usage, end_usage, operative) VALUES

@@ -152,7 +152,7 @@ public class EquipmentServiceImp implements EquipmentService {
 
     @Override
     public EquipmentDetailsDTO updateEquipment(Long id_equipment, EquipmentUpdateDTO data, Long userLog_id) {
-        var equipment = equipmentRepository.findByCode(data.code())
+        var equipment = equipmentRepository.findById(id_equipment)
                 .orElseThrow(() -> new NotFoundException("Equipment with code '" + data.code() + "' not found."));
 
 

@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("ap1/v1/permissions")
+@RequestMapping("api/v1/permissions")
 public class PermissionsController {
 
     private final PermissionServiceImp permissionServiceImp;

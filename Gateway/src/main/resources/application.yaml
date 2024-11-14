@@ -45,21 +45,12 @@ spring:
             - Path=/api/v1/permissions
           filters:
             - name: TokenRelay
-
+            - RewritePath=/ap1/v1/permissions(?<segment>.*), /api/v1/permissions${segment}
             - AddResponseHeader=Access-Control-Allow-Origin, http://localhost:4200
             - AddResponseHeader=Access-Control-Allow-Methods, GET, POST, PUT, DELETE, OPTIONS
             - AddResponseHeader=Access-Control-Allow-Headers, Authorization, Content-Type
 
-        - id: permission_POST
-          uri: http://localhost:9000
-          predicates:
-            - Path=/api/v1/permissions
-          filters:
-            - name: TokenRelay
 
-            - AddResponseHeader=Access-Control-Allow-Origin, http://localhost:4200
-            - AddResponseHeader=Access-Control-Allow-Methods, GET, POST, PUT, DELETE, OPTIONS
-            - AddResponseHeader=Access-Control-Allow-Headers, Authorization, Content-Type
 
 
         - id: loggedUser
