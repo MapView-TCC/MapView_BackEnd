@@ -1,6 +1,5 @@
 package com.MapView.BackEnd.serviceImp;
 
-import com.MapView.BackEnd.dtos.Area.AreaDetailsDTO;
 import com.MapView.BackEnd.dtos.Raspberry.RaspberryCreateDTO;
 import com.MapView.BackEnd.dtos.Raspberry.RaspberryDetailsDTO;
 import com.MapView.BackEnd.dtos.Raspberry.RaspberryUpdateDTO;

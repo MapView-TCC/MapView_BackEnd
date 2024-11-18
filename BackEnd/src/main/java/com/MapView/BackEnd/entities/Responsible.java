@@ -58,8 +58,6 @@ public class Responsible {
 
     }
 
-
-
     public boolean status_check(){
         return this.operative;
     }
