@@ -3,6 +3,7 @@ package com.MapView.BackEnd.entities;
 import com.MapView.BackEnd.dtos.User.UserCreateDTO;
 import com.MapView.BackEnd.enums.RoleUser;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -26,6 +27,7 @@ public class Users {
     private String name;
     @ManyToOne
     @JoinColumn(name = "id_role")
+    @JsonManagedReference // Evita recursão infinita
     private Role role;
     @Column(nullable = false)
     @JsonIgnore

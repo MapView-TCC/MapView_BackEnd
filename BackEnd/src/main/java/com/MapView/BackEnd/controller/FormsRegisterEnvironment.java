@@ -9,7 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("api/V1/registerEnvironment")
+@RequestMapping("api/v1/registerEnvironment")
 @Tag(name = "Register Environment", description = "Operations related to Excel report generation")
 
 public class FormsRegisterEnvironment {

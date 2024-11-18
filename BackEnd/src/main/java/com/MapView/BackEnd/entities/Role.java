@@ -1,6 +1,7 @@
 package com.MapView.BackEnd.entities;
 
 import com.MapView.BackEnd.dtos.Role.RoleCreateDTO;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -23,9 +24,11 @@ public class Role {
     @Column(name = "name")
     private String name;
     @OneToMany(mappedBy = "role",fetch = FetchType.LAZY)
+    @JsonBackReference
     private List<Users> users;
 
     @OneToMany(mappedBy = "role", fetch = FetchType.LAZY)
+    @JsonBackReference
     private List<Permission> permissoes;
 
 

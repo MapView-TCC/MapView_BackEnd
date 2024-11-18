@@ -42,6 +42,7 @@ public class PermissionServiceImp {
         Users user = userRepository.findById(permission.getUsers().getId_user()).orElseThrow(()-> new NotFoundException("User not found"));
         Role role = roleRespository.findById(permission.getRole().getId()).orElseThrow(()-> new NotFoundException("User not found"));
         user.setRole(role);
+        permissionRepository.delete(permission);
     }
 
     public void declinedPermission(Long id_permission){
