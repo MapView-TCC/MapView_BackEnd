@@ -176,10 +176,10 @@ public class EquipmentServiceImp implements EquipmentService {
             userlog.setField(userlog.getField()+" ,"+"equipment name to: " + data.name_equipment());
         }
 
-//        if (data.rfid() != 0) {
-//            equipment.setRfid(data.rfid());
-//            userlog.setField(userlog.getField()+" ,"+"equipment rfid to: " + data.rfid());
-//        }
+        if (data.rfid() != 0) {
+            equipment.setRfid(data.rfid());
+            userlog.setField(userlog.getField()+" ,"+"equipment rfid to: " + data.rfid());
+        }
 
         if (data.type() != null) {
             if(data.type().isBlank()){
