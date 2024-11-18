@@ -118,13 +118,13 @@ INSERT INTO equipment (cod_equipment, name_equipment, rfid, type, model, validit
 
 -- Inserir novos tracking history
 INSERT INTO tracking_history (datetime, id_equipment, id_environment, action, warning) VALUES
-(CURRENT_TIMESTAMP, 1, 1, 'ENTER', 'YELLOW'),
-(CURRENT_TIMESTAMP, 2, 1, 'ENTER', 'YELLOW'),
-(CURRENT_TIMESTAMP, 3, 1, 'ENTER', 'YELLOW'),
-(CURRENT_TIMESTAMP, 4, 1, 'ENTER', 'YELLOW'),
-(CURRENT_TIMESTAMP, 5, 1, 'ENTER', 'YELLOW'),
-(CURRENT_TIMESTAMP, 6, 1, 'ENTER', 'YELLOW'),
-(CURRENT_TIMESTAMP, 7, 1, 'ENTER', 'YELLOW');
+(CURRENT_TIMESTAMP, 1, 1, 'ENTER', 'GREEN'),
+(CURRENT_TIMESTAMP, 2, 1, 'ENTER', 'GREEN'),
+(CURRENT_TIMESTAMP, 3, 1, 'ENTER', 'GREEN'),
+(CURRENT_TIMESTAMP, 4, 1, 'ENTER', 'GREEN'),
+(CURRENT_TIMESTAMP, 5, 1, 'ENTER', 'GREEN'),
+(CURRENT_TIMESTAMP, 6, 1, 'ENTER', 'GREEN'),
+(CURRENT_TIMESTAMP, 7, 1, 'ENTER', 'GREEN');
 
 -- Inserir novos responsáveis
 INSERT INTO responsible (responsible_name, edv, id_classes, id_user, operative) VALUES
