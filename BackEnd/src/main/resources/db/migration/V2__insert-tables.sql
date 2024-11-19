@@ -100,7 +100,7 @@ INSERT INTO location (id_post, id_environment) VALUES
 
 -- Inserir novos centros de custo
 INSERT INTO cost_center (cost_center_name, operative) VALUES
-('Cost Center 1', 1);
+('908756', 1); -- centro de custos da ETS
 
 -- Inserir novos donos principais
 INSERT INTO main_owner (cod_owner, id_cost_center, operative) VALUES
