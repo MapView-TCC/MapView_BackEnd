@@ -39,6 +39,7 @@ spring:
             - AddResponseHeader=Access-Control-Allow-Methods, GET, POST, PUT, DELETE, OPTIONS
             - AddResponseHeader=Access-Control-Allow-Headers, Authorization, Content-Type
 
+
         - id: register
           uri: http://localhost:9000
           predicates:
@@ -104,6 +105,66 @@ spring:
             - AddResponseHeader=Access-Control-Allow-Methods, GET, POST, PUT, DELETE, OPTIONS
             - AddResponseHeader=Access-Control-Allow-Headers, Authorization, Content-Type
 
+        - id: environment
+          uri: http://localhost:9000
+          predicates:
+            - Path=/api/v1/environment/**
+
+          filters:
+            - name: TokenRelay
+            - RewritePath=/api/v1/environment(?<segment>.*), /api/v1/environment${segment}
+            - AddResponseHeader=Access-Control-Allow-Origin, http://localhost:4200
+            - AddResponseHeader=Access-Control-Allow-Methods, GET, POST, DELETE
+            - AddResponseHeader=Access-Control-Allow-Headers, Authorization, Content-Type
+
+
+        - id: building
+          uri: http://localhost:9000
+          predicates:
+            - Path=/api/v1/building
+
+          filters:
+            - name: TokenRelay
+            - RewritePath=/api/v1/building(?<segment>.*), /api/v1/building${segment}
+            - AddResponseHeader=Access-Control-Allow-Origin, http://localhost:4200
+            - AddResponseHeader=Access-Control-Allow-Methods, GET, POST, DELETE
+            - AddResponseHeader=Access-Control-Allow-Headers, Authorization, Content-Type
+
+
+        - id: equipmentresponsible_filter
+          uri: http://localhost:9000
+          predicates:
+            - Path=/api/v1/equipmentresponsible/filter
+
+          filters:
+            - name: TokenRelay
+            - RewritePath=/api/v1/equipmentresponsible/filter(?<segment>.*), /api/v1/equipmentresponsible/filter${segment}
+            - AddResponseHeader=Access-Control-Allow-Origin, http://localhost:4200
+            - AddResponseHeader=Access-Control-Allow-Methods, GET, POST, DELETE
+            - AddResponseHeader=Access-Control-Allow-Headers, Authorization, Content-Type
+
+        - id: trackingHistory_filterbyenvironment
+          uri: http://localhost:9000
+          predicates:
+            - Path=/api/v1/trackingHistory/filterbyenvironment
+
+          filters:
+            - name: TokenRelay
+            - RewritePath=/api/v1/trackingHistory/filterbyenvironment(?<segment>.*), /api/v1/trackingHistory/filterbyenvironment${segment}
+            - AddResponseHeader=Access-Control-Allow-Origin, http://localhost:4200
+            - AddResponseHeader=Access-Control-Allow-Methods, GET, POST, DELETE
+            - AddResponseHeader=Access-Control-Allow-Headers, Authorization, Content-Type
+
+        - id: wrong
+          uri: http://localhost:9000
+          predicates:
+            - Path=/api/v1/trackingHistory/wronglocations
+          filters:
+            - name: TokenRelay
+            - RewritePath=/api/v1/trackingHistory/wronglocations(?<segment>.*), /api/v1/trackingHistory/wronglocations${segment}
+            - AddResponseHeader=Access-Control-Allow-Origin, http://localhost:4200
+            - AddResponseHeader=Access-Control-Allow-Methods, GET, POST, DELETE
+            - AddResponseHeader=Access-Control-Allow-Headers, Authorization, Content-Type
 
 
 
@@ -308,9 +369,10 @@ spring:
         - id: inactivate-equipment
           uri: http://localhost:9000
           predicates:
-            - Path=/api/v1/equipment/inactivate/{id_equipment}
+            - Path=/api/v1/environment/inactivate/**
           filters:
             - name: TokenRelay
+            - RewritePath=/api/v1/trackingHistory/filterbyenvironment(?<segment>.*), /api/v1/trackingHistory/filterbyenvironment${segment}
             - AddResponseHeader=Access-Control-Allow-Origin, http://localhost:4200
             - AddResponseHeader=Access-Control-Allow-Methods, GET, POST, DELETE, OPTIONS
             - AddResponseHeader=Access-Control-Allow-Headers, Authorization, Content-Type
@@ -318,9 +380,10 @@ spring:
         - id: activate-equipment
           uri: http://localhost:9000
           predicates:
-            - Path=/api/v1/equipment/active/{id_equipment}
+            - Path=/api/v1/environment/active/**
           filters:
             - name: TokenRelay
+            - RewritePath=/api/v1/trackingHistory/filterbyenvironment(?<segment>.*), /api/v1/trackingHistory/filterbyenvironment${segment}
             - AddResponseHeader=Access-Control-Allow-Origin, http://localhost:4200
             - AddResponseHeader=Access-Control-Allow-Methods, GET, POST, DELETE, OPTIONS
             - AddResponseHeader=Access-Control-Allow-Headers, Authorization, Content-Type
