@@ -73,7 +73,7 @@ INSERT INTO raspberry (id_raspberry, id_building, id_area, operative) VALUES
 
 -- Inserir novos ambientes
 INSERT INTO environment (environment_name, id_raspberry, operative) VALUES
-('Lab. Soluções Digitais 04 e 5', 'Rasp. Teste', 1),  -- Fixed space
+('Lab. Soluções Digitais 04 e 5', 'Rasp. Teste', 1),
 ('Lab. Soluções Digitais 03', 'rasp1', 1),
 ('Lab. Soluções Digitais 02', 'rasp2', 1),
 ('Lab. Soluções Digitais 01', 'rasp3', 1);
