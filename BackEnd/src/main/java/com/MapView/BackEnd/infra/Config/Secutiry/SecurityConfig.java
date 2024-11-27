@@ -52,15 +52,14 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
+        http.csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/resource/**").authenticated()  // Verifica a role APRENDIZ
                         .requestMatchers(HttpMethod.POST,"/api/v1/equipment/**").hasAnyRole("MEIO_OFICIAL","INSTRUTOR","GESTOR")
                         .requestMatchers(HttpMethod.PUT, "/api/v1/equipment/**").hasAnyRole("MEIO_OFICIAL","INSTRUTOR","GESTOR")
                         .requestMatchers("/api/v1/notifications").authenticated()
-                        .requestMatchers(HttpMethod.GET,"/api/v1/trackingHistory/**").permitAll()
                         .requestMatchers(HttpMethod.GET,"/api/v1/trackingHistory/filterbyenvironment").permitAll()
-                        .requestMatchers(HttpMethod.POST,"/api/v1/trackingHistory").hasAnyRole("MEIO_OFICIAL","INSTRUTOR","GESTOR")
+                        .requestMatchers(HttpMethod.POST,"/api/v1/trackingHistory/**").permitAll()
                         .requestMatchers(HttpMethod.GET,"/api/v1/environment/**").authenticated()
                         .requestMatchers(HttpMethod.PUT,"/api/v1/environment").hasAnyRole("MEIO_OFICIAL","INSTRUTOR","GESTOR")
                         .requestMatchers(HttpMethod.POST,"/api/v1/environment").hasAnyRole("MEIO_OFICIAL","INSTRUTOR","GESTOR")
@@ -70,7 +69,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/v1/equipment/search").authenticated()
                         .requestMatchers(HttpMethod.GET,"/api/v1/equipmentresponsible/filter").hasAnyRole("MEIO_OFICIAL","INSTRUTOR","GESTOR")
                         .requestMatchers("/connect/**").permitAll()
-                        .requestMatchers("/ws/**").permitAll()
+                        .requestMatchers("/ws/**","ws/equip","/equip").permitAll()
                         .requestMatchers("/credentials").permitAll()
                         .requestMatchers(HttpMethod.GET,"ap1/v1/permissions").hasAnyRole("INSTRUTOR","GESTOR")
                         .requestMatchers(HttpMethod.POST,"ap1/v1/permissions").hasAnyRole("INSTRUTOR","GESTOR")
@@ -106,9 +105,9 @@ public class SecurityConfig {
     private Collection<GrantedAuthority> getRolesFromDatabase(String email, Jwt jwt) {
 
         Users user = userRepository.findByEmail(email).orElse(null);
-        String name2 = jwt.getClaimAsString("name");
-        user.setName(name2);
+
         System.out.println("Usuário encontrado: " +new UserDetailsDTO(user));
+        System.out.println("Nome encontrado: " +jwt.getClaimAsString("name"));
 
 
         if (user != null) {

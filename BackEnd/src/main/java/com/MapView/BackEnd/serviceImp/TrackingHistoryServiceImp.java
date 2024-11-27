@@ -103,9 +103,8 @@ public class TrackingHistoryServiceImp implements TrackingHistoryService {
 
 
 
-    @Async // Indica que o método pode ser executado de forma assíncrona.
+
     @Override
-    @CrossOrigin("http://localhost:3001") // Permite que requisições de um domínio específico (localhost:3001) acessem este endpoint.
     public TrackingHistoryDetailsDTO createTrackingHistory(TrackingHistoryCreateDTO dados) {
         // Busca um ambiente pelo ID fornecido nos dados. Se não for encontrado, lança uma exceção NotFoundException.
         Environment local_tracking = environmentRepository.findById(dados.environment())
