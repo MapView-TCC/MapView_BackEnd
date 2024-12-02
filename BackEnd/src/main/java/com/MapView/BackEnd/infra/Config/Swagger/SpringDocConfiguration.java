@@ -30,7 +30,7 @@ public class SpringDocConfiguration {
                 )
                 .externalDocs(new ExternalDocumentation()
                         .description("Documentação Completa do MapView")
-                        .url("https://exemplo.com/documentacao-completa")
+                        .url("https://map-view-docs.netlify.app/")
                 );
     }
 }

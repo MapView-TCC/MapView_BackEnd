@@ -16,11 +16,11 @@ INSERT INTO roles (name) VALUES
 
 -- Inserir novos usuários
 INSERT INTO users (email,name,id_role, operative) VALUES
-('maria.eduarda@example.com','ETS Campinas',1, 1),
-('ana.maria@example.com','ETS Campinas',2, 1),
-('thayna.quinteiro@example.com','ETS Campinas',3, 1),
-('sarah.santos@example.com','ETS Campinas',2, 1),
-('joao.borges@example.com','ETS Campinas',1,1),
+('maria.eduarda@example.com','Maria',1, 1),
+('ana.maria@example.com','Ana Maria',2, 1),
+('thayna.quinteiro@example.com','Thayna',3, 1),
+('sarah.santos@example.com','Sarah',2, 1),
+('joao.borges@example.com','João',1,1),
 ('Campinas.ETS@br.bosch.com','ETS Campinas',1,1);
 
 
@@ -168,3 +168,21 @@ INSERT INTO equipment_responsible (id_equipment, id_responsible, start_usage, en
 (3, 3, '2024-09-03', NULL, 1),
 (4, 4, '2024-09-04', '2024-09-15', 1),
 (5, 5, '2024-09-05', NULL, 1);
+
+
+INSERT INTO notification (id_equipment, date_notification)
+VALUES
+(1, '2024-12-01'),
+(2, '2024-12-02'),
+(3, '2024-12-03'),
+(4, '2024-12-01'),
+(5, '2024-12-02');
+
+
+INSERT INTO permission (id_user, id_role, date)
+VALUES
+(1, 1, '2024-12-01'),
+(2, 1, '2024-12-02'),
+(3, 1, '2024-12-03'),
+(4, 1, '2024-12-04'),
+(5, 1, '2024-12-05');

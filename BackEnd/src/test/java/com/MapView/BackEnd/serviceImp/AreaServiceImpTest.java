@@ -72,7 +72,7 @@ public class AreaServiceImpTest {
         // Mock da área
         Area area = new Area();
         area.setId_area(areaId);
-        area.setArea_code("Teste codigo");
+        area.setCode("Teste codigo");
         area.setArea_name("Teste nome");
         area.setOperative(true);
         when(areaRepository.findById(areaId)).thenReturn(Optional.of(area));
@@ -112,7 +112,7 @@ public class AreaServiceImpTest {
         // Criar a instância da área com ID definido
         Area savedArea = new Area();
         savedArea.setId_area(1L); // Defina um ID para a área salva
-        savedArea.setArea_code(createDTO.area_code());
+        savedArea.setCode(createDTO.area_code());
         savedArea.setArea_name(createDTO.area_name());
         savedArea.setOperative(true); // Defina como necessário
 
@@ -136,7 +136,7 @@ public class AreaServiceImpTest {
         Area area = new Area();
         area.setId_area(areaId);
         area.setArea_name("Old Area"); // Define o nome antigo da área
-        area.setArea_code("CA600"); // Define o código antigo da área
+        area.setCode("CA600"); // Define o código antigo da área
         area.setOperative(true);
 
         when(areaRepository.findById(areaId)).thenReturn(Optional.of(area));

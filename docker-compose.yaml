@@ -47,14 +47,14 @@ services:
     networks:
       - mapview-net
 
-  angular-app:
-    build:
-      context: ./frontend # Caminho onde está o Dockerfile do Angular
-    container_name: angular-app
-    ports:
-      - "4200:4200"  # Mapeia a porta 4200 do container para a 4200 da máquina
-    networks:
-      - mapview-net
+  #angular-app:
+    #build:
+      #context: ./frontend # Caminho onde está o Dockerfile do Angular
+    #container_name: angular-app
+    #ports:
+     # - "4200:4200"  # Mapeia a porta 4200 do container para a 4200 da máquina
+   # networks:
+     # - mapview-net
 
 volumes:
   mysql-data:

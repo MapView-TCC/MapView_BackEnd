@@ -63,7 +63,7 @@ class RaspberryServiceImpTest {
         // Mock da área
         Area area = new Area();
         area.setId_area(areaId);
-        area.setArea_code("Teste codigo");
+        area.setCode("Teste codigo");
         area.setArea_name("Teste nome");
         area.setOperative(true);
         when(areaRepository.findById(areaId)).thenReturn(Optional.of(area));
@@ -119,7 +119,7 @@ class RaspberryServiceImpTest {
         // Mock da área
         Area area = new Area();
         area.setId_area(areaId);
-        area.setArea_code("Teste codigo");
+        area.setCode("Teste codigo");
         area.setArea_name("Teste nome");
         area.setOperative(true);
         when(areaRepository.findById(areaId)).thenReturn(Optional.of(area));
@@ -161,7 +161,7 @@ class RaspberryServiceImpTest {
         // Mock da área
         Area area = new Area();
         area.setId_area(areaId);
-        area.setArea_code("Teste codigo");
+        area.setCode("Teste codigo");
         area.setArea_name("Teste nome");
         area.setOperative(true);
         when(areaRepository.findById(areaId)).thenReturn(Optional.of(area));
@@ -207,7 +207,7 @@ class RaspberryServiceImpTest {
         // Mock da área
         Area area = new Area();
         area.setId_area(areaId);
-        area.setArea_code("Teste codigo");
+        area.setCode("Teste codigo");
         area.setArea_name("Teste nome");
         area.setOperative(true);
         when(areaRepository.findById(areaId)).thenReturn(Optional.of(area));
@@ -222,7 +222,7 @@ class RaspberryServiceImpTest {
         // Mock da área para atualização
         Area updateArea = new Area();
         updateArea.setId_area(areaId1);
-        updateArea.setArea_code("Teste update");
+        updateArea.setCode("Teste update");
         updateArea.setArea_name("Teste update");
         updateArea.setOperative(true);
         when(areaRepository.findById(areaId1)).thenReturn(Optional.of(updateArea));
